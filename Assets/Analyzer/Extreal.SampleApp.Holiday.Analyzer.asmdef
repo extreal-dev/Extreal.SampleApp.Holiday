@@ -1,0 +1,16 @@
+{
+    "name": "Extreal.SampleApp.Holiday.Analyzer",
+    "rootNamespace": "Extreal.SampleApp.Holiday.Analyzer",
+    "references": [],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
