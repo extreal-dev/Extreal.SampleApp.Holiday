@@ -1,21 +1,24 @@
 using Extreal.Core.Logging;
 using UnityEngine;
 
-public static class Initializer
+namespace Extreal.SampleApp.Holiday.Common
 {
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-    private static void Initialize()
+    public static class Initializer
     {
-        QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = 60;
-
-        const LogLevel logLevel = LogLevel.Debug;
-        LoggingManager.Initialize(logLevel: logLevel);
-
-        var logger = LoggingManager.GetLogger(nameof(Initializer));
-        if (logger.IsDebug())
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void Initialize()
         {
-            logger.LogDebug($"targetFrameRage: {Application.targetFrameRate}, logLevel: {logLevel}");
+            QualitySettings.vSyncCount = 0;
+            Application.targetFrameRate = 60;
+
+            const LogLevel logLevel = LogLevel.Debug;
+            LoggingManager.Initialize(logLevel: logLevel);
+
+            var logger = LoggingManager.GetLogger(nameof(Initializer));
+            if (logger.IsDebug())
+            {
+                logger.LogDebug($"targetFrameRage: {Application.targetFrameRate}, logLevel: {logLevel}");
+            }
         }
     }
 }
