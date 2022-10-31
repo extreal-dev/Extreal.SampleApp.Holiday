@@ -1,7 +1,6 @@
-﻿using UnityEngine;
-
-namespace Extreal.SampleApp.Holiday.Common
+﻿namespace Extreal.SampleApp.Holiday.Config
 {
+    using UnityEngine;
     using System.Collections.Generic;
     using Core.SceneTransition;
 

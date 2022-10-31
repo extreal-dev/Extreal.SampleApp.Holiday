@@ -13,4 +13,10 @@ MonoBehaviour:
   m_Name: SceneConfig
   m_EditorClassIdentifier: 
   commonUnitySceneNames: 
-  scenes: []
+  scenes:
+  - sceneName: 0
+    unitySceneNames: 0000000001000000
+  - sceneName: 1
+    unitySceneNames: 0000000002000000
+  - sceneName: 2
+    unitySceneNames: 0000000003000000
