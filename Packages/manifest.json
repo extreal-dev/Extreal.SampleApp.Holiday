@@ -11,6 +11,8 @@
     "com.unity.toolchain.win-x86_64-linux-x86_64": "2.0.2",
     "com.unity.ugui": "1.0.0",
     "com.unity.visualscripting": "1.7.8",
+    "jp.co.tis.extreal.core.logging": "https://github.com/extreal-dev/Extreal.Core.Logging.git",
+    "jp.co.tis.extreal.core.scenetransition": "https://github.com/extreal-dev/Extreal.Core.SceneTransition.git",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
@@ -42,5 +44,14 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
-  }
+  },
+  "scopedRegistries": [
+    {
+      "name": "OpenUPM",
+      "url": "https://package.openupm.com",
+      "scopes": [
+        "com.cysharp"
+      ]
+    }
+  ]
 }
