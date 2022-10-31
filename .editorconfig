@@ -431,6 +431,8 @@ dotnet_diagnostic.CC0044.severity = none
 dotnet_diagnostic.CC0045.severity = none
 # Parameter 'xxxxx' is not used.
 dotnet_diagnostic.CC0057.severity = none
+# Method is not used.
+dotnet_diagnostic.CC0068.severity = none
 # Introduce a field for parameter
 dotnet_diagnostic.CC0071.severity = none
 # Remove 'Async' from method name that doesn't return 'Task'.
