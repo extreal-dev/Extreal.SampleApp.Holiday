@@ -64,6 +64,13 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
+    "com.unity.nuget.mono-cecil": {
+      "version": "1.10.1",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
     "com.unity.nuget.newtonsoft-json": {
       "version": "3.0.2",
       "depth": 2,
@@ -212,6 +219,15 @@
         "com.cysharp.unitask": "2.3.1"
       },
       "hash": "6d1ee4d7fa0b7d7fa473eda28b0a611e65c1a0a1"
+    },
+    "jp.hadashikick.vcontainer": {
+      "version": "1.11.1",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.nuget.mono-cecil": "1.10.1"
+      },
+      "url": "https://package.openupm.com"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
