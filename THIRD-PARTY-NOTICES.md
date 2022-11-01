@@ -2,9 +2,9 @@
 
 This repository incorporates the material listed below.
 
-## Code Cracker 
+## Code Cracker
 
-https://github.com/code-cracker/code-cracker
+[Code Cracker](https://github.com/code-cracker/code-cracker)
 
 ```
 Copyright 2014 Giovanni Bassi and Elemar Jr.
@@ -24,7 +24,7 @@ limitations under the License.
 
 ## TextMesh Pro
 
-https://docs.unity3d.com/Packages/com.unity.textmeshpro@3.0/manual/index.html
+[TextMesh Pro])(https://docs.unity3d.com/Packages/com.unity.textmeshpro@3.0/manual/index.html)
 
 ```
 TextMesh Pro copyright © 2014-2019 Unity Technologies ApS
@@ -41,7 +41,7 @@ and other terms and conditions.
 
 ## Noto Sans Japanese
 
-https://fonts.google.com/noto/specimen/Noto+Sans+JP
+[Noto Sans Japanese](https://fonts.google.com/noto/specimen/Noto+Sans+JP)
 
 ```
 Copyright 2012 Google Inc. All Rights Reserved.
@@ -50,3 +50,14 @@ This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is copied below, and is also available with a FAQ at:
 http://scripts.sil.org/OFL
 ```
+
+## Starter Assets
+
+[Starter Assets - First Person Character Controller](http://u3d.as/2z1q)
+[Starter Assets - Third Person Character Controller](http://u3d.as/2z1r)
+
+```
+This package is licensed under the Unity Companion License. 
+For full license terms, please see: https://unity3d.com/legal/licenses/Unity_Companion_License
+```
+
