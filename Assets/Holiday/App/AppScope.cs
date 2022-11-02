@@ -1,6 +1,6 @@
-﻿namespace Extreal.SampleApp.Holiday.Main
+﻿namespace Extreal.SampleApp.Holiday.App
 {
-    using Config;
+    using App;
     using Core.SceneTransition;
     using UnityEngine;
     using VContainer;
@@ -13,7 +13,7 @@
         protected override void Configure(IContainerBuilder builder)
         {
             builder.RegisterInstance(sceneConfig).AsImplementedInterfaces();
-            builder.Register<SceneTransitioner<SceneName, UnitySceneName>>(Lifetime.Singleton).AsImplementedInterfaces();
+            builder.Register<SceneTransitioner<StageName, SceneName>>(Lifetime.Singleton).AsImplementedInterfaces();
 
             builder.RegisterEntryPoint<AppPresenter>();
         }

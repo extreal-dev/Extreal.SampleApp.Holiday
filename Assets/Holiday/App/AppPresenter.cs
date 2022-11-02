@@ -1,19 +1,19 @@
-﻿namespace Extreal.SampleApp.Holiday.Main
+﻿namespace Extreal.SampleApp.Holiday.App
 {
     using System.Threading;
-    using Config;
+    using App;
     using Core.SceneTransition;
     using Cysharp.Threading.Tasks;
     using VContainer.Unity;
 
     public class AppPresenter : IAsyncStartable
     {
-        private readonly ISceneTransitioner<SceneName> sceneTransitioner;
+        private readonly ISceneTransitioner<StageName> sceneTransitioner;
 
-        public AppPresenter(ISceneTransitioner<SceneName> sceneTransitioner)
+        public AppPresenter(ISceneTransitioner<StageName> sceneTransitioner)
             => this.sceneTransitioner = sceneTransitioner;
 
         public async UniTask StartAsync(CancellationToken cancellation)
-            => await sceneTransitioner.ReplaceAsync(SceneName.TitlePage);
+            => await sceneTransitioner.ReplaceAsync(StageName.TitleScreen);
     }
 }

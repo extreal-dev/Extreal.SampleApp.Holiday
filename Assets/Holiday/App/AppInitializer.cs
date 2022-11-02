@@ -1,7 +1,7 @@
 using Extreal.Core.Logging;
 using UnityEngine;
 
-namespace Extreal.SampleApp.Holiday.Control
+namespace Extreal.SampleApp.Holiday.App
 {
     public static class AppInitializer
     {

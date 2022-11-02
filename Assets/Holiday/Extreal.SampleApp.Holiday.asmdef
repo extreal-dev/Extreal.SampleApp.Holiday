@@ -2,6 +2,7 @@
     "name": "Extreal.SampleApp.Holiday",
     "rootNamespace": "Extreal.SampleApp.Holiday",
     "references": [
+        "UniRx",
         "UniTask",
         "VContainer",
         "Extreal.Core.Logging",

@@ -1,17 +1,10 @@
 ﻿namespace Extreal.SampleApp.Holiday.App
 {
-    public enum SceneName
+    public enum StageName
     {
-        // Control
-        CameraControl,
-        InputControl,
-
-        // Screen
         TitleScreen,
         AvatarSelectionScreen,
         RoomSelectionScreen,
-
-        // Room
         VirtualRoom,
     }
 }

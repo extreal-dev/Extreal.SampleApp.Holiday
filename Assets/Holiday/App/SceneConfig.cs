@@ -1,4 +1,4 @@
-﻿namespace Extreal.SampleApp.Holiday.Config
+﻿namespace Extreal.SampleApp.Holiday.App
 {
     using UnityEngine;
     using System.Collections.Generic;
@@ -7,12 +7,12 @@
     [CreateAssetMenu(
         menuName = "Config/" + nameof(SceneConfig),
         fileName = nameof(SceneConfig))]
-    public class SceneConfig: ScriptableObject, ISceneConfig<SceneName, UnitySceneName>
+    public class SceneConfig: ScriptableObject, ISceneConfig<StageName, SceneName>
     {
-        [SerializeField] private List<UnitySceneName> commonUnitySceneNames;
-        [SerializeField] private List<Scene<SceneName, UnitySceneName>> scenes;
+        [SerializeField] private List<SceneName> commonUnitySceneNames;
+        [SerializeField] private List<Scene<StageName, SceneName>> scenes;
 
-        public List<UnitySceneName> CommonUnitySceneNames => commonUnitySceneNames;
-        public List<Scene<SceneName, UnitySceneName>> Scenes => scenes;
+        public List<SceneName> CommonUnitySceneNames => commonUnitySceneNames;
+        public List<Scene<StageName, SceneName>> Scenes => scenes;
     }
 }
