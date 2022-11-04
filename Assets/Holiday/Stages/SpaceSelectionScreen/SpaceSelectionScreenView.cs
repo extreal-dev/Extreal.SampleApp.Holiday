@@ -5,7 +5,7 @@
     using UnityEngine;
     using UnityEngine.UI;
 
-    public class RoomSelectionScreenView : MonoBehaviour
+    public class SpaceSelectionScreenView : MonoBehaviour
     {
         [SerializeField] private Button goButton;
 

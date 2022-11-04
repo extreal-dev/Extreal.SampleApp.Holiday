@@ -20,7 +20,7 @@
         public void Start() =>
             avatarSelectionScreenView.OnGoButtonClicked.Subscribe(_ =>
             {
-                sceneTransitioner.ReplaceAsync(StageName.RoomSelectionScreen).Forget();
+                sceneTransitioner.ReplaceAsync(StageName.SpaceSelectionScreen).Forget();
             });
     }
 }

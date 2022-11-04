@@ -201,7 +201,7 @@ MonoBehaviour:
     TypeName: Extreal.SampleApp.Holiday.App.AppScope
   autoRun: 1
   autoInjectGameObjects: []
-  roomSelectionScreenView: {fileID: 88700373}
+  spaceSelectionScreenView: {fileID: 88700373}
 --- !u!4 &253002924
 Transform:
   m_ObjectHideFlags: 0

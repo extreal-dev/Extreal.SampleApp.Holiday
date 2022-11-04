@@ -8,11 +8,11 @@
 
     public class AppScope : LifetimeScope
     {
-        [SerializeField] private SceneConfig sceneConfig;
+        [SerializeField] private StageConfig stageConfig;
 
         protected override void Configure(IContainerBuilder builder)
         {
-            builder.RegisterInstance(sceneConfig).AsImplementedInterfaces();
+            builder.RegisterInstance(stageConfig).AsImplementedInterfaces();
             builder.Register<SceneTransitioner<StageName, SceneName>>(Lifetime.Singleton).AsImplementedInterfaces();
 
             builder.RegisterEntryPoint<AppPresenter>();

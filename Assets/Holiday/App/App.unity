@@ -156,7 +156,7 @@ MonoBehaviour:
     TypeName: 
   autoRun: 1
   autoInjectGameObjects: []
-  sceneConfig: {fileID: 11400000, guid: d1b93e8ee48890443a2040ea71dba396, type: 2}
+  stageConfig: {fileID: 11400000, guid: d1b93e8ee48890443a2040ea71dba396, type: 2}
 --- !u!4 &1287753623
 Transform:
   m_ObjectHideFlags: 0

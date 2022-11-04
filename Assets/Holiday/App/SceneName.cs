@@ -3,15 +3,16 @@
     public enum SceneName
     {
         // Control
-        CameraControl,
-        InputControl,
+        CameraControl = 100,
+        InputControl = 101,
+        PlayerControl = 102,
 
         // Screen
-        TitleScreen,
-        AvatarSelectionScreen,
-        RoomSelectionScreen,
+        TitleScreen = 200,
+        AvatarSelectionScreen = 201,
+        SpaceSelectionScreen = 202,
 
         // Room
-        VirtualRoom,
+        VirtualSpace = 300,
     }
 }
