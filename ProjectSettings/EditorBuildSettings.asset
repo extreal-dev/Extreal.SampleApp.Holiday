@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Holiday/Controls/CameraControl/CameraControl.unity
     guid: 074921bc0edeced419261330d35b6531
   - enabled: 1
+    path: Assets/Holiday/Controls/LightControl/LightControl.unity
+    guid: 958069c9f37755d4f82fd832bd404883
+  - enabled: 1
     path: Assets/Holiday/Controls/InputControl/InputControl.unity
     guid: 5b154ac9a50bb3e49bd948dc95284d3c
   - enabled: 1

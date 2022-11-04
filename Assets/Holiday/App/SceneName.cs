@@ -4,6 +4,7 @@
     {
         // Control
         CameraControl = 100,
+        LightControl = 103,
         InputControl = 101,
         PlayerControl = 102,
 
