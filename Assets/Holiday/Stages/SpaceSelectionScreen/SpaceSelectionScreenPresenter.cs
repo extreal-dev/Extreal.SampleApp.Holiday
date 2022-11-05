@@ -4,18 +4,16 @@
     using Core.SceneTransition;
     using Cysharp.Threading.Tasks;
     using UniRx;
+    using VContainer;
     using VContainer.Unity;
 
     public class SpaceSelectionScreenPresenter : IStartable
     {
+        [Inject]
         private readonly ISceneTransitioner<StageName> sceneTransitioner;
-        private readonly SpaceSelectionScreenView spaceSelectionScreenView;
 
-        public SpaceSelectionScreenPresenter(ISceneTransitioner<StageName> sceneTransitioner, SpaceSelectionScreenView spaceSelectionScreenView)
-        {
-            this.sceneTransitioner = sceneTransitioner;
-            this.spaceSelectionScreenView = spaceSelectionScreenView;
-        }
+        [Inject]
+        private readonly SpaceSelectionScreenView spaceSelectionScreenView;
 
         public void Start() =>
             spaceSelectionScreenView.OnGoButtonClicked.Subscribe(_ =>

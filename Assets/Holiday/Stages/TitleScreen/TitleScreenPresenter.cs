@@ -4,18 +4,16 @@
     using Core.SceneTransition;
     using Cysharp.Threading.Tasks;
     using UniRx;
+    using VContainer;
     using VContainer.Unity;
 
     public class TitleScreenPresenter : IStartable
     {
+        [Inject]
         private readonly ISceneTransitioner<StageName> sceneTransitioner;
-        private readonly TitleScreenView titleScreenView;
 
-        public TitleScreenPresenter(ISceneTransitioner<StageName> sceneTransitioner, TitleScreenView titleScreenView)
-        {
-            this.sceneTransitioner = sceneTransitioner;
-            this.titleScreenView = titleScreenView;
-        }
+        [Inject]
+        private readonly TitleScreenView titleScreenView;
 
         public void Start() =>
             titleScreenView.OnGoButtonClicked.Subscribe(_ =>

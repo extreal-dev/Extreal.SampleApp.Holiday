@@ -4,18 +4,16 @@
     using Core.SceneTransition;
     using Cysharp.Threading.Tasks;
     using UniRx;
+    using VContainer;
     using VContainer.Unity;
 
     public class AvatarSelectionScreenPresenter : IStartable
     {
+        [Inject]
         private readonly ISceneTransitioner<StageName> sceneTransitioner;
-        private readonly AvatarSelectionScreenView avatarSelectionScreenView;
 
-        public AvatarSelectionScreenPresenter(ISceneTransitioner<StageName> sceneTransitioner, AvatarSelectionScreenView avatarSelectionScreenView)
-        {
-            this.sceneTransitioner = sceneTransitioner;
-            this.avatarSelectionScreenView = avatarSelectionScreenView;
-        }
+        [Inject]
+        private readonly AvatarSelectionScreenView avatarSelectionScreenView;
 
         public void Start() =>
             avatarSelectionScreenView.OnGoButtonClicked.Subscribe(_ =>
