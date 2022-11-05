@@ -9,6 +9,7 @@
         PlayerControl = 102,
 
         // Screen
+        BackgroundScreen = 204,
         LoadingScreen = 203,
         TitleScreen = 200,
         AvatarSelectionScreen = 201,

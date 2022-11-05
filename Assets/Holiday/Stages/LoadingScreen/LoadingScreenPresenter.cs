@@ -16,20 +16,20 @@
         public void Initialize()
         {
             loadingScreenView.Hide();
-            stageNavigator.OnLoading += ShowLoading;
-            stageNavigator.OnLoaded += HideLoading;
+            stageNavigator.OnLoading += OnStageLoading;
+            stageNavigator.OnLoaded += OnStageLoaded;
         }
 
         public void Dispose()
         {
-            stageNavigator.OnLoading -= ShowLoading;
-            stageNavigator.OnLoaded -= HideLoading;
+            stageNavigator.OnLoading -= OnStageLoading;
+            stageNavigator.OnLoaded -= OnStageLoaded;
             GC.SuppressFinalize(this);
         }
 
         private readonly HashSet<StageName> stageNamesForLoading = new() { StageName.VirtualSpace };
 
-        private void ShowLoading(StageName stageName)
+        private void OnStageLoading(StageName stageName)
         {
             if (stageNamesForLoading.Contains(stageName))
             {
@@ -37,7 +37,7 @@
             }
         }
 
-        private void HideLoading(StageName stageName)
+        private void OnStageLoaded(StageName stageName)
         {
             if (stageNamesForLoading.Contains(stageName))
             {
