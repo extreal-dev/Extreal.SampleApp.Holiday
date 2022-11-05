@@ -10,7 +10,7 @@
     public class AvatarSelectionScreenPresenter : IStartable
     {
         [Inject]
-        private readonly ISceneTransitioner<StageName> sceneTransitioner;
+        private readonly StageNavigator stageNavigator;
 
         [Inject]
         private readonly AvatarSelectionScreenView avatarSelectionScreenView;
@@ -18,7 +18,7 @@
         public void Start() =>
             avatarSelectionScreenView.OnGoButtonClicked.Subscribe(_ =>
             {
-                sceneTransitioner.ReplaceAsync(StageName.SpaceSelectionScreen).Forget();
+                stageNavigator.ReplaceAsync(StageName.SpaceSelectionScreen).Forget();
             });
     }
 }

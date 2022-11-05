@@ -1,6 +1,5 @@
 ﻿namespace Extreal.SampleApp.Holiday.App
 {
-    using App;
     using Core.SceneTransition;
     using UnityEngine;
     using VContainer;
@@ -14,6 +13,7 @@
         {
             builder.RegisterInstance(stageConfig).AsImplementedInterfaces();
             builder.Register<SceneTransitioner<StageName, SceneName>>(Lifetime.Singleton).AsImplementedInterfaces();
+            builder.Register<StageNavigator>(Lifetime.Singleton);
 
             builder.RegisterEntryPoint<AppPresenter>();
         }

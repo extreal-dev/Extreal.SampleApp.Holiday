@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9cb3eb76981472e890e2be2f66bd559, type: 3}
   m_Name: StageConfig
   m_EditorClassIdentifier: 
-  commonScenes: 
+  commonScenes: cb000000
   stages:
   - sceneName: 100
     unitySceneNames: 6400000065000000c8000000
@@ -21,4 +21,4 @@ MonoBehaviour:
   - sceneName: 102
     unitySceneNames: 6400000065000000ca000000
   - sceneName: 200
-    unitySceneNames: 67000000660000002c010000
+    unitySceneNames: 670000002c01000066000000

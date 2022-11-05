@@ -10,7 +10,7 @@
     public class SpaceSelectionScreenPresenter : IStartable
     {
         [Inject]
-        private readonly ISceneTransitioner<StageName> sceneTransitioner;
+        private readonly StageNavigator stageNavigator;
 
         [Inject]
         private readonly SpaceSelectionScreenView spaceSelectionScreenView;
@@ -18,7 +18,7 @@
         public void Start() =>
             spaceSelectionScreenView.OnGoButtonClicked.Subscribe(_ =>
             {
-                sceneTransitioner.ReplaceAsync(StageName.VirtualSpace).Forget();
+                stageNavigator.ReplaceAsync(StageName.VirtualSpace).Forget();
             });
     }
 }

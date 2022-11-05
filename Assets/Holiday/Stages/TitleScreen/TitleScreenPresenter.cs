@@ -10,7 +10,7 @@
     public class TitleScreenPresenter : IStartable
     {
         [Inject]
-        private readonly ISceneTransitioner<StageName> sceneTransitioner;
+        private readonly StageNavigator stageNavigator;
 
         [Inject]
         private readonly TitleScreenView titleScreenView;
@@ -18,7 +18,7 @@
         public void Start() =>
             titleScreenView.OnGoButtonClicked.Subscribe(_ =>
             {
-                sceneTransitioner.ReplaceAsync(StageName.AvatarSelectionScreen).Forget();
+                stageNavigator.ReplaceAsync(StageName.AvatarSelectionScreen).Forget();
             });
     }
 }
