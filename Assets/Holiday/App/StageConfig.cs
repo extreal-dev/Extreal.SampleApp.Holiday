@@ -1,8 +1,8 @@
 ﻿namespace Extreal.SampleApp.Holiday.App
 {
-    using UnityEngine;
     using System.Collections.Generic;
     using Core.SceneTransition;
+    using UnityEngine;
 
     [CreateAssetMenu(
         menuName = "Config/" + nameof(StageConfig),

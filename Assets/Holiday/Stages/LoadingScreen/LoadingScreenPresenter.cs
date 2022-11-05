@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using App;
-    using Core.Logging;
     using VContainer;
     using VContainer.Unity;
 

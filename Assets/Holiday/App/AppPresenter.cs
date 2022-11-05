@@ -1,7 +1,6 @@
 ﻿namespace Extreal.SampleApp.Holiday.App
 {
     using System.Threading;
-    using App;
     using Core.SceneTransition;
     using Cysharp.Threading.Tasks;
     using VContainer.Unity;

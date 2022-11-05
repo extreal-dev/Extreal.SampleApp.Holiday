@@ -1,7 +1,6 @@
 ﻿namespace Extreal.SampleApp.Holiday.Stages.BackgroundScreen
 {
     using App;
-    using UnityEngine;
     using VContainer;
     using VContainer.Unity;
 

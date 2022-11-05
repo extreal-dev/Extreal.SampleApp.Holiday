@@ -1,7 +1,6 @@
 ﻿namespace Extreal.SampleApp.Holiday.Scenes.TitlePage
 {
     using App;
-    using Core.SceneTransition;
     using Cysharp.Threading.Tasks;
     using UniRx;
     using VContainer;
