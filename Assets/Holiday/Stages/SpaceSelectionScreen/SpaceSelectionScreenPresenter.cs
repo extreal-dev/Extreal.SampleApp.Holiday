@@ -8,11 +8,9 @@
 
     public class SpaceSelectionScreenPresenter : IStartable
     {
-        [Inject]
-        private readonly StageNavigator stageNavigator;
+        [Inject] private StageNavigator stageNavigator;
 
-        [Inject]
-        private readonly SpaceSelectionScreenView spaceSelectionScreenView;
+        [Inject] private SpaceSelectionScreenView spaceSelectionScreenView;
 
         public void Start() =>
             spaceSelectionScreenView.OnGoButtonClicked.Subscribe(_ =>

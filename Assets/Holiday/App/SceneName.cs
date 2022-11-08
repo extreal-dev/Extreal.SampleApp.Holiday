@@ -2,6 +2,9 @@
 {
     public enum SceneName
     {
+        // Models
+        Models = 0,
+
         // Control
         CameraControl = 100,
         LightControl = 103,
@@ -15,7 +18,7 @@
         AvatarSelectionScreen = 201,
         SpaceSelectionScreen = 202,
 
-        // Room
+        // Space
         VirtualSpace = 300,
     }
 }

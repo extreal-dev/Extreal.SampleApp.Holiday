@@ -7,11 +7,9 @@
 
     public class BackgroundScreenPresenter : IInitializable, IDisposable
     {
-        [Inject]
-        private StageNavigator stageNavigator;
+        [Inject] private StageNavigator stageNavigator;
 
-        [Inject]
-        private BackgroundScreenView backgroundScreenView;
+        [Inject] private BackgroundScreenView backgroundScreenView;
 
         public void Initialize()
         {

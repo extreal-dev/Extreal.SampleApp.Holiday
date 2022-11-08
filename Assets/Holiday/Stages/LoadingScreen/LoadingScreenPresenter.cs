@@ -1,16 +1,15 @@
 ﻿namespace Extreal.SampleApp.Holiday.Stages.LoadingScreen
 {
     using System;
-    using System.Collections.Generic;
     using App;
     using VContainer;
     using VContainer.Unity;
 
     public class LoadingScreenPresenter : IInitializable, IDisposable
     {
-        [Inject] private readonly StageNavigator stageNavigator;
+        [Inject] private StageNavigator stageNavigator;
 
-        [Inject] private readonly LoadingScreenView loadingScreenView;
+        [Inject] private LoadingScreenView loadingScreenView;
 
         public void Initialize()
         {

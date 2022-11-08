@@ -11,8 +11,7 @@
     /// </summary>
     public class StageNavigator
     {
-        [Inject]
-        private ISceneTransitioner<StageName> sceneTransitioner;
+        [Inject] private ISceneTransitioner<StageName> sceneTransitioner;
 
         public event Action<StageName> OnLoading;
         public event Action<StageName> OnLoaded;

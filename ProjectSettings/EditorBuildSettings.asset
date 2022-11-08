@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Holiday/App/App.unity
     guid: d5a2b30336f757949b77910e8bd24532
   - enabled: 1
+    path: Assets/Holiday/Models/Models.unity
+    guid: a981ee5282318c04c9ebd7ef97157215
+  - enabled: 1
     path: Assets/Holiday/Controls/CameraControl/CameraControl.unity
     guid: 074921bc0edeced419261330d35b6531
   - enabled: 1

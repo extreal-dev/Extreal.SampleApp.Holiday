@@ -135,6 +135,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: UI_Canvas_StarterAssetsInputs_Joysticks
       objectReference: {fileID: 0}
+    - target: {fileID: 4587337015479408046, guid: 4b98e76d7ebb41947b3e67fbcc670f4c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7661377541570261408, guid: 4b98e76d7ebb41947b3e67fbcc670f4c,
         type: 3}
       propertyPath: m_Pivot.x

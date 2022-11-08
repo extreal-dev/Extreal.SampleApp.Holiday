@@ -5,6 +5,7 @@
         "UniRx",
         "UniTask",
         "VContainer",
+        "Unity.TextMeshPro",
         "Extreal.Core.Logging",
         "Extreal.Core.SceneTransition",
         "Extreal.SampleApp.Holiday.Analyzer"

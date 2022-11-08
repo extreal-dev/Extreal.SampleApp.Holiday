@@ -7,7 +7,7 @@
     [CreateAssetMenu(
         menuName = "Config/" + nameof(StageConfig),
         fileName = nameof(StageConfig))]
-    public class StageConfig: ScriptableObject, ISceneConfig<StageName, SceneName>
+    public class StageConfig : ScriptableObject, ISceneConfig<StageName, SceneName>
     {
         [SerializeField] private List<SceneName> commonScenes;
         [SerializeField] private List<Scene<StageName, SceneName>> stages;

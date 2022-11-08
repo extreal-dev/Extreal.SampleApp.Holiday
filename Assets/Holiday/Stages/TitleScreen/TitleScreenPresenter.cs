@@ -8,11 +8,9 @@
 
     public class TitleScreenPresenter : IStartable
     {
-        [Inject]
-        private readonly StageNavigator stageNavigator;
+        [Inject] private StageNavigator stageNavigator;
 
-        [Inject]
-        private readonly TitleScreenView titleScreenView;
+        [Inject] private TitleScreenView titleScreenView;
 
         public void Start() =>
             titleScreenView.OnGoButtonClicked.Subscribe(_ =>
