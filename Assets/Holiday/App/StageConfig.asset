@@ -18,7 +18,5 @@ MonoBehaviour:
     unitySceneNames: 64000000c8000000
   - sceneName: 101
     unitySceneNames: 64000000c9000000
-  - sceneName: 102
-    unitySceneNames: 64000000ca000000
   - sceneName: 200
     unitySceneNames: 2c01000066000000

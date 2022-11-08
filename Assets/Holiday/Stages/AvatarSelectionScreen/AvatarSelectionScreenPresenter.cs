@@ -25,17 +25,17 @@
 
             avatarSelectionScreenView.SetInitialValues(player.Name.Value, player.Avatar.Value.ToString());
 
-            avatarSelectionScreenView.OnGoButtonClicked.Subscribe(_ =>
-            {
-                stageNavigator.ReplaceAsync(StageName.SpaceSelectionScreen).Forget();
-            });
-
             avatarSelectionScreenView.OnNameChanged.Subscribe(player.SetName);
 
             avatarSelectionScreenView.OnAvatarChanged.Subscribe(avatarName =>
             {
                 var avatar = avatarRepository.Avatars.Find(avatar => avatar.AvatarName.ToString() == avatarName);
                 player.SetAvatar(avatar.AvatarName);
+            });
+
+            avatarSelectionScreenView.OnGoButtonClicked.Subscribe(_ =>
+            {
+                stageNavigator.ReplaceAsync(StageName.VirtualSpace).Forget();
             });
         }
     }

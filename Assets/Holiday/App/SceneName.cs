@@ -16,7 +16,6 @@
         LoadingScreen = 203,
         TitleScreen = 200,
         AvatarSelectionScreen = 201,
-        SpaceSelectionScreen = 202,
 
         // Space
         VirtualSpace = 300,
