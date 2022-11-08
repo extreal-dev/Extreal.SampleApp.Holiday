@@ -22,11 +22,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
   - m_GUID: c4dcf09e90594b94eaca4be66b398d00
-    m_Address: PlayerAmy
+    m_Address: PlayerNinja
     m_ReadOnly: 0
     m_SerializedLabels: []
   - m_GUID: ba2caef93fa79a74bb795ceb4cebc791
-    m_Address: PlayerNinja
+    m_Address: PlayerAmy
     m_ReadOnly: 0
     m_SerializedLabels: []
   - m_GUID: 1322c5325c1a1b34bbfd88c2693c7f31

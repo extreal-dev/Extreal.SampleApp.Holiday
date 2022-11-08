@@ -1,5 +1,5 @@
 https://www.mixamo.com/
 
 Ch03: Michelle
-Ch24: Amy
-Ch46: Ninja
+Ch24: Ninja
+Ch46: Amy
