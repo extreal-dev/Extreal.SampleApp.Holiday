@@ -2,10 +2,12 @@
     "name": "Extreal.SampleApp.Holiday",
     "rootNamespace": "Extreal.SampleApp.Holiday",
     "references": [
+        "Unity.ResourceManager",
+        "Unity.Addressables",
+        "Unity.TextMeshPro",
         "UniRx",
         "UniTask",
         "VContainer",
-        "Unity.TextMeshPro",
         "Extreal.Core.Logging",
         "Extreal.Core.SceneTransition",
         "Extreal.SampleApp.Holiday.Analyzer"

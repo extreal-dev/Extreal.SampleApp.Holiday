@@ -7,11 +7,12 @@
 
     public class ModelsScope : LifetimeScope
     {
+        [SerializeField] private Player player;
         [SerializeField] private BuiltinAvatarRepository builtinAvatarRepository;
 
         protected override void Configure(IContainerBuilder builder)
         {
-            builder.Register<Player>(Lifetime.Singleton);
+            builder.RegisterInstance(player);
 
             builder.RegisterInstance(builtinAvatarRepository).AsImplementedInterfaces();
         }

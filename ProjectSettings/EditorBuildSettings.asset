@@ -42,5 +42,7 @@ EditorBuildSettings:
     path: Assets/Holiday/Stages/VirtualSpace/VirtualSpace.unity
     guid: 6998577d024e09143869c5c8099418a0
   m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: 1c5b30508a76c8e49b630eaba074f4f3,
+      type: 2}
     com.unity.input.settings: {fileID: 11400000, guid: 9e7be553448fa2546aea5752021cbcf7,
       type: 2}
