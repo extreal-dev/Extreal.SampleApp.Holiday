@@ -39,15 +39,16 @@
             character = await LoadCharacterAsync();
             if (character != null)
             {
-                player.transform.Find("Geometry").gameObject.SetActive(false);
-                character.transform.parent = player.transform;
+                var playerTransform = player.transform.Find("PlayerArmature").transform;
+                playerTransform.Find("Geometry").gameObject.SetActive(false);
+                character.transform.parent = playerTransform;
             }
         }
 
         private static async UniTask<GameObject> LoadPlayerAsync()
         {
             var handle = Addressables.InstantiateAsync("PlayerPrefab");
-            return await handle.Task.ConfigureAwait(false);
+            return await handle.Task;
         }
 
         private async UniTask<GameObject> LoadCharacterAsync()
@@ -56,8 +57,8 @@
             {
                 return null;
             }
-            var handle = Addressables.LoadAssetAsync<GameObject>($"Player{avatar.Value}");
-            return await handle.Task.ConfigureAwait(false);
+            var handle = Addressables.InstantiateAsync($"Player{avatar.Value}");
+            return await handle.Task;
         }
 
         private void OnDestroy()
