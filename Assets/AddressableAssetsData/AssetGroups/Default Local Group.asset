@@ -17,20 +17,16 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: f2b2967d531f20348b75f02e0528aacd
   m_SerializeEntries:
-  - m_GUID: 7dd2b2c5852f9a94f802668541508153
-    m_Address: PlayerMichelle
+  - m_GUID: 64afc0822bd0b0a46b1051366da270c4
+    m_Address: AvatarArmature
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: c4dcf09e90594b94eaca4be66b398d00
-    m_Address: PlayerNinja
+  - m_GUID: 389ab924fbead874980c9ab0aa6d7bc2
+    m_Address: AvatarMichelle
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: ba2caef93fa79a74bb795ceb4cebc791
-    m_Address: PlayerAmy
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 1322c5325c1a1b34bbfd88c2693c7f31
-    m_Address: PlayerPrefab
+  - m_GUID: 7957be9b182ed7f4e94d8c125af65fa4
+    m_Address: AvatarAmy
     m_ReadOnly: 0
     m_SerializedLabels: []
   m_ReadOnly: 0
