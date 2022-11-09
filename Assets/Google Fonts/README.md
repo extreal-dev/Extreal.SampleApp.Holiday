@@ -1,4 +1,4 @@
-フォントは次の手順で作成しました。
+フォントは次の手順で作成しています。
 
 - フォントをダウンロードします。
   - https://fonts.google.com/noto/specimen/Noto+Sans+JP
