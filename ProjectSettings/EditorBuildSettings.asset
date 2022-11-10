@@ -36,9 +36,6 @@ EditorBuildSettings:
     path: Assets/Holiday/Stages/AvatarSelectionScreen/AvatarSelectionScreen.unity
     guid: d5fc57acb41ec3d4ca23670f58b9cd05
   - enabled: 1
-    path: Assets/Holiday/Stages/SpaceSelectionScreen/SpaceSelectionScreen.unity
-    guid: 5c16026327fb92147b755cf110161d29
-  - enabled: 1
     path: Assets/Holiday/Stages/VirtualSpace/VirtualSpace.unity
     guid: 6998577d024e09143869c5c8099418a0
   m_configObjects:
