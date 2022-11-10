@@ -14,20 +14,20 @@
         [SerializeField] private TMP_Dropdown avatarDropdown;
         [SerializeField] private Button goButton;
 
-        private readonly List<string> avatars = new List<string>();
+        private readonly List<string> avatarNames = new List<string>();
 
-        public void Initialize(List<string> avatars)
+        public void Initialize(List<string> avatarNames)
         {
-            this.avatars.Clear();
-            this.avatars.AddRange(avatars);
+            this.avatarNames.Clear();
+            this.avatarNames.AddRange(avatarNames);
             avatarDropdown.options =
-                this.avatars.Select(avatar => new TMP_Dropdown.OptionData(avatar.ToString())).ToList();
+                this.avatarNames.Select(avatarName => new TMP_Dropdown.OptionData(avatarName)).ToList();
         }
 
-        public void SetInitialValues(string name, string avatar)
+        public void SetInitialValues(string name, string avatarName)
         {
             nameInputField.text = name;
-            avatarDropdown.value = avatars.IndexOf(avatar);
+            avatarDropdown.value = avatarNames.IndexOf(avatarName);
         }
 
         public IObservable<string> OnNameChanged =>
@@ -35,7 +35,7 @@
 
         public IObservable<string> OnAvatarChanged =>
             avatarDropdown.onValueChanged.AsObservable()
-                .TakeUntilDestroy(this).Select(index => avatars[index].ToString());
+                .TakeUntilDestroy(this).Select(index => avatarNames[index]);
 
         public IObservable<Unit> OnGoButtonClicked => goButton.OnClickAsObservable().TakeUntilDestroy(this);
     }

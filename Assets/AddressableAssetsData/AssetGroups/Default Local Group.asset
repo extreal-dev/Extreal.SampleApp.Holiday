@@ -17,16 +17,16 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: f2b2967d531f20348b75f02e0528aacd
   m_SerializeEntries:
-  - m_GUID: 64afc0822bd0b0a46b1051366da270c4
+  - m_GUID: c6ae014bfb0f10d45a7451f05c0c220b
     m_Address: AvatarArmature
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: 389ab924fbead874980c9ab0aa6d7bc2
-    m_Address: AvatarMichelle
+  - m_GUID: f3feaef2eae3f22419a474298dec3ac8
+    m_Address: AvatarAmy
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: 7957be9b182ed7f4e94d8c125af65fa4
-    m_Address: AvatarAmy
+  - m_GUID: be07bc4eb998a0241b3f668851cdeca7
+    m_Address: AvatarMichelle
     m_ReadOnly: 0
     m_SerializedLabels: []
   m_ReadOnly: 0

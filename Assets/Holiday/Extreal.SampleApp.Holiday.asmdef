@@ -2,6 +2,7 @@
     "name": "Extreal.SampleApp.Holiday",
     "rootNamespace": "Extreal.SampleApp.Holiday",
     "references": [
+        "Cinemachine",
         "Unity.ResourceManager",
         "Unity.Addressables",
         "Unity.TextMeshPro",

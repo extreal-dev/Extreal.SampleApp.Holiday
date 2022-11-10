@@ -1,75 +1,70 @@
 ﻿namespace Extreal.SampleApp.Holiday.Models
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using Cinemachine;
     using Core.Logging;
     using Cysharp.Threading.Tasks;
     using UniRx;
     using UnityEngine;
     using UnityEngine.AddressableAssets;
+    using VContainer;
 
     public class Player : MonoBehaviour
     {
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(Player));
 
-        private new readonly ReactiveProperty<string> name = new("Guest");
-        private readonly ReactiveProperty<AvatarName> avatar = new(AvatarName.Armature);
-
         public IReadOnlyReactiveProperty<string> Name => name;
-        public IReadOnlyReactiveProperty<AvatarName> Avatar => avatar;
+        private new readonly ReactiveProperty<string> name = new();
+
+        public IReadOnlyReactiveProperty<Avatar> Avatar => avatar;
+        private readonly ReactiveProperty<Avatar> avatar = new();
+
+        [Inject] private IAvatarRepository avatarRepository;
+        public List<Avatar> Avatars { get; private set; }
+
+        private GameObject playerAvatar;
+
+        private void Start()
+        {
+            Avatars = avatarRepository.Avatars;
+            name.Value = "Guest";
+            avatar.Value = Avatars.First();
+        }
 
         public void SetName(string name) => this.name.Value = name;
 
-        public void SetAvatar(AvatarName avatar) => this.avatar.Value = avatar;
-
-        private GameObject player;
-        private GameObject character;
+        public void SetAvatar(string avatarName) => avatar.Value = Avatars.Find(a => a.Name == avatarName);
 
         public async UniTask CreateAsync()
         {
             if (Logger.IsDebug())
             {
-                Logger.LogDebug($"spawn: name: {name} avatar: {avatar}");
+                Logger.LogDebug($"spawn: name: {name} avatar: {avatar.Value.Name}");
             }
 
-            if (player != null)
+            if (playerAvatar != null)
             {
                 OnDestroy();
             }
 
-            player = await LoadPlayerAsync();
-            character = await LoadCharacterAsync();
-            if (character != null)
-            {
-                var playerTransform = player.transform.Find("PlayerArmature").transform;
-                playerTransform.Find("Geometry").gameObject.SetActive(false);
-                character.transform.parent = playerTransform;
-            }
+            var handle = Addressables.InstantiateAsync(avatar.Value.AssetName);
+            playerAvatar = await handle.Task;
+            SetPlayerCamera();
         }
 
-        private static async UniTask<GameObject> LoadPlayerAsync()
+        private static void SetPlayerCamera()
         {
-            var handle = Addressables.InstantiateAsync("PlayerPrefab");
-            return await handle.Task;
-        }
-
-        private async UniTask<GameObject> LoadCharacterAsync()
-        {
-            if (AvatarName.Armature == avatar.Value)
-            {
-                return null;
-            }
-            var handle = Addressables.InstantiateAsync($"Player{avatar.Value}");
-            return await handle.Task;
+            var playerFollowCamera = FindObjectOfType<CinemachineVirtualCamera>();
+            var playerCameraRoot = GameObject.FindGameObjectWithTag("CinemachineTarget");
+            playerFollowCamera.Follow = playerCameraRoot.transform;
         }
 
         private void OnDestroy()
         {
-            if (character != null)
+            if (playerAvatar != null)
             {
-                Addressables.ReleaseInstance(character);
-            }
-            if (player != null)
-            {
-                Addressables.ReleaseInstance(player);
+                Addressables.ReleaseInstance(playerAvatar);
             }
         }
     }

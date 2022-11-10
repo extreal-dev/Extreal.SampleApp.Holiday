@@ -2,6 +2,7 @@
 {
     using System.Linq;
     using App;
+    using Core.Logging;
     using Cysharp.Threading.Tasks;
     using Models;
     using UniRx;
@@ -10,28 +11,29 @@
 
     public class AvatarSelectionScreenPresenter : IStartable
     {
+        private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(AvatarSelectionScreenPresenter));
+
         [Inject] private StageNavigator stageNavigator;
 
         [Inject] private AvatarSelectionScreenView avatarSelectionScreenView;
 
         [Inject] private Player player;
 
-        [Inject] private IAvatarRepository avatarRepository;
-
         public void Start()
         {
-            var avatars = avatarRepository.Avatars.Select(avatar => avatar.AvatarName.ToString()).ToList();
+            if (Logger.IsDebug())
+            {
+                Logger.LogDebug($"player: name: {player.Name.Value} avatar: {player.Avatar.Value.Name}");
+            }
+
+            var avatars = player.Avatars.Select(avatar => avatar.Name).ToList();
             avatarSelectionScreenView.Initialize(avatars);
 
-            avatarSelectionScreenView.SetInitialValues(player.Name.Value, player.Avatar.Value.ToString());
+            avatarSelectionScreenView.SetInitialValues(player.Name.Value, player.Avatar.Value.Name);
 
             avatarSelectionScreenView.OnNameChanged.Subscribe(player.SetName);
 
-            avatarSelectionScreenView.OnAvatarChanged.Subscribe(avatarName =>
-            {
-                var avatar = avatarRepository.Avatars.Find(avatar => avatar.AvatarName.ToString() == avatarName);
-                player.SetAvatar(avatar.AvatarName);
-            });
+            avatarSelectionScreenView.OnAvatarChanged.Subscribe(player.SetAvatar);
 
             avatarSelectionScreenView.OnGoButtonClicked.Subscribe(_ =>
             {

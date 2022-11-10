@@ -178,7 +178,7 @@ PrefabInstance:
     - target: {fileID: 8480354736583352232, guid: 31d7acdb6d79109489d5c76b6cf90305,
         type: 3}
       propertyPath: m_Name
-      value: Screen
+      value: ScreenCanvas
       objectReference: {fileID: 0}
     - target: {fileID: 8480354736583352236, guid: 31d7acdb6d79109489d5c76b6cf90305,
         type: 3}

@@ -6,10 +6,10 @@
     [Serializable]
     public class Avatar
     {
-        [SerializeField] private AvatarName avatarName;
+        [SerializeField] private string name;
         [SerializeField] private string assetName;
 
-        public AvatarName AvatarName => avatarName;
+        public string Name => name;
         public string AssetName => assetName;
     }
 }

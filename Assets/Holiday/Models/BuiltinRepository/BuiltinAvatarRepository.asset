@@ -13,11 +13,9 @@ MonoBehaviour:
   m_Name: BuiltinAvatarRepository
   m_EditorClassIdentifier: 
   avatars:
-  - avatarName: 0
-    assetName: 
-  - avatarName: 1
-    assetName: 
-  - avatarName: 2
-    assetName: 
-  - avatarName: 3
-    assetName: 
+  - name: Armature
+    assetName: AvatarArmature
+  - name: Michelle
+    assetName: AvatarMichelle
+  - name: Amy
+    assetName: AvatarAmy
