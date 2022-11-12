@@ -433,6 +433,8 @@ dotnet_diagnostic.CC0045.severity = none
 dotnet_diagnostic.CC0057.severity = none
 # Method is not used.
 dotnet_diagnostic.CC0068.severity = none
+# Consider using ConfigureAwait(false) on the awaited task.
+dotnet_diagnostic.CC0070.severity = none
 # Introduce a field for parameter
 dotnet_diagnostic.CC0071.severity = none
 # Remove 'Async' from method name that doesn't return 'Task'.
