@@ -2,30 +2,48 @@
 {
     using System;
     using App;
+    using Cysharp.Threading.Tasks;
+    using Models;
+    using UniRx;
     using VContainer;
     using VContainer.Unity;
 
     public class LoadingScreenPresenter : IInitializable, IDisposable
     {
         [Inject] private StageNavigator stageNavigator;
-
         [Inject] private LoadingScreenView loadingScreenView;
+        [Inject] private Player player;
+
+        private readonly CompositeDisposable compositeDisposable = new();
 
         public void Initialize()
         {
             stageNavigator.OnLoading += OnStageLoading;
-            stageNavigator.OnLoaded += OnStageLoaded;
+            player.IsPlaying.Subscribe(OnPlayerPlayingChangedAsync).AddTo(compositeDisposable);
         }
 
         public void Dispose()
         {
             stageNavigator.OnLoading -= OnStageLoading;
-            stageNavigator.OnLoaded -= OnStageLoaded;
+            compositeDisposable?.Dispose();
             GC.SuppressFinalize(this);
         }
 
-        private void OnStageLoading(StageName stageName) => loadingScreenView.Show(stageName);
+        private void OnStageLoading(StageName stageName)
+        {
+            if (AppUtils.IsSpace(stageName))
+            {
+                loadingScreenView.Show();
+            }
+        }
 
-        private void OnStageLoaded(StageName stageName) => loadingScreenView.Hide(stageName);
+        private async void OnPlayerPlayingChangedAsync(bool isPlaying)
+        {
+            if (isPlaying)
+            {
+                await UniTask.Delay(TimeSpan.FromMilliseconds(200));
+                loadingScreenView.Hide();
+            }
+        }
     }
 }

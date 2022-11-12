@@ -1,7 +1,9 @@
 ﻿namespace Extreal.SampleApp.Holiday.Models
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Cinemachine;
     using Core.Logging;
     using Cysharp.Threading.Tasks;
     using UniRx;
@@ -25,11 +27,11 @@
         [Inject] private IAvatarRepository avatarRepository;
         public List<Avatar> Avatars { get; private set; }
 
-        public Transform CameraRoot => playerAvatar.gameObject.transform.Find("PlayerCameraRoot");
+        public Transform CameraRoot => player.gameObject.transform.Find("PlayerCameraRoot");
 
-        private GameObject playerAvatar;
+        private GameObject player;
 
-        private void Start()
+        private void Awake()
         {
             Avatars = avatarRepository.Avatars;
             name.Value = "Guest";
@@ -41,20 +43,24 @@
 
         public void SetAvatar(string avatarName) => avatar.Value = Avatars.Find(a => a.Name == avatarName);
 
-        public async UniTask CreateAsync()
+        public async UniTask SpawnAsync()
         {
             if (Logger.IsDebug())
             {
                 Logger.LogDebug($"spawn: name: {name} avatar: {avatar.Value.Name}");
             }
 
-            if (playerAvatar != null)
+            if (player != null)
             {
                 OnDestroy();
             }
 
             var handle = Addressables.InstantiateAsync(avatar.Value.AssetName);
-            playerAvatar = await handle.Task;
+            player = await handle.Task;
+
+            var playerFollowCamera = FindObjectOfType<CinemachineVirtualCamera>();
+            var playerCameraRoot = player.gameObject.transform.Find("PlayerCameraRoot");
+            playerFollowCamera.Follow = playerCameraRoot.transform;
 
             isPlaying.Value = true;
         }
@@ -63,9 +69,9 @@
         {
             isPlaying.Value = false;
 
-            if (playerAvatar != null)
+            if (player != null)
             {
-                Addressables.ReleaseInstance(playerAvatar);
+                Addressables.ReleaseInstance(player);
             }
         }
     }
