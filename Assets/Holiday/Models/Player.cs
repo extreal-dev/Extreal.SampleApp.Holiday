@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Cinemachine;
     using Core.Logging;
     using Cysharp.Threading.Tasks;
     using UniRx;
@@ -20,8 +19,13 @@
         public IReadOnlyReactiveProperty<Avatar> Avatar => avatar;
         private readonly ReactiveProperty<Avatar> avatar = new();
 
+        public IReadOnlyReactiveProperty<bool> IsPlaying => isPlaying;
+        private readonly ReactiveProperty<bool> isPlaying = new();
+
         [Inject] private IAvatarRepository avatarRepository;
         public List<Avatar> Avatars { get; private set; }
+
+        public Transform CameraRoot => playerAvatar.gameObject.transform.Find("PlayerCameraRoot");
 
         private GameObject playerAvatar;
 
@@ -30,6 +34,7 @@
             Avatars = avatarRepository.Avatars;
             name.Value = "Guest";
             avatar.Value = Avatars.First();
+            isPlaying.Value = false;
         }
 
         public void SetName(string name) => this.name.Value = name;
@@ -50,18 +55,14 @@
 
             var handle = Addressables.InstantiateAsync(avatar.Value.AssetName);
             playerAvatar = await handle.Task;
-            SetPlayerCamera();
-        }
 
-        private static void SetPlayerCamera()
-        {
-            var playerFollowCamera = FindObjectOfType<CinemachineVirtualCamera>();
-            var playerCameraRoot = GameObject.FindGameObjectWithTag("CinemachineTarget");
-            playerFollowCamera.Follow = playerCameraRoot.transform;
+            isPlaying.Value = true;
         }
 
         private void OnDestroy()
         {
+            isPlaying.Value = false;
+
             if (playerAvatar != null)
             {
                 Addressables.ReleaseInstance(playerAvatar);
