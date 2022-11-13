@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 955397115}
   - component: {fileID: 955397114}
   m_Layer: 0
-  m_Name: view
+  m_Name: View
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -179,7 +179,7 @@ GameObject:
   - component: {fileID: 1184982254}
   - component: {fileID: 1184982255}
   m_Layer: 0
-  m_Name: scope
+  m_Name: Scope
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
