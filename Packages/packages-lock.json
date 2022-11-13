@@ -256,15 +256,15 @@
       "dependencies": {},
       "hash": "c27faeb1d4a1799428c04ea9506cddd1b5964061"
     },
-    "jp.co.tis.extreal.core.scenetransition": {
-      "version": "https://github.com/extreal-dev/Extreal.Core.SceneTransition.git",
+    "jp.co.tis.extreal.core.stagenavigation": {
+      "version": "https://github.com/extreal-dev/Extreal.Core.StageNavigation.git",
       "depth": 0,
       "source": "git",
       "dependencies": {
         "jp.co.tis.extreal.core.logging": "0.1.0",
         "com.cysharp.unitask": "2.3.1"
       },
-      "hash": "6d1ee4d7fa0b7d7fa473eda28b0a611e65c1a0a1"
+      "hash": "4579d252c7724d6b4aa66c8a5e55eadfa9c54bc9"
     },
     "jp.hadashikick.vcontainer": {
       "version": "1.11.1",

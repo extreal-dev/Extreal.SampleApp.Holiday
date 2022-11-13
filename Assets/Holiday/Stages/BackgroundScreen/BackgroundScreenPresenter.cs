@@ -2,6 +2,7 @@
 {
     using System;
     using App;
+    using Core.StageNavigation;
     using Models;
     using UniRx;
     using VContainer;
@@ -9,7 +10,7 @@
 
     public class BackgroundScreenPresenter : IInitializable, IDisposable
     {
-        [Inject] private StageNavigator stageNavigator;
+        [Inject] private IStageNavigator<StageName> stageNavigator;
         [Inject] private BackgroundScreenView backgroundScreenView;
         [Inject] private Player player;
 
@@ -17,22 +18,22 @@
 
         public void Initialize()
         {
-            stageNavigator.OnLoading += OnStageLoading;
-            stageNavigator.OnLoaded += OnStageLoaded;
+            stageNavigator.OnStageTransitioning += OnStageTransitioning;
+            stageNavigator.OnStageTransitioned += OnStageTransitioned;
             player.IsPlaying.Subscribe(OnPlayerPlayingChanged).AddTo(compositeDisposable);
         }
 
         public void Dispose()
         {
-            stageNavigator.OnLoading -= OnStageLoading;
-            stageNavigator.OnLoaded -= OnStageLoaded;
+            stageNavigator.OnStageTransitioning -= OnStageTransitioning;
+            stageNavigator.OnStageTransitioned -= OnStageTransitioned;
             compositeDisposable?.Dispose();
             GC.SuppressFinalize(this);
         }
 
-        private void OnStageLoading(StageName stageName) => backgroundScreenView.Show();
+        private void OnStageTransitioning(StageName stageName) => backgroundScreenView.Show();
 
-        private void OnStageLoaded(StageName stageName)
+        private void OnStageTransitioned(StageName stageName)
         {
             if (!AppUtils.IsSpace(stageName))
             {

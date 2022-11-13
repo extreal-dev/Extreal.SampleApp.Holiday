@@ -1,6 +1,6 @@
 ﻿namespace Extreal.SampleApp.Holiday.App
 {
-    using Core.SceneTransition;
+    using Core.StageNavigation;
     using Models;
     using UnityEngine;
     using VContainer;
@@ -17,8 +17,7 @@
 
             // Stage Config
             builder.RegisterInstance(stageConfig).AsImplementedInterfaces();
-            builder.Register<SceneTransitioner<StageName, SceneName>>(Lifetime.Singleton).AsImplementedInterfaces();
-            builder.Register<StageNavigator>(Lifetime.Singleton);
+            builder.Register<StageNavigator<StageName, SceneName>>(Lifetime.Singleton).AsImplementedInterfaces();
 
             builder.RegisterEntryPoint<AppPresenter>();
         }

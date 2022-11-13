@@ -10,7 +10,7 @@
         "UniTask",
         "VContainer",
         "Extreal.Core.Logging",
-        "Extreal.Core.SceneTransition",
+        "Extreal.Core.StageNavigation",
         "Extreal.SampleApp.Holiday.Analyzer"
     ],
     "includePlatforms": [],

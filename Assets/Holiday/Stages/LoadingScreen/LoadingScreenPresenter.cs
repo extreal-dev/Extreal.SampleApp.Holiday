@@ -2,6 +2,7 @@
 {
     using System;
     using App;
+    using Core.StageNavigation;
     using Cysharp.Threading.Tasks;
     using Models;
     using UniRx;
@@ -10,7 +11,7 @@
 
     public class LoadingScreenPresenter : IInitializable, IDisposable
     {
-        [Inject] private StageNavigator stageNavigator;
+        [Inject] private IStageNavigator<StageName> stageNavigator;
         [Inject] private LoadingScreenView loadingScreenView;
         [Inject] private Player player;
 
@@ -18,18 +19,18 @@
 
         public void Initialize()
         {
-            stageNavigator.OnLoading += OnStageLoading;
+            stageNavigator.OnStageTransitioning += OnStageTransitioning;
             player.IsPlaying.Subscribe(OnPlayerPlayingChangedAsync).AddTo(compositeDisposable);
         }
 
         public void Dispose()
         {
-            stageNavigator.OnLoading -= OnStageLoading;
+            stageNavigator.OnStageTransitioning -= OnStageTransitioning;
             compositeDisposable?.Dispose();
             GC.SuppressFinalize(this);
         }
 
-        private void OnStageLoading(StageName stageName)
+        private void OnStageTransitioning(StageName stageName)
         {
             if (AppUtils.IsSpace(stageName))
             {

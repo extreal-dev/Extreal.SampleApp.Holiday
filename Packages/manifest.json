@@ -16,7 +16,7 @@
     "com.unity.ugui": "1.0.0",
     "com.unity.visualscripting": "1.7.8",
     "jp.co.tis.extreal.core.logging": "https://github.com/extreal-dev/Extreal.Core.Logging.git",
-    "jp.co.tis.extreal.core.scenetransition": "https://github.com/extreal-dev/Extreal.Core.SceneTransition.git",
+    "jp.co.tis.extreal.core.stagenavigation": "https://github.com/extreal-dev/Extreal.Core.StageNavigation.git",
     "jp.hadashikick.vcontainer": "1.11.1",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",

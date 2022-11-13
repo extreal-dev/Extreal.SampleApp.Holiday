@@ -1,6 +1,7 @@
 ﻿namespace Extreal.SampleApp.Holiday.Stages.VirtualSpace
 {
     using App;
+    using Core.StageNavigation;
     using Cysharp.Threading.Tasks;
     using UniRx;
     using VContainer;
@@ -8,7 +9,7 @@
 
     public class VirtualSpacePresenter : IStartable
     {
-        [Inject] private StageNavigator stageNavigator;
+        [Inject] private IStageNavigator<StageName> stageNavigator;
         [Inject] private VirtualSpaceView virtualSpaceView;
 
         public void Start() =>

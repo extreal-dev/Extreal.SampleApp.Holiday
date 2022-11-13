@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   commonScenes: 000000006500000067000000cc000000cb000000
   stages:
-  - sceneName: 100
-    unitySceneNames: 64000000c8000000
-  - sceneName: 101
-    unitySceneNames: 64000000c9000000
-  - sceneName: 200
-    unitySceneNames: 660000002c010000
+  - stageName: 100
+    sceneNames: 64000000c8000000
+  - stageName: 101
+    sceneNames: 64000000c9000000
+  - stageName: 200
+    sceneNames: 660000002c010000

@@ -1,18 +1,18 @@
 ﻿namespace Extreal.SampleApp.Holiday.App
 {
     using System.Collections.Generic;
-    using Core.SceneTransition;
+    using Core.StageNavigation;
     using UnityEngine;
 
     [CreateAssetMenu(
         menuName = "Config/" + nameof(StageConfig),
         fileName = nameof(StageConfig))]
-    public class StageConfig : ScriptableObject, ISceneConfig<StageName, SceneName>
+    public class StageConfig : ScriptableObject, IStageConfig<StageName, SceneName>
     {
         [SerializeField] private List<SceneName> commonScenes;
-        [SerializeField] private List<Scene<StageName, SceneName>> stages;
+        [SerializeField] private List<Stage<StageName, SceneName>> stages;
 
-        public List<SceneName> CommonUnitySceneNames => commonScenes;
-        public List<Scene<StageName, SceneName>> Scenes => stages;
+        public List<SceneName> CommonScenes => commonScenes;
+        public List<Stage<StageName, SceneName>> Stages => stages;
     }
 }

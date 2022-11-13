@@ -3,6 +3,7 @@
     using System.Linq;
     using App;
     using Core.Logging;
+    using Core.StageNavigation;
     using Cysharp.Threading.Tasks;
     using Models;
     using UniRx;
@@ -13,7 +14,7 @@
     {
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(AvatarSelectionScreenPresenter));
 
-        [Inject] private StageNavigator stageNavigator;
+        [Inject] private IStageNavigator<StageName> stageNavigator;
 
         [Inject] private AvatarSelectionScreenView avatarSelectionScreenView;
 
