@@ -16,7 +16,7 @@
             builder.Register<Player>(Lifetime.Singleton);
 
             // Stage Config
-            builder.RegisterInstance(stageConfig).AsImplementedInterfaces();
+            builder.RegisterComponent(stageConfig).AsImplementedInterfaces();
             builder.Register<StageNavigator<StageName, SceneName>>(Lifetime.Singleton).AsImplementedInterfaces();
 
             builder.RegisterEntryPoint<AppPresenter>();
