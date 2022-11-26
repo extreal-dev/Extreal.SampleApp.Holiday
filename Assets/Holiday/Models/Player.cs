@@ -1,15 +1,15 @@
-﻿namespace Extreal.SampleApp.Holiday.Models
-{
-    using System.Collections.Generic;
-    using System.Linq;
-    using Cinemachine;
-    using Core.Logging;
-    using Cysharp.Threading.Tasks;
-    using UniRx;
-    using UnityEngine;
-    using UnityEngine.AddressableAssets;
-    using VContainer;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Cinemachine;
+using Cysharp.Threading.Tasks;
+using Extreal.Core.Logging;
+using UniRx;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
+using VContainer;
 
+namespace Extreal.SampleApp.Holiday.Models
+{
     public class Player : MonoBehaviour
     {
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(Player));

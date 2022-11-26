@@ -1,7 +1,7 @@
-﻿namespace Extreal.SampleApp.Holiday.Stages.LoadingScreen
-{
-    using UnityEngine;
+﻿using UnityEngine;
 
+namespace Extreal.SampleApp.Holiday.Stages.LoadingScreen
+{
     public class LoadingScreenView : MonoBehaviour
     {
         [SerializeField] private GameObject screen;

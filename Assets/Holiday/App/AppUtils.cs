@@ -1,8 +1,8 @@
-﻿namespace Extreal.SampleApp.Holiday.App
-{
-    using System;
-    using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
+namespace Extreal.SampleApp.Holiday.App
+{
     public static class AppUtils
     {
         private static readonly HashSet<StageName> spaceStages = new();

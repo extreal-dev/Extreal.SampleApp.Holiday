@@ -1,12 +1,12 @@
-﻿namespace Extreal.SampleApp.Holiday.Scenes.TitlePage
-{
-    using App;
-    using Core.StageNavigation;
-    using Cysharp.Threading.Tasks;
-    using UniRx;
-    using VContainer;
-    using VContainer.Unity;
+﻿using Cysharp.Threading.Tasks;
+using Extreal.Core.StageNavigation;
+using Extreal.SampleApp.Holiday.App;
+using UniRx;
+using VContainer;
+using VContainer.Unity;
 
+namespace Extreal.SampleApp.Holiday.Scenes.TitlePage
+{
     public class TitleScreenPresenter : IStartable
     {
         [Inject] private IStageNavigator<StageName> stageNavigator;

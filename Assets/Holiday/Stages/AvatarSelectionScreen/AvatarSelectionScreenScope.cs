@@ -1,9 +1,9 @@
-﻿namespace Extreal.SampleApp.Holiday.Stages.AvatarSelectionScreen
-{
-    using UnityEngine;
-    using VContainer;
-    using VContainer.Unity;
+﻿using UnityEngine;
+using VContainer;
+using VContainer.Unity;
 
+namespace Extreal.SampleApp.Holiday.Stages.AvatarSelectionScreen
+{
     public class AvatarSelectionScreenScope : LifetimeScope
     {
         [SerializeField] private AvatarSelectionScreenView avatarSelectionScreenView;

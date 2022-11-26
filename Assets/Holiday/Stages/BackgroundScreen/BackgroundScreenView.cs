@@ -1,7 +1,7 @@
-﻿namespace Extreal.SampleApp.Holiday.Stages.BackgroundScreen
-{
-    using UnityEngine;
+﻿using UnityEngine;
 
+namespace Extreal.SampleApp.Holiday.Stages.BackgroundScreen
+{
     public class BackgroundScreenView : MonoBehaviour
     {
         [SerializeField] private GameObject screen;

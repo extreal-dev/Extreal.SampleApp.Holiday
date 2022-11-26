@@ -1,11 +1,11 @@
-﻿namespace Extreal.SampleApp.Holiday.App
-{
-    using Core.StageNavigation;
-    using Models;
-    using UnityEngine;
-    using VContainer;
-    using VContainer.Unity;
+﻿using Extreal.Core.StageNavigation;
+using Extreal.SampleApp.Holiday.Models;
+using UnityEngine;
+using VContainer;
+using VContainer.Unity;
 
+namespace Extreal.SampleApp.Holiday.App
+{
     public class AppScope : LifetimeScope
     {
         [SerializeField] private StageConfig stageConfig;

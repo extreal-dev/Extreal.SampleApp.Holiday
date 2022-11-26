@@ -1,15 +1,15 @@
-﻿namespace Extreal.SampleApp.Holiday.Stages.AvatarSelectionScreen
-{
-    using System.Linq;
-    using App;
-    using Core.Logging;
-    using Core.StageNavigation;
-    using Cysharp.Threading.Tasks;
-    using Models;
-    using UniRx;
-    using VContainer;
-    using VContainer.Unity;
+﻿using System.Linq;
+using Cysharp.Threading.Tasks;
+using Extreal.Core.Logging;
+using Extreal.Core.StageNavigation;
+using Extreal.SampleApp.Holiday.App;
+using Extreal.SampleApp.Holiday.Models;
+using UniRx;
+using VContainer;
+using VContainer.Unity;
 
+namespace Extreal.SampleApp.Holiday.Stages.AvatarSelectionScreen
+{
     public class AvatarSelectionScreenPresenter : IStartable
     {
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(AvatarSelectionScreenPresenter));

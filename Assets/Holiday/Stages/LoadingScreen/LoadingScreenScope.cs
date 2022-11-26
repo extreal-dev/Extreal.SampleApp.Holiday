@@ -1,9 +1,9 @@
-﻿namespace Extreal.SampleApp.Holiday.Stages.LoadingScreen
-{
-    using UnityEngine;
-    using VContainer;
-    using VContainer.Unity;
+﻿using UnityEngine;
+using VContainer;
+using VContainer.Unity;
 
+namespace Extreal.SampleApp.Holiday.Stages.LoadingScreen
+{
     public class LoadingScreenScope : LifetimeScope
     {
         [SerializeField] private LoadingScreenView loadingScreenView;

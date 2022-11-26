@@ -1,9 +1,9 @@
-﻿namespace Extreal.SampleApp.Holiday.Scenes.TitlePage
-{
-    using UnityEngine;
-    using VContainer;
-    using VContainer.Unity;
+﻿using UnityEngine;
+using VContainer;
+using VContainer.Unity;
 
+namespace Extreal.SampleApp.Holiday.Scenes.TitlePage
+{
     public class TitleScreenScope : LifetimeScope
     {
         [SerializeField] private TitleScreenView titleScreenView;

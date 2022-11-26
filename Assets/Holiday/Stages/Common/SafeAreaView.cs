@@ -1,7 +1,7 @@
-﻿namespace Extreal.SampleApp.Holiday.Scenes.Common
-{
-    using UnityEngine;
+﻿using UnityEngine;
 
+namespace Extreal.SampleApp.Holiday.Scenes.Common
+{
     public class SafeAreaView : MonoBehaviour
     {
         private void Start()

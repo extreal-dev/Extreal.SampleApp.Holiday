@@ -1,8 +1,8 @@
+using Extreal.Core.Logging;
+using UnityEngine;
+
 namespace Extreal.SampleApp.Holiday.App
 {
-    using Core.Logging;
-    using UnityEngine;
-
     public static class AppInitializer
     {
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]

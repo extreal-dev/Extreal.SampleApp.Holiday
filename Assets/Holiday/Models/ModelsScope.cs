@@ -1,10 +1,10 @@
-﻿namespace Extreal.SampleApp.Holiday.Models
-{
-    using ScriptableObject;
-    using UnityEngine;
-    using VContainer;
-    using VContainer.Unity;
+﻿using Extreal.SampleApp.Holiday.Models.ScriptableObject;
+using UnityEngine;
+using VContainer;
+using VContainer.Unity;
 
+namespace Extreal.SampleApp.Holiday.Models
+{
     public class ModelsScope : LifetimeScope
     {
         [SerializeField] private BuiltinAvatarRepository builtinAvatarRepository;

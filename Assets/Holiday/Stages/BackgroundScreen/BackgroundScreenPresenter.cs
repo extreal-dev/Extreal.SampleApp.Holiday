@@ -1,13 +1,13 @@
-﻿namespace Extreal.SampleApp.Holiday.Stages.BackgroundScreen
-{
-    using System;
-    using App;
-    using Core.StageNavigation;
-    using Models;
-    using UniRx;
-    using VContainer;
-    using VContainer.Unity;
+﻿using System;
+using Extreal.Core.StageNavigation;
+using Extreal.SampleApp.Holiday.App;
+using Extreal.SampleApp.Holiday.Models;
+using UniRx;
+using VContainer;
+using VContainer.Unity;
 
+namespace Extreal.SampleApp.Holiday.Stages.BackgroundScreen
+{
     public class BackgroundScreenPresenter : IInitializable, IDisposable
     {
         [Inject] private IStageNavigator<StageName> stageNavigator;

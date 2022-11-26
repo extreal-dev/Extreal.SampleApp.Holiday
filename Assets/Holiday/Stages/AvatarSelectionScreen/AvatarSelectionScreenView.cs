@@ -1,13 +1,13 @@
-﻿namespace Extreal.SampleApp.Holiday.Stages.AvatarSelectionScreen
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using TMPro;
-    using UniRx;
-    using UnityEngine;
-    using UnityEngine.UI;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using TMPro;
+using UniRx;
+using UnityEngine;
+using UnityEngine.UI;
 
+namespace Extreal.SampleApp.Holiday.Stages.AvatarSelectionScreen
+{
     public class AvatarSelectionScreenView : MonoBehaviour
     {
         [SerializeField] private TMP_InputField nameInputField;

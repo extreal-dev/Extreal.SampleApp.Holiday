@@ -1,8 +1,8 @@
-﻿namespace Extreal.SampleApp.Holiday.Models
-{
-    using System;
-    using UnityEngine;
+﻿using System;
+using UnityEngine;
 
+namespace Extreal.SampleApp.Holiday.Models
+{
     [Serializable]
     public class Avatar
     {

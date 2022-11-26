@@ -1,9 +1,9 @@
-﻿namespace Extreal.SampleApp.Holiday.Stages.BackgroundScreen
-{
-    using UnityEngine;
-    using VContainer;
-    using VContainer.Unity;
+﻿using UnityEngine;
+using VContainer;
+using VContainer.Unity;
 
+namespace Extreal.SampleApp.Holiday.Stages.BackgroundScreen
+{
     public class BackgroundScreenScope : LifetimeScope
     {
         [SerializeField] private BackgroundScreenView backgroundScreenView;

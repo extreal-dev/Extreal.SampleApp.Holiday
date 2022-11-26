@@ -1,14 +1,14 @@
-﻿namespace Extreal.SampleApp.Holiday.Stages.LoadingScreen
-{
-    using System;
-    using App;
-    using Core.StageNavigation;
-    using Cysharp.Threading.Tasks;
-    using Models;
-    using UniRx;
-    using VContainer;
-    using VContainer.Unity;
+﻿using System;
+using Cysharp.Threading.Tasks;
+using Extreal.Core.StageNavigation;
+using Extreal.SampleApp.Holiday.App;
+using Extreal.SampleApp.Holiday.Models;
+using UniRx;
+using VContainer;
+using VContainer.Unity;
 
+namespace Extreal.SampleApp.Holiday.Stages.LoadingScreen
+{
     public class LoadingScreenPresenter : IInitializable, IDisposable
     {
         [Inject] private IStageNavigator<StageName> stageNavigator;

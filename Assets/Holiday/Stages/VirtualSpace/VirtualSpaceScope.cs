@@ -1,9 +1,9 @@
-﻿namespace Extreal.SampleApp.Holiday.Stages.VirtualSpace
-{
-    using UnityEngine;
-    using VContainer;
-    using VContainer.Unity;
+﻿using UnityEngine;
+using VContainer;
+using VContainer.Unity;
 
+namespace Extreal.SampleApp.Holiday.Stages.VirtualSpace
+{
     public class VirtualSpaceScope : LifetimeScope
     {
         [SerializeField] private VirtualSpaceView virtualSpaceView;
