@@ -23,12 +23,15 @@ namespace Extreal.SampleApp.Holiday.Models
         public IReadOnlyReactiveProperty<bool> IsPlaying => isPlaying;
         private readonly ReactiveProperty<bool> isPlaying = new();
 
-        [Inject] private IAvatarRepository avatarRepository;
+        private IAvatarRepository avatarRepository;
         public List<Avatar> Avatars { get; private set; }
 
         public Transform CameraRoot => player.gameObject.transform.Find("PlayerCameraRoot");
 
         private GameObject player;
+
+        [Inject]
+        public void Construct(IAvatarRepository avatarRepository) => this.avatarRepository = avatarRepository;
 
         private void Awake()
         {

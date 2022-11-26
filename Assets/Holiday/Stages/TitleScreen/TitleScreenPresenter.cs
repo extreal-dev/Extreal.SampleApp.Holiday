@@ -2,16 +2,21 @@
 using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App;
 using UniRx;
-using VContainer;
 using VContainer.Unity;
 
 namespace Extreal.SampleApp.Holiday.Scenes.TitlePage
 {
     public class TitleScreenPresenter : IStartable
     {
-        [Inject] private IStageNavigator<StageName> stageNavigator;
+        private readonly IStageNavigator<StageName> stageNavigator;
 
-        [Inject] private TitleScreenView titleScreenView;
+        private readonly TitleScreenView titleScreenView;
+
+        public TitleScreenPresenter(IStageNavigator<StageName> stageNavigator, TitleScreenView titleScreenView)
+        {
+            this.stageNavigator = stageNavigator;
+            this.titleScreenView = titleScreenView;
+        }
 
         public void Start() =>
             titleScreenView.OnGoButtonClicked.Subscribe(_ =>

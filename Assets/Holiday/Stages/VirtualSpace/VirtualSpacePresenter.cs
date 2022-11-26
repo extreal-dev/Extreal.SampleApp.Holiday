@@ -2,15 +2,20 @@
 using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App;
 using UniRx;
-using VContainer;
 using VContainer.Unity;
 
 namespace Extreal.SampleApp.Holiday.Stages.VirtualSpace
 {
     public class VirtualSpacePresenter : IStartable
     {
-        [Inject] private IStageNavigator<StageName> stageNavigator;
-        [Inject] private VirtualSpaceView virtualSpaceView;
+        private readonly IStageNavigator<StageName> stageNavigator;
+        private readonly VirtualSpaceView virtualSpaceView;
+
+        public VirtualSpacePresenter(IStageNavigator<StageName> stageNavigator, VirtualSpaceView virtualSpaceView)
+        {
+            this.stageNavigator = stageNavigator;
+            this.virtualSpaceView = virtualSpaceView;
+        }
 
         public void Start() =>
             virtualSpaceView.OnBackButtonClicked.Subscribe(_ =>

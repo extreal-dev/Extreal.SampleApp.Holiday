@@ -1,17 +1,15 @@
 ﻿using Cysharp.Threading.Tasks;
 using Extreal.SampleApp.Holiday.Models;
-using VContainer;
 using VContainer.Unity;
 
 namespace Extreal.SampleApp.Holiday.Holiday.Controls.PlayerControl
 {
     public class PlayerPresenter : IStartable
     {
-        [Inject] private Player player;
+        private readonly Player player;
 
-        public void Start()
-        {
-            player.SpawnAsync().Forget();
-        }
+        public PlayerPresenter(Player player) => this.player = player;
+
+        public void Start() => player.SpawnAsync().Forget();
     }
 }

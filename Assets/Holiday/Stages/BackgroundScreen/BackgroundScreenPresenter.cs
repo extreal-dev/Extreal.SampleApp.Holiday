@@ -3,16 +3,23 @@ using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.Models;
 using UniRx;
-using VContainer;
 using VContainer.Unity;
 
 namespace Extreal.SampleApp.Holiday.Stages.BackgroundScreen
 {
     public class BackgroundScreenPresenter : IInitializable, IDisposable
     {
-        [Inject] private IStageNavigator<StageName> stageNavigator;
-        [Inject] private BackgroundScreenView backgroundScreenView;
-        [Inject] private Player player;
+        private readonly IStageNavigator<StageName> stageNavigator;
+        private readonly BackgroundScreenView backgroundScreenView;
+        private readonly Player player;
+
+        public BackgroundScreenPresenter(IStageNavigator<StageName> stageNavigator,
+            BackgroundScreenView backgroundScreenView, Player player)
+        {
+            this.stageNavigator = stageNavigator;
+            this.backgroundScreenView = backgroundScreenView;
+            this.player = player;
+        }
 
         private CompositeDisposable compositeDisposable = new();
 

@@ -5,7 +5,6 @@ using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.Models;
 using UniRx;
-using VContainer;
 using VContainer.Unity;
 
 namespace Extreal.SampleApp.Holiday.Stages.AvatarSelectionScreen
@@ -14,11 +13,19 @@ namespace Extreal.SampleApp.Holiday.Stages.AvatarSelectionScreen
     {
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(AvatarSelectionScreenPresenter));
 
-        [Inject] private IStageNavigator<StageName> stageNavigator;
+        private readonly IStageNavigator<StageName> stageNavigator;
 
-        [Inject] private AvatarSelectionScreenView avatarSelectionScreenView;
+        private readonly AvatarSelectionScreenView avatarSelectionScreenView;
 
-        [Inject] private Player player;
+        private readonly Player player;
+
+        public AvatarSelectionScreenPresenter(IStageNavigator<StageName> stageNavigator,
+            AvatarSelectionScreenView avatarSelectionScreenView, Player player)
+        {
+            this.stageNavigator = stageNavigator;
+            this.avatarSelectionScreenView = avatarSelectionScreenView;
+            this.player = player;
+        }
 
         public void Start()
         {

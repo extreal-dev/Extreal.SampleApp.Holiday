@@ -4,18 +4,25 @@ using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.Models;
 using UniRx;
-using VContainer;
 using VContainer.Unity;
 
 namespace Extreal.SampleApp.Holiday.Stages.LoadingScreen
 {
     public class LoadingScreenPresenter : IInitializable, IDisposable
     {
-        [Inject] private IStageNavigator<StageName> stageNavigator;
-        [Inject] private LoadingScreenView loadingScreenView;
-        [Inject] private Player player;
+        private readonly IStageNavigator<StageName> stageNavigator;
+        private readonly LoadingScreenView loadingScreenView;
+        private readonly Player player;
 
         private readonly CompositeDisposable compositeDisposable = new();
+
+        public LoadingScreenPresenter(IStageNavigator<StageName> stageNavigator, LoadingScreenView loadingScreenView,
+            Player player)
+        {
+            this.stageNavigator = stageNavigator;
+            this.loadingScreenView = loadingScreenView;
+            this.player = player;
+        }
 
         public void Initialize()
         {
