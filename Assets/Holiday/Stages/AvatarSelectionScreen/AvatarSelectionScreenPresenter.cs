@@ -45,7 +45,7 @@ namespace Extreal.SampleApp.Holiday.Stages.AvatarSelectionScreen
 
             avatarSelectionScreenView.OnGoButtonClicked.Subscribe(_ =>
             {
-                stageNavigator.ReplaceAsync(StageName.VirtualSpace).Forget();
+                stageNavigator.ReplaceAsync(StageName.VirtualStage).Forget();
             });
         }
     }

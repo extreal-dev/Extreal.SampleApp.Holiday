@@ -20,7 +20,7 @@ namespace Extreal.SampleApp.Holiday.Stages.VirtualSpace
         public void Start() =>
             virtualSpaceView.OnBackButtonClicked.Subscribe(_ =>
             {
-                stageNavigator.ReplaceAsync(StageName.AvatarSelectionScreen).Forget();
+                stageNavigator.ReplaceAsync(StageName.AvatarSelectionStage).Forget();
             });
     }
 }

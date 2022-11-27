@@ -5,19 +5,11 @@ namespace Extreal.SampleApp.Holiday.App
 {
     public static class AppUtils
     {
-        private static readonly HashSet<StageName> spaceStages = new();
-
-        static AppUtils()
+        private static readonly HashSet<StageName> SpaceStages = new()
         {
-            foreach (StageName name in Enum.GetValues(typeof(StageName)))
-            {
-                if (name.ToString().EndsWith("Space"))
-                {
-                    spaceStages.Add(name);
-                }
-            }
-        }
+            StageName.VirtualStage
+        };
 
-        public static bool IsSpace(StageName stageName) => spaceStages.Contains(stageName);
+        public static bool IsSpace(StageName stageName) => SpaceStages.Contains(stageName);
     }
 }

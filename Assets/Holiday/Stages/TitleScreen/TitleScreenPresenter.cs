@@ -21,7 +21,7 @@ namespace Extreal.SampleApp.Holiday.Scenes.TitlePage
         public void Start() =>
             titleScreenView.OnGoButtonClicked.Subscribe(_ =>
             {
-                stageNavigator.ReplaceAsync(StageName.AvatarSelectionScreen).Forget();
+                stageNavigator.ReplaceAsync(StageName.AvatarSelectionStage).Forget();
             });
     }
 }

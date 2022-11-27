@@ -12,6 +12,6 @@ namespace Extreal.SampleApp.Holiday.App
         public AppPresenter(IStageNavigator<StageName> stageNavigator) => this.stageNavigator = stageNavigator;
 
         public async UniTask StartAsync(CancellationToken cancellation)
-            => await stageNavigator.ReplaceAsync(StageName.TitleScreen);
+            => await stageNavigator.ReplaceAsync(StageName.TitleStage);
     }
 }

@@ -3,10 +3,10 @@
     public enum StageName
     {
         // Screen
-        TitleScreen = 100,
-        AvatarSelectionScreen = 101,
+        TitleStage = 100,
+        AvatarSelectionStage = 101,
 
         // Room
-        VirtualSpace = 200,
+        VirtualStage = 200,
     }
 }
