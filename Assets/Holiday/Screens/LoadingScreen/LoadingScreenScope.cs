@@ -2,7 +2,7 @@
 using VContainer;
 using VContainer.Unity;
 
-namespace Extreal.SampleApp.Holiday.Stages.LoadingScreen
+namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
 {
     public class LoadingScreenScope : LifetimeScope
     {

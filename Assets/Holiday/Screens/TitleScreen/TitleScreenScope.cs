@@ -2,7 +2,7 @@
 using VContainer;
 using VContainer.Unity;
 
-namespace Extreal.SampleApp.Holiday.Scenes.TitlePage
+namespace Extreal.SampleApp.Holiday.Screens.TitleScreen
 {
     public class TitleScreenScope : LifetimeScope
     {

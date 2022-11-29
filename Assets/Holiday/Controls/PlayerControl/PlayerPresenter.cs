@@ -2,7 +2,7 @@
 using Extreal.SampleApp.Holiday.Models;
 using VContainer.Unity;
 
-namespace Extreal.SampleApp.Holiday.Holiday.Controls.PlayerControl
+namespace Extreal.SampleApp.Holiday.Controls.PlayerControl
 {
     public class PlayerPresenter : IStartable
     {

@@ -6,7 +6,7 @@ using Extreal.SampleApp.Holiday.Models;
 using UniRx;
 using VContainer.Unity;
 
-namespace Extreal.SampleApp.Holiday.Stages.LoadingScreen
+namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
 {
     public class LoadingScreenPresenter : IInitializable, IDisposable
     {

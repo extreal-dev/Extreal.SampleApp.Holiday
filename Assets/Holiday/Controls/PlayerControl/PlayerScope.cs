@@ -1,7 +1,7 @@
 ﻿using VContainer;
 using VContainer.Unity;
 
-namespace Extreal.SampleApp.Holiday.Holiday.Controls.PlayerControl
+namespace Extreal.SampleApp.Holiday.Controls.PlayerControl
 {
     public class PlayerScope : LifetimeScope
     {

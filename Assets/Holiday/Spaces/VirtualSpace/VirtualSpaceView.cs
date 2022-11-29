@@ -3,7 +3,7 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Extreal.SampleApp.Holiday.Stages.VirtualSpace
+namespace Extreal.SampleApp.Holiday.Spaces.VirtualSpace
 {
     public class VirtualSpaceView : MonoBehaviour
     {

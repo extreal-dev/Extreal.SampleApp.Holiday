@@ -2,7 +2,7 @@
 using VContainer;
 using VContainer.Unity;
 
-namespace Extreal.SampleApp.Holiday.Stages.BackgroundScreen
+namespace Extreal.SampleApp.Holiday.Screens.BackgroundScreen
 {
     public class BackgroundScreenScope : LifetimeScope
     {

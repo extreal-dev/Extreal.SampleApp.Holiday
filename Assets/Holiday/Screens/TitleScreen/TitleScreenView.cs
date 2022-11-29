@@ -3,7 +3,7 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Extreal.SampleApp.Holiday.Scenes.TitlePage
+namespace Extreal.SampleApp.Holiday.Screens.TitleScreen
 {
     public class TitleScreenView : MonoBehaviour
     {

@@ -1,12 +1,10 @@
 ﻿using UnityEngine;
 
-namespace Extreal.SampleApp.Holiday.Stages.LoadingScreen
+namespace Extreal.SampleApp.Holiday.Screens.BackgroundScreen
 {
-    public class LoadingScreenView : MonoBehaviour
+    public class BackgroundScreenView : MonoBehaviour
     {
         [SerializeField] private GameObject screen;
-
-        private void Start() => screen.SetActive(false);
 
         public void Show() => screen.SetActive(true);
 

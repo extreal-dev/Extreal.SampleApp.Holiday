@@ -5,19 +5,19 @@
         // Models
         Models = 0,
 
-        // Control
+        // Controls
         CameraControl = 100,
         LightControl = 103,
         InputControl = 101,
         PlayerControl = 102,
 
-        // Screen
+        // Screens
         BackgroundScreen = 204,
         LoadingScreen = 203,
         TitleScreen = 200,
         AvatarSelectionScreen = 201,
 
-        // Space
+        // Spaces
         VirtualSpace = 300,
     }
 }

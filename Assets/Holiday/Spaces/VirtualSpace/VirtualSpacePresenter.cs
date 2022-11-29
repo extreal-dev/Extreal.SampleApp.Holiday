@@ -4,22 +4,21 @@ using Extreal.SampleApp.Holiday.App;
 using UniRx;
 using VContainer.Unity;
 
-namespace Extreal.SampleApp.Holiday.Scenes.TitlePage
+namespace Extreal.SampleApp.Holiday.Spaces.VirtualSpace
 {
-    public class TitleScreenPresenter : IStartable
+    public class VirtualSpacePresenter : IStartable
     {
         private readonly IStageNavigator<StageName> stageNavigator;
+        private readonly VirtualSpaceView virtualSpaceView;
 
-        private readonly TitleScreenView titleScreenView;
-
-        public TitleScreenPresenter(IStageNavigator<StageName> stageNavigator, TitleScreenView titleScreenView)
+        public VirtualSpacePresenter(IStageNavigator<StageName> stageNavigator, VirtualSpaceView virtualSpaceView)
         {
             this.stageNavigator = stageNavigator;
-            this.titleScreenView = titleScreenView;
+            this.virtualSpaceView = virtualSpaceView;
         }
 
         public void Start() =>
-            titleScreenView.OnGoButtonClicked.Subscribe(_ =>
+            virtualSpaceView.OnBackButtonClicked.Subscribe(_ =>
             {
                 stageNavigator.ReplaceAsync(StageName.AvatarSelectionStage).Forget();
             });

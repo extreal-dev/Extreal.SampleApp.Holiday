@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Extreal.SampleApp.Holiday.Scenes.Common
+namespace Extreal.SampleApp.Holiday.Screens.Common
 {
     public class SafeAreaView : MonoBehaviour
     {

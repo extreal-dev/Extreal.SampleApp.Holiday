@@ -2,7 +2,7 @@
 using VContainer;
 using VContainer.Unity;
 
-namespace Extreal.SampleApp.Holiday.Stages.AvatarSelectionScreen
+namespace Extreal.SampleApp.Holiday.Screens.AvatarSelectionScreen
 {
     public class AvatarSelectionScreenScope : LifetimeScope
     {
