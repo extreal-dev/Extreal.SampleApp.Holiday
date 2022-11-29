@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Cinemachine;
 using Cysharp.Threading.Tasks;
@@ -6,34 +7,31 @@ using Extreal.Core.Logging;
 using UniRx;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using VContainer;
+using Object = UnityEngine.Object;
 
 namespace Extreal.SampleApp.Holiday.Models
 {
-    public class Player : MonoBehaviour
+    public class Player : IDisposable
     {
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(Player));
 
-        public IReadOnlyReactiveProperty<string> Name => name;
-        private new readonly ReactiveProperty<string> name = new();
+        private readonly CompositeDisposable disposable = new CompositeDisposable();
+        public IReadOnlyReactiveProperty<string> Name => name.AddTo(disposable);
+        private readonly ReactiveProperty<string> name = new();
 
-        public IReadOnlyReactiveProperty<Avatar> Avatar => avatar;
+        public IReadOnlyReactiveProperty<Avatar> Avatar => avatar.AddTo(disposable);
         private readonly ReactiveProperty<Avatar> avatar = new();
 
-        public IReadOnlyReactiveProperty<bool> IsPlaying => isPlaying;
+        public IReadOnlyReactiveProperty<bool> IsPlaying => isPlaying.AddTo(disposable);
         private readonly ReactiveProperty<bool> isPlaying = new();
 
-        private IAvatarRepository avatarRepository;
         public List<Avatar> Avatars { get; private set; }
 
         public Transform CameraRoot => player.gameObject.transform.Find("PlayerCameraRoot");
 
         private GameObject player;
 
-        [Inject]
-        public void Construct(IAvatarRepository avatarRepository) => this.avatarRepository = avatarRepository;
-
-        private void Awake()
+        public Player(IAvatarRepository avatarRepository)
         {
             Avatars = avatarRepository.Avatars;
             name.Value = "Guest";
@@ -54,27 +52,33 @@ namespace Extreal.SampleApp.Holiday.Models
 
             if (player != null)
             {
-                OnDestroy();
+                DisposePlayer();
             }
 
             var handle = Addressables.InstantiateAsync(avatar.Value.AssetName);
             player = await handle.Task;
 
-            var playerFollowCamera = FindObjectOfType<CinemachineVirtualCamera>();
+            var playerFollowCamera = Object.FindObjectOfType<CinemachineVirtualCamera>();
             var playerCameraRoot = player.gameObject.transform.Find("PlayerCameraRoot");
             playerFollowCamera.Follow = playerCameraRoot.transform;
 
             isPlaying.Value = true;
         }
 
-        private void OnDestroy()
+        private void DisposePlayer()
         {
             isPlaying.Value = false;
-
             if (player != null)
             {
                 Addressables.ReleaseInstance(player);
             }
+        }
+
+        public void Dispose()
+        {
+            disposable.Dispose();
+            DisposePlayer();
+            GC.SuppressFinalize(this);
         }
     }
 }

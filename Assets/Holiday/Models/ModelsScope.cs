@@ -8,12 +8,11 @@ namespace Extreal.SampleApp.Holiday.Models
     public class ModelsScope : LifetimeScope
     {
         [SerializeField] private BuiltinAvatarRepository builtinAvatarRepository;
-        [SerializeField] private Player player;
 
         protected override void Configure(IContainerBuilder builder)
         {
             builder.RegisterInstance(builtinAvatarRepository).AsImplementedInterfaces();
-            builder.RegisterComponent(player);
+            builder.Register<Player>(Lifetime.Singleton);
         }
     }
 }
