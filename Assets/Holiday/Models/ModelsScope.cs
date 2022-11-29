@@ -11,7 +11,7 @@ namespace Extreal.SampleApp.Holiday.Models
 
         protected override void Configure(IContainerBuilder builder)
         {
-            builder.RegisterInstance(builtinAvatarRepository).AsImplementedInterfaces();
+            builder.RegisterComponent(builtinAvatarRepository).AsImplementedInterfaces();
             builder.Register<Player>(Lifetime.Singleton);
         }
     }
