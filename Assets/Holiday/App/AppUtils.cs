@@ -5,7 +5,7 @@ namespace Extreal.SampleApp.Holiday.App
 {
     public static class AppUtils
     {
-        private static readonly HashSet<StageName> SpaceStages = new()
+        private static readonly HashSet<StageName> SpaceStages = new HashSet<StageName>
         {
             StageName.VirtualStage
         };

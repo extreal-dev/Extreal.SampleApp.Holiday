@@ -14,7 +14,7 @@ namespace Extreal.SampleApp.Holiday.Stages.LoadingScreen
         private readonly LoadingScreenView loadingScreenView;
         private readonly Player player;
 
-        private readonly CompositeDisposable compositeDisposable = new();
+        private readonly CompositeDisposable disposable = new CompositeDisposable();
 
         public LoadingScreenPresenter(IStageNavigator<StageName> stageNavigator, LoadingScreenView loadingScreenView,
             Player player)
@@ -27,13 +27,13 @@ namespace Extreal.SampleApp.Holiday.Stages.LoadingScreen
         public void Initialize()
         {
             stageNavigator.OnStageTransitioning += OnStageTransitioning;
-            player.IsPlaying.Subscribe(OnPlayerPlayingChangedAsync).AddTo(compositeDisposable);
+            player.IsPlaying.Subscribe(OnPlayerPlayingChangedAsync).AddTo(disposable);
         }
 
         public void Dispose()
         {
             stageNavigator.OnStageTransitioning -= OnStageTransitioning;
-            compositeDisposable?.Dispose();
+            disposable.Dispose();
             GC.SuppressFinalize(this);
         }
 

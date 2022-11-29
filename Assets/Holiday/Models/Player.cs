@@ -15,15 +15,14 @@ namespace Extreal.SampleApp.Holiday.Models
     {
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(Player));
 
-        private readonly CompositeDisposable disposable = new CompositeDisposable();
-        public IReadOnlyReactiveProperty<string> Name => name.AddTo(disposable);
-        private readonly ReactiveProperty<string> name = new();
+        public IReadOnlyReactiveProperty<string> Name => name;
+        private readonly ReactiveProperty<string> name = new ReactiveProperty<string>();
 
-        public IReadOnlyReactiveProperty<Avatar> Avatar => avatar.AddTo(disposable);
-        private readonly ReactiveProperty<Avatar> avatar = new();
+        public IReadOnlyReactiveProperty<Avatar> Avatar => avatar;
+        private readonly ReactiveProperty<Avatar> avatar = new ReactiveProperty<Avatar>();
 
-        public IReadOnlyReactiveProperty<bool> IsPlaying => isPlaying.AddTo(disposable);
-        private readonly ReactiveProperty<bool> isPlaying = new();
+        public IReadOnlyReactiveProperty<bool> IsPlaying => isPlaying;
+        private readonly ReactiveProperty<bool> isPlaying = new ReactiveProperty<bool>();
 
         public List<Avatar> Avatars { get; private set; }
 
@@ -76,7 +75,9 @@ namespace Extreal.SampleApp.Holiday.Models
 
         public void Dispose()
         {
-            disposable.Dispose();
+            name.Dispose();
+            avatar.Dispose();
+            isPlaying.Dispose();
             DisposePlayer();
             GC.SuppressFinalize(this);
         }

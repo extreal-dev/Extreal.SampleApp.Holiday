@@ -21,20 +21,20 @@ namespace Extreal.SampleApp.Holiday.Stages.BackgroundScreen
             this.player = player;
         }
 
-        private CompositeDisposable compositeDisposable = new();
+        private readonly CompositeDisposable disposable = new CompositeDisposable();
 
         public void Initialize()
         {
             stageNavigator.OnStageTransitioning += OnStageTransitioning;
             stageNavigator.OnStageTransitioned += OnStageTransitioned;
-            player.IsPlaying.Subscribe(OnPlayerPlayingChanged).AddTo(compositeDisposable);
+            player.IsPlaying.Subscribe(OnPlayerPlayingChanged).AddTo(disposable);
         }
 
         public void Dispose()
         {
             stageNavigator.OnStageTransitioning -= OnStageTransitioning;
             stageNavigator.OnStageTransitioned -= OnStageTransitioned;
-            compositeDisposable?.Dispose();
+            disposable.Dispose();
             GC.SuppressFinalize(this);
         }
 
