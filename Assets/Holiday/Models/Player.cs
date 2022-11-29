@@ -26,8 +26,6 @@ namespace Extreal.SampleApp.Holiday.Models
 
         public List<Avatar> Avatars { get; private set; }
 
-        public Transform CameraRoot => player.gameObject.transform.Find("PlayerCameraRoot");
-
         private GameObject player;
 
         public Player(IAvatarRepository avatarRepository)
@@ -58,7 +56,7 @@ namespace Extreal.SampleApp.Holiday.Models
             player = await handle.Task;
 
             var playerFollowCamera = Object.FindObjectOfType<CinemachineVirtualCamera>();
-            var playerCameraRoot = player.gameObject.transform.Find("PlayerCameraRoot");
+            var playerCameraRoot = player.transform.Find("PlayerCameraRoot");
             playerFollowCamera.Follow = playerCameraRoot.transform;
 
             isPlaying.Value = true;
