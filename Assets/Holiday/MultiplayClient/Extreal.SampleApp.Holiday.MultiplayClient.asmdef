@@ -1,0 +1,34 @@
+{
+    "name": "Extreal.SampleApp.Holiday.MultiplayClient",
+    "rootNamespace": "Extreal.SampleApp.Holiday.MultiplayClient",
+    "references": [
+        "Cinemachine",
+        "Unity.ResourceManager",
+        "Unity.Addressables",
+        "Unity.Collections",
+        "Unity.TextMeshPro",
+        "UniRx",
+        "UniTask",
+        "VContainer",
+        "Unity.Netcode.Runtime",
+        "Extreal.Core.Logging",
+        "Extreal.Core.StageNavigation",
+        "Extreal.Integration.Multiplay.NGO",
+        "Extreal.SampleApp.Holiday.Common",
+        "Extreal.SampleApp.Holiday.Analyzer"
+    ],
+    "includePlatforms": [
+        "Android",
+        "Editor",
+        "iOS",
+        "WindowsStandalone64"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -55,6 +55,16 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.collections": {
+      "version": "1.2.4",
+      "depth": 2,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.burst": "1.6.6",
+        "com.unity.test-framework": "1.1.31"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.ext.nunit": {
       "version": "2.0.3",
       "depth": 1,
@@ -101,6 +111,16 @@
       "depth": 1,
       "source": "registry",
       "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.netcode.gameobjects": {
+      "version": "1.1.0",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.nuget.mono-cecil": "1.10.1",
+        "com.unity.transport": "1.3.0"
+      },
       "url": "https://packages.unity.com"
     },
     "com.unity.nuget.mono-cecil": {
@@ -230,6 +250,17 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.transport": {
+      "version": "1.3.0",
+      "depth": 2,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.collections": "1.2.4",
+        "com.unity.burst": "1.6.6",
+        "com.unity.mathematics": "1.2.6"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.ugui": {
       "version": "1.0.0",
       "depth": 0,
@@ -249,22 +280,42 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.veriorpies.parrelsync": {
+      "version": "1.5.1",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://package.openupm.com"
+    },
     "jp.co.tis.extreal.core.logging": {
-      "version": "https://github.com/extreal-dev/Extreal.Core.Logging.git",
+      "version": "https://github.com/extreal-dev/Extreal.Core.Logging.git#0.1.0",
       "depth": 0,
       "source": "git",
       "dependencies": {},
       "hash": "c27faeb1d4a1799428c04ea9506cddd1b5964061"
     },
     "jp.co.tis.extreal.core.stagenavigation": {
-      "version": "https://github.com/extreal-dev/Extreal.Core.StageNavigation.git",
+      "version": "https://github.com/extreal-dev/Extreal.Core.StageNavigation.git#0.3.0",
       "depth": 0,
       "source": "git",
       "dependencies": {
         "jp.co.tis.extreal.core.logging": "0.1.0",
-        "com.cysharp.unitask": "2.3.1"
+        "com.cysharp.unitask": "2.3.1",
+        "com.neuecc.unirx": "7.1.0"
       },
-      "hash": "4579d252c7724d6b4aa66c8a5e55eadfa9c54bc9"
+      "hash": "85714fb33b00b02c9cea218e73dd71878c6163a6"
+    },
+    "jp.co.tis.extreal.integration.multiplay.ngo": {
+      "version": "https://github.com/extreal-dev/Extreal.Integration.Multiplay.NGO.git#0.1.0",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "jp.co.tis.extreal.core.logging": "0.1.0",
+        "com.unity.netcode.gameobjects": "1.1.0",
+        "com.cysharp.unitask": "2.3.1",
+        "com.neuecc.unirx": "7.1.0"
+      },
+      "hash": "ac97c2966dadd41ddef8c801130b519a5219a214"
     },
     "jp.hadashikick.vcontainer": {
       "version": "1.12.0",
