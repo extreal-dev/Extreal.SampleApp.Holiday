@@ -61,3 +61,6 @@ crashlytics-build.properties
 
 # Idea
 .idea
+
+# Vivox application config scriptable file
+VivoxAppConfig.asset*

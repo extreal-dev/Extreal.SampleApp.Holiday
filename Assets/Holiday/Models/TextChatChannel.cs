@@ -1,0 +1,113 @@
+using System.Threading;
+using System;
+using Cysharp.Threading.Tasks;
+using Extreal.Core.Logging;
+using Extreal.Integration.Chat.Vivox;
+using UniRx;
+using VContainer.Unity;
+using VivoxUnity;
+
+namespace Extreal.SampleApp.Holiday.Models
+{
+    public class TextChatChannel : IInitializable, IDisposable
+    {
+        public IObservable<bool> InText => inText;
+        private readonly BoolReactiveProperty inText = new BoolReactiveProperty(false);
+        public IObservable<string> OnTextMessageReceived
+            => vivoxClient.OnTextMessageReceived.Select(channelTextMessage => channelTextMessage.Message);
+
+        private readonly VivoxClient vivoxClient;
+
+        private string channelName;
+        private ChannelId channelId;
+
+        private readonly CancellationTokenSource cts = new CancellationTokenSource();
+
+        private IDisposable joinDisposable;
+        private readonly CompositeDisposable disposables = new CompositeDisposable();
+
+        private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(TextChatChannel));
+
+        public TextChatChannel(VivoxClient vivoxClient)
+            => this.vivoxClient = vivoxClient;
+
+        public void Initialize()
+        {
+            vivoxClient.OnChannelSessionAdded
+                .Where(channelId => channelId.Name == channelName)
+                .Subscribe(async channelId =>
+                {
+                    this.channelId = channelId;
+
+                    var channelSession = vivoxClient.LoginSession.ChannelSessions[channelId];
+
+                    try
+                    {
+                        await UniTask
+                            .WaitUntil(
+                                () => channelSession.TextState == ConnectionState.Connected,
+                                cancellationToken: cts.Token);
+                    }
+                    catch (Exception)
+                    {
+                        return;
+                    }
+
+                    inText.Value = true;
+                })
+                .AddTo(disposables);
+
+            vivoxClient.OnChannelSessionRemoved
+                .Where(channelId => channelId.Name == channelName)
+                .Subscribe(_ =>
+                {
+                    channelName = string.Empty;
+                    channelId = null;
+                    inText.Value = false;
+                })
+                .AddTo(disposables);
+        }
+
+        public void Dispose()
+        {
+            cts.Cancel();
+
+            cts.Dispose();
+            inText.Dispose();
+            disposables.Dispose();
+            GC.SuppressFinalize(this);
+        }
+
+        public void Join(string channelName)
+        {
+            if (vivoxClient.LoginSession != null && vivoxClient.LoginSession.State == LoginState.LoggedIn)
+            {
+                JoinInternalAsync(channelName).Forget();
+            }
+            else
+            {
+                joinDisposable = vivoxClient.OnLoggedIn.Subscribe(_ => JoinInternalAsync(channelName).Forget());
+            }
+        }
+
+        public void Leave()
+            => vivoxClient.Disconnect(channelId);
+
+        public void SendTextMessage(string message)
+            => vivoxClient.SendTextMessage(message, channelId);
+
+        private async UniTaskVoid JoinInternalAsync(string channelName)
+        {
+            this.channelName = channelName;
+            var channelConfig = new VivoxChannelConfig(channelName, ChatType.TextOnly, transmissionSwitch: false);
+            vivoxClient.Connect(channelConfig);
+
+            await UniTask.Yield();
+            if (joinDisposable != null)
+            {
+                joinDisposable.Dispose();
+                joinDisposable = null;
+            }
+        }
+    }
+}

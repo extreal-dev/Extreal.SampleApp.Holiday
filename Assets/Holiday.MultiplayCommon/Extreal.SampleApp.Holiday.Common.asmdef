@@ -1,0 +1,26 @@
+{
+    "name": "Extreal.SampleApp.Holiday.Common",
+    "rootNamespace": "Extreal.SampleApp.Holiday.Common",
+    "references": [
+        "Unity.InputSystem",
+        "Cinemachine",
+        "Unity.Netcode.Runtime",
+        "Unity.Netcode.Components",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [
+        "Android",
+        "Editor",
+        "EmbeddedLinux",
+        "iOS",
+        "WindowsStandalone64"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
