@@ -1,11 +1,18 @@
-﻿using VContainer;
+﻿using UnityEngine;
+using VContainer;
 using VContainer.Unity;
 
 namespace Extreal.SampleApp.Holiday.MultiplayClient.Spaces.VirtualSpace
 {
     public class VirtualSpaceScope : LifetimeScope
     {
+        [SerializeField] private VirtualSpaceView virtualSpaceView;
+
         protected override void Configure(IContainerBuilder builder)
-            => builder.RegisterEntryPoint<VirtualSpacePresenter>();
+        {
+            builder.RegisterComponent(virtualSpaceView);
+
+            builder.RegisterEntryPoint<VirtualSpacePresenter>();
+        }
     }
 }

@@ -1,6 +1,4 @@
-using Extreal.Integration.Multiplay.NGO;
-using Unity.Netcode;
-using UnityEngine;
+using Extreal.SampleApp.Holiday.MultiplayClient.Models;
 using VContainer;
 using VContainer.Unity;
 
@@ -8,12 +6,10 @@ namespace Extreal.SampleApp.Holiday.MultiplayClient.Controls.MultiplayControl
 {
     public class MultiplayControlScope : LifetimeScope
     {
-        [SerializeField] private NetworkManager networkManager;
-
         protected override void Configure(IContainerBuilder builder)
         {
-            builder.RegisterComponent(networkManager);
-            builder.Register<NgoClient>(Lifetime.Singleton);
+            builder.RegisterEntryPoint<MultiplayRoom>().AsSelf();
+            builder.RegisterEntryPoint<MultiplayPresenter>();
         }
     }
 }

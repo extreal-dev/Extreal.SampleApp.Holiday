@@ -1,7 +1,8 @@
 ﻿using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
-using Extreal.SampleApp.Holiday.MultiplayClient.Models;
+using Extreal.Integration.Multiplay.NGO;
 using Extreal.SampleApp.Holiday.MultiplayClient.Models.ScriptableObject;
+using Unity.Netcode;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -12,13 +13,14 @@ namespace Extreal.SampleApp.Holiday.MultiplayClient.App
     {
         [SerializeField] private StageConfig stageConfig;
         [SerializeField] private BuiltinAvatarRepository builtinAvatarRepository;
+        [SerializeField] private NetworkManager networkManager;
 
         private static void InitializeApp()
         {
             QualitySettings.vSyncCount = 0;
             Application.targetFrameRate = 60;
 
-            const LogLevel logLevel = LogLevel.Debug;
+            const Core.Logging.LogLevel logLevel = Core.Logging.LogLevel.Debug;
             LoggingManager.Initialize(logLevel: logLevel);
 
             var logger = LoggingManager.GetLogger(nameof(AppScope));
@@ -38,9 +40,11 @@ namespace Extreal.SampleApp.Holiday.MultiplayClient.App
         {
             builder.RegisterComponent(stageConfig).AsImplementedInterfaces();
             builder.RegisterComponent(builtinAvatarRepository).AsImplementedInterfaces();
+            builder.RegisterComponent(networkManager);
 
             builder.Register<StageNavigator<StageName, SceneName>>(Lifetime.Singleton);
             builder.Register<AppState>(Lifetime.Singleton);
+            builder.Register<NgoClient>(Lifetime.Singleton);
 
             builder.RegisterEntryPoint<AppPresenter>();
         }

@@ -1,0 +1,58 @@
+using System;
+using Cysharp.Threading.Tasks;
+using Extreal.Core.StageNavigation;
+using Extreal.SampleApp.Holiday.MultiplayClient.App;
+using Extreal.SampleApp.Holiday.MultiplayClient.Models;
+using UniRx;
+using VContainer.Unity;
+
+namespace Extreal.SampleApp.Holiday.MultiplayClient.Controls.MultiplayControl
+{
+    public class MultiplayPresenter : IInitializable, IDisposable
+    {
+        private readonly StageNavigator<StageName, SceneName> stageNavigator;
+        private readonly MultiplayRoom multiplayRoom;
+        private readonly AppState appState;
+
+        private readonly CompositeDisposable disposables = new CompositeDisposable();
+
+        public MultiplayPresenter
+        (
+            StageNavigator<StageName, SceneName> stageNavigator,
+            MultiplayRoom multiplayRoom,
+            AppState appState
+        )
+        {
+            this.stageNavigator = stageNavigator;
+            this.multiplayRoom = multiplayRoom;
+            this.appState = appState;
+        }
+
+        public void Initialize()
+        {
+            stageNavigator.OnStageTransitioned
+                .Subscribe(_ => OnStageEntered())
+                .AddTo(disposables);
+
+            stageNavigator.OnStageTransitioning
+                .Subscribe(_ => OnStageExiting())
+                .AddTo(disposables);
+
+            multiplayRoom.IsPlayerSpawned
+                .Subscribe(appState.SetIsPlaying)
+                .AddTo(disposables);
+        }
+
+        public void Dispose()
+        {
+            disposables.Dispose();
+            GC.SuppressFinalize(this);
+        }
+
+        public void OnStageEntered()
+            => multiplayRoom.JoinAsync(appState.Avatar.Value.AssetName).Forget();
+
+        public void OnStageExiting()
+            => multiplayRoom.LeaveAsync().Forget();
+    }
+}

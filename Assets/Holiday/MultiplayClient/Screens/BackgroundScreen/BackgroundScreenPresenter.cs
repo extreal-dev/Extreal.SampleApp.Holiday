@@ -1,7 +1,6 @@
 ﻿using System;
 using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.MultiplayClient.App;
-using Extreal.SampleApp.Holiday.MultiplayClient.Models;
 using UniRx;
 using VContainer.Unity;
 

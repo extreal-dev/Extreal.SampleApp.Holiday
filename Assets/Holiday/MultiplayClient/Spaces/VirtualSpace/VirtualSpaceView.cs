@@ -3,9 +3,9 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Extreal.SampleApp.Holiday.MultiplayClient.Controls.SpaceControl
+namespace Extreal.SampleApp.Holiday.MultiplayClient.Spaces.VirtualSpace
 {
-    public class SpaceControlView : MonoBehaviour
+    public class VirtualSpaceView : MonoBehaviour
     {
         [SerializeField] private Button backButton;
 

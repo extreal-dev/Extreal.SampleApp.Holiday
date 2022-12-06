@@ -11,6 +11,6 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
             => this.multiplayServer = multiplayServer;
 
         public void Start()
-            => multiplayServer.StartServerAsync().Forget();
+            => multiplayServer.StartAsync().Forget();
     }
 }

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Extreal.SampleApp.Holiday.MultiplayClient.Models;
 using UniRx;
 
-namespace Extreal.SampleApp.Holiday.MultiplayClient.Models
+namespace Extreal.SampleApp.Holiday.MultiplayClient.App
 {
     public class AppState : IDisposable
     {

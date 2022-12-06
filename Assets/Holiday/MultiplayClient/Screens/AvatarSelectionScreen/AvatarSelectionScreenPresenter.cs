@@ -3,7 +3,6 @@ using Cysharp.Threading.Tasks;
 using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.MultiplayClient.App;
-using Extreal.SampleApp.Holiday.MultiplayClient.Models;
 using UniRx;
 using VContainer.Unity;
 
@@ -17,31 +16,31 @@ namespace Extreal.SampleApp.Holiday.MultiplayClient.Screens.AvatarSelectionScree
 
         private readonly AvatarSelectionScreenView avatarSelectionScreenView;
 
-        private readonly AppState player;
+        private readonly AppState appState;
 
         public AvatarSelectionScreenPresenter(StageNavigator<StageName, SceneName> stageNavigator,
-            AvatarSelectionScreenView avatarSelectionScreenView, AppState player)
+            AvatarSelectionScreenView avatarSelectionScreenView, AppState appState)
         {
             this.stageNavigator = stageNavigator;
             this.avatarSelectionScreenView = avatarSelectionScreenView;
-            this.player = player;
+            this.appState = appState;
         }
 
         public void Start()
         {
             if (Logger.IsDebug())
             {
-                Logger.LogDebug($"player: name: {player.PlayerName.Value} avatar: {player.Avatar.Value.Name}");
+                Logger.LogDebug($"player: name: {appState.PlayerName.Value} avatar: {appState.Avatar.Value.Name}");
             }
 
-            var avatars = player.Avatars.Select(avatar => avatar.Name).ToList();
+            var avatars = appState.Avatars.Select(avatar => avatar.Name).ToList();
             avatarSelectionScreenView.Initialize(avatars);
 
-            avatarSelectionScreenView.SetInitialValues(player.PlayerName.Value, player.Avatar.Value.Name);
+            avatarSelectionScreenView.SetInitialValues(appState.PlayerName.Value, appState.Avatar.Value.Name);
 
-            avatarSelectionScreenView.OnNameChanged.Subscribe(player.SetPlayerName);
+            avatarSelectionScreenView.OnNameChanged.Subscribe(appState.SetPlayerName);
 
-            avatarSelectionScreenView.OnAvatarChanged.Subscribe(player.SetAvatar);
+            avatarSelectionScreenView.OnAvatarChanged.Subscribe(appState.SetAvatar);
 
             avatarSelectionScreenView.OnGoButtonClicked
                 .Subscribe(_ => stageNavigator.ReplaceAsync(StageName.VirtualStage).Forget());

@@ -34,7 +34,7 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
                 .AddTo(disposables);
         }
 
-        public UniTask StartServerAsync()
+        public UniTask StartAsync()
             => ngoServer.StartServerAsync();
 
         private void SendPlayerSpawned(ulong clientId)

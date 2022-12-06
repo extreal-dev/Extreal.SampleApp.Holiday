@@ -10,34 +10,38 @@ using VContainer.Unity;
 
 namespace Extreal.SampleApp.Holiday.MultiplayClient.Models
 {
-    public class Space : IInitializable, IDisposable
+    public class MultiplayRoom : IInitializable, IDisposable
     {
         public IObservable<Unit> OnConnected => ngoClient.OnConnected;
-
-        public IObservable<Unit> OnDisconnected => onDisconnected;
-        private readonly Subject<Unit> onDisconnected = new Subject<Unit>();
 
         public IObservable<bool> IsPlayerSpawned => isPlayerSpawned;
         private readonly BoolReactiveProperty isPlayerSpawned = new BoolReactiveProperty(false);
 
         private readonly NgoClient ngoClient;
 
+        private bool isJoined;
+
         private readonly CompositeDisposable disposables = new CompositeDisposable();
 
-        private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(Space));
+        private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(MultiplayRoom));
 
-        public Space(NgoClient ngoClient)
+        public MultiplayRoom(NgoClient ngoClient)
             => this.ngoClient = ngoClient;
 
         public void Initialize()
         {
             ngoClient.OnConnected
-                .Subscribe(_ => ngoClient.RegisterMessageHandler(MessageName.PlayerSpawned.ToString(), PlayerSpawnedMessageHandler))
+                .Subscribe(_ =>
+                {
+                    isJoined = true;
+                    ngoClient.RegisterMessageHandler(MessageName.PlayerSpawned.ToString(), PlayerSpawnedMessageHandler);
+                })
                 .AddTo(disposables);
 
             ngoClient.OnDisconnecting
                 .Subscribe(_ =>
                 {
+                    isJoined = false;
                     isPlayerSpawned.Value = false;
                     ngoClient.UnregisterMessageHandler(MessageName.PlayerSpawned.ToString());
                 })
@@ -47,22 +51,21 @@ namespace Extreal.SampleApp.Holiday.MultiplayClient.Models
         public void Dispose()
         {
             isPlayerSpawned.Dispose();
-            onDisconnected.Dispose();
             disposables.Dispose();
             GC.SuppressFinalize(this);
         }
 
-        public async UniTask JoinAsync()
+        public async UniTask JoinAsync(string avatarAssetName)
         {
+            await UniTask.WaitWhile(() => isJoined);
+
             var ngoConfig = new NgoConfig();
             await ngoClient.ConnectAsync(ngoConfig);
+            SendPlayerSpawn(avatarAssetName);
         }
 
         public async UniTask LeaveAsync()
-        {
-            await ngoClient.DisconnectAsync();
-            onDisconnected.OnNext(Unit.Default);
-        }
+            => await ngoClient.DisconnectAsync();
 
         public void SendPlayerSpawn(string avatarAssetName)
         {

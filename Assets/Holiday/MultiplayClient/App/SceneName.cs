@@ -7,7 +7,6 @@
         LightControl = 103,
         InputControl = 101,
         MultiplayControl = 104,
-        SpaceControl = 105,
 
         // Screens
         BackgroundScreen = 204,

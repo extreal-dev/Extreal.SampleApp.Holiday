@@ -11,9 +11,11 @@
         "UniTask",
         "VContainer",
         "Unity.Netcode.Runtime",
+        "VivoxUnity",
         "Extreal.Core.Logging",
         "Extreal.Core.StageNavigation",
         "Extreal.Integration.Multiplay.NGO",
+        "Extreal.Integration.Chat.Vivox",
         "Extreal.SampleApp.Holiday.Common",
         "Extreal.SampleApp.Holiday.Analyzer"
     ],

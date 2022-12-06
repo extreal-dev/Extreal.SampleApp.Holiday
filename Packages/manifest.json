@@ -19,6 +19,7 @@
     "com.veriorpies.parrelsync": "1.5.1",
     "jp.co.tis.extreal.core.logging": "https://github.com/extreal-dev/Extreal.Core.Logging.git#0.1.0",
     "jp.co.tis.extreal.core.stagenavigation": "https://github.com/extreal-dev/Extreal.Core.StageNavigation.git#0.3.0",
+    "jp.co.tis.extreal.integration.chat.vivox": "https://github.com/extreal-dev/Extreal.Integration.Chat.Vivox.git#0.1.0",
     "jp.co.tis.extreal.integration.multiplay.ngo": "https://github.com/extreal-dev/Extreal.Integration.Multiplay.NGO.git#0.1.0",
     "jp.hadashikick.vcontainer": "1.12.0",
     "com.unity.modules.ai": "1.0.0",
