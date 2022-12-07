@@ -4,9 +4,9 @@ using UniRx;
 using UnityEngine.UI;
 using TMPro;
 
-namespace Extreal.SampleApp.Holiday.Screens.VoiceChatScreen
+namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
 {
-    public class VoiceChatScreenView : MonoBehaviour
+    public class VoiceChatControlView : MonoBehaviour
     {
         [SerializeField] private Button muteButton;
         [SerializeField] private TMP_Text mutedString;

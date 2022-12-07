@@ -76,29 +76,41 @@ namespace Extreal.SampleApp.Holiday.Models
             cts.Dispose();
             inAudio.Dispose();
             onMuted.Dispose();
+            joinDisposable?.Dispose();
             disposables.Dispose();
             GC.SuppressFinalize(this);
         }
 
-        public void Join(string channelName)
+        public void SetChannelName(string channelName)
+            => this.channelName = channelName;
+
+        public void Login()
         {
-            if (vivoxClient.LoginSession != null && vivoxClient.LoginSession.State == LoginState.LoggedIn)
+            if (vivoxClient.LoginSession == null || vivoxClient.LoginSession.State == LoginState.LoggedOut)
             {
-                JoinInternalAsync(channelName).Forget();
-            }
-            else
-            {
-                joinDisposable = vivoxClient.OnLoggedIn.Subscribe(_ => JoinInternalAsync(channelName).Forget());
+                var authConfig = new VivoxAuthConfig(nameof(Holiday));
+                vivoxClient.Login(authConfig);
             }
         }
 
-        private async UniTaskVoid JoinInternalAsync(string channelName)
+        public void Join()
+        {
+            if (vivoxClient.LoginSession != null && vivoxClient.LoginSession.State == LoginState.LoggedIn)
+            {
+                JoinInternalAsync().Forget();
+            }
+            else
+            {
+                joinDisposable = vivoxClient.OnLoggedIn.Subscribe(_ => JoinInternalAsync().Forget());
+            }
+        }
+
+        private async UniTaskVoid JoinInternalAsync()
         {
             var audioInputDevices = await vivoxClient.GetAudioInputDevicesAsync();
             audioInputDevices.Muted = true;
             onMuted.Value = "OFF";
 
-            this.channelName = channelName;
             var channelConfig = new VivoxChannelConfig(channelName, ChatType.AudioOnly);
             vivoxClient.Connect(channelConfig);
 
@@ -111,7 +123,14 @@ namespace Extreal.SampleApp.Holiday.Models
         }
 
         public void Leave()
-            => vivoxClient.Disconnect(channelId);
+        {
+            joinDisposable?.Dispose();
+
+            if (!ChannelId.IsNullOrEmpty(channelId))
+            {
+                vivoxClient.Disconnect(channelId);
+            }
+        }
 
         public async UniTask ToggleMuteAsync()
         {

@@ -214,10 +214,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentReference:
-    TypeName: Extreal.SampleApp.Holiday.Controls.MultiplayControl.ChatControlScope
+    TypeName: Extreal.SampleApp.Holiday.App.AppScope
   autoRun: 1
   autoInjectGameObjects: []
-  voiceChatScreenView: {fileID: 135245241}
+  voiceChatControlView: {fileID: 135245241}
 --- !u!114 &1469821048492739082
 MonoBehaviour:
   m_ObjectHideFlags: 0

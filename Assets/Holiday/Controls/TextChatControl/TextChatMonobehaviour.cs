@@ -2,7 +2,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using TMPro;
 
-namespace Extreal.SampleApp.Holiday.Screens.TextChatScreen
+namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
 {
     public class TextChatMonobehaviour : MonoBehaviour
     {

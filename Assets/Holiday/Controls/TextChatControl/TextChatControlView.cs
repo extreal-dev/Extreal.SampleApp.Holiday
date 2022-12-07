@@ -4,9 +4,9 @@ using TMPro;
 using UniRx;
 using UnityEngine.UI;
 
-namespace Extreal.SampleApp.Holiday.Screens.TextChatScreen
+namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
 {
-    public class TextChatScreenView : MonoBehaviour
+    public class TextChatControlView : MonoBehaviour
     {
         [SerializeField] private TMP_InputField inputField;
         [SerializeField] private Button sendButton;

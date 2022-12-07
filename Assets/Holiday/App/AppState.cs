@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Extreal.SampleApp.Holiday.Models;
 using UniRx;
@@ -10,7 +9,7 @@ namespace Extreal.SampleApp.Holiday.App
     public class AppState : IInitializable, IDisposable
     {
         public IReadOnlyReactiveProperty<string> PlayerName => playerName;
-        private readonly ReactiveProperty<string> playerName = new ReactiveProperty<string>();
+        private readonly ReactiveProperty<string> playerName = new ReactiveProperty<string>("Guest");
 
         public IReadOnlyReactiveProperty<Avatar> Avatar => avatar;
         private readonly ReactiveProperty<Avatar> avatar = new ReactiveProperty<Avatar>();
@@ -27,26 +26,13 @@ namespace Extreal.SampleApp.Holiday.App
         public IObservable<bool> IsPlaying => isPlaying;
         private readonly BoolReactiveProperty isPlaying = new BoolReactiveProperty(false);
 
-        public List<Avatar> Avatars { get; private set; }
-
         private readonly CompositeDisposable disposables = new CompositeDisposable();
-
-        public AppState(IAvatarRepository avatarRepository)
-        {
-            Avatars = avatarRepository.Avatars;
-            playerName.Value = "Guest";
-            avatar.Value = Avatars.First();
-        }
 
         public void Initialize()
         {
             InMultiplay.Merge(InText, InAudio)
                 .Where(_ => inMultiplay.Value && inText.Value && inAudio.Value)
-                .Subscribe(_ =>
-                {
-                    // UnityEngine.Debug.LogWarning($"{inMultiplay.Value}, {inText.Value}, {inAudio.Value}");
-                    isPlaying.Value = true;
-                })
+                .Subscribe(_ => isPlaying.Value = true)
                 .AddTo(disposables);
 
             InMultiplay.Merge(InText, InAudio)
@@ -70,8 +56,8 @@ namespace Extreal.SampleApp.Holiday.App
         public void SetPlayerName(string playerName)
             => this.playerName.Value = playerName;
 
-        public void SetAvatar(string avatarName)
-            => avatar.Value = Avatars.Find(a => a.Name == avatarName);
+        public void SetAvatar(Avatar avatar)
+            => this.avatar.Value = avatar;
 
         public void SetInMultiplay(bool value)
             => inMultiplay.Value = value;

@@ -74,31 +74,50 @@ namespace Extreal.SampleApp.Holiday.Models
 
             cts.Dispose();
             inText.Dispose();
+            joinDisposable?.Dispose();
             disposables.Dispose();
             GC.SuppressFinalize(this);
         }
 
-        public void Join(string channelName)
+        public void SetChannelName(string channelName)
+            => this.channelName = channelName;
+
+        public void Login()
+        {
+            if (vivoxClient.LoginSession == null || vivoxClient.LoginSession.State == LoginState.LoggedOut)
+            {
+                var authConfig = new VivoxAuthConfig(nameof(Holiday));
+                vivoxClient.Login(authConfig);
+            }
+        }
+
+        public void Join()
         {
             if (vivoxClient.LoginSession != null && vivoxClient.LoginSession.State == LoginState.LoggedIn)
             {
-                JoinInternalAsync(channelName).Forget();
+                JoinInternalAsync().Forget();
             }
             else
             {
-                joinDisposable = vivoxClient.OnLoggedIn.Subscribe(_ => JoinInternalAsync(channelName).Forget());
+                joinDisposable = vivoxClient.OnLoggedIn.Subscribe(_ => JoinInternalAsync().Forget());
             }
         }
 
         public void Leave()
-            => vivoxClient.Disconnect(channelId);
+        {
+            joinDisposable?.Dispose();
+
+            if (!ChannelId.IsNullOrEmpty(channelId))
+            {
+                vivoxClient.Disconnect(channelId);
+            }
+        }
 
         public void SendTextMessage(string message)
             => vivoxClient.SendTextMessage(message, channelId);
 
-        private async UniTaskVoid JoinInternalAsync(string channelName)
+        private async UniTaskVoid JoinInternalAsync()
         {
-            this.channelName = channelName;
             var channelConfig = new VivoxChannelConfig(channelName, ChatType.TextOnly, transmissionSwitch: false);
             vivoxClient.Connect(channelConfig);
 
