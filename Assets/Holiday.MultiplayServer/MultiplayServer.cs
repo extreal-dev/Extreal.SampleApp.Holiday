@@ -27,7 +27,7 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
         {
             ngoServer.SetConnectionApprovalCallback((_, response) =>
             {
-                if (ngoServer.ConnectedClients.Count >= 1)
+                if (ngoServer.ConnectedClients.Count >= 100)
                 {
                     response.Approved = false;
                 }

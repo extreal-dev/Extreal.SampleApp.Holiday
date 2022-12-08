@@ -3503,8 +3503,8 @@ MonoBehaviour:
   BottomClamp: -30
   CameraAngleOverride: 0
   LockCameraPosition: 0
-  _playerInput: {fileID: 7328389915124856758}
-  _input: {fileID: 6421557887294024646}
+  PlayerInput: {fileID: 7328389915124856758}
+  Input: {fileID: 6421557887294024646}
 --- !u!114 &672096911106874698
 MonoBehaviour:
   m_ObjectHideFlags: 0

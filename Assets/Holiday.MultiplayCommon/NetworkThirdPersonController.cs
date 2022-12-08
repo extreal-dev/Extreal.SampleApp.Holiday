@@ -5,6 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.UI;
 
 /* Note: animations are called via the controller for both the character and capsule using animator null checks
  */
@@ -76,8 +77,8 @@ namespace Extreal.SampleApp.Holiday.Common
         public bool LockCameraPosition = false;
 
         [Header("Input")]
-        public PlayerInput _playerInput;
-        public StarterAssetsInputs _input;
+        public PlayerInput PlayerInput;
+        public StarterAssetsInputs Input;
 
         // cinemachine
         private float _cinemachineTargetYaw;
@@ -115,7 +116,7 @@ namespace Extreal.SampleApp.Holiday.Common
         {
             get
             {
-                return _playerInput.currentControlScheme == "KeyboardMouse";
+                return PlayerInput.currentControlScheme == "KeyboardMouse";
             }
         }
 
@@ -142,8 +143,15 @@ namespace Extreal.SampleApp.Holiday.Common
                 _mainCamera = Camera.main.gameObject;
                 _cinemachineVirtualCamera = FindObjectOfType<CinemachineVirtualCamera>();
 
-                _playerInput.enabled = true;
+                PlayerInput.enabled = true;
                 _cinemachineVirtualCamera.Follow = CinemachineCameraTarget.transform;
+
+#if UNITY_IOS || UNITY_ANDROID
+                var uiCanvasControllerInput = FindObjectOfType<UICanvasControllerInput>();
+                uiCanvasControllerInput.starterAssetsInputs = Input;
+                PlayerInput.uiInputModule = EventSystem.current.GetComponent<InputSystemUIInputModule>();
+                PlayerInput.neverAutoSwitchControlSchemes = true;
+#endif
             }
         }
 
@@ -205,13 +213,13 @@ namespace Extreal.SampleApp.Holiday.Common
         private void CameraRotation()
         {
             // if there is an input and camera position is not fixed
-            if (_input.look.sqrMagnitude >= _threshold && !LockCameraPosition)
+            if (Input.look.sqrMagnitude >= _threshold && !LockCameraPosition)
             {
                 //Don't multiply mouse input by Time.deltaTime;
                 float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
 
-                _cinemachineTargetYaw += _input.look.x * deltaTimeMultiplier;
-                _cinemachineTargetPitch += _input.look.y * deltaTimeMultiplier;
+                _cinemachineTargetYaw += Input.look.x * deltaTimeMultiplier;
+                _cinemachineTargetPitch += Input.look.y * deltaTimeMultiplier;
             }
 
             // clamp our rotations so our values are limited 360 degrees
@@ -225,10 +233,10 @@ namespace Extreal.SampleApp.Holiday.Common
 
         private void Move(bool isMovable)
         {
-            var move = isMovable ? _input.move : Vector2.zero;
+            var move = isMovable ? Input.move : Vector2.zero;
 
             // set target speed based on move speed, sprint speed and if sprint is pressed
-            float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+            float targetSpeed = Input.sprint ? SprintSpeed : MoveSpeed;
 
             // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
@@ -241,7 +249,7 @@ namespace Extreal.SampleApp.Holiday.Common
             float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.z).magnitude;
 
             float speedOffset = 0.1f;
-            float inputMagnitude = _input.analogMovement ? move.magnitude : 1f;
+            float inputMagnitude = Input.analogMovement ? move.magnitude : 1f;
 
             // accelerate or decelerate to target speed
             if (currentHorizontalSpeed < targetSpeed - speedOffset ||
@@ -297,7 +305,7 @@ namespace Extreal.SampleApp.Holiday.Common
 
         private void JumpAndGravity(bool isJumpable)
         {
-            var jump = isJumpable && _input.jump;
+            var jump = isJumpable && Input.jump;
             if (Grounded)
             {
                 // reset the fall timeout timer
@@ -361,7 +369,7 @@ namespace Extreal.SampleApp.Holiday.Common
                 _verticalVelocity += Gravity * Time.deltaTime;
             }
 
-            _input.jump = false;
+            Input.jump = false;
         }
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
