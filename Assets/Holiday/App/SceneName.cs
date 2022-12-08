@@ -13,6 +13,7 @@
         // Screens
         BackgroundScreen = 204,
         LoadingScreen = 203,
+        ErrorScreen = 205,
         TitleScreen = 200,
         AvatarSelectionScreen = 201,
 

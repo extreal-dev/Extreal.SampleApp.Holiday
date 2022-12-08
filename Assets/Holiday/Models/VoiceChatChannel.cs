@@ -17,10 +17,16 @@ namespace Extreal.SampleApp.Holiday.Models
         public IObservable<string> OnMuted => onMuted;
         private readonly ReactiveProperty<string> onMuted = new ReactiveProperty<string>();
 
+        public IObservable<Unit> OnUnexpectedDisconnected
+                    => vivoxClient.OnRecoveryStateChanged
+                        .Where(recoveryState => recoveryState == ConnectionRecoveryState.FailedToRecover)
+                        .Select(_ => Unit.Default);
+
         private readonly VivoxClient vivoxClient;
 
         private string channelName;
         private ChannelId channelId;
+        private bool isRecovering;
 
         private readonly CancellationTokenSource cts = new CancellationTokenSource();
 
@@ -66,6 +72,16 @@ namespace Extreal.SampleApp.Holiday.Models
                     channelId = null;
                     inAudio.Value = false;
                 })
+                .AddTo(disposables);
+
+            vivoxClient.OnRecoveryStateChanged
+                .Where(recoveryState => recoveryState == ConnectionRecoveryState.Recovering)
+                .Subscribe(_ => isRecovering = true)
+                .AddTo(disposables);
+
+            vivoxClient.OnRecoveryStateChanged
+                .Where(recoveryState => recoveryState == ConnectionRecoveryState.Recovered)
+                .Subscribe(_ => isRecovering = false)
                 .AddTo(disposables);
         }
 
@@ -126,7 +142,7 @@ namespace Extreal.SampleApp.Holiday.Models
         {
             joinDisposable?.Dispose();
 
-            if (!ChannelId.IsNullOrEmpty(channelId))
+            if (!ChannelId.IsNullOrEmpty(channelId) && !isRecovering)
             {
                 vivoxClient.Disconnect(channelId);
             }

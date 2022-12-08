@@ -26,6 +26,11 @@ namespace Extreal.SampleApp.Holiday.App
         public IObservable<bool> IsPlaying => isPlaying;
         private readonly BoolReactiveProperty isPlaying = new BoolReactiveProperty(false);
 
+        public IObservable<string> OnErrorOccurred => onErrorOccurred;
+        private readonly Subject<string> onErrorOccurred = new Subject<string>();
+
+        public bool IsErrorShowed { get; private set; }
+
         private readonly CompositeDisposable disposables = new CompositeDisposable();
 
         public void Initialize()
@@ -45,10 +50,11 @@ namespace Extreal.SampleApp.Holiday.App
         {
             playerName.Dispose();
             avatar.Dispose();
-            isPlaying.Dispose();
             inMultiplay.Dispose();
             inText.Dispose();
             inAudio.Dispose();
+            isPlaying.Dispose();
+            onErrorOccurred.Dispose();
             disposables.Dispose();
             GC.SuppressFinalize(this);
         }
@@ -67,5 +73,11 @@ namespace Extreal.SampleApp.Holiday.App
 
         public void SetInAudio(bool value)
             => inAudio.Value = value;
+
+        public void SetErrorMessage(string message)
+            => onErrorOccurred.OnNext(message);
+
+        public void SetIsErrorShowed(bool value)
+            => IsErrorShowed = value;
     }
 }

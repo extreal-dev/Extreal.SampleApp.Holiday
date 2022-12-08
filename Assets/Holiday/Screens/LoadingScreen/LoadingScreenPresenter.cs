@@ -36,6 +36,10 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
             appState.IsPlaying
                 .Subscribe(OnPlayingChangedAsync)
                 .AddTo(disposables);
+
+            appState.OnErrorOccurred
+                .Subscribe(_ => loadingScreenView.Hide())
+                .AddTo(disposables);
         }
 
         public void Dispose()

@@ -75,6 +75,10 @@ namespace Extreal.SampleApp.Holiday.Common
         [Tooltip("For locking the camera position on all axis")]
         public bool LockCameraPosition = false;
 
+        [Header("Input")]
+        public PlayerInput _playerInput;
+        public StarterAssetsInputs _input;
+
         // cinemachine
         private float _cinemachineTargetYaw;
         private float _cinemachineTargetPitch;
@@ -98,10 +102,8 @@ namespace Extreal.SampleApp.Holiday.Common
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
 
-        private PlayerInput _playerInput;
         private Animator _animator;
         private CharacterController _controller;
-        private StarterAssetsInputs _input;
         private GameObject _mainCamera;
         private CinemachineVirtualCamera _cinemachineVirtualCamera;
 
@@ -123,7 +125,6 @@ namespace Extreal.SampleApp.Holiday.Common
 
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
-            _input = GetComponent<StarterAssetsInputs>();
 
             AssignAnimationIDs();
 
@@ -140,7 +141,6 @@ namespace Extreal.SampleApp.Holiday.Common
             {
                 _mainCamera = Camera.main.gameObject;
                 _cinemachineVirtualCamera = FindObjectOfType<CinemachineVirtualCamera>();
-                _playerInput = GetComponent<PlayerInput>();
 
                 _playerInput.enabled = true;
                 _cinemachineVirtualCamera.Follow = CinemachineCameraTarget.transform;

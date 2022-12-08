@@ -40,6 +40,10 @@ namespace Extreal.SampleApp.Holiday.Screens.BackgroundScreen
             appState.IsPlaying
                 .Subscribe(OnPlayingChanged)
                 .AddTo(disposables);
+
+            appState.OnErrorOccurred
+                .Subscribe(_ => backgroundScreenView.Hide())
+                .AddTo(disposables);
         }
 
         public void Dispose()

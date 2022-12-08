@@ -15,11 +15,16 @@ namespace Extreal.SampleApp.Holiday.Models
         private readonly BoolReactiveProperty inText = new BoolReactiveProperty(false);
         public IObservable<string> OnTextMessageReceived
             => vivoxClient.OnTextMessageReceived.Select(channelTextMessage => channelTextMessage.Message);
+        public IObservable<Unit> OnUnexpectedDisconnected
+            => vivoxClient.OnRecoveryStateChanged
+                .Where(recoveryState => recoveryState == ConnectionRecoveryState.FailedToRecover)
+                .Select(_ => Unit.Default);
 
         private readonly VivoxClient vivoxClient;
 
         private string channelName;
         private ChannelId channelId;
+        private bool isRecovering;
 
         private readonly CancellationTokenSource cts = new CancellationTokenSource();
 
@@ -66,6 +71,16 @@ namespace Extreal.SampleApp.Holiday.Models
                     inText.Value = false;
                 })
                 .AddTo(disposables);
+
+            vivoxClient.OnRecoveryStateChanged
+                .Where(recoveryState => recoveryState == ConnectionRecoveryState.Recovering)
+                .Subscribe(_ => isRecovering = true)
+                .AddTo(disposables);
+
+            vivoxClient.OnRecoveryStateChanged
+                .Where(recoveryState => recoveryState == ConnectionRecoveryState.Recovered)
+                .Subscribe(_ => isRecovering = false)
+                .AddTo(disposables);
         }
 
         public void Dispose()
@@ -107,10 +122,11 @@ namespace Extreal.SampleApp.Holiday.Models
         {
             joinDisposable?.Dispose();
 
-            if (!ChannelId.IsNullOrEmpty(channelId))
+            if (!ChannelId.IsNullOrEmpty(channelId) && !isRecovering)
             {
                 vivoxClient.Disconnect(channelId);
             }
+
         }
 
         public void SendTextMessage(string message)

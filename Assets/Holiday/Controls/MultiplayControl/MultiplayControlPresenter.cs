@@ -41,6 +41,30 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
             multiplayRoom.IsPlayerSpawned
                 .Subscribe(appState.SetInMultiplay)
                 .AddTo(disposables);
+
+            multiplayRoom.OnConnectionApprovalRejected
+                .Subscribe(_ =>
+                {
+                    appState.SetErrorMessage("The space is full");
+                    stageNavigator.ReplaceAsync(StageName.AvatarSelectionStage);
+                })
+                .AddTo(disposables);
+
+            multiplayRoom.OnUnexpectedDisconnected
+                .Subscribe(_ =>
+                {
+                    appState.SetErrorMessage("Unexpected disconnection from multiplay server has occurred");
+                    stageNavigator.ReplaceAsync(StageName.AvatarSelectionStage);
+                })
+                .AddTo(disposables);
+
+            multiplayRoom.OnConnectFailed
+                .Subscribe(_ =>
+                {
+                    appState.SetErrorMessage("Connection to multiplay server is failed");
+                    stageNavigator.ReplaceAsync(StageName.AvatarSelectionStage);
+                })
+                .AddTo(disposables);
         }
 
         public void Dispose()

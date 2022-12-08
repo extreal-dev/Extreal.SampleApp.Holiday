@@ -53,6 +53,14 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
                 .Subscribe(voiceChatScreenView.SetMutedString)
                 .AddTo(disposables);
 
+            voiceChatChannel.OnUnexpectedDisconnected
+                .Subscribe(_ =>
+                {
+                    appState.SetErrorMessage("Unexpected disconnection from vivox server has occurred");
+                    stageNavigator.ReplaceAsync(StageName.AvatarSelectionStage);
+                })
+                .AddTo(disposables);
+
             appState.InMultiplay
             .Where(inMultiplay => inMultiplay)
             .Subscribe(_ => voiceChatChannel.Join())

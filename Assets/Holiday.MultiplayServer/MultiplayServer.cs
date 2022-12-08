@@ -25,6 +25,18 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
 
         public void Initialize()
         {
+            ngoServer.SetConnectionApprovalCallback((_, response) =>
+            {
+                if (ngoServer.ConnectedClients.Count >= 1)
+                {
+                    response.Approved = false;
+                }
+                else
+                {
+                    response.Approved = true;
+                }
+            });
+
             ngoServer.OnServerStarted
                 .Subscribe(_ => ngoServer.RegisterMessageHandler(MessageName.PlayerSpawn.ToString(), PlayerSpawnMessageHandler))
                 .AddTo(disposables);

@@ -1,3 +1,4 @@
+using System.Threading;
 using System;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.Logging;
@@ -13,6 +14,11 @@ namespace Extreal.SampleApp.Holiday.Models
     public class MultiplayRoom : IInitializable, IDisposable
     {
         public IObservable<Unit> OnConnected => ngoClient.OnConnected;
+        public IObservable<Unit> OnConnectionApprovalRejected => ngoClient.OnConnectionApprovalRejected;
+        public IObservable<Unit> OnUnexpectedDisconnected => ngoClient.OnUnexpectedDisconnected;
+
+        public IObservable<Unit> OnConnectFailed => onConnectFailed;
+        private readonly Subject<Unit> onConnectFailed = new Subject<Unit>();
 
         public IObservable<bool> IsPlayerSpawned => isPlayerSpawned;
         private readonly BoolReactiveProperty isPlayerSpawned = new BoolReactiveProperty(false);
@@ -22,6 +28,7 @@ namespace Extreal.SampleApp.Holiday.Models
         private bool isJoined;
 
         private readonly CompositeDisposable disposables = new CompositeDisposable();
+        private readonly CancellationTokenSource cts = new CancellationTokenSource();
 
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(MultiplayRoom));
 
@@ -50,6 +57,10 @@ namespace Extreal.SampleApp.Holiday.Models
 
         public void Dispose()
         {
+            cts.Cancel();
+
+            cts.Dispose();
+            onConnectFailed.Dispose();
             isPlayerSpawned.Dispose();
             disposables.Dispose();
             GC.SuppressFinalize(this);
@@ -60,7 +71,20 @@ namespace Extreal.SampleApp.Holiday.Models
             await UniTask.WaitWhile(() => isJoined);
 
             var ngoConfig = new NgoConfig();
-            await ngoClient.ConnectAsync(ngoConfig);
+            try
+            {
+                await ngoClient.ConnectAsync(ngoConfig, cts.Token);
+            }
+            catch (TimeoutException)
+            {
+                onConnectFailed?.OnNext(Unit.Default);
+                return;
+            }
+            catch (OperationCanceledException)
+            {
+                return;
+            }
+
             SendPlayerSpawn(avatarAssetName);
         }
 
