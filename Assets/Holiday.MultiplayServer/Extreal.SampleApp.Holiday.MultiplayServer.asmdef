@@ -12,7 +12,7 @@
         "VContainer",
         "Extreal.Core.Logging",
         "Extreal.Integration.Multiplay.NGO",
-        "Extreal.SampleApp.Holiday.Common"
+        "Extreal.SampleApp.Holiday.MultiplayCommon"
     ],
     "includePlatforms": [
         "Editor",

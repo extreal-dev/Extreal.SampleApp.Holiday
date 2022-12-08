@@ -64,3 +64,7 @@ crashlytics-build.properties
 
 # Vivox application config scriptable file
 VivoxAppConfig.asset*
+
+# Temporal taking refuge of performance test
+Assets/Holiday.PerformanceTest/
+Assets/Holiday.PerformanceTest.meta

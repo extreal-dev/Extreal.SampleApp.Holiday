@@ -16,7 +16,7 @@
         "Extreal.Core.StageNavigation",
         "Extreal.Integration.Multiplay.NGO",
         "Extreal.Integration.Chat.Vivox",
-        "Extreal.SampleApp.Holiday.Common",
+        "Extreal.SampleApp.Holiday.MultiplayCommon",
         "Extreal.SampleApp.Holiday.Analyzer"
     ],
     "includePlatforms": [

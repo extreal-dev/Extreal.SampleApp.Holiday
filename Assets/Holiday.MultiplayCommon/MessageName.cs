@@ -1,4 +1,4 @@
-namespace Extreal.SampleApp.Holiday.Common
+namespace Extreal.SampleApp.Holiday.MultiplayCommon
 {
     public enum MessageName
     {

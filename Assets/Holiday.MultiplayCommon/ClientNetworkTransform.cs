@@ -1,6 +1,6 @@
 using Unity.Netcode.Components;
 
-namespace Extreal.SampleApp.Holiday.Common
+namespace Extreal.SampleApp.Holiday.MultiplayCommon
 {
     public class ClientNetworkTransform : NetworkTransform
     {
