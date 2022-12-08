@@ -6,6 +6,7 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
     {
         [SerializeField] private GameObject screen;
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0051")]
         private void Start() => screen.SetActive(false);
 
         public void Show() => screen.SetActive(true);

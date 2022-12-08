@@ -5,10 +5,12 @@ namespace Extreal.SampleApp.Holiday.Controls.InputControl
     public class InputControlView : MonoBehaviour
     {
         [SerializeField] private GameObject canvas4Mobile;
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0051")]
         [SerializeField] private GameObject eventSystem4StandAlone;
         [SerializeField] private GameObject eventSystem4Mobile;
 
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0051")]
         private void Awake()
         {
             canvas4Mobile.SetActive(false);

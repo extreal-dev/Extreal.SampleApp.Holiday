@@ -10,6 +10,7 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
 
         private bool destroyed;
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0051")]
         private void OnDestroy()
             => destroyed = true;
 

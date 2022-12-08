@@ -24,13 +24,14 @@ namespace Extreal.SampleApp.Holiday.Controls.InputControl
         }
 
         public void Initialize()
-        {
 #if UNITY_IOS || UNITY_ANDROID
-            stageNavigator.OnStageTransitioned
-                .Subscribe(OnStageTransitioned)
-                .AddTo(disposables);
+            => stageNavigator.OnStageTransitioned
+                        .Subscribe(OnStageTransitioned)
+                        .AddTo(disposables);
+#else
+        { }
 #endif
-        }
+
 
         public void Dispose()
         {

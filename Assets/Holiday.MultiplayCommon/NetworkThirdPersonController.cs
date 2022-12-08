@@ -12,6 +12,7 @@ using UnityEngine.InputSystem.UI;
 
 namespace Extreal.SampleApp.Holiday.MultiplayCommon
 {
+#pragma warning disable
     [RequireComponent(typeof(CharacterController))]
     [RequireComponent(typeof(PlayerInput))]
     public class NetworkThirdPersonController : NetworkBehaviour
@@ -70,7 +71,7 @@ namespace Extreal.SampleApp.Holiday.MultiplayCommon
         [Tooltip("How far in degrees can you move the camera down")]
         public float BottomClamp = -30.0f;
 
-        [Tooltip("Additional degress to override the camera. Useful for fine tuning camera position when locked")]
+        [Tooltip("Additional degrees to override the camera. Useful for fine tuning camera position when locked")]
         public float CameraAngleOverride = 0.0f;
 
         [Tooltip("For locking the camera position on all axis")]
@@ -92,7 +93,7 @@ namespace Extreal.SampleApp.Holiday.MultiplayCommon
         private float _verticalVelocity;
         private float _terminalVelocity = 53.0f;
 
-        // timeout deltatime
+        // timeout delta time
         private float _jumpTimeoutDelta;
         private float _fallTimeoutDelta;
 
@@ -272,7 +273,7 @@ namespace Extreal.SampleApp.Holiday.MultiplayCommon
             if (_animationBlend < 0.01f)
                 _animationBlend = 0f;
 
-            // normalise input direction
+            // normalize input direction
             Vector3 inputDirection = new Vector3(move.x, 0.0f, move.y).normalized;
 
             // note: Vector2's != operator uses approximation so is not floating point error prone, and is cheaper than magnitude
