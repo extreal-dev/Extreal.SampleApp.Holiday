@@ -4,12 +4,11 @@ using Cysharp.Threading.Tasks;
 using Extreal.Core.Logging;
 using Extreal.Integration.Chat.Vivox;
 using UniRx;
-using VContainer.Unity;
 using VivoxUnity;
 
-namespace Extreal.SampleApp.Holiday.Models
+namespace Extreal.SampleApp.Holiday.DomainModels
 {
-    public class TextChatChannel : IInitializable, IDisposable
+    public class TextChatChannel : IDisposable
     {
         public IObservable<bool> InText => inText;
         private readonly BoolReactiveProperty inText = new BoolReactiveProperty(false);

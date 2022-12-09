@@ -28,8 +28,8 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
         {
             builder.RegisterComponent(networkManager);
             builder.Register<NgoServer>(Lifetime.Singleton);
+            builder.Register<MultiplayServer>(Lifetime.Singleton);
 
-            builder.RegisterEntryPoint<MultiplayServer>().AsSelf();
             builder.RegisterEntryPoint<MultiplayServerPresenter>();
         }
     }

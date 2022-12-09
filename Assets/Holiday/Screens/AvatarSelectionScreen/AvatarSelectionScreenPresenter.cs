@@ -3,7 +3,7 @@ using Cysharp.Threading.Tasks;
 using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App;
-using Extreal.SampleApp.Holiday.Models;
+using Extreal.SampleApp.Holiday.App.Avatars;
 using UniRx;
 using VContainer.Unity;
 
@@ -15,26 +15,26 @@ namespace Extreal.SampleApp.Holiday.Screens.AvatarSelectionScreen
 
         private readonly StageNavigator<StageName, SceneName> stageNavigator;
         private readonly AvatarSelectionScreenView avatarSelectionScreenView;
-        private readonly IAvatarRepository avatarRepository;
+        private readonly AvatarService avatarService;
         private readonly AppState appState;
 
         public AvatarSelectionScreenPresenter
         (
             StageNavigator<StageName, SceneName> stageNavigator,
             AvatarSelectionScreenView avatarSelectionScreenView,
-            IAvatarRepository avatarRepository,
+            AvatarService avatarService,
             AppState appState
         )
         {
             this.stageNavigator = stageNavigator;
             this.avatarSelectionScreenView = avatarSelectionScreenView;
-            this.avatarRepository = avatarRepository;
+            this.avatarService = avatarService;
             this.appState = appState;
         }
 
         public void Start()
         {
-            var avatars = avatarRepository.Avatars;
+            var avatars = avatarService.Avatars;
             if (appState.Avatar.Value == null)
             {
                 appState.SetAvatar(avatars.First());
@@ -55,7 +55,7 @@ namespace Extreal.SampleApp.Holiday.Screens.AvatarSelectionScreen
             avatarSelectionScreenView.OnAvatarChanged
                 .Subscribe(avatarName =>
                 {
-                    var avatar = avatars.Find(avatar => avatar.Name == avatarName);
+                    var avatar = avatarService.FindAvatarByName(avatarName);
                     appState.SetAvatar(avatar);
                 });
 

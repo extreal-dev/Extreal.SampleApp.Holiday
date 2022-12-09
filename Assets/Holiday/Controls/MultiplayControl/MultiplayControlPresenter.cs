@@ -2,7 +2,6 @@ using System;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App;
-using Extreal.SampleApp.Holiday.Models;
 using UniRx;
 using VContainer.Unity;
 
@@ -30,6 +29,8 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 
         public void Initialize()
         {
+            multiplayRoom.Initialize();
+
             stageNavigator.OnStageTransitioned
                 .Subscribe(_ => OnStageEntered())
                 .AddTo(disposables);

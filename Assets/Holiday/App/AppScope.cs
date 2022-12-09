@@ -2,7 +2,8 @@
 using Extreal.Core.StageNavigation;
 using Extreal.Integration.Chat.Vivox;
 using Extreal.Integration.Multiplay.NGO;
-using Extreal.SampleApp.Holiday.Models.ScriptableObject;
+using Extreal.SampleApp.Holiday.App.Avatars;
+using Extreal.SampleApp.Holiday.App.BuiltinRepository;
 using Unity.Netcode;
 using UnityEngine;
 using VContainer;
@@ -41,14 +42,18 @@ namespace Extreal.SampleApp.Holiday.App
         protected override void Configure(IContainerBuilder builder)
         {
             builder.RegisterComponent(stageConfig).AsImplementedInterfaces();
-            builder.RegisterComponent(builtinAvatarRepository).AsImplementedInterfaces();
-            builder.RegisterComponent(networkManager);
-            builder.RegisterComponent(appConfig);
-
             builder.Register<StageNavigator<StageName, SceneName>>(Lifetime.Singleton);
-            builder.RegisterEntryPoint<AppState>(Lifetime.Singleton).AsSelf();
+
+            builder.RegisterComponent(builtinAvatarRepository).AsImplementedInterfaces();
+            builder.Register<AvatarService>(Lifetime.Singleton);
+
+            builder.RegisterComponent(networkManager);
             builder.Register<NgoClient>(Lifetime.Singleton);
+
+            builder.RegisterComponent(appConfig);
             builder.Register<VivoxClient>(Lifetime.Singleton);
+
+            builder.Register<AppState>(Lifetime.Singleton);
 
             builder.RegisterEntryPoint<AppPresenter>();
         }

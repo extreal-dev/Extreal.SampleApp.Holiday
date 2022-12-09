@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Linq;
-using Extreal.SampleApp.Holiday.Models;
+using Extreal.SampleApp.Holiday.App.Avatars;
 using UniRx;
-using VContainer.Unity;
 
 namespace Extreal.SampleApp.Holiday.App
 {
-    public class AppState : IInitializable, IDisposable
+    public class AppState : IDisposable
     {
         public IReadOnlyReactiveProperty<string> PlayerName => playerName;
         private readonly ReactiveProperty<string> playerName = new ReactiveProperty<string>("Guest");

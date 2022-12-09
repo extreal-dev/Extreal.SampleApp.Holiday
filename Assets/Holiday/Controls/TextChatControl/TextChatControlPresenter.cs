@@ -2,9 +2,10 @@ using System;
 using Cysharp.Threading.Tasks;
 using VContainer.Unity;
 using UniRx;
-using Extreal.SampleApp.Holiday.Models;
 using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App;
+using Extreal.Integration.Chat.Vivox;
+using Extreal.SampleApp.Holiday.DomainModels;
 
 namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
 {
@@ -21,18 +22,21 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
         (
             StageNavigator<StageName, SceneName> stageNavigator,
             TextChatControlView textChatScreenView,
-            TextChatChannel textChatChannel,
-            AppState appState
+            AppState appState,
+            VivoxClient vivoxClient
         )
         {
             this.stageNavigator = stageNavigator;
             this.textChatScreenView = textChatScreenView;
-            this.textChatChannel = textChatChannel;
             this.appState = appState;
+
+            textChatChannel = new TextChatChannel(vivoxClient);
         }
 
         public void Initialize()
         {
+            textChatChannel.Initialize();
+
             stageNavigator.OnStageTransitioned
                 .Subscribe(stageName => textChatChannel.SetChannelName($"HolidayTextChat{stageName}"))
                 .AddTo(disposables);

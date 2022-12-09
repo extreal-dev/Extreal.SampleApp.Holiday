@@ -1,4 +1,3 @@
-using Extreal.SampleApp.Holiday.Models;
 using VContainer;
 using VContainer.Unity;
 
@@ -8,7 +7,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
     {
         protected override void Configure(IContainerBuilder builder)
         {
-            builder.RegisterEntryPoint<MultiplayRoom>().AsSelf();
+            builder.Register<MultiplayRoom>(Lifetime.Singleton);
             builder.RegisterEntryPoint<MultiplayControlPresenter>();
         }
     }

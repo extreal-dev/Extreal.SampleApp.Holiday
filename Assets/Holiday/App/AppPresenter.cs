@@ -10,15 +10,24 @@ namespace Extreal.SampleApp.Holiday.App
     {
         private readonly StageNavigator<StageName, SceneName> stageNavigator;
         private readonly VivoxClient vivoxClient;
+        private readonly AppState appState;
 
-        public AppPresenter(StageNavigator<StageName, SceneName> stageNavigator, VivoxClient vivoxClient)
+        public AppPresenter
+        (
+            StageNavigator<StageName, SceneName> stageNavigator,
+            VivoxClient vivoxClient,
+            AppState appState
+        )
         {
             this.stageNavigator = stageNavigator;
             this.vivoxClient = vivoxClient;
+            this.appState = appState;
         }
 
         public void Initialize()
         {
+            appState.Initialize();
+
             var authConfig = new VivoxAuthConfig(nameof(Holiday));
             vivoxClient.Login(authConfig);
         }

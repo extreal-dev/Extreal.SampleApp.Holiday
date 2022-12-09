@@ -7,11 +7,10 @@ using Extreal.SampleApp.Holiday.MultiplayCommon;
 using UniRx;
 using Unity.Collections;
 using Unity.Netcode;
-using VContainer.Unity;
 
-namespace Extreal.SampleApp.Holiday.Models
+namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 {
-    public class MultiplayRoom : IInitializable, IDisposable
+    public class MultiplayRoom : IDisposable
     {
         public IObservable<Unit> OnConnected => ngoClient.OnConnected;
         public IObservable<Unit> OnConnectionApprovalRejected => ngoClient.OnConnectionApprovalRejected;

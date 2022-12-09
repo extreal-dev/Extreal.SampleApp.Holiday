@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.Logging;
@@ -8,11 +9,10 @@ using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using VContainer.Unity;
 
 namespace Extreal.SampleApp.Holiday.MultiplayServer
 {
-    public class MultiplayServer : IInitializable
+    public class MultiplayServer : IDisposable
     {
         private readonly NgoServer ngoServer;
 
@@ -44,6 +44,12 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
             ngoServer.OnServerStopping
                 .Subscribe(_ => ngoServer.UnregisterMessageHandler(MessageName.PlayerSpawn.ToString()))
                 .AddTo(disposables);
+        }
+
+        public void Dispose()
+        {
+            disposables.Dispose();
+            GC.SuppressFinalize(this);
         }
 
         public UniTask StartAsync()

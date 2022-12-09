@@ -1,4 +1,3 @@
-using Extreal.SampleApp.Holiday.Models;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -12,7 +11,6 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
         protected override void Configure(IContainerBuilder builder)
         {
             builder.RegisterComponent(voiceChatControlView);
-            builder.RegisterEntryPoint<VoiceChatChannel>().AsSelf();
 
             builder.RegisterEntryPoint<VoiceChatControlPresenter>();
         }
