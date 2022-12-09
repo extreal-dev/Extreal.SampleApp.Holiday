@@ -4,13 +4,11 @@ namespace Extreal.SampleApp.Holiday.Controls.InputControl
 {
     public class InputControlView : MonoBehaviour
     {
+#pragma warning disable IDE0051
         [SerializeField] private GameObject canvas4Mobile;
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0051")]
         [SerializeField] private GameObject eventSystem4StandAlone;
         [SerializeField] private GameObject eventSystem4Mobile;
 
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0051")]
         private void Awake()
         {
             canvas4Mobile.SetActive(false);
@@ -20,6 +18,7 @@ namespace Extreal.SampleApp.Holiday.Controls.InputControl
             eventSystem4StandAlone.SetActive(true);
 #endif
         }
+#pragma warning restore IDE0051
 
         public void ShowCanvas()
             => canvas4Mobile.SetActive(true);

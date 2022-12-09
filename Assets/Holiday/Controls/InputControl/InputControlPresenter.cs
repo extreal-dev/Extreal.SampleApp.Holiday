@@ -8,6 +8,7 @@ namespace Extreal.SampleApp.Holiday.Controls.InputControl
 {
     public class InputControlPresenter : IInitializable, IDisposable
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0052")]
         private readonly StageNavigator<StageName, SceneName> stageNavigator;
         private readonly InputControlView inputControlView;
 
@@ -39,6 +40,7 @@ namespace Extreal.SampleApp.Holiday.Controls.InputControl
             GC.SuppressFinalize(this);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0051")]
         private void OnStageTransitioned(StageName stageName)
         {
             if (AppUtils.IsSpace(stageName))
