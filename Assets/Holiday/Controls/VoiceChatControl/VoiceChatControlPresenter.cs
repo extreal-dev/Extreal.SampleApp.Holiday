@@ -1,11 +1,10 @@
 using System;
 using Cysharp.Threading.Tasks;
-using VContainer.Unity;
-using UniRx;
-using Extreal.SampleApp.Holiday.DomainModels;
 using Extreal.Core.StageNavigation;
-using Extreal.SampleApp.Holiday.App;
 using Extreal.Integration.Chat.Vivox;
+using Extreal.SampleApp.Holiday.App;
+using UniRx;
+using VContainer.Unity;
 
 namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
 {
@@ -66,9 +65,9 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
                 .AddTo(disposables);
 
             appState.InMultiplay
-            .Where(inMultiplay => inMultiplay)
-            .Subscribe(_ => voiceChatChannel.Join())
-            .AddTo(disposables);
+                .Where(inMultiplay => inMultiplay)
+                .Subscribe(_ => voiceChatChannel.Join())
+                .AddTo(disposables);
 
             voiceChatChannel.Login();
         }

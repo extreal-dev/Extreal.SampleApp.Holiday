@@ -1,6 +1,6 @@
 using System.Linq;
 
-namespace Extreal.SampleApp.Holiday.App.Avatars
+namespace Extreal.SampleApp.Holiday.App
 {
     public class AvatarService
     {

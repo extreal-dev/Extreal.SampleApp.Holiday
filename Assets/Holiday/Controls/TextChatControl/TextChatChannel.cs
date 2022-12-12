@@ -1,19 +1,21 @@
-using System.Threading;
 using System;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.Logging;
 using Extreal.Integration.Chat.Vivox;
 using UniRx;
 using VivoxUnity;
 
-namespace Extreal.SampleApp.Holiday.DomainModels
+namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
 {
     public class TextChatChannel : IDisposable
     {
         public IObservable<bool> InText => inText;
         private readonly BoolReactiveProperty inText = new BoolReactiveProperty(false);
+
         public IObservable<string> OnTextMessageReceived
             => vivoxClient.OnTextMessageReceived.Select(channelTextMessage => channelTextMessage.Message);
+
         public IObservable<Unit> OnUnexpectedDisconnected
             => vivoxClient.OnRecoveryStateChanged
                 .Where(recoveryState => recoveryState == ConnectionRecoveryState.FailedToRecover)
@@ -125,7 +127,6 @@ namespace Extreal.SampleApp.Holiday.DomainModels
             {
                 vivoxClient.Disconnect(channelId);
             }
-
         }
 
         public void SendTextMessage(string message)

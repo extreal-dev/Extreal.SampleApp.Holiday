@@ -6,7 +6,7 @@ using Extreal.Integration.Chat.Vivox;
 using UniRx;
 using VivoxUnity;
 
-namespace Extreal.SampleApp.Holiday.DomainModels
+namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
 {
     public class VoiceChatChannel : IDisposable
     {
@@ -17,9 +17,9 @@ namespace Extreal.SampleApp.Holiday.DomainModels
         private readonly ReactiveProperty<string> onMuted = new ReactiveProperty<string>();
 
         public IObservable<Unit> OnUnexpectedDisconnected
-                    => vivoxClient.OnRecoveryStateChanged
-                        .Where(recoveryState => recoveryState == ConnectionRecoveryState.FailedToRecover)
-                        .Select(_ => Unit.Default);
+            => vivoxClient.OnRecoveryStateChanged
+                .Where(recoveryState => recoveryState == ConnectionRecoveryState.FailedToRecover)
+                .Select(_ => Unit.Default);
 
         private readonly VivoxClient vivoxClient;
 
@@ -43,7 +43,6 @@ namespace Extreal.SampleApp.Holiday.DomainModels
                 .Where(channelId => channelId.Name == channelName)
                 .Subscribe(async channelId =>
                 {
-
                     this.channelId = channelId;
                     var channelSession = vivoxClient.LoginSession.ChannelSessions[channelId];
 

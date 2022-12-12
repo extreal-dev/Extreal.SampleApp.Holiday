@@ -1,6 +1,7 @@
+using System.Diagnostics.CodeAnalysis;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 
 namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
 {
@@ -10,7 +11,7 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
 
         private bool destroyed;
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0051")]
+        [SuppressMessage("Style", "IDE0051")]
         private void OnDestroy()
             => destroyed = true;
 
@@ -27,6 +28,7 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
             {
                 ancestor = ancestor.transform.parent;
             }
+
             var canvasRectTransform = ancestor.GetComponent<RectTransform>();
             var canvasWidth = canvasRectTransform.rect.width;
             var canvasHeight = canvasRectTransform.rect.height;

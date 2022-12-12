@@ -3,7 +3,6 @@ using Cysharp.Threading.Tasks;
 using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App;
-using Extreal.SampleApp.Holiday.App.Avatars;
 using UniRx;
 using VContainer.Unity;
 

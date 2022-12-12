@@ -1,7 +1,8 @@
 using System;
-using UnityEngine;
+using System.Diagnostics.CodeAnalysis;
 using TMPro;
 using UniRx;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
@@ -14,7 +15,8 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
         [SerializeField] private GameObject textChatPrefab;
 
         public IObservable<string> OnSendButtonClicked => onSendButtonClicked;
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeCracker", "CC0033")]
+
+        [SuppressMessage("CodeCracker", "CC0033")]
         private readonly Subject<string> onSendButtonClicked = new Subject<string>();
 
 #pragma warning disable IDE0051

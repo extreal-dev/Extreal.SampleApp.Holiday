@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using TMPro;
 using UniRx;
 using UnityEngine;
@@ -14,7 +15,7 @@ namespace Extreal.SampleApp.Holiday.Screens.ErrorScreen
 
         public IObservable<Unit> OnOkButtonClicked => okButton.OnClickAsObservable().TakeUntilDestroy(this);
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0051")]
+        [SuppressMessage("Style", "IDE0051")]
         private void Start()
             => canvas.SetActive(false);
 

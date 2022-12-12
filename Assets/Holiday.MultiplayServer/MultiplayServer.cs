@@ -67,6 +67,7 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
             {
                 Logger.LogDebug($"{MessageName.PlayerSpawn}: {clientId}");
             }
+
             messageStream.ReadValueSafe(out string avatarAssetName);
             var result = Addressables.LoadAssetAsync<GameObject>(avatarAssetName);
             var playerPrefab = await result.Task;

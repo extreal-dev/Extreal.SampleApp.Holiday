@@ -1,8 +1,8 @@
 using System;
-using UnityEngine;
-using UniRx;
-using UnityEngine.UI;
 using TMPro;
+using UniRx;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
 {

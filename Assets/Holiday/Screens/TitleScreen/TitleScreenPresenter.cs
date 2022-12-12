@@ -12,7 +12,8 @@ namespace Extreal.SampleApp.Holiday.Screens.TitleScreen
 
         private readonly TitleScreenView titleScreenView;
 
-        public TitleScreenPresenter(StageNavigator<StageName, SceneName> stageNavigator, TitleScreenView titleScreenView)
+        public TitleScreenPresenter(StageNavigator<StageName, SceneName> stageNavigator,
+            TitleScreenView titleScreenView)
         {
             this.stageNavigator = stageNavigator;
             this.titleScreenView = titleScreenView;

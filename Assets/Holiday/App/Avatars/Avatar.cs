@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Extreal.SampleApp.Holiday.App.Avatars
+namespace Extreal.SampleApp.Holiday.App
 {
     [Serializable]
     public class Avatar

@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
-using Extreal.SampleApp.Holiday.App.Avatars;
 using UnityEngine;
-using Avatar = Extreal.SampleApp.Holiday.App.Avatars.Avatar;
 
-namespace Extreal.SampleApp.Holiday.App.BuiltinRepository
+namespace Extreal.SampleApp.Holiday.App
 {
     [CreateAssetMenu(
         menuName = "Holiday/" + nameof(BuiltinAvatarRepository),

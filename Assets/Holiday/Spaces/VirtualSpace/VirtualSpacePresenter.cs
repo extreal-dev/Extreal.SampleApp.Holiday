@@ -1,9 +1,9 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System;
+using Cysharp.Threading.Tasks;
 using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App;
 using UniRx;
 using VContainer.Unity;
-using System;
 
 namespace Extreal.SampleApp.Holiday.Spaces.VirtualSpace
 {

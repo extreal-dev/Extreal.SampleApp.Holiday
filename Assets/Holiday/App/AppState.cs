@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using Extreal.SampleApp.Holiday.App.Avatars;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.App

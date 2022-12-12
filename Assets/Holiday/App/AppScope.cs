@@ -2,12 +2,11 @@
 using Extreal.Core.StageNavigation;
 using Extreal.Integration.Chat.Vivox;
 using Extreal.Integration.Multiplay.NGO;
-using Extreal.SampleApp.Holiday.App.Avatars;
-using Extreal.SampleApp.Holiday.App.BuiltinRepository;
 using Unity.Netcode;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
+using LogLevel = Extreal.Core.Logging.LogLevel;
 
 namespace Extreal.SampleApp.Holiday.App
 {
@@ -23,7 +22,7 @@ namespace Extreal.SampleApp.Holiday.App
             QualitySettings.vSyncCount = 0;
             Application.targetFrameRate = 60;
 
-            const Core.Logging.LogLevel logLevel = Core.Logging.LogLevel.Debug;
+            const LogLevel logLevel = LogLevel.Debug;
             LoggingManager.Initialize(logLevel: logLevel);
 
             var logger = LoggingManager.GetLogger(nameof(AppScope));

@@ -1,11 +1,9 @@
 using System;
-using Cysharp.Threading.Tasks;
-using VContainer.Unity;
-using UniRx;
 using Extreal.Core.StageNavigation;
-using Extreal.SampleApp.Holiday.App;
 using Extreal.Integration.Chat.Vivox;
-using Extreal.SampleApp.Holiday.DomainModels;
+using Extreal.SampleApp.Holiday.App;
+using UniRx;
+using VContainer.Unity;
 
 namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
 {
