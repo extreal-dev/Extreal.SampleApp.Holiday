@@ -6,7 +6,7 @@ using Avatar = Extreal.SampleApp.Holiday.App.Avatars.Avatar;
 namespace Extreal.SampleApp.Holiday.App.BuiltinRepository
 {
     [CreateAssetMenu(
-        menuName = "BuiltinRepository/" + nameof(BuiltinAvatarRepository),
+        menuName = "Holiday/" + nameof(BuiltinAvatarRepository),
         fileName = nameof(BuiltinAvatarRepository))]
     public class BuiltinAvatarRepository : ScriptableObject, IAvatarRepository
     {
