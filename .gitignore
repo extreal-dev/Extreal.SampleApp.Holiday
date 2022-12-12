@@ -68,3 +68,6 @@ VivoxAppConfig.asset*
 # Temporal taking refuge of performance test
 Assets/Holiday.PerformanceTest/
 Assets/Holiday.PerformanceTest.meta
+
+# CodeCoverage
+CodeCoverage/
