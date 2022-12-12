@@ -1,45 +1,59 @@
 ﻿using System;
+using Extreal.Core.Logging;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.App
 {
     public class AppState : IDisposable
     {
+        private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(AppState));
+
         public IReadOnlyReactiveProperty<string> PlayerName => playerName;
         private readonly ReactiveProperty<string> playerName = new ReactiveProperty<string>("Guest");
 
         public IReadOnlyReactiveProperty<Avatar> Avatar => avatar;
         private readonly ReactiveProperty<Avatar> avatar = new ReactiveProperty<Avatar>();
 
-        public IObservable<bool> InMultiplay => inMultiplay;
-        private readonly BoolReactiveProperty inMultiplay = new BoolReactiveProperty(false);
-
-        public IObservable<bool> InText => inText;
-        private readonly BoolReactiveProperty inText = new BoolReactiveProperty(false);
-
-        public IObservable<bool> InAudio => inAudio;
-        private readonly BoolReactiveProperty inAudio = new BoolReactiveProperty(false);
-
         public IObservable<bool> IsPlaying => isPlaying;
         private readonly BoolReactiveProperty isPlaying = new BoolReactiveProperty(false);
 
-        public IObservable<string> OnErrorOccurred => onErrorOccurred;
-        private readonly Subject<string> onErrorOccurred = new Subject<string>();
+        public IObservable<string> OnNotificationReceived => onNotificationReceived;
+        private readonly Subject<string> onNotificationReceived = new Subject<string>();
 
-        public bool IsErrorShowed { get; private set; }
+        //public bool IsErrorShowed { get; private set; }
+
+        private readonly BoolReactiveProperty inMultiplay = new BoolReactiveProperty(false);
+        private readonly BoolReactiveProperty inText = new BoolReactiveProperty(false);
+        private readonly BoolReactiveProperty inAudio = new BoolReactiveProperty(false);
 
         private readonly CompositeDisposable disposables = new CompositeDisposable();
 
-        public void Initialize()
+        public AppState()
         {
-            InMultiplay.Merge(InText, InAudio)
+            inMultiplay.Merge(inText, inAudio)
                 .Where(_ => inMultiplay.Value && inText.Value && inAudio.Value)
-                .Subscribe(_ => isPlaying.Value = true)
+                .Subscribe(_ =>
+                {
+                    if (Logger.IsDebug())
+                    {
+                        Logger.LogDebug("IsPlaying: true");
+                    }
+
+                    isPlaying.Value = true;
+                })
                 .AddTo(disposables);
 
-            InMultiplay.Merge(InText, InAudio)
-                .Where(value => isPlaying.Value && !value)
-                .Subscribe(_ => isPlaying.Value = false)
+            inMultiplay.Merge(inText, inAudio)
+                .Where(inState => isPlaying.Value && !inState)
+                .Subscribe(_ =>
+                {
+                    if (Logger.IsDebug())
+                    {
+                        Logger.LogDebug("IsPlaying: false");
+                    }
+
+                    isPlaying.Value = false;
+                })
                 .AddTo(disposables);
         }
 
@@ -51,30 +65,17 @@ namespace Extreal.SampleApp.Holiday.App
             inText.Dispose();
             inAudio.Dispose();
             isPlaying.Dispose();
-            onErrorOccurred.Dispose();
+            onNotificationReceived.Dispose();
             disposables.Dispose();
             GC.SuppressFinalize(this);
         }
 
-        public void SetPlayerName(string playerName)
-            => this.playerName.Value = playerName;
-
-        public void SetAvatar(Avatar avatar)
-            => this.avatar.Value = avatar;
-
-        public void SetInMultiplay(bool value)
-            => inMultiplay.Value = value;
-
-        public void SetInText(bool value)
-            => inText.Value = value;
-
-        public void SetInAudio(bool value)
-            => inAudio.Value = value;
-
-        public void SetErrorMessage(string message)
-            => onErrorOccurred.OnNext(message);
-
-        public void SetIsErrorShowed(bool value)
-            => IsErrorShowed = value;
+        public void SetPlayerName(string playerName) => this.playerName.Value = playerName;
+        public void SetAvatar(Avatar avatar) => this.avatar.Value = avatar;
+        public void SetInMultiplay(bool value) => inMultiplay.Value = value;
+        public void SetInText(bool value) => inText.Value = value;
+        public void SetInAudio(bool value) => inAudio.Value = value;
+        public void SetNotification(string message) => onNotificationReceived.OnNext(message);
+        //public void SetIsErrorShowed(bool value) => IsErrorShowed = value;
     }
 }

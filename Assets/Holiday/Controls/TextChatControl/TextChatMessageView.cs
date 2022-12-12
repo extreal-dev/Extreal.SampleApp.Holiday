@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
 {
-    public class TextChatMonobehaviour : MonoBehaviour
+    public class TextChatMessageView : MonoBehaviour
     {
         [SerializeField] private TMP_Text messageText;
 
@@ -30,14 +30,16 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
             }
 
             var canvasRectTransform = ancestor.GetComponent<RectTransform>();
-            var canvasWidth = canvasRectTransform.rect.width;
-            var canvasHeight = canvasRectTransform.rect.height;
+            var rect = canvasRectTransform.rect;
+            var canvasWidth = rect.width;
+            var canvasHeight = rect.height;
             var velocity = Random.Range(0.2f, 0.5f) * canvasWidth;
             var lifetime = (canvasWidth + messageText.preferredWidth) / velocity;
 
             var rectTransform = GetComponent<RectTransform>();
-            rectTransform.sizeDelta = new Vector2(messageText.preferredWidth, messageText.preferredHeight);
-            rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, messageText.preferredHeight);
+            var sizeDelta = new Vector2(messageText.preferredWidth, messageText.preferredHeight);
+            sizeDelta = new Vector2(sizeDelta.x, messageText.preferredHeight);
+            rectTransform.sizeDelta = sizeDelta;
 
             if ((Random.Range(0, 10) & 1) == 0)
             {

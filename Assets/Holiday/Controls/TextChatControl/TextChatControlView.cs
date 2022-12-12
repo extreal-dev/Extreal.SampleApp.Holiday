@@ -14,12 +14,10 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
         [SerializeField] private Transform messageRoot;
         [SerializeField] private GameObject textChatPrefab;
 
-        public IObservable<string> OnSendButtonClicked => onSendButtonClicked;
-
+        public IObservable<string> OnSendButtonClicked => onSendButtonClicked.AddTo(this);
         [SuppressMessage("CodeCracker", "CC0033")]
         private readonly Subject<string> onSendButtonClicked = new Subject<string>();
 
-#pragma warning disable IDE0051
         private void Awake()
             => sendButton.OnClickAsObservable()
                 .TakeUntilDestroy(this)
@@ -29,13 +27,9 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
                     inputField.text = string.Empty;
                 });
 
-        private void OnDestroy()
-            => onSendButtonClicked.Dispose();
-#pragma warning restore IDE0051
-
         public void ShowMessage(string message)
             => Instantiate(textChatPrefab, messageRoot)
-                .GetComponent<TextChatMonobehaviour>()
+                .GetComponent<TextChatMessageView>()
                 .SetText(message);
     }
 }

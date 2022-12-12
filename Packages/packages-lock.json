@@ -73,7 +73,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.rider": {
-      "version": "3.0.16",
+      "version": "3.0.17",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -316,11 +316,11 @@
       "url": "https://package.openupm.com"
     },
     "jp.co.tis.extreal.core.logging": {
-      "version": "https://github.com/extreal-dev/Extreal.Core.Logging.git#0.1.0",
+      "version": "https://github.com/extreal-dev/Extreal.Core.Logging.git#0.2.0",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "c27faeb1d4a1799428c04ea9506cddd1b5964061"
+      "hash": "50ad92973fc790276ca3a4e95b747743feb39cb8"
     },
     "jp.co.tis.extreal.core.stagenavigation": {
       "version": "https://github.com/extreal-dev/Extreal.Core.StageNavigation.git#0.3.0",
@@ -346,7 +346,7 @@
       "hash": "ada04270864b15736b14cc3abe05ba2f1570199a"
     },
     "jp.co.tis.extreal.integration.multiplay.ngo": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.Multiplay.NGO.git#0.1.0",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.Multiplay.NGO.git#0.2.0",
       "depth": 0,
       "source": "git",
       "dependencies": {
@@ -355,7 +355,7 @@
         "com.cysharp.unitask": "2.3.1",
         "com.neuecc.unirx": "7.1.0"
       },
-      "hash": "ac97c2966dadd41ddef8c801130b519a5219a214"
+      "hash": "a08e0a1c10b21e3b501e5a6fa7594231943aebaa"
     },
     "jp.hadashikick.vcontainer": {
       "version": "1.12.0",

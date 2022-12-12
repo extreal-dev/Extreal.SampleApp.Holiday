@@ -26,8 +26,6 @@ namespace Extreal.SampleApp.Holiday.App
 
         public void Initialize()
         {
-            appState.Initialize();
-
             var authConfig = new VivoxAuthConfig(nameof(Holiday));
             vivoxClient.Login(authConfig);
         }

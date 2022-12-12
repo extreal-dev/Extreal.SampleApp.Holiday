@@ -1,80 +1,61 @@
-using System;
+using System.Diagnostics.CodeAnalysis;
+using Cysharp.Threading.Tasks;
 using Extreal.Core.StageNavigation;
 using Extreal.Integration.Chat.Vivox;
 using Extreal.SampleApp.Holiday.App;
 using UniRx;
-using VContainer.Unity;
 
 namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
 {
-    public class TextChatControlPresenter : IInitializable, IDisposable
+    public class TextChatControlPresenter : StagePresenterBase
     {
         private readonly StageNavigator<StageName, SceneName> stageNavigator;
-        private readonly TextChatControlView textChatScreenView;
-        private readonly TextChatChannel textChatChannel;
+        private readonly VivoxClient vivoxClient;
+        private readonly TextChatControlView textChatControlView;
         private readonly AppState appState;
 
-        private readonly CompositeDisposable disposables = new CompositeDisposable();
+        private TextChatChannel textChatChannel;
 
-        public TextChatControlPresenter
-        (
+        public TextChatControlPresenter(
             StageNavigator<StageName, SceneName> stageNavigator,
-            TextChatControlView textChatScreenView,
-            AppState appState,
-            VivoxClient vivoxClient
-        )
+            VivoxClient vivoxClient,
+            TextChatControlView textChatControlView,
+            AppState appState) : base(stageNavigator)
         {
             this.stageNavigator = stageNavigator;
-            this.textChatScreenView = textChatScreenView;
+            this.vivoxClient = vivoxClient;
+            this.textChatControlView = textChatControlView;
             this.appState = appState;
-
-            textChatChannel = new TextChatChannel(vivoxClient);
         }
 
-        public void Initialize()
+        [SuppressMessage("CodeCracker", "CC0020")]
+        protected override void Initialize(StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables) =>
+            textChatControlView.OnSendButtonClicked
+                .Subscribe(message => textChatChannel.SendMessage(message)).AddTo(sceneDisposables);
+
+        protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
         {
-            textChatChannel.Initialize();
+            textChatChannel = new TextChatChannel(vivoxClient, $"HolidayTextChat{stageName}");
 
-            stageNavigator.OnStageTransitioned
-                .Subscribe(stageName => textChatChannel.SetChannelName($"HolidayTextChat{stageName}"))
-                .AddTo(disposables);
-
-            stageNavigator.OnStageTransitioning
-                .Subscribe(_ => textChatChannel.Leave())
-                .AddTo(disposables);
-
-            textChatChannel.InText
+            textChatChannel.OnConnected
                 .Subscribe(appState.SetInText)
-                .AddTo(disposables);
+                .AddTo(stageDisposables);
 
-            textChatScreenView.OnSendButtonClicked
-                .Subscribe(textChatChannel.SendTextMessage)
-                .AddTo(disposables);
-
-            textChatChannel.OnTextMessageReceived
-                .Subscribe(textChatScreenView.ShowMessage)
-                .AddTo(disposables);
+            textChatChannel.OnMessageReceived
+                .Subscribe(textChatControlView.ShowMessage)
+                .AddTo(stageDisposables);
 
             textChatChannel.OnUnexpectedDisconnected
                 .Subscribe(_ =>
                 {
-                    appState.SetErrorMessage("Unexpected disconnection from vivox server has occurred");
+                    appState.SetNotification("Unexpected disconnection from vivox server has occurred");
                     stageNavigator.ReplaceAsync(StageName.AvatarSelectionStage);
                 })
-                .AddTo(disposables);
+                .AddTo(stageDisposables);
 
-            appState.InMultiplay
-                .Where(inMultiplay => inMultiplay)
-                .Subscribe(_ => textChatChannel.Join())
-                .AddTo(disposables);
-
-            textChatChannel.Login();
+            textChatChannel.JoinAsync().Forget();
         }
 
-        public void Dispose()
-        {
-            disposables.Dispose();
-            GC.SuppressFinalize(this);
-        }
+        protected override void OnStageExiting(StageName stageName) => textChatChannel.Leave();
     }
 }

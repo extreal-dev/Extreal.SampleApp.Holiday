@@ -1,81 +1,61 @@
-using System;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.StageNavigation;
 using Extreal.Integration.Chat.Vivox;
 using Extreal.SampleApp.Holiday.App;
 using UniRx;
-using VContainer.Unity;
 
 namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
 {
-    public class VoiceChatControlPresenter : IInitializable, IDisposable
+    public class VoiceChatControlPresenter : StagePresenterBase
     {
         private readonly StageNavigator<StageName, SceneName> stageNavigator;
+        private readonly VivoxClient vivoxClient;
         private readonly VoiceChatControlView voiceChatScreenView;
-        private readonly VoiceChatChannel voiceChatChannel;
         private readonly AppState appState;
 
-        private readonly CompositeDisposable disposables = new CompositeDisposable();
+        private VoiceChatChannel voiceChatChannel;
 
-        public VoiceChatControlPresenter
-        (
+        public VoiceChatControlPresenter(
             StageNavigator<StageName, SceneName> stageNavigator,
+            VivoxClient vivoxClient,
             VoiceChatControlView voiceChatScreenView,
-            AppState appState,
-            VivoxClient vivoxClient
-        )
+            AppState appState) : base(stageNavigator)
         {
             this.stageNavigator = stageNavigator;
+            this.vivoxClient = vivoxClient;
             this.voiceChatScreenView = voiceChatScreenView;
             this.appState = appState;
-
-            voiceChatChannel = new VoiceChatChannel(vivoxClient);
         }
 
-        public void Initialize()
-        {
-            voiceChatChannel.Initialize();
-
-            stageNavigator.OnStageTransitioned
-                .Subscribe(stageName => voiceChatChannel.SetChannelName($"HolidayVoiceChat{stageName}"))
-                .AddTo(disposables);
-
-            stageNavigator.OnStageTransitioning
-                .Subscribe(_ => voiceChatChannel.Leave())
-                .AddTo(disposables);
-
-            voiceChatChannel.InAudio
-                .Subscribe(appState.SetInAudio)
-                .AddTo(disposables);
-
+        protected override void Initialize(
+            StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables) =>
             voiceChatScreenView.OnMuteButtonClicked
                 .Subscribe(_ => voiceChatChannel.ToggleMuteAsync().Forget())
-                .AddTo(disposables);
+                .AddTo(sceneDisposables);
+
+        protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
+        {
+            voiceChatChannel = new VoiceChatChannel(vivoxClient, $"HolidayVoiceChat{stageName}");
+
+            voiceChatChannel.OnConnected
+                .Subscribe(appState.SetInAudio)
+                .AddTo(stageDisposables);
 
             voiceChatChannel.OnMuted
-                .Subscribe(voiceChatScreenView.SetMutedString)
-                .AddTo(disposables);
+                .Subscribe(voiceChatScreenView.ToggleMute)
+                .AddTo(stageDisposables);
 
             voiceChatChannel.OnUnexpectedDisconnected
                 .Subscribe(_ =>
                 {
-                    appState.SetErrorMessage("Unexpected disconnection from vivox server has occurred");
+                    appState.SetNotification("Unexpected disconnection from vivox server has occurred");
                     stageNavigator.ReplaceAsync(StageName.AvatarSelectionStage);
                 })
-                .AddTo(disposables);
+                .AddTo(stageDisposables);
 
-            appState.InMultiplay
-                .Where(inMultiplay => inMultiplay)
-                .Subscribe(_ => voiceChatChannel.Join())
-                .AddTo(disposables);
-
-            voiceChatChannel.Login();
+            voiceChatChannel.JoinAsync().Forget();
         }
 
-        public void Dispose()
-        {
-            disposables.Dispose();
-            GC.SuppressFinalize(this);
-        }
+        protected override void OnStageExiting(StageName stageName) => voiceChatChannel.Leave();
     }
 }

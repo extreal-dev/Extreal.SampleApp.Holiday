@@ -20,11 +20,11 @@ namespace Extreal.SampleApp.Holiday.Screens.ErrorScreen
 
         public void Initialize()
         {
-            appState.OnErrorOccurred
-                .Where(_ => !appState.IsErrorShowed)
+            appState.OnNotificationReceived
+                //.Where(_ => !appState.IsErrorShowed)
                 .Subscribe(message =>
                 {
-                    appState.SetIsErrorShowed(true);
+                    //appState.SetIsErrorShowed(true);
                     errorScreenView.SetAndShowErrorMessage(message);
                 })
                 .AddTo(disposables);
@@ -32,7 +32,7 @@ namespace Extreal.SampleApp.Holiday.Screens.ErrorScreen
             errorScreenView.OnOkButtonClicked
                 .Subscribe(_ =>
                 {
-                    appState.SetIsErrorShowed(false);
+                    //appState.SetIsErrorShowed(false);
                     errorScreenView.HideErrorMessage();
                 });
         }

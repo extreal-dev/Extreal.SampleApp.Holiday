@@ -12,7 +12,6 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 {
     public class MultiplayRoom : IDisposable
     {
-        public IObservable<Unit> OnConnected => ngoClient.OnConnected;
         public IObservable<Unit> OnConnectionApprovalRejected => ngoClient.OnConnectionApprovalRejected;
         public IObservable<Unit> OnUnexpectedDisconnected => ngoClient.OnUnexpectedDisconnected;
 
@@ -23,31 +22,25 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
         private readonly BoolReactiveProperty isPlayerSpawned = new BoolReactiveProperty(false);
 
         private readonly NgoClient ngoClient;
-
-        private bool isJoined;
-
         private readonly CompositeDisposable disposables = new CompositeDisposable();
         private readonly CancellationTokenSource cts = new CancellationTokenSource();
 
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(MultiplayRoom));
 
         public MultiplayRoom(NgoClient ngoClient)
-            => this.ngoClient = ngoClient;
-
-        public void Initialize()
         {
-            ngoClient.OnConnected
+            this.ngoClient = ngoClient;
+
+            this.ngoClient.OnConnected
                 .Subscribe(_ =>
                 {
-                    isJoined = true;
                     ngoClient.RegisterMessageHandler(MessageName.PlayerSpawned.ToString(), PlayerSpawnedMessageHandler);
                 })
                 .AddTo(disposables);
 
-            ngoClient.OnDisconnecting
+            this.ngoClient.OnDisconnecting
                 .Subscribe(_ =>
                 {
-                    isJoined = false;
                     isPlayerSpawned.Value = false;
                     ngoClient.UnregisterMessageHandler(MessageName.PlayerSpawned.ToString());
                 })
@@ -57,7 +50,6 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
         public void Dispose()
         {
             cts.Cancel();
-
             cts.Dispose();
             onConnectFailed.Dispose();
             isPlayerSpawned.Dispose();
@@ -67,16 +59,13 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 
         public async UniTask JoinAsync(string avatarAssetName)
         {
-            await UniTask.WaitWhile(() => isJoined);
-
-            var ngoConfig = new NgoConfig();
             try
             {
-                await ngoClient.ConnectAsync(ngoConfig, cts.Token);
+                await ngoClient.ConnectAsync(new NgoConfig(timeout: TimeSpan.FromSeconds(5)), cts.Token);
             }
             catch (TimeoutException)
             {
-                onConnectFailed?.OnNext(Unit.Default);
+                onConnectFailed.OnNext(Unit.Default);
                 return;
             }
             catch (OperationCanceledException)
@@ -96,7 +85,6 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
             {
                 Logger.LogDebug($"spawn: avatarAssetName: {avatarAssetName}");
             }
-
             var messageStream = new FastBufferWriter(FixedString64Bytes.UTF8MaxLengthInBytes, Allocator.Temp);
             messageStream.WriteValueSafe(avatarAssetName);
             ngoClient.SendMessage(MessageName.PlayerSpawn.ToString(), messageStream);
