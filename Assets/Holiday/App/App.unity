@@ -160,7 +160,7 @@ MonoBehaviour:
   builtinAvatarRepository: {fileID: 11400000, guid: 9d3fe01be1d6c244eb77b0bedabc0e9d,
     type: 2}
   networkManager: {fileID: 1418789195}
-  appConfig: {fileID: 11400000, guid: 69de3c804d59c7d4b94e238ed4abd6ca, type: 2}
+  vivoxAppConfig: {fileID: 0}
 --- !u!4 &1287753623
 Transform:
   m_ObjectHideFlags: 0
