@@ -14,27 +14,29 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
 {
     public class MultiplayServer : IDisposable
     {
+        private readonly MultiplayServerConfig multiplayServerConfig;
         private readonly NgoServer ngoServer;
 
         private readonly CompositeDisposable disposables = new CompositeDisposable();
 
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(MultiplayServer));
 
-        public MultiplayServer(NgoServer ngoServer)
-            => this.ngoServer = ngoServer;
+        public MultiplayServer(MultiplayServerConfig multiplayServerConfig, NgoServer ngoServer)
+        {
+            this.multiplayServerConfig = multiplayServerConfig;
+            this.ngoServer = ngoServer;
+        }
 
         public void Initialize()
         {
+            if (Logger.IsDebug())
+            {
+                Logger.LogDebug($"MaxCapacity: {multiplayServerConfig.MaxCapacity}");
+            }
+
             ngoServer.SetConnectionApprovalCallback((_, response) =>
             {
-                if (ngoServer.ConnectedClients.Count >= 100)
-                {
-                    response.Approved = false;
-                }
-                else
-                {
-                    response.Approved = true;
-                }
+                response.Approved = ngoServer.ConnectedClients.Count < multiplayServerConfig.MaxCapacity;
             });
 
             ngoServer.OnServerStarted

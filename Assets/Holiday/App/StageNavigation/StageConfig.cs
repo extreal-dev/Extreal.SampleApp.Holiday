@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Extreal.SampleApp.Holiday.App
 {
     [CreateAssetMenu(
-        menuName = "Config/" + nameof(StageConfig),
+        menuName = "Holiday/" + nameof(StageConfig),
         fileName = nameof(StageConfig))]
     public class StageConfig : ScriptableObject, IStageConfig<StageName, SceneName>
     {

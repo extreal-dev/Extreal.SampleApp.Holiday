@@ -237,6 +237,8 @@ MonoBehaviour:
     TypeName: 
   autoRun: 1
   autoInjectGameObjects: []
+  multiplayServerConfig: {fileID: 11400000, guid: 36d199537f7e22a4e829df08f882615f,
+    type: 2}
   networkManager: {fileID: 319104688}
 --- !u!4 &1504279234
 Transform:
