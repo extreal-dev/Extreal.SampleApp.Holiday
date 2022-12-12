@@ -40,19 +40,13 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
             });
 
             ngoServer.OnServerStarted
-                .Subscribe(_ => ngoServer.RegisterMessageHandler(MessageName.PlayerSpawn.ToString(), PlayerSpawnMessageHandler))
+                .Subscribe(_ =>
+                    ngoServer.RegisterMessageHandler(MessageName.PlayerSpawn.ToString(), PlayerSpawnMessageHandler))
                 .AddTo(disposables);
-
-            /* TODO Allow MessageHandler to be unregistered even if the server is down
-            ngoServer.OnServerStopping
-                .Subscribe(_ => ngoServer.UnregisterMessageHandler(MessageName.PlayerSpawn.ToString()))
-                .AddTo(disposables);
-            */
         }
 
         public void Dispose()
         {
-            ngoServer.StopServerAsync().Forget();
             disposables.Dispose();
             GC.SuppressFinalize(this);
         }
@@ -63,7 +57,8 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
         private void SendPlayerSpawned(ulong clientId)
         {
             var messageStream = new FastBufferWriter(FixedString64Bytes.UTF8MaxLengthInBytes, Allocator.Temp);
-            ngoServer.SendMessageToClients(new List<ulong> { clientId }, MessageName.PlayerSpawned.ToString(), messageStream);
+            ngoServer.SendMessageToClients(new List<ulong> { clientId }, MessageName.PlayerSpawned.ToString(),
+                messageStream);
         }
 
         private async void PlayerSpawnMessageHandler(ulong clientId, FastBufferReader messageStream)
