@@ -41,13 +41,16 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
                 .Subscribe(_ => ngoServer.RegisterMessageHandler(MessageName.PlayerSpawn.ToString(), PlayerSpawnMessageHandler))
                 .AddTo(disposables);
 
+            /* TODO Allow MessageHandler to be unregistered even if the server is down
             ngoServer.OnServerStopping
                 .Subscribe(_ => ngoServer.UnregisterMessageHandler(MessageName.PlayerSpawn.ToString()))
                 .AddTo(disposables);
+            */
         }
 
         public void Dispose()
         {
+            ngoServer.StopServerAsync().Forget();
             disposables.Dispose();
             GC.SuppressFinalize(this);
         }
