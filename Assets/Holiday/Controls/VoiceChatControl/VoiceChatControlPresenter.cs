@@ -8,7 +8,6 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
 {
     public class VoiceChatControlPresenter : StagePresenterBase
     {
-        private readonly StageNavigator<StageName, SceneName> stageNavigator;
         private readonly VivoxClient vivoxClient;
         private readonly VoiceChatControlView voiceChatScreenView;
         private readonly AppState appState;
@@ -21,7 +20,6 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
             VoiceChatControlView voiceChatScreenView,
             AppState appState) : base(stageNavigator)
         {
-            this.stageNavigator = stageNavigator;
             this.vivoxClient = vivoxClient;
             this.voiceChatScreenView = voiceChatScreenView;
             this.appState = appState;
@@ -49,13 +47,23 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
                 .Subscribe(_ =>
                 {
                     appState.SetNotification("Unexpected disconnection from vivox server has occurred");
-                    stageNavigator.ReplaceAsync(StageName.AvatarSelectionStage);
+                })
+                .AddTo(stageDisposables);
+
+            voiceChatChannel.OnConnectFailed
+                .Subscribe(_ =>
+                {
+                    appState.SetNotification("Connection to vivox server is failed");
                 })
                 .AddTo(stageDisposables);
 
             voiceChatChannel.JoinAsync().Forget();
         }
 
-        protected override void OnStageExiting(StageName stageName) => voiceChatChannel.Leave();
+        protected override void OnStageExiting(StageName stageName)
+        {
+            appState.SetInAudio(false);
+            voiceChatChannel.Leave();
+        }
     }
 }

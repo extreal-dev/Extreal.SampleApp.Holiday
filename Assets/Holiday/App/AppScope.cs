@@ -49,7 +49,7 @@ namespace Extreal.SampleApp.Holiday.App
             builder.RegisterComponent(networkManager);
             builder.Register<NgoClient>(Lifetime.Singleton);
 
-            builder.RegisterComponent(vivoxAppConfig);
+            builder.RegisterComponent(vivoxAppConfig).AsImplementedInterfaces();
             builder.Register<VivoxClient>(Lifetime.Singleton);
 
             builder.Register<AppState>(Lifetime.Singleton);

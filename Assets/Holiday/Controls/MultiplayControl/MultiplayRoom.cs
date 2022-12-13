@@ -61,7 +61,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
         {
             try
             {
-                await ngoClient.ConnectAsync(new NgoConfig(timeout: TimeSpan.FromSeconds(5)), cts.Token);
+                await ngoClient.ConnectAsync(new NgoConfig(), cts.Token);
             }
             catch (TimeoutException)
             {

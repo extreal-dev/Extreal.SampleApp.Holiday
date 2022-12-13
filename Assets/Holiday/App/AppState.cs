@@ -20,8 +20,6 @@ namespace Extreal.SampleApp.Holiday.App
         public IObservable<string> OnNotificationReceived => onNotificationReceived;
         private readonly Subject<string> onNotificationReceived = new Subject<string>();
 
-        //public bool IsErrorShowed { get; private set; }
-
         private readonly BoolReactiveProperty inMultiplay = new BoolReactiveProperty(false);
         private readonly BoolReactiveProperty inText = new BoolReactiveProperty(false);
         private readonly BoolReactiveProperty inAudio = new BoolReactiveProperty(false);
@@ -31,7 +29,16 @@ namespace Extreal.SampleApp.Holiday.App
         public AppState()
         {
             inMultiplay.Merge(inText, inAudio)
-                .Where(_ => inMultiplay.Value && inText.Value && inAudio.Value)
+                .Where(_ =>
+                {
+                    if (Logger.IsDebug())
+                    {
+                        Logger.LogDebug(
+                            $"inMultiplay: {inMultiplay.Value}, inText: {inText.Value}, inAudio: {inAudio.Value}");
+                    }
+
+                    return inMultiplay.Value && inText.Value && inAudio.Value;
+                })
                 .Subscribe(_ =>
                 {
                     if (Logger.IsDebug())
@@ -44,7 +51,16 @@ namespace Extreal.SampleApp.Holiday.App
                 .AddTo(disposables);
 
             inMultiplay.Merge(inText, inAudio)
-                .Where(inState => isPlaying.Value && !inState)
+                .Where(_ =>
+                {
+                    if (Logger.IsDebug())
+                    {
+                        Logger.LogDebug(
+                            $"inMultiplay: {inMultiplay.Value}, inText: {inText.Value}, inAudio: {inAudio.Value}");
+                    }
+
+                    return !inMultiplay.Value && !inText.Value && !inAudio.Value;
+                })
                 .Subscribe(_ =>
                 {
                     if (Logger.IsDebug())
@@ -75,7 +91,15 @@ namespace Extreal.SampleApp.Holiday.App
         public void SetInMultiplay(bool value) => inMultiplay.Value = value;
         public void SetInText(bool value) => inText.Value = value;
         public void SetInAudio(bool value) => inAudio.Value = value;
-        public void SetNotification(string message) => onNotificationReceived.OnNext(message);
-        //public void SetIsErrorShowed(bool value) => IsErrorShowed = value;
+
+        public void SetNotification(string message)
+        {
+            if (Logger.IsDebug())
+            {
+                Logger.LogDebug($"OnNotificationReceived: {message}");
+            }
+
+            onNotificationReceived.OnNext(message);
+        }
     }
 }

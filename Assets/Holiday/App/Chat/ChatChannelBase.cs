@@ -18,6 +18,9 @@ namespace Extreal.SampleApp.Holiday.App
                 .Where(recoveryState => recoveryState == ConnectionRecoveryState.FailedToRecover)
                 .Select(_ => Unit.Default);
 
+        public IObservable<Unit> OnConnectFailed => onConnectFailed;
+        private readonly Subject<Unit> onConnectFailed = new Subject<Unit>();
+
         private readonly VivoxClient vivoxClient;
         private readonly string channelName;
 
@@ -63,7 +66,15 @@ namespace Extreal.SampleApp.Holiday.App
         {
             if (!IsLoggedIn)
             {
-                Login();
+                try
+                {
+                    await vivoxClient.Login(new VivoxAuthConfig(nameof(TextChatChannel)));
+                }
+                catch (TimeoutException)
+                {
+                    onConnectFailed.OnNext(Unit.Default);
+                    return;
+                }
             }
 
             await UniTask.WaitUntil(() => IsLoggedIn, cancellationToken: cts.Token);
@@ -72,10 +83,6 @@ namespace Extreal.SampleApp.Holiday.App
 
         protected bool IsLoggedIn
             => vivoxClient.LoginSession?.State == LoginState.LoggedIn;
-
-        private void Login() =>
-            // TODO タイムアウトが入ったらマルチプレイと同じように処理する
-            vivoxClient.Login(new VivoxAuthConfig(nameof(TextChatChannel)));
 
         protected abstract void Connect(string channelName);
 
@@ -95,6 +102,7 @@ namespace Extreal.SampleApp.Holiday.App
             cts.Dispose();
             Disposables.Dispose();
             onConnected.Dispose();
+            onConnectFailed.Dispose();
             GC.SuppressFinalize(this);
         }
     }

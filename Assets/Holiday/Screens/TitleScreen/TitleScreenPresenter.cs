@@ -2,25 +2,30 @@
 using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App;
 using UniRx;
-using VContainer.Unity;
 
 namespace Extreal.SampleApp.Holiday.Screens.TitleScreen
 {
-    public class TitleScreenPresenter : IStartable
+    public class TitleScreenPresenter : StagePresenterBase
     {
-        private readonly StageNavigator<StageName, SceneName> stageNavigator;
-
         private readonly TitleScreenView titleScreenView;
 
-        public TitleScreenPresenter(StageNavigator<StageName, SceneName> stageNavigator,
-            TitleScreenView titleScreenView)
-        {
-            this.stageNavigator = stageNavigator;
+        public TitleScreenPresenter(
+            StageNavigator<StageName, SceneName> stageNavigator,
+            TitleScreenView titleScreenView) : base(stageNavigator) =>
             this.titleScreenView = titleScreenView;
+
+        protected override void Initialize(
+            StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables) =>
+            titleScreenView.OnGoButtonClicked
+                .Subscribe(_ => stageNavigator.ReplaceAsync(StageName.AvatarSelectionStage).Forget())
+                .AddTo(sceneDisposables);
+
+        protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
+        {
         }
 
-        public void Start() =>
-            titleScreenView.OnGoButtonClicked
-                .Subscribe(_ => stageNavigator.ReplaceAsync(StageName.AvatarSelectionStage).Forget());
+        protected override void OnStageExiting(StageName stageName)
+        {
+        }
     }
 }

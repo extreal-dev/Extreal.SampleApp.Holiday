@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66080db268d4458c9efddc392b3f74d3, type: 3}
   m_Name: MultiplayServerConfig
   m_EditorClassIdentifier: 
-  maxCapacity: 100
+  maxCapacity: 2

@@ -48,7 +48,6 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
                 .Subscribe(_ =>
                 {
                     appState.SetNotification("Unexpected disconnection from multiplay server has occurred");
-                    stageNavigator.ReplaceAsync(StageName.AvatarSelectionStage);
                 })
                 .AddTo(stageDisposables);
 
@@ -56,13 +55,16 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
                 .Subscribe(_ =>
                 {
                     appState.SetNotification("Connection to multiplay server is failed");
-                    stageNavigator.ReplaceAsync(StageName.AvatarSelectionStage);
                 })
                 .AddTo(stageDisposables);
 
             multiplayRoom.JoinAsync(appState.Avatar.Value.AssetName).Forget();
         }
 
-        protected override void OnStageExiting(StageName stageName) => multiplayRoom.LeaveAsync().Forget();
+        protected override void OnStageExiting(StageName stageName)
+        {
+            appState.SetInMultiplay(false);
+            multiplayRoom.LeaveAsync().Forget();
+        }
     }
 }

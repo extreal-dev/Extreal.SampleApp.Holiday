@@ -130,10 +130,40 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 816704117}
     m_Modifications:
+    - target: {fileID: 2988394989580816023, guid: 3feb1b83ab9ba634bbd8e6e055f3d860,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.38039216
+      objectReference: {fileID: 0}
+    - target: {fileID: 2988394989580816023, guid: 3feb1b83ab9ba634bbd8e6e055f3d860,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.43529412
+      objectReference: {fileID: 0}
+    - target: {fileID: 2988394989580816023, guid: 3feb1b83ab9ba634bbd8e6e055f3d860,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6277548127454747489, guid: 3feb1b83ab9ba634bbd8e6e055f3d860,
         type: 3}
       propertyPath: m_text
       value: OK
+      objectReference: {fileID: 0}
+    - target: {fileID: 6277548127454747489, guid: 3feb1b83ab9ba634bbd8e6e055f3d860,
+        type: 3}
+      propertyPath: m_fontColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6277548127454747489, guid: 3feb1b83ab9ba634bbd8e6e055f3d860,
+        type: 3}
+      propertyPath: m_fontColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6277548127454747489, guid: 3feb1b83ab9ba634bbd8e6e055f3d860,
+        type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 6307249710144826396, guid: 3feb1b83ab9ba634bbd8e6e055f3d860,
         type: 3}
@@ -266,6 +296,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5251550439069800612, guid: 31d7acdb6d79109489d5c76b6cf90305,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5251550439069800612, guid: 31d7acdb6d79109489d5c76b6cf90305,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8480354736583352232, guid: 31d7acdb6d79109489d5c76b6cf90305,
         type: 3}
       propertyPath: m_Name
@@ -443,7 +483,7 @@ MonoBehaviour:
     TypeName: Extreal.SampleApp.Holiday.App.AppScope
   autoRun: 1
   autoInjectGameObjects: []
-  errorScreenView: {fileID: 2119252577}
+  notificationControlView: {fileID: 2119252577}
 --- !u!1 &2119252575
 GameObject:
   m_ObjectHideFlags: 0
@@ -489,7 +529,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 816704118}
-  errorMessage: {fileID: 7073681647277578288}
+  message: {fileID: 7073681647277578288}
   okButton: {fileID: 552582533}
 --- !u!114 &7073681647277578288
 MonoBehaviour:
@@ -521,8 +561,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4284575743
+  m_fontColor: {r: 1, g: 0.43529412, b: 0.38039216, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -601,7 +641,7 @@ GameObject:
   - component: {fileID: 7073681647277578289}
   - component: {fileID: 7073681647277578288}
   m_Layer: 5
-  m_Name: ErrorMessage
+  m_Name: Message
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
