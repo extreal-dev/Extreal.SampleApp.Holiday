@@ -34,6 +34,7 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
         protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
         {
             voiceChatChannel = new VoiceChatChannel(vivoxClient, $"HolidayVoiceChat{stageName}");
+            stageDisposables.Add(voiceChatChannel);
 
             voiceChatChannel.OnConnected
                 .Subscribe(appState.SetInAudio)

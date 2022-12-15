@@ -34,6 +34,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
         protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
         {
             multiplayRoom = new MultiplayRoom(ngoClient, multiplayAppConfig);
+            stageDisposables.Add(multiplayRoom);
 
             multiplayRoom.IsPlayerSpawned
                 .Subscribe(appState.SetInMultiplay)

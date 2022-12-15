@@ -34,6 +34,7 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
         protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
         {
             textChatChannel = new TextChatChannel(vivoxClient, $"HolidayTextChat{stageName}");
+            stageDisposables.Add(textChatChannel);
 
             textChatChannel.OnConnected
                 .Subscribe(appState.SetInText)
