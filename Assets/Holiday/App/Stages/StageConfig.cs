@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Extreal.Core.StageNavigation;
+﻿using Extreal.Core.StageNavigation;
 using UnityEngine;
 
 namespace Extreal.SampleApp.Holiday.App
@@ -7,12 +6,7 @@ namespace Extreal.SampleApp.Holiday.App
     [CreateAssetMenu(
         menuName = "Holiday/" + nameof(StageConfig),
         fileName = nameof(StageConfig))]
-    public class StageConfig : ScriptableObject, IStageConfig<StageName, SceneName>
+    public class StageConfig : StageConfigBase<StageName, SceneName>
     {
-        [SerializeField] private List<SceneName> commonScenes;
-        [SerializeField] private List<Stage<StageName, SceneName>> stages;
-
-        public List<SceneName> CommonScenes => commonScenes;
-        public List<Stage<StageName, SceneName>> Stages => stages;
     }
 }
