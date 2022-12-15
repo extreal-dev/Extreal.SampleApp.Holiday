@@ -44,17 +44,11 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
                 .AddTo(stageDisposables);
 
             voiceChatChannel.OnUnexpectedDisconnected
-                .Subscribe(_ =>
-                {
-                    appState.SetNotification("Unexpected disconnection from vivox server has occurred");
-                })
+                .Subscribe(_ => appState.SetNotification("Unexpected disconnection from vivox server has occurred"))
                 .AddTo(stageDisposables);
 
             voiceChatChannel.OnConnectFailed
-                .Subscribe(_ =>
-                {
-                    appState.SetNotification("Connection to vivox server is failed");
-                })
+                .Subscribe(_ => appState.SetNotification("Connection to vivox server is failed"))
                 .AddTo(stageDisposables);
 
             voiceChatChannel.JoinAsync().Forget();

@@ -6,12 +6,10 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
     {
         [SerializeField] private GameObject joysticksCanvas;
 
+#if UNITY_EDITOR || UNITY_STANDALONE
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0051")]
         private void Awake()
-        {
-            joysticksCanvas.SetActive(false);
-#if UNITY_IOS || UNITY_ANDROID
-            joysticksCanvas.SetActive(true);
+            => joysticksCanvas.SetActive(false);
 #endif
-        }
     }
 }

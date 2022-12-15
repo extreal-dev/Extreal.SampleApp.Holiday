@@ -24,8 +24,9 @@ namespace Extreal.SampleApp.Holiday.App
         private readonly VivoxClient vivoxClient;
         private readonly string channelName;
 
-        protected ChannelId ChannelId;
-        protected readonly CompositeDisposable Disposables = new CompositeDisposable();
+        protected ChannelId ChannelId { get; private set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeCracker", "CC0022")]
+        protected CompositeDisposable Disposables { get; } = new CompositeDisposable();
 
         private readonly CancellationTokenSource cts = new CancellationTokenSource();
 

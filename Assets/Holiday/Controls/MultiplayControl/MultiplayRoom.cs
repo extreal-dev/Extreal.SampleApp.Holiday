@@ -22,20 +22,20 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
         private readonly BoolReactiveProperty isPlayerSpawned = new BoolReactiveProperty(false);
 
         private readonly NgoClient ngoClient;
+        private readonly MultiplayConnectionConfig connectionConfig;
         private readonly CompositeDisposable disposables = new CompositeDisposable();
         private readonly CancellationTokenSource cts = new CancellationTokenSource();
 
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(MultiplayRoom));
 
-        public MultiplayRoom(NgoClient ngoClient)
+        public MultiplayRoom(NgoClient ngoClient, MultiplayConnectionConfig connectionConfig)
         {
             this.ngoClient = ngoClient;
+            this.connectionConfig = connectionConfig;
 
             this.ngoClient.OnConnected
                 .Subscribe(_ =>
-                {
-                    ngoClient.RegisterMessageHandler(MessageName.PlayerSpawned.ToString(), PlayerSpawnedMessageHandler);
-                })
+                    ngoClient.RegisterMessageHandler(MessageName.PlayerSpawned.ToString(), PlayerSpawnedMessageHandler))
                 .AddTo(disposables);
 
             this.ngoClient.OnDisconnecting
@@ -61,7 +61,8 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
         {
             try
             {
-                await ngoClient.ConnectAsync(new NgoConfig(), cts.Token);
+                var ngoConfig = new NgoConfig(connectionConfig.Address, connectionConfig.Port);
+                await ngoClient.ConnectAsync(ngoConfig, cts.Token);
             }
             catch (TimeoutException)
             {

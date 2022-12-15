@@ -17,10 +17,7 @@ namespace Extreal.SampleApp.Holiday.App
         public void Initialize()
         {
             stageNavigator.OnStageTransitioned
-                .Subscribe(stageName =>
-                {
-                    OnStageEntered(stageName, stageDisposables);
-                }).AddTo(sceneDisposables);
+                .Subscribe(stageName => OnStageEntered(stageName, stageDisposables)).AddTo(sceneDisposables);
 
             stageNavigator.OnStageTransitioning
                 .Subscribe(stageName =>

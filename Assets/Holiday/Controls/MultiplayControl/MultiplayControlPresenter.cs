@@ -10,16 +10,19 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
     {
         private readonly StageNavigator<StageName, SceneName> stageNavigator;
         private readonly NgoClient ngoClient;
+        private readonly MultiplayConnectionConfig multiplayConnectionConfig;
         private readonly AppState appState;
         private MultiplayRoom multiplayRoom;
 
         public MultiplayControlPresenter(
             StageNavigator<StageName, SceneName> stageNavigator,
             NgoClient ngoClient,
+            MultiplayConnectionConfig multiplayConnectionConfig,
             AppState appState) : base(stageNavigator)
         {
             this.stageNavigator = stageNavigator;
             this.ngoClient = ngoClient;
+            this.multiplayConnectionConfig = multiplayConnectionConfig;
             this.appState = appState;
         }
 
@@ -30,7 +33,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 
         protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
         {
-            multiplayRoom = new MultiplayRoom(ngoClient);
+            multiplayRoom = new MultiplayRoom(ngoClient, multiplayConnectionConfig);
 
             multiplayRoom.IsPlayerSpawned
                 .Subscribe(appState.SetInMultiplay)
@@ -46,16 +49,11 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 
             multiplayRoom.OnUnexpectedDisconnected
                 .Subscribe(_ =>
-                {
-                    appState.SetNotification("Unexpected disconnection from multiplay server has occurred");
-                })
+                    appState.SetNotification("Unexpected disconnection from multiplay server has occurred"))
                 .AddTo(stageDisposables);
 
             multiplayRoom.OnConnectFailed
-                .Subscribe(_ =>
-                {
-                    appState.SetNotification("Connection to multiplay server is failed");
-                })
+                .Subscribe(_ => appState.SetNotification("Connection to multiplay server is failed"))
                 .AddTo(stageDisposables);
 
             multiplayRoom.JoinAsync(appState.Avatar.Value.AssetName).Forget();

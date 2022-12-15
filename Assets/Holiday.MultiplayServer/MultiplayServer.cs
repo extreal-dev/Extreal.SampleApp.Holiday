@@ -1,3 +1,4 @@
+using System.Net;
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
@@ -7,6 +8,7 @@ using Extreal.SampleApp.Holiday.MultiplayCommon;
 using UniRx;
 using Unity.Collections;
 using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -35,9 +37,7 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
             }
 
             ngoServer.SetConnectionApprovalCallback((_, response) =>
-            {
-                response.Approved = ngoServer.ConnectedClients.Count < multiplayServerConfig.MaxCapacity;
-            });
+                response.Approved = ngoServer.ConnectedClients.Count < multiplayServerConfig.MaxCapacity);
 
             ngoServer.OnServerStarted
                 .Subscribe(_ =>
@@ -51,8 +51,21 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
             GC.SuppressFinalize(this);
         }
 
-        public UniTask StartAsync()
-            => ngoServer.StartServerAsync();
+        public async UniTask StartAsync()
+        {
+            var unityTransport = NetworkManager.Singleton.NetworkConfig.NetworkTransport as UnityTransport;
+            var args = Environment.GetCommandLineArgs();
+            if (args.Length > 1 && IPAddress.TryParse(args[1], out var ipAddress))
+            {
+                unityTransport.ConnectionData.Address = ipAddress.ToString();
+            }
+            if (args.Length > 2 && ushort.TryParse(args[1], out var port))
+            {
+                unityTransport.ConnectionData.Port = port;
+            }
+
+            await ngoServer.StartServerAsync();
+        }
 
         private void SendPlayerSpawned(ulong clientId)
         {

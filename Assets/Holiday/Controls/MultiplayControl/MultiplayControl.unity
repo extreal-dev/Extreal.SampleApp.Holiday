@@ -347,3 +347,5 @@ MonoBehaviour:
     TypeName: Extreal.SampleApp.Holiday.App.AppScope
   autoRun: 1
   autoInjectGameObjects: []
+  multiplayConnectionConfig: {fileID: 11400000, guid: 47397559ed06b1f4cb285eeb0373b7b4,
+    type: 2}

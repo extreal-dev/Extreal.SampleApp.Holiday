@@ -1,5 +1,4 @@
-﻿using System;
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App;
 using UniRx;
@@ -26,7 +25,7 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
             StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables)
         {
             appState.IsPlaying
-                .Subscribe(OnPlayingChangedAsync)
+                .Subscribe(OnPlayingChanged)
                 .AddTo(sceneDisposables);
 
             appState.OnNotificationReceived
@@ -34,7 +33,7 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
                 .AddTo(sceneDisposables);
         }
 
-        private async void OnPlayingChangedAsync(bool isPlaying)
+        private void OnPlayingChanged(bool isPlaying)
         {
             if (isPlaying)
             {

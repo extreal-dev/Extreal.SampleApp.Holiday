@@ -11,8 +11,8 @@
     "includePlatforms": [
         "Android",
         "Editor",
-        "EmbeddedLinux",
         "iOS",
+        "LinuxStandalone64",
         "WindowsStandalone64"
     ],
     "excludePlatforms": [],

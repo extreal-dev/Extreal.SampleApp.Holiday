@@ -18,6 +18,7 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
         [SuppressMessage("CodeCracker", "CC0033")]
         private readonly Subject<string> onSendButtonClicked = new Subject<string>();
 
+#pragma warning disable IDE0051
         private void Awake()
             => sendButton.OnClickAsObservable()
                 .TakeUntilDestroy(this)
@@ -26,6 +27,10 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
                     onSendButtonClicked.OnNext(inputField.text);
                     inputField.text = string.Empty;
                 });
+
+        private void OnDestroy()
+            => onSendButtonClicked.Dispose();
+#pragma warning restore IDE0051
 
         public void ShowMessage(string message)
             => Instantiate(textChatPrefab, messageRoot)

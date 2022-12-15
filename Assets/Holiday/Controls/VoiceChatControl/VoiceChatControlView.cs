@@ -16,7 +16,9 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
 
         private Color mainColor;
 
-        private void Awake() => mainColor = mutedString.color;
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0051")]
+        private void Awake()
+            => mainColor = mutedString.color;
 
         public void ToggleMute(bool isMute)
         {
