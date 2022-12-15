@@ -10,19 +10,19 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
     {
         private readonly StageNavigator<StageName, SceneName> stageNavigator;
         private readonly NgoClient ngoClient;
-        private readonly MultiplayConnectionConfig multiplayConnectionConfig;
+        private readonly MultiplayAppConfig multiplayAppConfig;
         private readonly AppState appState;
         private MultiplayRoom multiplayRoom;
 
         public MultiplayControlPresenter(
             StageNavigator<StageName, SceneName> stageNavigator,
             NgoClient ngoClient,
-            MultiplayConnectionConfig multiplayConnectionConfig,
+            MultiplayAppConfig multiplayAppConfig,
             AppState appState) : base(stageNavigator)
         {
             this.stageNavigator = stageNavigator;
             this.ngoClient = ngoClient;
-            this.multiplayConnectionConfig = multiplayConnectionConfig;
+            this.multiplayAppConfig = multiplayAppConfig;
             this.appState = appState;
         }
 
@@ -33,7 +33,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 
         protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
         {
-            multiplayRoom = new MultiplayRoom(ngoClient, multiplayConnectionConfig);
+            multiplayRoom = new MultiplayRoom(ngoClient, multiplayAppConfig);
 
             multiplayRoom.IsPlayerSpawned
                 .Subscribe(appState.SetInMultiplay)

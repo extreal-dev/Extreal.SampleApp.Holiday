@@ -6,7 +6,8 @@
         "Cinemachine",
         "Unity.Netcode.Runtime",
         "Unity.Netcode.Components",
-        "Unity.TextMeshPro"
+        "Unity.TextMeshPro",
+        "Extreal.SampleApp.Holiday.Analyzer"
     ],
     "includePlatforms": [
         "Android",

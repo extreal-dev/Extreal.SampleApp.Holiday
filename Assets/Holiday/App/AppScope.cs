@@ -14,6 +14,7 @@ namespace Extreal.SampleApp.Holiday.App
     {
         [SerializeField] private StageConfig stageConfig;
         [SerializeField] private BuiltinAvatarRepository builtinAvatarRepository;
+        [SerializeField] private MultiplayAppConfig multiplayAppConfig;
         [SerializeField] private NetworkManager networkManager;
         [SerializeField] private VivoxAppConfig vivoxAppConfig;
 
@@ -46,6 +47,7 @@ namespace Extreal.SampleApp.Holiday.App
             builder.RegisterComponent(builtinAvatarRepository).AsImplementedInterfaces();
             builder.Register<AvatarService>(Lifetime.Singleton);
 
+            builder.RegisterComponent(multiplayAppConfig);
             builder.RegisterComponent(networkManager);
             builder.Register<NgoClient>(Lifetime.Singleton);
 

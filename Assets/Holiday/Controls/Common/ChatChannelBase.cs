@@ -6,7 +6,7 @@ using Extreal.SampleApp.Holiday.Controls.TextChatControl;
 using UniRx;
 using VivoxUnity;
 
-namespace Extreal.SampleApp.Holiday.App
+namespace Extreal.SampleApp.Holiday.Controls.Common
 {
     public abstract class ChatChannelBase : IDisposable
     {

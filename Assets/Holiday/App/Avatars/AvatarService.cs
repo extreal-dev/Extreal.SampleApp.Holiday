@@ -4,7 +4,7 @@ namespace Extreal.SampleApp.Holiday.App
 {
     public class AvatarService
     {
-        public Avatar[] Avatars { get; private set; }
+        public Avatar[] Avatars { get; }
 
         public AvatarService(IAvatarRepository avatarRepository)
             => Avatars = avatarRepository.Avatars.ToArray();

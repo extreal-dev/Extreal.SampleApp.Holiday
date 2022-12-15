@@ -22,16 +22,16 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
         private readonly BoolReactiveProperty isPlayerSpawned = new BoolReactiveProperty(false);
 
         private readonly NgoClient ngoClient;
-        private readonly MultiplayConnectionConfig connectionConfig;
+        private readonly NgoConfig ngoConfig;
         private readonly CompositeDisposable disposables = new CompositeDisposable();
         private readonly CancellationTokenSource cts = new CancellationTokenSource();
 
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(MultiplayRoom));
 
-        public MultiplayRoom(NgoClient ngoClient, MultiplayConnectionConfig connectionConfig)
+        public MultiplayRoom(NgoClient ngoClient, MultiplayAppConfig multiplayAppConfig)
         {
             this.ngoClient = ngoClient;
-            this.connectionConfig = connectionConfig;
+            this.ngoConfig = new NgoConfig(multiplayAppConfig.Address, multiplayAppConfig.Port);
 
             this.ngoClient.OnConnected
                 .Subscribe(_ =>
@@ -61,7 +61,6 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
         {
             try
             {
-                var ngoConfig = new NgoConfig(connectionConfig.Address, connectionConfig.Port);
                 await ngoClient.ConnectAsync(ngoConfig, cts.Token);
             }
             catch (TimeoutException)
@@ -86,6 +85,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
             {
                 Logger.LogDebug($"spawn: avatarAssetName: {avatarAssetName}");
             }
+
             var messageStream = new FastBufferWriter(FixedString64Bytes.UTF8MaxLengthInBytes, Allocator.Temp);
             messageStream.WriteValueSafe(avatarAssetName);
             ngoClient.SendMessage(MessageName.PlayerSpawn.ToString(), messageStream);

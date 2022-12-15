@@ -12,7 +12,8 @@
         "VContainer",
         "Extreal.Core.Logging",
         "Extreal.Integration.Multiplay.NGO",
-        "Extreal.SampleApp.Holiday.MultiplayCommon"
+        "Extreal.SampleApp.Holiday.MultiplayCommon",
+        "Extreal.SampleApp.Holiday.Analyzer"
     ],
     "includePlatforms": [
         "Editor",

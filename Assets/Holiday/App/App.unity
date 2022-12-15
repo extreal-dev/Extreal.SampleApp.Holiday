@@ -159,8 +159,9 @@ MonoBehaviour:
   stageConfig: {fileID: 11400000, guid: d1b93e8ee48890443a2040ea71dba396, type: 2}
   builtinAvatarRepository: {fileID: 11400000, guid: 9d3fe01be1d6c244eb77b0bedabc0e9d,
     type: 2}
+  multiplayAppConfig: {fileID: 11400000, guid: 82dd1936701224e49bfe3f89b130a913, type: 2}
   networkManager: {fileID: 1418789195}
-  vivoxAppConfig: {fileID: 11400000, guid: b1a473dbf08bd934b827643ff372ff63, type: 2}
+  vivoxAppConfig: {fileID: 11400000, guid: ae5a7e1a506a39e4ea6a25c873395ac4, type: 2}
 --- !u!4 &1287753623
 Transform:
   m_ObjectHideFlags: 0

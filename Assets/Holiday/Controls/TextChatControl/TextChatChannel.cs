@@ -1,6 +1,6 @@
 using System;
 using Extreal.Integration.Chat.Vivox;
-using Extreal.SampleApp.Holiday.App;
+using Extreal.SampleApp.Holiday.Controls.Common;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
