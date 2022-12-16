@@ -1,4 +1,4 @@
-﻿using Extreal.Core.Logging;
+using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
 using Extreal.Integration.Chat.Vivox;
 using Extreal.Integration.Multiplay.NGO;
@@ -16,7 +16,7 @@ namespace Extreal.SampleApp.Holiday.App
         [SerializeField] private BuiltinAvatarRepository builtinAvatarRepository;
         [SerializeField] private MultiplayAppConfig multiplayAppConfig;
         [SerializeField] private NetworkManager networkManager;
-        [SerializeField] private VivoxAppConfig vivoxAppConfig;
+        [SerializeField] private VivoxAppConfigSO vivoxAppConfigSO;
 
         private static void InitializeApp()
         {
@@ -55,7 +55,14 @@ namespace Extreal.SampleApp.Holiday.App
             builder.RegisterComponent(networkManager);
             builder.Register<NgoClient>(Lifetime.Singleton);
 
-            builder.RegisterComponent(vivoxAppConfig).AsImplementedInterfaces();
+            var vivoxAppConfig = new VivoxAppConfig
+            (
+                vivoxAppConfigSO.ApiEndPoint,
+                vivoxAppConfigSO.Domain,
+                vivoxAppConfigSO.Issuer,
+                vivoxAppConfigSO.SecretKey
+            );
+            builder.RegisterComponent(vivoxAppConfig);
             builder.Register<VivoxClient>(Lifetime.Singleton);
 
             builder.Register<AppState>(Lifetime.Singleton);
