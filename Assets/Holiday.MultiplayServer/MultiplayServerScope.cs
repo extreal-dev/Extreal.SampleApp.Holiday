@@ -15,7 +15,11 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
 
         private static void InitializeApp()
         {
+#if HOLIDAY_PROD
+            const LogLevel logLevel = LogLevel.Info;
+#else
             const LogLevel logLevel = LogLevel.Debug;
+#endif
             LoggingManager.Initialize(logLevel: logLevel);
         }
 

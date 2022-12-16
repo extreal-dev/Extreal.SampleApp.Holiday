@@ -23,7 +23,11 @@ namespace Extreal.SampleApp.Holiday.App
             QualitySettings.vSyncCount = 0;
             Application.targetFrameRate = 60;
 
+#if HOLIDAY_PROD
+            const LogLevel logLevel = LogLevel.Info;
+#else
             const LogLevel logLevel = LogLevel.Debug;
+#endif
             LoggingManager.Initialize(logLevel: logLevel);
 
             var logger = LoggingManager.GetLogger(nameof(AppScope));
