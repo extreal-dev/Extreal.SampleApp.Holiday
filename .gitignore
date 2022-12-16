@@ -63,7 +63,7 @@ crashlytics-build.properties
 .idea
 
 # Vivox application config scriptable object
-VivoxAppConfig.asset*
+VivoxAppConfigSO.asset*
 
 # Multiplay application config scriptable object
 MultiplayAppConfig.asset*
