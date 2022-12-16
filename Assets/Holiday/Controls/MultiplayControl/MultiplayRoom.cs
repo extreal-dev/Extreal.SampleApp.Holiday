@@ -31,7 +31,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
         public MultiplayRoom(NgoClient ngoClient, MultiplayAppConfig multiplayAppConfig)
         {
             this.ngoClient = ngoClient;
-            this.ngoConfig = new NgoConfig(multiplayAppConfig.Address, multiplayAppConfig.Port);
+            ngoConfig = new NgoConfig(multiplayAppConfig.Address, multiplayAppConfig.Port);
 
             this.ngoClient.OnConnected
                 .Subscribe(_ =>

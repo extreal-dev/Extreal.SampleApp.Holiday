@@ -1,6 +1,6 @@
-using System.Net;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.Logging;
 using Extreal.Integration.Multiplay.NGO;
@@ -41,7 +41,7 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
 
             ngoServer.OnServerStarted
                 .Subscribe(_ =>
-                    ngoServer.RegisterMessageHandler(MessageName.PlayerSpawn.ToString(), PlayerSpawnMessageHandler))
+                    ngoServer.RegisterMessageHandler(MessageName.PlayerSpawn.ToString(), PlayerSpawnMessageHandlerAsync))
                 .AddTo(disposables);
         }
 
@@ -74,7 +74,7 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
                 messageStream);
         }
 
-        private async void PlayerSpawnMessageHandler(ulong clientId, FastBufferReader messageStream)
+        private async void PlayerSpawnMessageHandlerAsync(ulong clientId, FastBufferReader messageStream)
         {
             if (Logger.IsDebug())
             {

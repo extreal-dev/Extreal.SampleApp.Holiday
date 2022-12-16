@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
 namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen

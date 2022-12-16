@@ -1,4 +1,4 @@
-﻿using Extreal.Core.StageNavigation;
+using Extreal.Core.StageNavigation;
 using UnityEngine;
 
 namespace Extreal.SampleApp.Holiday.App

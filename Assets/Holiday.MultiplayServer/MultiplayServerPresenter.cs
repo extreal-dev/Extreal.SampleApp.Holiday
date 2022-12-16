@@ -5,7 +5,7 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
 {
     public class MultiplayServerPresenter : IInitializable, IStartable
     {
-        private MultiplayServer multiplayServer;
+        private readonly MultiplayServer multiplayServer;
 
         public MultiplayServerPresenter(MultiplayServer multiplayServer)
             => this.multiplayServer = multiplayServer;

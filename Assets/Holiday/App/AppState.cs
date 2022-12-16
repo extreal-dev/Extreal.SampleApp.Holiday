@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Extreal.Core.Logging;
 using UniRx;
 
