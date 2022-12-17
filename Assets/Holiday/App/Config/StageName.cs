@@ -1,4 +1,4 @@
-namespace Extreal.SampleApp.Holiday.App
+namespace Extreal.SampleApp.Holiday.App.Config
 {
     public enum StageName
     {

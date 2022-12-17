@@ -2,6 +2,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.StageNavigation;
 using Extreal.Integration.Chat.Vivox;
+using Extreal.SampleApp.Holiday.App.Config;
 using VContainer.Unity;
 
 namespace Extreal.SampleApp.Holiday.App

@@ -2,6 +2,8 @@ using Cysharp.Threading.Tasks;
 using Extreal.Core.StageNavigation;
 using Extreal.Integration.Multiplay.NGO;
 using Extreal.SampleApp.Holiday.App;
+using Extreal.SampleApp.Holiday.App.Common;
+using Extreal.SampleApp.Holiday.App.Config;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
@@ -10,19 +12,19 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
     {
         private readonly StageNavigator<StageName, SceneName> stageNavigator;
         private readonly NgoClient ngoClient;
-        private readonly MultiplayAppConfig multiplayAppConfig;
+        private readonly NgoConfig ngoConfig;
         private readonly AppState appState;
         private MultiplayRoom multiplayRoom;
 
         public MultiplayControlPresenter(
             StageNavigator<StageName, SceneName> stageNavigator,
             NgoClient ngoClient,
-            MultiplayAppConfig multiplayAppConfig,
+            NgoConfig ngoConfig,
             AppState appState) : base(stageNavigator)
         {
             this.stageNavigator = stageNavigator;
             this.ngoClient = ngoClient;
-            this.multiplayAppConfig = multiplayAppConfig;
+            this.ngoConfig = ngoConfig;
             this.appState = appState;
         }
 
@@ -33,7 +35,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 
         protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
         {
-            multiplayRoom = new MultiplayRoom(ngoClient, multiplayAppConfig);
+            multiplayRoom = new MultiplayRoom(ngoClient, ngoConfig);
             stageDisposables.Add(multiplayRoom);
 
             multiplayRoom.IsPlayerSpawned

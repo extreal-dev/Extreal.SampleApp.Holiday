@@ -1,9 +1,10 @@
 using System;
 using Extreal.Core.StageNavigation;
+using Extreal.SampleApp.Holiday.App.Config;
 using UniRx;
 using VContainer.Unity;
 
-namespace Extreal.SampleApp.Holiday.App
+namespace Extreal.SampleApp.Holiday.App.Common
 {
     public abstract class StagePresenterBase : IInitializable, IDisposable
     {

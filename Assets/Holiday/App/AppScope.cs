@@ -2,6 +2,8 @@ using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
 using Extreal.Integration.Chat.Vivox;
 using Extreal.Integration.Multiplay.NGO;
+using Extreal.SampleApp.Holiday.App.Avatars;
+using Extreal.SampleApp.Holiday.App.Config;
 using Unity.Netcode;
 using UnityEngine;
 using VContainer;
@@ -14,9 +16,9 @@ namespace Extreal.SampleApp.Holiday.App
     {
         [SerializeField] private StageConfig stageConfig;
         [SerializeField] private BuiltinAvatarRepository builtinAvatarRepository;
-        [SerializeField] private MultiplayAppConfig multiplayAppConfig;
+        [SerializeField] private MultiplayConfig multiplayConfig;
         [SerializeField] private NetworkManager networkManager;
-        [SerializeField] private VivoxAppConfigSO vivoxAppConfigSO;
+        [SerializeField] private ChatConfig chatConfig;
 
         private static void InitializeApp()
         {
@@ -51,18 +53,11 @@ namespace Extreal.SampleApp.Holiday.App
             builder.RegisterComponent(builtinAvatarRepository).AsImplementedInterfaces();
             builder.Register<AvatarService>(Lifetime.Singleton);
 
-            builder.RegisterComponent(multiplayAppConfig);
+            builder.RegisterComponent(multiplayConfig.ToNgoConfig());
             builder.RegisterComponent(networkManager);
             builder.Register<NgoClient>(Lifetime.Singleton);
 
-            var vivoxAppConfig = new VivoxAppConfig
-            (
-                vivoxAppConfigSO.ApiEndPoint,
-                vivoxAppConfigSO.Domain,
-                vivoxAppConfigSO.Issuer,
-                vivoxAppConfigSO.SecretKey
-            );
-            builder.RegisterComponent(vivoxAppConfig);
+            builder.RegisterComponent(chatConfig.ToVivoxAppConfig());
             builder.Register<VivoxClient>(Lifetime.Singleton);
 
             builder.Register<AppState>(Lifetime.Singleton);

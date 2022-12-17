@@ -28,10 +28,10 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(MultiplayRoom));
 
-        public MultiplayRoom(NgoClient ngoClient, MultiplayAppConfig multiplayAppConfig)
+        public MultiplayRoom(NgoClient ngoClient, NgoConfig ngoConfig)
         {
             this.ngoClient = ngoClient;
-            ngoConfig = new NgoConfig(multiplayAppConfig.Address, multiplayAppConfig.Port);
+            this.ngoConfig = ngoConfig;
 
             this.ngoClient.OnConnected
                 .Subscribe(_ =>

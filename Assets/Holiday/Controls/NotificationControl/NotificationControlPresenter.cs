@@ -1,5 +1,7 @@
 using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App;
+using Extreal.SampleApp.Holiday.App.Common;
+using Extreal.SampleApp.Holiday.App.Config;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.Controls.NotificationControl

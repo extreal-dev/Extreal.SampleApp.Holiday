@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Extreal.SampleApp.Holiday.App
+namespace Extreal.SampleApp.Holiday.App.Avatars
 {
     public interface IAvatarRepository
     {

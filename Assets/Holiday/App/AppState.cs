@@ -1,5 +1,6 @@
 using System;
 using Extreal.Core.Logging;
+using Extreal.SampleApp.Holiday.App.Avatars;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.App

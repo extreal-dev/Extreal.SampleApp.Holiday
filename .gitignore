@@ -62,11 +62,9 @@ crashlytics-build.properties
 # Idea
 .idea
 
-# Vivox application config scriptable object
-VivoxAppConfigSO.asset*
-
-# Multiplay application config scriptable object
-MultiplayAppConfig.asset*
+# Application config scriptable object
+ChatConfig.asset*
+MultiplayConfig.asset*
 
 # Temporal taking refuge of performance test
 Assets/Holiday.PerformanceTest/

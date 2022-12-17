@@ -1,10 +1,10 @@
 using Extreal.Core.StageNavigation;
 using UnityEngine;
 
-namespace Extreal.SampleApp.Holiday.App
+namespace Extreal.SampleApp.Holiday.App.Config
 {
     [CreateAssetMenu(
-        menuName = "Holiday/" + nameof(StageConfig),
+        menuName = nameof(Holiday) + "/" + nameof(StageConfig),
         fileName = nameof(StageConfig))]
     public class StageConfig : StageConfigBase<StageName, SceneName>
     {
