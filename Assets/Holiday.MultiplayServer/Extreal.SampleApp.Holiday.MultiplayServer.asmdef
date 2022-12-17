@@ -1,0 +1,31 @@
+{
+    "name": "Extreal.SampleApp.Holiday.MultiplayServer",
+    "rootNamespace": "Extreal.SampleApp.Holiday.MultiplayServer",
+    "references": [
+        "Unity.ResourceManager",
+        "Unity.Addressables",
+        "Unity.Netcode.Runtime",
+        "Unity.Netcode.Components",
+        "Unity.Collections",
+        "UniRx",
+        "UniTask",
+        "VContainer",
+        "Extreal.Core.Logging",
+        "Extreal.Integration.Multiplay.NGO",
+        "Extreal.SampleApp.Holiday.MultiplayCommon",
+        "Extreal.SampleApp.Holiday.Analyzer"
+    ],
+    "includePlatforms": [
+        "Editor",
+        "LinuxStandalone64",
+        "WindowsStandalone64"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

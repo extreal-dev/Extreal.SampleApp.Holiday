@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.cysharp.unitask": {
-      "version": "2.3.1",
+      "version": "2.3.3",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
@@ -29,7 +29,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.burst": {
-      "version": "1.7.3",
+      "version": "1.8.2",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -47,11 +47,21 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.collab-proxy": {
-      "version": "1.17.6",
+      "version": "1.17.7",
       "depth": 0,
       "source": "registry",
       "dependencies": {
         "com.unity.services.core": "1.0.1"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.collections": {
+      "version": "1.2.4",
+      "depth": 2,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.burst": "1.6.6",
+        "com.unity.test-framework": "1.1.31"
       },
       "url": "https://packages.unity.com"
     },
@@ -63,7 +73,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.rider": {
-      "version": "3.0.16",
+      "version": "3.0.17",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -72,7 +82,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.visualstudio": {
-      "version": "2.0.16",
+      "version": "2.0.17",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -103,6 +113,16 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
+    "com.unity.netcode.gameobjects": {
+      "version": "1.2.0",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.nuget.mono-cecil": "1.10.1",
+        "com.unity.transport": "1.3.0"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.nuget.mono-cecil": {
       "version": "1.10.1",
       "depth": 1,
@@ -118,7 +138,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.render-pipelines.core": {
-      "version": "12.1.7",
+      "version": "12.1.8",
       "depth": 1,
       "source": "builtin",
       "dependencies": {
@@ -128,14 +148,14 @@
       }
     },
     "com.unity.render-pipelines.universal": {
-      "version": "12.1.7",
+      "version": "12.1.8",
       "depth": 0,
       "source": "builtin",
       "dependencies": {
         "com.unity.mathematics": "1.2.1",
-        "com.unity.burst": "1.7.3",
-        "com.unity.render-pipelines.core": "12.1.7",
-        "com.unity.shadergraph": "12.1.7"
+        "com.unity.burst": "1.8.2",
+        "com.unity.render-pipelines.core": "12.1.8",
+        "com.unity.shadergraph": "12.1.8"
       }
     },
     "com.unity.scriptablebuildpipeline": {
@@ -153,7 +173,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.services.core": {
-      "version": "1.5.2",
+      "version": "1.6.0",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -163,12 +183,30 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.services.vivox": {
+      "version": "15.1.190000-pre.1",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.settings-manager": "2.0.0",
+        "com.unity.services.core": "1.3.1",
+        "com.unity.nuget.newtonsoft-json": "3.0.2"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.settings-manager": {
+      "version": "2.0.0",
+      "depth": 2,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
     "com.unity.shadergraph": {
-      "version": "12.1.7",
+      "version": "12.1.8",
       "depth": 1,
       "source": "builtin",
       "dependencies": {
-        "com.unity.render-pipelines.core": "12.1.7",
+        "com.unity.render-pipelines.core": "12.1.8",
         "com.unity.searcher": "4.9.1"
       }
     },
@@ -196,6 +234,16 @@
         "com.unity.ext.nunit": "2.0.3",
         "com.unity.modules.imgui": "1.0.0",
         "com.unity.modules.jsonserialize": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.testtools.codecoverage": {
+      "version": "1.1.1",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.test-framework": "1.0.16",
+        "com.unity.settings-manager": "1.0.1"
       },
       "url": "https://packages.unity.com"
     },
@@ -230,6 +278,17 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.transport": {
+      "version": "1.3.0",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.collections": "1.2.4",
+        "com.unity.burst": "1.6.6",
+        "com.unity.mathematics": "1.2.6"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.ugui": {
       "version": "1.0.0",
       "depth": 0,
@@ -249,22 +308,54 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.veriorpies.parrelsync": {
+      "version": "1.5.1",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://package.openupm.com"
+    },
     "jp.co.tis.extreal.core.logging": {
-      "version": "https://github.com/extreal-dev/Extreal.Core.Logging.git",
+      "version": "https://github.com/extreal-dev/Extreal.Core.Logging.git#0.2.0",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "c27faeb1d4a1799428c04ea9506cddd1b5964061"
+      "hash": "50ad92973fc790276ca3a4e95b747743feb39cb8"
     },
     "jp.co.tis.extreal.core.stagenavigation": {
-      "version": "https://github.com/extreal-dev/Extreal.Core.StageNavigation.git",
+      "version": "https://github.com/extreal-dev/Extreal.Core.StageNavigation.git#0.4.0",
       "depth": 0,
       "source": "git",
       "dependencies": {
-        "jp.co.tis.extreal.core.logging": "0.1.0",
-        "com.cysharp.unitask": "2.3.1"
+        "jp.co.tis.extreal.core.logging": "0.2.0",
+        "com.cysharp.unitask": "2.3.3",
+        "com.neuecc.unirx": "7.1.0"
       },
-      "hash": "4579d252c7724d6b4aa66c8a5e55eadfa9c54bc9"
+      "hash": "89afe0055febfa1881fb4edaf2141b0ebcd0371f"
+    },
+    "jp.co.tis.extreal.integration.chat.vivox": {
+      "version": "https://github.com/extreal-dev/Extreal.Integration.Chat.Vivox.git#0.4.0",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "jp.co.tis.extreal.core.logging": "0.2.0",
+        "com.unity.services.vivox": "15.1.190000-pre.1",
+        "com.cysharp.unitask": "2.3.3",
+        "com.neuecc.unirx": "7.1.0"
+      },
+      "hash": "2389083257610747fdc95078dd460b43954d46b1"
+    },
+    "jp.co.tis.extreal.integration.multiplay.ngo": {
+      "version": "https://github.com/extreal-dev/Extreal.Integration.Multiplay.NGO.git#0.4.0",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "jp.co.tis.extreal.core.logging": "0.2.0",
+        "com.unity.netcode.gameobjects": "1.2.0",
+        "com.cysharp.unitask": "2.3.3",
+        "com.neuecc.unirx": "7.1.0"
+      },
+      "hash": "7952c69c61292e4e3792b20333a47f1097cf32bc"
     },
     "jp.hadashikick.vcontainer": {
       "version": "1.12.0",

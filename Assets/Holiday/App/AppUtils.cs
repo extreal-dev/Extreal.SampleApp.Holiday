@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using Extreal.SampleApp.Holiday.App.Config;
 
 namespace Extreal.SampleApp.Holiday.App
 {

@@ -1,52 +1,77 @@
-﻿using System.Linq;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App;
-using Extreal.SampleApp.Holiday.Models;
+using Extreal.SampleApp.Holiday.App.Avatars;
+using Extreal.SampleApp.Holiday.App.Common;
+using Extreal.SampleApp.Holiday.App.Config;
 using UniRx;
-using VContainer.Unity;
 
 namespace Extreal.SampleApp.Holiday.Screens.AvatarSelectionScreen
 {
-    public class AvatarSelectionScreenPresenter : IStartable
+    public class AvatarSelectionScreenPresenter : StagePresenterBase
     {
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(AvatarSelectionScreenPresenter));
 
-        private readonly IStageNavigator<StageName> stageNavigator;
-
+        private readonly AvatarService avatarService;
         private readonly AvatarSelectionScreenView avatarSelectionScreenView;
+        private readonly AppState appState;
 
-        private readonly Player player;
-
-        public AvatarSelectionScreenPresenter(IStageNavigator<StageName> stageNavigator,
-            AvatarSelectionScreenView avatarSelectionScreenView, Player player)
+        public AvatarSelectionScreenPresenter
+        (
+            StageNavigator<StageName, SceneName> stageNavigator,
+            AvatarService avatarService,
+            AvatarSelectionScreenView avatarSelectionScreenView,
+            AppState appState
+        ) : base(stageNavigator)
         {
-            this.stageNavigator = stageNavigator;
             this.avatarSelectionScreenView = avatarSelectionScreenView;
-            this.player = player;
+            this.avatarService = avatarService;
+            this.appState = appState;
         }
 
-        public void Start()
+        protected override void Initialize(
+            StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables)
         {
-            if (Logger.IsDebug())
+            avatarSelectionScreenView.OnNameChanged
+                .Subscribe(appState.SetPlayerName)
+                .AddTo(sceneDisposables);
+
+            avatarSelectionScreenView.OnAvatarChanged
+                .Subscribe(avatarName =>
+                {
+                    var avatar = avatarService.FindAvatarByName(avatarName);
+                    appState.SetAvatar(avatar);
+                })
+                .AddTo(sceneDisposables);
+
+            avatarSelectionScreenView.OnGoButtonClicked
+                .Subscribe(_ => stageNavigator.ReplaceAsync(StageName.VirtualStage).Forget())
+                .AddTo(sceneDisposables);
+        }
+
+        protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
+        {
+            var avatars = avatarService.Avatars;
+            if (appState.Avatar.Value == null)
             {
-                Logger.LogDebug($"player: name: {player.Name.Value} avatar: {player.Avatar.Value.Name}");
+                appState.SetAvatar(avatars.First());
             }
 
-            var avatars = player.Avatars.Select(avatar => avatar.Name).ToList();
-            avatarSelectionScreenView.Initialize(avatars);
+            var avatarNames = avatars.Select(avatar => avatar.Name).ToList();
+            avatarSelectionScreenView.Initialize(avatarNames);
 
-            avatarSelectionScreenView.SetInitialValues(player.Name.Value, player.Avatar.Value.Name);
+            avatarSelectionScreenView.SetInitialValues(appState.PlayerName.Value, appState.Avatar.Value.Name);
 
-            avatarSelectionScreenView.OnNameChanged.Subscribe(player.SetName);
-
-            avatarSelectionScreenView.OnAvatarChanged.Subscribe(player.SetAvatar);
-
-            avatarSelectionScreenView.OnGoButtonClicked.Subscribe(_ =>
+            if (Logger.IsDebug())
             {
-                stageNavigator.ReplaceAsync(StageName.VirtualStage).Forget();
-            });
+                Logger.LogDebug($"player: name: {appState.PlayerName.Value} avatar: {appState.Avatar.Value.Name}");
+            }
+        }
+
+        protected override void OnStageExiting(StageName stageName)
+        {
         }
     }
 }

@@ -439,6 +439,8 @@ dotnet_diagnostic.CC0070.severity = none
 dotnet_diagnostic.CC0071.severity = none
 # Remove 'Async' from method name that doesn't return 'Task'.
 dotnet_diagnostic.CC0072.severity = none
+# Split into nested if.
+dotnet_diagnostic.CC0076.severity = none
 # You may change 0 to a hexadecimal literal type.
 dotnet_diagnostic.CC0079.severity = none
 # Use "" instead of 'string.Empty'

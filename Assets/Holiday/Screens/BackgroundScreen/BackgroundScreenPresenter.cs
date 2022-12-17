@@ -1,59 +1,36 @@
-﻿using System;
 using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App;
-using Extreal.SampleApp.Holiday.Models;
+using Extreal.SampleApp.Holiday.App.Common;
+using Extreal.SampleApp.Holiday.App.Config;
 using UniRx;
-using VContainer.Unity;
 
 namespace Extreal.SampleApp.Holiday.Screens.BackgroundScreen
 {
-    public class BackgroundScreenPresenter : IInitializable, IDisposable
+    public class BackgroundScreenPresenter : StagePresenterBase
     {
-        private readonly IStageNavigator<StageName> stageNavigator;
         private readonly BackgroundScreenView backgroundScreenView;
-        private readonly Player player;
+        private readonly AppState appState;
 
-        public BackgroundScreenPresenter(IStageNavigator<StageName> stageNavigator,
-            BackgroundScreenView backgroundScreenView, Player player)
+        public BackgroundScreenPresenter
+        (
+            StageNavigator<StageName, SceneName> stageNavigator,
+            BackgroundScreenView backgroundScreenView,
+            AppState appState
+        ) : base(stageNavigator)
         {
-            this.stageNavigator = stageNavigator;
             this.backgroundScreenView = backgroundScreenView;
-            this.player = player;
+            this.appState = appState;
         }
 
-        private readonly CompositeDisposable disposable = new CompositeDisposable();
+        protected override void Initialize(
+            StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables) =>
+            appState.OnNotificationReceived
+                .Subscribe(_ => backgroundScreenView.Hide())
+                .AddTo(sceneDisposables);
 
-        public void Initialize()
-        {
-            stageNavigator.OnStageTransitioning += OnStageTransitioning;
-            stageNavigator.OnStageTransitioned += OnStageTransitioned;
-            player.IsPlaying.Subscribe(OnPlayerPlayingChanged).AddTo(disposable);
-        }
+        protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables) =>
+            backgroundScreenView.Hide();
 
-        public void Dispose()
-        {
-            stageNavigator.OnStageTransitioning -= OnStageTransitioning;
-            stageNavigator.OnStageTransitioned -= OnStageTransitioned;
-            disposable.Dispose();
-            GC.SuppressFinalize(this);
-        }
-
-        private void OnStageTransitioning(StageName stageName) => backgroundScreenView.Show();
-
-        private void OnStageTransitioned(StageName stageName)
-        {
-            if (!AppUtils.IsSpace(stageName))
-            {
-                backgroundScreenView.Hide();
-            }
-        }
-
-        private void OnPlayerPlayingChanged(bool isPlaying)
-        {
-            if (isPlaying)
-            {
-                backgroundScreenView.Hide();
-            }
-        }
+        protected override void OnStageExiting(StageName stageName) => backgroundScreenView.Show();
     }
 }

@@ -1,9 +1,11 @@
-﻿using UnityEngine;
+using System.Diagnostics.CodeAnalysis;
+using UnityEngine;
 
 namespace Extreal.SampleApp.Holiday.Screens.Common
 {
     public class SafeAreaView : MonoBehaviour
     {
+        [SuppressMessage("Style", "IDE0051")]
         private void Start()
         {
             var safeArea = Screen.safeArea;

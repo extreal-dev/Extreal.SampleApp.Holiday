@@ -9,6 +9,7 @@ namespace Extreal.SampleApp.Holiday.Spaces.VirtualSpace
     {
         [SerializeField] private Button backButton;
 
-        public IObservable<Unit> OnBackButtonClicked => backButton.OnClickAsObservable().TakeUntilDestroy(this);
+        public IObservable<Unit> OnBackButtonClicked
+            => backButton.OnClickAsObservable().TakeUntilDestroy(this);
     }
 }

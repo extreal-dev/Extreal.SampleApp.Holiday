@@ -61,3 +61,14 @@ crashlytics-build.properties
 
 # Idea
 .idea
+
+# Application config scriptable object
+ChatConfig.asset*
+MultiplayConfig.asset*
+
+# Temporal taking refuge of performance test
+Assets/Holiday.PerformanceTest/
+Assets/Holiday.PerformanceTest.meta
+
+# CodeCoverage
+CodeCoverage/

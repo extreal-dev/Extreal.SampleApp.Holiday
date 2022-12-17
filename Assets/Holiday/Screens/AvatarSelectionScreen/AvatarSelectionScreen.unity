@@ -2233,7 +2233,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentReference:
-    TypeName: Extreal.SampleApp.Holiday.Models.ModelsScope
+    TypeName: Extreal.SampleApp.Holiday.App.AppScope
   autoRun: 1
   autoInjectGameObjects: []
   avatarSelectionScreenView: {fileID: 1514294814}

@@ -1,26 +1,32 @@
-﻿using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Extreal.Core.StageNavigation;
-using Extreal.SampleApp.Holiday.App;
+using Extreal.SampleApp.Holiday.App.Common;
+using Extreal.SampleApp.Holiday.App.Config;
 using UniRx;
-using VContainer.Unity;
 
 namespace Extreal.SampleApp.Holiday.Spaces.VirtualSpace
 {
-    public class VirtualSpacePresenter : IStartable
+    public class VirtualSpacePresenter : StagePresenterBase
     {
-        private readonly IStageNavigator<StageName> stageNavigator;
         private readonly VirtualSpaceView virtualSpaceView;
 
-        public VirtualSpacePresenter(IStageNavigator<StageName> stageNavigator, VirtualSpaceView virtualSpaceView)
-        {
-            this.stageNavigator = stageNavigator;
+        public VirtualSpacePresenter(
+            StageNavigator<StageName, SceneName> stageNavigator,
+            VirtualSpaceView virtualSpaceView) : base(stageNavigator) =>
             this.virtualSpaceView = virtualSpaceView;
+
+        protected override void Initialize(
+            StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables) =>
+            virtualSpaceView.OnBackButtonClicked
+                .Subscribe(_ => stageNavigator.ReplaceAsync(StageName.AvatarSelectionStage).Forget())
+                .AddTo(sceneDisposables);
+
+        protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
+        {
         }
 
-        public void Start() =>
-            virtualSpaceView.OnBackButtonClicked.Subscribe(_ =>
-            {
-                stageNavigator.ReplaceAsync(StageName.AvatarSelectionStage).Forget();
-            });
+        protected override void OnStageExiting(StageName stageName)
+        {
+        }
     }
 }

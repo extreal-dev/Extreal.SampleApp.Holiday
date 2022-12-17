@@ -1,43 +1,48 @@
-﻿using System;
-using Cysharp.Threading.Tasks;
 using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App;
-using Extreal.SampleApp.Holiday.Models;
+using Extreal.SampleApp.Holiday.App.Common;
+using Extreal.SampleApp.Holiday.App.Config;
 using UniRx;
-using VContainer.Unity;
 
 namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
 {
-    public class LoadingScreenPresenter : IInitializable, IDisposable
+    public class LoadingScreenPresenter : StagePresenterBase
     {
-        private readonly IStageNavigator<StageName> stageNavigator;
         private readonly LoadingScreenView loadingScreenView;
-        private readonly Player player;
+        private readonly AppState appState;
 
-        private readonly CompositeDisposable disposable = new CompositeDisposable();
-
-        public LoadingScreenPresenter(IStageNavigator<StageName> stageNavigator, LoadingScreenView loadingScreenView,
-            Player player)
+        public LoadingScreenPresenter
+        (
+            StageNavigator<StageName, SceneName> stageNavigator,
+            LoadingScreenView loadingScreenView,
+            AppState appState
+        ) : base(stageNavigator)
         {
-            this.stageNavigator = stageNavigator;
             this.loadingScreenView = loadingScreenView;
-            this.player = player;
+            this.appState = appState;
         }
 
-        public void Initialize()
+        protected override void Initialize(
+            StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables)
         {
-            stageNavigator.OnStageTransitioning += OnStageTransitioning;
-            player.IsPlaying.Subscribe(OnPlayerPlayingChangedAsync).AddTo(disposable);
+            appState.IsPlaying
+                .Subscribe(OnPlayingChanged)
+                .AddTo(sceneDisposables);
+
+            appState.OnNotificationReceived
+                .Subscribe(_ => loadingScreenView.Hide())
+                .AddTo(sceneDisposables);
         }
 
-        public void Dispose()
+        private void OnPlayingChanged(bool isPlaying)
         {
-            stageNavigator.OnStageTransitioning -= OnStageTransitioning;
-            disposable.Dispose();
-            GC.SuppressFinalize(this);
+            if (isPlaying)
+            {
+                loadingScreenView.Hide();
+            }
         }
 
-        private void OnStageTransitioning(StageName stageName)
+        protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
         {
             if (AppUtils.IsSpace(stageName))
             {
@@ -45,13 +50,8 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
             }
         }
 
-        private async void OnPlayerPlayingChangedAsync(bool isPlaying)
+        protected override void OnStageExiting(StageName stageName)
         {
-            if (isPlaying)
-            {
-                await UniTask.Delay(TimeSpan.FromMilliseconds(200));
-                loadingScreenView.Hide();
-            }
         }
     }
 }
