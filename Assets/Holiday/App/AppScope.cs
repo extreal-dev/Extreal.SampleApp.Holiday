@@ -6,6 +6,9 @@ using Extreal.SampleApp.Holiday.App.Avatars;
 using Extreal.SampleApp.Holiday.App.Config;
 using Unity.Netcode;
 using UnityEngine;
+#if UNITY_ANDROID
+using UnityEngine.Android;
+#endif
 using VContainer;
 using VContainer.Unity;
 using LogLevel = Extreal.Core.Logging.LogLevel;
@@ -25,18 +28,42 @@ namespace Extreal.SampleApp.Holiday.App
             QualitySettings.vSyncCount = 0;
             Application.targetFrameRate = 60;
 
-#if HOLIDAY_PROD
-            const LogLevel logLevel = LogLevel.Info;
-#else
-            const LogLevel logLevel = LogLevel.Debug;
-#endif
-            LoggingManager.Initialize(logLevel: logLevel);
+            var logLevel = InitializeLogging();
+            InitializeMicrophone();
 
             var logger = LoggingManager.GetLogger(nameof(AppScope));
             if (logger.IsDebug())
             {
                 logger.LogDebug($"targetFrameRage: {Application.targetFrameRate}, logLevel: {logLevel}");
             }
+        }
+
+        private static LogLevel InitializeLogging()
+        {
+#if HOLIDAY_PROD
+            const LogLevel logLevel = LogLevel.Info;
+#else
+            const LogLevel logLevel = LogLevel.Debug;
+#endif
+            LoggingManager.Initialize(logLevel: logLevel);
+            return logLevel;
+        }
+
+        private static void InitializeMicrophone()
+        {
+#if UNITY_IOS
+            if (!Application.HasUserAuthorization(UserAuthorization.Microphone))
+            {
+                Application.RequestUserAuthorization(UserAuthorization.Microphone).ToUniTask().Forget();
+            }
+#endif
+
+#if UNITY_ANDROID
+            if (!Permission.HasUserAuthorizedPermission(Permission.Microphone))
+            {
+                Permission.RequestUserPermission(Permission.Microphone);
+            }
+#endif
         }
 
         protected override void Awake()
