@@ -72,3 +72,7 @@ Assets/Holiday.PerformanceTest.meta
 
 # CodeCoverage
 CodeCoverage/
+
+# Build Report Inspector
+Assets/BuildReports/
+Assets/BuildReports.meta
