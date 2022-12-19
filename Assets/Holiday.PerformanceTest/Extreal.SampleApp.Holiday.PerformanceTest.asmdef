@@ -1,0 +1,35 @@
+{
+    "name": "Extreal.SampleApp.Holiday.PerformanceTest",
+    "rootNamespace": "Extreal.SampleApp.Holiday.PerformanceTest",
+    "references": [
+        "Extreal.SampleApp.Holiday",
+        "Cinemachine",
+        "Unity.ResourceManager",
+        "Unity.Addressables",
+        "Unity.Collections",
+        "Unity.TextMeshPro",
+        "UniRx",
+        "UniTask",
+        "VContainer",
+        "Unity.Netcode.Runtime",
+        "VivoxUnity",
+        "StarterAsserts",
+        "Extreal.Core.Logging",
+        "Extreal.Core.StageNavigation",
+        "Extreal.Integration.Multiplay.NGO",
+        "Extreal.Integration.Chat.Vivox",
+        "Extreal.SampleApp.Holiday.MultiplayCommon"
+    ],
+    "includePlatforms": [
+        "Editor",
+        "WindowsStandalone64"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
