@@ -14,12 +14,15 @@ using Extreal.Integration.Multiplay.NGO;
 using System.IO;
 using Extreal.SampleApp.Holiday.App.Config;
 using UnityEngine.Profiling;
+using System.Threading;
 
 namespace Extreal.SampleApp.Holiday.PerformanceTest
 {
     public class PerformanceTest : MonoBehaviour
     {
         private bool isDestroyed;
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeCracker", "CC0033")]
+        private readonly CancellationTokenSource cts = new CancellationTokenSource();
 
         private readonly Vector3 movableRangeMin = new Vector3(-13f, 0f, -3f);
         private readonly Vector3 movableRangeMax = new Vector3(21f, 0f, 30f);
@@ -35,7 +38,12 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
         [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeCracker", "CC0091")]
         private void Awake()
         {
-            LoggingManager.Initialize(Core.Logging.LogLevel.Debug);
+#if HOLIDAY_PROD
+            const Core.Logging.LogLevel logLevel = Core.Logging.LogLevel.Info;
+#else
+            const Core.Logging.LogLevel logLevel = Core.Logging.LogLevel.Debug;
+#endif
+            LoggingManager.Initialize(logLevel: logLevel);
             logger = LoggingManager.GetLogger(nameof(PerformanceTest));
         }
 
@@ -46,8 +54,11 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
         }
 
         private void OnDestroy()
-            => isDestroyed = true;
-
+        {
+            isDestroyed = true;
+            cts?.Cancel();
+            cts?.Dispose();
+        }
         private async UniTaskVoid StartTestAsync()
         {
             // Loads application
@@ -126,7 +137,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                     logger.LogDebug(
                         "move\n"
                         + $" duration: {moveDuration} sec\n"
-                        + $" direction: ({moveDirection.x}, {moveDirection.y})"
+                        + $" direction: ({moveDirection.x}, {moveDirection.y})\n"
                         + $" isSprint: {playerInput.sprint}");
                 }
 
@@ -212,8 +223,10 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                 var totalUnusedReservedMemory = Profiler.GetTotalUnusedReservedMemoryLong();
                 writer.WriteLine($"{currentTime} {totalReservedMemory} {totalAllocatedMemory} {totalUnusedReservedMemory}");
 
-                await UniTask.Delay(TimeSpan.FromSeconds(1));
+                await UniTask.Delay(TimeSpan.FromSeconds(1), cancellationToken: cts.Token);
             }
+
+            file.Close();
         }
     }
 }
