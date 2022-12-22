@@ -341,7 +341,7 @@
       "hash": "89afe0055febfa1881fb4edaf2141b0ebcd0371f"
     },
     "jp.co.tis.extreal.integration.chat.vivox": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.Chat.Vivox.git#0.4.0",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.Chat.Vivox.git#0.5.0",
       "depth": 0,
       "source": "git",
       "dependencies": {
@@ -350,7 +350,7 @@
         "com.cysharp.unitask": "2.3.3",
         "com.neuecc.unirx": "7.1.0"
       },
-      "hash": "2389083257610747fdc95078dd460b43954d46b1"
+      "hash": "6576fee0f1225125f76cf5c4d623eb32b1a34397"
     },
     "jp.co.tis.extreal.integration.multiplay.ngo": {
       "version": "https://github.com/extreal-dev/Extreal.Integration.Multiplay.NGO.git#0.4.0",
