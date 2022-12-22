@@ -1,3 +1,6 @@
+#if UNITY_IOS
+using Cysharp.Threading.Tasks;
+#endif
 using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
 using Extreal.Integration.Chat.Vivox;
