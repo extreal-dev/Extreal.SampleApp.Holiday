@@ -69,7 +69,7 @@ namespace Extreal.SampleApp.Holiday.Controls.Common
             {
                 try
                 {
-                    await vivoxClient.Login(new VivoxAuthConfig(nameof(TextChatChannel)));
+                    await vivoxClient.LoginAsync(new VivoxAuthConfig(nameof(TextChatChannel)));
                 }
                 catch (TimeoutException)
                 {
@@ -79,13 +79,21 @@ namespace Extreal.SampleApp.Holiday.Controls.Common
             }
 
             await UniTask.WaitUntil(() => IsLoggedIn, cancellationToken: cts.Token);
-            Connect(channelName);
+
+            try
+            {
+                await ConnectAsync(channelName);
+            }
+            catch (TimeoutException)
+            {
+                onConnectFailed.OnNext(Unit.Default);
+            }
         }
 
         protected bool IsLoggedIn
             => vivoxClient.LoginSession?.State == LoginState.LoggedIn;
 
-        protected abstract void Connect(string channelName);
+        protected abstract UniTask ConnectAsync(string channelName);
 
         public void Leave()
         {

@@ -120,6 +120,13 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
+    "com.unity.mobile.android-logcat": {
+      "version": "1.3.2",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
     "com.unity.netcode.gameobjects": {
       "version": "1.2.0",
       "depth": 1,
@@ -341,7 +348,7 @@
       "hash": "89afe0055febfa1881fb4edaf2141b0ebcd0371f"
     },
     "jp.co.tis.extreal.integration.chat.vivox": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.Chat.Vivox.git#0.5.0",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.Chat.Vivox.git#0.6.0",
       "depth": 0,
       "source": "git",
       "dependencies": {
@@ -350,7 +357,7 @@
         "com.cysharp.unitask": "2.3.3",
         "com.neuecc.unirx": "7.1.0"
       },
-      "hash": "6576fee0f1225125f76cf5c4d623eb32b1a34397"
+      "hash": "12c9aaca69a6f484ecda675d22cca592b250462a"
     },
     "jp.co.tis.extreal.integration.multiplay.ngo": {
       "version": "https://github.com/extreal-dev/Extreal.Integration.Multiplay.NGO.git#0.4.0",

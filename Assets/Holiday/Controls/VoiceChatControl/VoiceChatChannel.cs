@@ -21,8 +21,8 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
             SetMuteAsync(true).Forget();
         }
 
-        protected override void Connect(string channelName)
-            => vivoxClient.Connect(new VivoxChannelConfig(channelName, ChatType.AudioOnly));
+        protected override UniTask ConnectAsync(string channelName)
+            => vivoxClient.ConnectAsync(new VivoxChannelConfig(channelName, ChatType.AudioOnly));
 
         public UniTask ToggleMuteAsync() => SetMuteAsync(!onMuted.Value);
 

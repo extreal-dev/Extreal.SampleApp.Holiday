@@ -25,7 +25,7 @@ namespace Extreal.SampleApp.Holiday.App
         public void Initialize()
         {
             var authConfig = new VivoxAuthConfig(nameof(Holiday));
-            vivoxClient.Login(authConfig);
+            vivoxClient.LoginAsync(authConfig).Forget();
         }
 
         public async UniTask StartAsync(CancellationToken cancellation)
