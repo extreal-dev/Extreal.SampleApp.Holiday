@@ -66,9 +66,9 @@ crashlytics-build.properties
 ChatConfig.asset*
 MultiplayConfig.asset*
 
-# Temporal taking refuge of performance test
-Assets/Holiday.PerformanceTest/
-Assets/Holiday.PerformanceTest.meta
-
 # CodeCoverage
 CodeCoverage/
+
+# Build Report Inspector
+Assets/BuildReports/
+Assets/BuildReports.meta

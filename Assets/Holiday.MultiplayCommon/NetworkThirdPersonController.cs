@@ -148,8 +148,6 @@ namespace Extreal.SampleApp.Holiday.MultiplayCommon
 #if UNITY_IOS || UNITY_ANDROID
                 var uiCanvasControllerInput = FindObjectOfType<UICanvasControllerInput>();
                 uiCanvasControllerInput.starterAssetsInputs = Input;
-                PlayerInput.uiInputModule
-                    = EventSystem.current.GetComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
                 PlayerInput.neverAutoSwitchControlSchemes = true;
 #endif
             }
