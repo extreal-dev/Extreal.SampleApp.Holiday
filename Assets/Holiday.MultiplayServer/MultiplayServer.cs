@@ -1,6 +1,6 @@
+using System.Threading;
 using System;
 using System.Collections.Generic;
-using System.Net;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.Logging;
 using Extreal.Integration.Multiplay.NGO;
@@ -8,7 +8,6 @@ using Extreal.SampleApp.Holiday.MultiplayCommon;
 using UniRx;
 using Unity.Collections;
 using Unity.Netcode;
-using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -16,28 +15,27 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
 {
     public class MultiplayServer : IDisposable
     {
-        private readonly MultiplayServerConfig multiplayServerConfig;
         private readonly NgoServer ngoServer;
+
+        private bool isDisposed;
+        private readonly CancellationTokenSource cts = new CancellationTokenSource();
 
         private readonly CompositeDisposable disposables = new CompositeDisposable();
 
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(MultiplayServer));
 
-        public MultiplayServer(MultiplayServerConfig multiplayServerConfig, NgoServer ngoServer)
-        {
-            this.multiplayServerConfig = multiplayServerConfig;
-            this.ngoServer = ngoServer;
-        }
+        public MultiplayServer(NgoServer ngoServer)
+            => this.ngoServer = ngoServer;
 
         public void Initialize()
         {
             if (Logger.IsDebug())
             {
-                Logger.LogDebug($"MaxCapacity: {multiplayServerConfig.MaxCapacity}");
+                Logger.LogDebug($"MaxCapacity: {MultiplayServerArgumentHandler.MaxCapacity}");
             }
 
             ngoServer.SetConnectionApprovalCallback((_, response) =>
-                response.Approved = ngoServer.ConnectedClients.Count < multiplayServerConfig.MaxCapacity);
+                response.Approved = ngoServer.ConnectedClients.Count < MultiplayServerArgumentHandler.MaxCapacity);
 
             ngoServer.OnServerStarted
                 .Subscribe(_ =>
@@ -47,23 +45,17 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
 
         public void Dispose()
         {
+            isDisposed = true;
+            cts.Cancel();
+            cts.Dispose();
             disposables.Dispose();
             GC.SuppressFinalize(this);
         }
 
         public async UniTask StartAsync()
         {
-            var unityTransport = NetworkManager.Singleton.NetworkConfig.NetworkTransport as UnityTransport;
-            var args = Environment.GetCommandLineArgs();
-            if (args.Length > 1 && IPAddress.TryParse(args[1], out var ipAddress))
-            {
-                unityTransport.ConnectionData.Address = ipAddress.ToString();
-            }
-            if (args.Length > 2 && ushort.TryParse(args[1], out var port))
-            {
-                unityTransport.ConnectionData.Port = port;
-            }
-
+            DestroyInLifetimeSecondsAsync().Forget();
+            OutputMemoryStatisticsAsync().Forget();
             await ngoServer.StartServerAsync();
         }
 
@@ -87,6 +79,61 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
             ngoServer.SpawnAsPlayerObject(clientId, playerPrefab);
 
             SendPlayerSpawned(clientId);
+        }
+
+        private async UniTaskVoid OutputMemoryStatisticsAsync()
+        {
+            var path = MultiplayServerArgumentHandler.MemoryUtilizationDumpFile;
+            if (string.IsNullOrEmpty(path))
+            {
+                return;
+            }
+            if (System.IO.File.Exists(path))
+            {
+                if (Logger.IsDebug())
+                {
+                    Logger.LogDebug($"There already exists a file at {path}");
+                }
+                return;
+            }
+
+            if (Logger.IsDebug())
+            {
+                Logger.LogDebug($"Creates a file {path} and writes data into it");
+            }
+
+            var file = System.IO.File.Create(path);
+            var writer = new System.IO.StreamWriter(file, System.Text.Encoding.UTF8);
+            writer.WriteLine("Date Time TotalReservedMemory TotalAllocatedMemory TotalUnusedReservedMemory");
+
+            while (!isDisposed)
+            {
+                var currentTime = DateTime.Now;
+                var totalReservedMemory = UnityEngine.Profiling.Profiler.GetTotalReservedMemoryLong();
+                var totalAllocatedMemory = UnityEngine.Profiling.Profiler.GetTotalAllocatedMemoryLong();
+                var totalUnusedReservedMemory = UnityEngine.Profiling.Profiler.GetTotalUnusedReservedMemoryLong();
+                writer.WriteLine($"{currentTime} {totalReservedMemory} {totalAllocatedMemory} {totalUnusedReservedMemory}");
+
+                await UniTask.Delay(TimeSpan.FromSeconds(1), cancellationToken: cts.Token);
+            }
+
+            file.Close();
+        }
+
+        private static async UniTaskVoid DestroyInLifetimeSecondsAsync()
+        {
+            if (MultiplayServerArgumentHandler.Lifetime == 0)
+            {
+                return;
+            }
+
+            await UniTask.Delay(TimeSpan.FromSeconds(MultiplayServerArgumentHandler.Lifetime));
+
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#elif UNITY_STANDALONE
+            Application.Quit();
+#endif
         }
     }
 }
