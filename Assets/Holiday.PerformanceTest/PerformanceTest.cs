@@ -49,6 +49,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
 
         private void Start()
         {
+            DestroyInLifetimeSecondsAsync().Forget();
             OutputMemoryStatisticsAsync().Forget();
             StartTestAsync().Forget();
         }
@@ -59,6 +60,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
             cts?.Cancel();
             cts?.Dispose();
         }
+
         private async UniTaskVoid StartTestAsync()
         {
             // Loads application
@@ -122,6 +124,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                 }
             }
 
+            var messagePeriod = PerformanceTestArgumentHandler.SendMessagePeriod;
             while (player != null)
             {
                 var moveDuration = UnityEngine.Random.Range(1f, 5f);
@@ -153,7 +156,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                     }
                     playerInput.MoveInput(moveDirection);
 
-                    if (UnityEngine.Random.Range(0, 600) == 0)
+                    if (UnityEngine.Random.Range(0, messagePeriod) == 1)
                     {
                         var message = messageReparatory[UnityEngine.Random.Range(0, messageReparatory.Length)];
                         messageInput.text = message;
@@ -190,13 +193,11 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
 
         private async UniTaskVoid OutputMemoryStatisticsAsync()
         {
-            var args = Environment.GetCommandLineArgs();
-            if (args.Length == 1)
+            var path = PerformanceTestArgumentHandler.MemoryUtilizationDumpFile;
+            if (string.IsNullOrEmpty(path))
             {
                 return;
             }
-
-            var path = args[1];
             if (File.Exists(path))
             {
                 if (logger.IsDebug())
@@ -227,6 +228,22 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
             }
 
             file.Close();
+        }
+
+        private static async UniTaskVoid DestroyInLifetimeSecondsAsync()
+        {
+            if (PerformanceTestArgumentHandler.Lifetime == 0)
+            {
+                return;
+            }
+
+            await UniTask.Delay(TimeSpan.FromSeconds(PerformanceTestArgumentHandler.Lifetime));
+
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#elif UNITY_STANDALONE
+            Application.Quit();
+#endif
         }
     }
 }
