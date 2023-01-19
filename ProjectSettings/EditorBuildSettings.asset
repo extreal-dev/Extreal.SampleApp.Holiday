@@ -8,7 +8,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Holiday.MultiplayServer/MultiplayServer.unity
     guid: 20e830a4d95a9e349908a9b266e57785
-  - enabled: 1
+  - enabled: 0
     path: Assets/Holiday.PerformanceTest/PerformanceTest.unity
     guid: 6d9e9e50ba63d9742ab72714e3309779
   - enabled: 1
