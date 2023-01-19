@@ -72,3 +72,13 @@ CodeCoverage/
 # Build Report Inspector
 Assets/BuildReports/
 Assets/BuildReports.meta
+
+# Avatar using Mixamo
+Assets/Mixamo/*/*.fbx
+Assets/Mixamo/*/*.fbx.meta
+Assets/Mixamo/*/mat/*
+Assets/Mixamo/*/tex/*
+Assets/Holiday.MultiplayCommon/AvatarAmy.prefab
+Assets/Holiday.MultiplayCommon/AvatarAmy.prefab.meta
+Assets/Holiday.MultiplayCommon/AvatarMichelle.prefab
+Assets/Holiday.MultiplayCommon/AvatarMichelle.prefab.meta
