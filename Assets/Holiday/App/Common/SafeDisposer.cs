@@ -1,9 +1,12 @@
 ﻿using System;
+using Extreal.Core.Logging;
 
 namespace Extreal.SampleApp.Holiday.App.Common
 {
     public class SafeDisposer
     {
+        private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(SafeDisposer));
+
         private bool isDisposed;
 
         private readonly object target;
@@ -32,6 +35,11 @@ namespace Extreal.SampleApp.Holiday.App.Common
 
         private void Dispose(bool disposing)
         {
+            if (Logger.IsDebug())
+            {
+                Logger.LogDebug($"target: {target.GetType().FullName} disposing: {disposing} isDisposed: {isDisposed}");
+            }
+
             if (isDisposed)
             {
                 return;

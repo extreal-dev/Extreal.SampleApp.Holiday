@@ -6,8 +6,12 @@ namespace Extreal.SampleApp.Holiday.App.Common
     {
         private readonly SafeDisposer safeDisposer;
 
-        protected DisposableBase(Action freeManagedResources = null, Action freeUnmanagedResources = null)
-            => safeDisposer = new SafeDisposer(this, freeManagedResources, freeUnmanagedResources);
+        protected DisposableBase()
+            => safeDisposer = new SafeDisposer(this, FreeManagedResources, FreeUnmanagedResources);
+
+        protected virtual void FreeManagedResources() { }
+
+        protected virtual void FreeUnmanagedResources() { }
 
         ~DisposableBase() => safeDisposer.DisposeByFinalizer();
 
