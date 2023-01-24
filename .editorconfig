@@ -421,6 +421,8 @@ dotnet_diagnostic.IDE0044.severity = none
 # dotnet_diagnostic.IDE0065.severity = none
 # Simplify 'new' expression
 dotnet_diagnostic.IDE0090.severity = none
+# 'Xxxxx' should call GC.SuppressFinalize inside the Dispose method.
+dotnet_diagnostic.CC0029.severity = none
 # Ordering member inside this type.
 dotnet_diagnostic.CC0035.severity = none
 # Make it a for loop that increment/decrement the counter.
