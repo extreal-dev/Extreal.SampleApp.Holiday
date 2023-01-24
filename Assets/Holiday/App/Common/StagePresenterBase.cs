@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Diagnostics.CodeAnalysis;
+using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App.Config;
 using UniRx;
@@ -6,10 +7,16 @@ using VContainer.Unity;
 
 namespace Extreal.SampleApp.Holiday.App.Common
 {
-    public abstract class StagePresenterBase : IInitializable, IDisposable
+    public abstract class StagePresenterBase : DisposableBase, IInitializable
     {
+        private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(StagePresenterBase));
+
         private readonly StageNavigator<StageName, SceneName> stageNavigator;
+
+        [SuppressMessage("Usage", "CC0033")]
         private readonly CompositeDisposable sceneDisposables = new CompositeDisposable();
+
+        [SuppressMessage("Usage", "CC0033")]
         private readonly CompositeDisposable stageDisposables = new CompositeDisposable();
 
         protected StagePresenterBase(StageNavigator<StageName, SceneName> stageNavigator)
@@ -37,11 +44,15 @@ namespace Extreal.SampleApp.Holiday.App.Common
 
         protected abstract void OnStageExiting(StageName stageName);
 
-        public void Dispose()
+        protected override void FreeManagedResources()
         {
+            if (Logger.IsDebug())
+            {
+                Logger.LogDebug(nameof(FreeManagedResources));
+            }
+
             stageDisposables.Dispose();
             sceneDisposables.Dispose();
-            GC.SuppressFinalize(this);
         }
     }
 }
