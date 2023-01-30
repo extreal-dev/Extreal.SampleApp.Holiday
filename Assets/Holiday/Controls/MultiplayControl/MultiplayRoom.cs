@@ -2,9 +2,9 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
 using Extreal.Integration.Multiplay.NGO;
-using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.MultiplayCommon;
 using UniRx;
 using Unity.Collections;
@@ -55,13 +55,8 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
                 .AddTo(disposables);
         }
 
-        protected override void FreeManagedResources()
+        protected override void ReleaseManagedResources()
         {
-            if (Logger.IsDebug())
-            {
-                Logger.LogDebug(nameof(FreeManagedResources));
-            }
-
             cts.Cancel();
             cts.Dispose();
             onConnectFailed.Dispose();

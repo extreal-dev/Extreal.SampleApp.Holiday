@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
 using Extreal.Integration.Multiplay.NGO;
 using Extreal.SampleApp.Holiday.MultiplayCommon;
@@ -13,13 +15,16 @@ using UnityEngine.AddressableAssets;
 
 namespace Extreal.SampleApp.Holiday.MultiplayServer
 {
-    public class MultiplayServer : IDisposable
+    public class MultiplayServer : DisposableBase
     {
         private readonly NgoServer ngoServer;
 
         private bool isDisposed;
+
+        [SuppressMessage("Usage", "CC0033")]
         private readonly CancellationTokenSource cts = new CancellationTokenSource();
 
+        [SuppressMessage("Usage", "CC0033")]
         private readonly CompositeDisposable disposables = new CompositeDisposable();
 
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(MultiplayServer));
@@ -43,13 +48,12 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
                 .AddTo(disposables);
         }
 
-        public void Dispose()
+        protected override void ReleaseManagedResources()
         {
             isDisposed = true;
             cts.Cancel();
             cts.Dispose();
             disposables.Dispose();
-            GC.SuppressFinalize(this);
         }
 
         public async UniTask StartAsync()

@@ -2,9 +2,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Extreal.Core.Logging;
+using Extreal.Core.Common.System;
 using Extreal.Integration.Chat.Vivox;
-using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.Controls.TextChatControl;
 using UniRx;
 using VivoxUnity;
@@ -13,8 +12,6 @@ namespace Extreal.SampleApp.Holiday.Controls.Common
 {
     public abstract class ChatChannelBase : DisposableBase
     {
-        private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(ChatChannelBase));
-
         public IObservable<bool> OnConnected => onConnected;
 
         [SuppressMessage("Usage", "CC0033")]
@@ -115,13 +112,8 @@ namespace Extreal.SampleApp.Holiday.Controls.Common
             vivoxClient.Disconnect(ChannelId);
         }
 
-        protected override void FreeManagedResources()
+        protected override void ReleaseManagedResources()
         {
-            if (Logger.IsDebug())
-            {
-                Logger.LogDebug(nameof(FreeManagedResources));
-            }
-
             cts.Cancel();
             cts.Dispose();
             Disposables.Dispose();

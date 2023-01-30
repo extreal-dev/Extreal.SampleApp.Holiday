@@ -11,6 +11,7 @@
         "UniTask",
         "VContainer",
         "Extreal.Core.Logging",
+        "Extreal.Core.Common",
         "Extreal.Integration.Multiplay.NGO",
         "Extreal.SampleApp.Holiday.MultiplayCommon",
         "Extreal.SampleApp.Holiday.Analyzer"

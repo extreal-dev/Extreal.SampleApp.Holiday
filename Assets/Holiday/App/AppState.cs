@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
 using Extreal.SampleApp.Holiday.App.Avatars;
-using Extreal.SampleApp.Holiday.App.Common;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.App
@@ -100,13 +100,8 @@ namespace Extreal.SampleApp.Holiday.App
             onNotificationReceived.OnNext(message);
         }
 
-        protected override void FreeManagedResources()
+        protected override void ReleaseManagedResources()
         {
-            if (Logger.IsDebug())
-            {
-                Logger.LogDebug(nameof(FreeManagedResources));
-            }
-
             playerName.Dispose();
             avatar.Dispose();
             inMultiplay.Dispose();

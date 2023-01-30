@@ -16,6 +16,7 @@
         "StarterAsserts",
         "Extreal.Core.Logging",
         "Extreal.Core.StageNavigation",
+        "Extreal.Core.Common",
         "Extreal.Integration.Multiplay.NGO",
         "Extreal.Integration.Chat.Vivox",
         "Extreal.SampleApp.Holiday.MultiplayCommon"
