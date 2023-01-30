@@ -23,7 +23,8 @@ namespace Extreal.SampleApp.Holiday.Controls.Common
                 .Select(_ => Unit.Default);
 
         public IObservable<Unit> OnConnectFailed => onConnectFailed;
-        [SuppressMessage("Usage", "CC0033")] private readonly Subject<Unit> onConnectFailed = new Subject<Unit>();
+        [SuppressMessage("Usage", "CC0033")]
+        private readonly Subject<Unit> onConnectFailed = new Subject<Unit>();
 
         private readonly VivoxClient vivoxClient;
         private readonly string channelName;

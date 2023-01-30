@@ -18,7 +18,8 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
         public IObservable<Unit> OnUnexpectedDisconnected => ngoClient.OnUnexpectedDisconnected;
 
         public IObservable<Unit> OnConnectFailed => onConnectFailed;
-        [SuppressMessage("Usage", "CC0033")] private readonly Subject<Unit> onConnectFailed = new Subject<Unit>();
+        [SuppressMessage("Usage", "CC0033")]
+        private readonly Subject<Unit> onConnectFailed = new Subject<Unit>();
 
         public IObservable<bool> IsPlayerSpawned => isPlayerSpawned;
 
@@ -86,7 +87,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
         public async UniTask LeaveAsync()
             => await ngoClient.DisconnectAsync();
 
-        public void SendPlayerSpawn(string avatarAssetName)
+        private void SendPlayerSpawn(string avatarAssetName)
         {
             if (Logger.IsDebug())
             {
