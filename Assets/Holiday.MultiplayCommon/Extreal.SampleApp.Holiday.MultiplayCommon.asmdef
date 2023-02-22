@@ -2,6 +2,7 @@
     "name": "Extreal.SampleApp.Holiday.MultiplayCommon",
     "rootNamespace": "Extreal.SampleApp.Holiday.MultiplayCommon",
     "references": [
+        "Unity.Collections",
         "Unity.InputSystem",
         "Cinemachine",
         "Unity.Netcode.Runtime",

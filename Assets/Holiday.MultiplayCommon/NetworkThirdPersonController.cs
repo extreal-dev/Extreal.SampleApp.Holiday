@@ -1,6 +1,7 @@
 ﻿using Cinemachine;
 using StarterAssets;
 using TMPro;
+using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -79,6 +80,23 @@ namespace Extreal.SampleApp.Holiday.MultiplayCommon
         [Header("Input")] public PlayerInput PlayerInput;
         public StarterAssetsInputs Input;
 
+        private NetworkVariable<FixedString32Bytes> avatarPath = new NetworkVariable<FixedString32Bytes>();
+        public string AvatarPath
+        {
+            get => avatarPath.Value.ToString();
+            set
+            {
+                if (IsServer)
+                {
+                    avatarPath.Value = value;
+                }
+                else if (IsOwner)
+                {
+                    SetAvatarPathServerRpc(value);
+                }
+            }
+        }
+
         // cinemachine
         private float _cinemachineTargetYaw;
         private float _cinemachineTargetPitch;
@@ -102,6 +120,13 @@ namespace Extreal.SampleApp.Holiday.MultiplayCommon
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
 
+        // animation values
+        private float _animValueSpeed;
+        private bool _animValueGrounded;
+        private bool _animValueJump;
+        private bool _animValueFreeFall;
+        private float _animValueMotionSpeed;
+
         private Animator _animator;
         private CharacterController _controller;
         private GameObject _mainCamera;
@@ -123,10 +148,14 @@ namespace Extreal.SampleApp.Holiday.MultiplayCommon
         {
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
 
-            _hasAnimator = TryGetComponent(out _animator);
-            _controller = GetComponent<CharacterController>();
-
             AssignAnimationIDs();
+
+            if (_hasAnimator = TryGetComponent(out _animator))
+            {
+                _animator.SetFloat(_animIDMotionSpeed, 1f);
+                _animator.SetBool(_animIDGrounded, true);
+            }
+            _controller = GetComponent<CharacterController>();
 
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
@@ -157,7 +186,7 @@ namespace Extreal.SampleApp.Holiday.MultiplayCommon
         {
             if (IsOwner)
             {
-                _hasAnimator = TryGetComponent(out _animator);
+                _hasAnimator = _animator.avatar != null;
                 GroundedCheck();
 
                 if (EventSystem.current.currentSelectedGameObject == null
@@ -182,6 +211,24 @@ namespace Extreal.SampleApp.Holiday.MultiplayCommon
             {
                 CameraRotation();
             }
+        }
+
+        public void SaveAnimValues()
+        {
+            _animValueSpeed = _animator.GetFloat(_animIDSpeed);
+            _animValueGrounded = _animator.GetBool(_animIDGrounded);
+            _animValueJump = _animator.GetBool(_animIDJump);
+            _animValueFreeFall = _animator.GetBool(_animIDFreeFall);
+            _animValueMotionSpeed = _animator.GetFloat(_animIDMotionSpeed);
+        }
+
+        public void RestoreAnimValues()
+        {
+            _animator.SetFloat(_animIDSpeed, _animValueSpeed);
+            _animator.SetBool(_animIDGrounded, _animValueGrounded);
+            _animator.SetBool(_animIDJump, _animValueJump);
+            _animator.SetBool(_animIDFreeFall, _animValueFreeFall);
+            _animator.SetFloat(_animIDMotionSpeed, _animValueMotionSpeed);
         }
 
         private void AssignAnimationIDs()
@@ -416,5 +463,35 @@ namespace Extreal.SampleApp.Holiday.MultiplayCommon
                     FootstepAudioVolume);
             }
         }
+
+        [ServerRpc]
+        private void SetAvatarPathServerRpc(string value)
+            => AvatarPath = value;
+
+        // [ServerRpc]
+        // private void _animator.SetBool(int animId, bool value)
+        //     => AnimatorSetBoolClientRpc(animId, value);
+
+        // [ClientRpc]
+        // private void AnimatorSetBoolClientRpc(int animId, bool value)
+        // {
+        //     if (_hasAnimator)
+        //     {
+        //         _animator.SetBool(animId, value);
+        //     }
+        // }
+
+        // [ServerRpc]
+        // private void _animator.SetFloat(int animId, float value)
+        //     => AnimatorSetFloatClientRpc(animId, value);
+
+        // [ClientRpc]
+        // private void AnimatorSetFloatClientRpc(int animId, float value)
+        // {
+        //     if (_hasAnimator)
+        //     {
+        //         _animator.SetFloat(animId, value);
+        //     }
+        // }
     }
 }

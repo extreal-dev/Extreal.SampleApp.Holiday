@@ -355,9 +355,9 @@ MonoBehaviour:
     TypeName: 
   autoRun: 1
   autoInjectGameObjects: []
-  multiplayServerConfig: {fileID: 11400000, guid: 36d199537f7e22a4e829df08f882615f,
-    type: 2}
   networkManager: {fileID: 319104688}
+  playerPrefab: {fileID: 7407036263737879821, guid: d2eae51810896804e9ece241a580a09a,
+    type: 3}
 --- !u!4 &1504279234
 Transform:
   m_ObjectHideFlags: 0

@@ -7,7 +7,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
     {
         public static string MemoryUtilizationDumpFile { get; private set; }
         public static int SendMessagePeriod { get; private set; }
-        public static float Lifetime { get; private set; } = float.MaxValue;
+        public static float Lifetime { get; private set; } = 0f;
 
         private const string ExecCommand = nameof(Holiday);
 

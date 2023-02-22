@@ -24,6 +24,12 @@ EditorBuildSettings:
     path: Assets/Holiday/Controls/InputControl/InputControl.unity
     guid: 5b154ac9a50bb3e49bd948dc95284d3c
   - enabled: 1
+    path: Assets/Holiday/Controls/NotificationControl/NotificationControl.unity
+    guid: e4acbeab3ecfaf245818307d1eb010bf
+  - enabled: 1
+    path: Assets/Holiday/Controls/AppControl/AppControl.unity
+    guid: f8e9d9e073b728e45b22ca0cb8e23f56
+  - enabled: 1
     path: Assets/Holiday/Controls/MultiplayControl/MultiplayControl.unity
     guid: b1045e6b146d9aa4fb4c24b20e98b21a
   - enabled: 1
@@ -33,23 +39,23 @@ EditorBuildSettings:
     path: Assets/Holiday/Controls/VoiceChatControl/VoiceChatControl.unity
     guid: ddc3394fd410a514483bd603ff8cdd92
   - enabled: 1
+    path: Assets/Holiday/Controls/VirtualSpaceControl/VirtualSpaceControl.unity
+    guid: c7d9a9c4f1a34124199c3b84cd5fceda
+  - enabled: 1
     path: Assets/Holiday/Screens/BackgroundScreen/BackgroundScreen.unity
     guid: dba3c12c6d3018c47bbf5fd6dea28417
   - enabled: 1
     path: Assets/Holiday/Screens/LoadingScreen/LoadingScreen.unity
     guid: 4fc7e4b0e6970fb4dbccff3b4d076e2f
   - enabled: 1
-    path: Assets/Holiday/Controls/NotificationControl/NotificationControl.unity
-    guid: e4acbeab3ecfaf245818307d1eb010bf
+    path: Assets/Holiday/Screens/ConfirmationScreen/ConfirmationScreen.unity
+    guid: 4f1370eeca9a8224da19cd5186c796e3
   - enabled: 1
     path: Assets/Holiday/Screens/TitleScreen/TitleScreen.unity
     guid: 9dc0a54c0689a9b4d96083760b3a0a4a
   - enabled: 1
     path: Assets/Holiday/Screens/AvatarSelectionScreen/AvatarSelectionScreen.unity
     guid: d5fc57acb41ec3d4ca23670f58b9cd05
-  - enabled: 1
-    path: Assets/Holiday/Spaces/VirtualSpace/VirtualSpace.unity
-    guid: 6998577d024e09143869c5c8099418a0
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 1c5b30508a76c8e49b630eaba074f4f3,
       type: 2}

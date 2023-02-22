@@ -66,6 +66,9 @@ crashlytics-build.properties
 ChatConfig.asset*
 MultiplayConfig.asset*
 
+# Addressables connection server config
+SecretVariables.cs*
+
 # CodeCoverage
 CodeCoverage/
 
@@ -74,11 +77,8 @@ Assets/BuildReports/
 Assets/BuildReports.meta
 
 # Avatar using Mixamo
-Assets/Mixamo/*/*.fbx
-Assets/Mixamo/*/*.fbx.meta
+Assets/Mixamo/*/*.fbx*
 Assets/Mixamo/*/mat/*
 Assets/Mixamo/*/tex/*
-Assets/Holiday.MultiplayCommon/AvatarAmy.prefab
-Assets/Holiday.MultiplayCommon/AvatarAmy.prefab.meta
-Assets/Holiday.MultiplayCommon/AvatarMichelle.prefab
-Assets/Holiday.MultiplayCommon/AvatarMichelle.prefab.meta
+AvatarAmy.prefab*
+AvatarMichelle.prefab*

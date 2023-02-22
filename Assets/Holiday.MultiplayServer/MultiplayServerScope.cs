@@ -11,6 +11,7 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
     public class MultiplayServerScope : LifetimeScope
     {
         [SerializeField] private NetworkManager networkManager;
+        [SerializeField] private GameObject playerPrefab;
 
         private static void InitializeApp()
         {
@@ -31,6 +32,7 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
         protected override void Configure(IContainerBuilder builder)
         {
             builder.RegisterComponent(networkManager);
+            builder.RegisterComponent(playerPrefab);
             builder.Register<NgoServer>(Lifetime.Singleton);
             builder.Register<MultiplayServer>(Lifetime.Singleton);
 

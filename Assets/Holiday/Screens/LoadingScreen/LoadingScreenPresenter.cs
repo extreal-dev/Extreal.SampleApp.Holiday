@@ -2,6 +2,7 @@
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.App.Config;
+using Extreal.SampleApp.Holiday.App.Data;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
@@ -9,24 +10,31 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
     public class LoadingScreenPresenter : StagePresenterBase
     {
         private readonly LoadingScreenView loadingScreenView;
+        private readonly DataRepository dataRepository;
         private readonly AppState appState;
 
         public LoadingScreenPresenter
         (
             StageNavigator<StageName, SceneName> stageNavigator,
             LoadingScreenView loadingScreenView,
+            DataRepository dataRepository,
             AppState appState
         ) : base(stageNavigator)
         {
             this.loadingScreenView = loadingScreenView;
+            this.dataRepository = dataRepository;
             this.appState = appState;
         }
 
         protected override void Initialize(
             StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables)
         {
-            appState.IsPlaying
-                .Subscribe(OnPlayingChanged)
+            appState.IsLoading
+                .Subscribe(OnLoadingChanged)
+                .AddTo(sceneDisposables);
+
+            dataRepository.LoadedPercent
+                .Subscribe(loadingScreenView.SetLoadedPercent)
                 .AddTo(sceneDisposables);
 
             appState.OnNotificationReceived
@@ -34,9 +42,13 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
                 .AddTo(sceneDisposables);
         }
 
-        private void OnPlayingChanged(bool isPlaying)
+        private void OnLoadingChanged(bool isLoading)
         {
-            if (isPlaying)
+            if (isLoading)
+            {
+                loadingScreenView.Show();
+            }
+            else
             {
                 loadingScreenView.Hide();
             }
@@ -46,7 +58,7 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
         {
             if (AppUtils.IsSpace(stageName))
             {
-                loadingScreenView.Show();
+                appState.SetIsLoading(true);
             }
         }
 

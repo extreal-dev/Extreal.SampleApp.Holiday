@@ -14,20 +14,21 @@
       - /Assets/Mixamo/Amy
       - /Assets/Mixamo/Michelle
     - Rename FBX files to their respective avatar names (e.g. Amy.fbx).
-- Create avatar prefabs into the `/Assets/Holiday.MultiplayCommon` directory.
-  - Duplicate the `AvatarArmature` prefab and rename it to "AvatarAmy".
-  - Remove `Geometry` under `AvatarAmy` in the Hierarchy.
-  - Drag and drop `Amy.fbx` under `AvatarAmy` in Hierarchy and unpack completely.
-  - Remove the `Animator` component of Amy in Inspector.
-  - Change `Avatar` in the `Animator` component in `AvatarAmy` to `AmyAvatar`.
+- Create avatar prefabs into the `/Assets/Holiday.MultiplayCommon/Avatars` directory.
+  - Create a new scene.
+  - Drag and drop `Amy.fbx`into the scene above and unpack completely.
+  - Remove the `Animator` component and rename "Amy" to "AvatarAmy".
+  - Attach the `AvatarProvider` component and select `AmyAvatar` as `Avatar`.
+  - Drag and drop the `AvatarAmy` GameObject into the `/Assets/Holiday.MultiplayCommon/Avatars` directory to create prefab.
+  - Remove the scene you just created.
   - Add the `AvatarAmy` asset to Addressables with the name `AvatarAmy`.
   - Create an avatar prefab about `Michelle` in the same way as above.
-- Set the prefabs above to `NetworkPrefabs` in the `NetworkManager` component in the `NetworkManager` prefab.
 - Create a `ChatConfig` from the Create Assets menu in the `/Assets/Holiday/App/Config` directory and set the Vivox access information in the inspector.
   - Path in the Create Assets menu: `Holiday > ChatConfig`
+  - Add it to Addressables wi0th the name `ChatConfig`.
 - Create a `MultiplayConfig` from the Create Assets menu in the `/Assets/Holiday/App/Config` directory. Default values are set so there is no need to set them in the inspector.
   - Path in the Create Assets menu: `Holiday > MultiplayConfig`
-- Open `/Assets/Holiday/App/App` scene and set `ChatConfig` and `MultiplayConfig` in the `Scope` object inspector.
+  - Add it to Addressables wi0th the name `MultiplayConfig`.
 - Open multiple Unity editors using [ParrelSync.](https://github.com/VeriorPies/ParrelSync). ParrelSync is already installed in this project.
 - Run a multiplayer server.
   - Run the following scene: `/Assets/Holiday.MultiplayServer/MultilayServer`

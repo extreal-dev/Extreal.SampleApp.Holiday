@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentReference:
-    TypeName: Extreal.SampleApp.Holiday.App.AppScope
+    TypeName: Extreal.SampleApp.Holiday.Controls.AppControl.AppControlScope
   autoRun: 1
   autoInjectGameObjects: []
   textChatControlView: {fileID: 685982609}
@@ -392,6 +392,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputField: {fileID: 1100754052}
   sendButton: {fileID: 7364901185568192661}
+  sendButtonLabel: {fileID: 6277548129107287879}
   messageRoot: {fileID: 8265940784966560313}
   textChatPrefab: {fileID: 2086250153483841142, guid: 58e4e215c33ec2f4f98dd9e20d10db0b,
     type: 3}

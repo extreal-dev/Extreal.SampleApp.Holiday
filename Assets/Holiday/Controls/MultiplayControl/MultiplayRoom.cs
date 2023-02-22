@@ -9,6 +9,8 @@ using Extreal.SampleApp.Holiday.MultiplayCommon;
 using UniRx;
 using Unity.Collections;
 using Unity.Netcode;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 {
@@ -44,7 +46,13 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 
             this.ngoClient.OnConnected
                 .Subscribe(_ =>
-                    ngoClient.RegisterMessageHandler(MessageName.PlayerSpawned.ToString(), PlayerSpawnedMessageHandler))
+                {
+                    ngoClient.RegisterMessageHandler(MessageName.PlayerSpawned.ToString(), PlayerSpawnedMessageHandler);
+                    foreach (var spawnedObject in NetworkManager.Singleton.SpawnManager.SpawnedObjects.Values)
+                    {
+                        SetCharacterAvatarAsync(spawnedObject).Forget();
+                    }
+                })
                 .AddTo(disposables);
 
             this.ngoClient.OnDisconnecting
@@ -100,6 +108,31 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
         }
 
         private void PlayerSpawnedMessageHandler(ulong senderClientId, FastBufferReader messagePayload)
-            => isPlayerSpawned.Value = true;
+        {
+            messagePayload.ReadValueSafe(out ulong objectId);
+            var spawnedObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[objectId];
+            if (spawnedObject.IsOwner)
+            {
+                isPlayerSpawned.Value = true;
+            }
+            SetCharacterAvatarAsync(spawnedObject).Forget();
+        }
+
+        private static async UniTask SetCharacterAvatarAsync(NetworkObject spawnedObject)
+        {
+            var controller = spawnedObject.GetComponent<NetworkThirdPersonController>();
+            await UniTask.WaitWhile(() => string.IsNullOrEmpty(controller.AvatarPath));
+
+            var avatarPath = controller.AvatarPath;
+            var result = Addressables.LoadAssetAsync<GameObject>(avatarPath);
+            var playerAvatarPrefab = await result.Task;
+            var playerAvatar = UnityEngine.Object.Instantiate(playerAvatarPrefab, spawnedObject.transform);
+
+            var avatar = playerAvatar.GetComponent<AvatarProvider>().Avatar;
+            var animator = spawnedObject.GetComponent<Animator>();
+            controller.SaveAnimValues();
+            animator.avatar = avatar;
+            controller.RestoreAnimValues();
+        }
     }
 }

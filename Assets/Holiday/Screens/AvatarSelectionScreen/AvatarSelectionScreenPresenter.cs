@@ -3,9 +3,9 @@ using Cysharp.Threading.Tasks;
 using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App;
-using Extreal.SampleApp.Holiday.App.Avatars;
 using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.App.Config;
+using Extreal.SampleApp.Holiday.App.Data;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.Screens.AvatarSelectionScreen
@@ -14,21 +14,21 @@ namespace Extreal.SampleApp.Holiday.Screens.AvatarSelectionScreen
     {
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(AvatarSelectionScreenPresenter));
 
-        private readonly AvatarService avatarService;
         private readonly AvatarSelectionScreenView avatarSelectionScreenView;
         private readonly AppState appState;
+        private readonly DataRepository dataRepository;
 
         public AvatarSelectionScreenPresenter
         (
             StageNavigator<StageName, SceneName> stageNavigator,
-            AvatarService avatarService,
             AvatarSelectionScreenView avatarSelectionScreenView,
-            AppState appState
+            AppState appState,
+            DataRepository dataRepository
         ) : base(stageNavigator)
         {
             this.avatarSelectionScreenView = avatarSelectionScreenView;
-            this.avatarService = avatarService;
             this.appState = appState;
+            this.dataRepository = dataRepository;
         }
 
         protected override void Initialize(
@@ -41,7 +41,7 @@ namespace Extreal.SampleApp.Holiday.Screens.AvatarSelectionScreen
             avatarSelectionScreenView.OnAvatarChanged
                 .Subscribe(avatarName =>
                 {
-                    var avatar = avatarService.FindAvatarByName(avatarName);
+                    var avatar = dataRepository.AvatarService.FindAvatarByName(avatarName);
                     appState.SetAvatar(avatar);
                 })
                 .AddTo(sceneDisposables);
@@ -53,7 +53,7 @@ namespace Extreal.SampleApp.Holiday.Screens.AvatarSelectionScreen
 
         protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
         {
-            var avatars = avatarService.Avatars;
+            var avatars = dataRepository.AvatarService.Avatars;
             if (appState.Avatar.Value == null)
             {
                 appState.SetAvatar(avatars.First());

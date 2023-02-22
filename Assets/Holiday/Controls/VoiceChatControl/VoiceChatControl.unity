@@ -153,6 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   muteButton: {fileID: 6568589697678686254}
+  muteImage: {fileID: 1469821048492739082}
   mutedString: {fileID: 7639063601383415804}
 --- !u!4 &135245242
 Transform:
@@ -214,7 +215,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentReference:
-    TypeName: Extreal.SampleApp.Holiday.App.AppScope
+    TypeName: Extreal.SampleApp.Holiday.Controls.AppControl.AppControlScope
   autoRun: 1
   autoInjectGameObjects: []
   voiceChatControlView: {fileID: 135245241}

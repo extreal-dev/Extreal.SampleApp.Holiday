@@ -25,7 +25,7 @@ start GetCpuUtilization.bat %get_cpu_lifetime% %cpu_file_name%
 for /l %%i in (0, 1, %loop_count%) do (
     set counter=%%i
     start C:\Windows\System32\cmd.exe /c ^
-        ".\Holiday --memory-utilization-dump-file %pre_memory_file_name%!counter!.txt > %pre_log_file_name%!counter!.log 2>&1"
+        ".\Holiday --memory-utilization-dump-file %pre_memory_file_name%!counter!.txt --send-message-period 5 > %pre_log_file_name%!counter!.log 2>&1"
     powershell sleep 10
 )
 

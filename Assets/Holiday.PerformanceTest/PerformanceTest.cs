@@ -7,6 +7,7 @@ using Extreal.Core.Logging;
 using Extreal.Integration.Multiplay.NGO;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.Config;
+using Extreal.SampleApp.Holiday.Controls.AppControl;
 using StarterAssets;
 using TMPro;
 using UniRx;
@@ -67,29 +68,46 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
             await SceneManager.LoadSceneAsync(nameof(App), LoadSceneMode.Additive);
             await UniTask.WaitUntil(() => FindObjectOfType<Button>() != null);
 
-            var appScope = FindObjectOfType<AppScope>();
-            var appState = appScope.Container.Resolve(typeof(AppState)) as AppState;
-            var isPlaying = false;
-            var isPlayingDisposable = appState.IsPlaying
-                .Where(value => value)
-                .Subscribe(value => isPlaying = value);
-
-            var ngoClient = appScope.Container.Resolve(typeof(NgoClient)) as NgoClient;
-            var isConnectionApprovalRejected = false;
-            var isConnectionApprovalRejectedDisposable =
-                ngoClient.OnConnectionApprovalRejected
-                    .Subscribe(_ => isConnectionApprovalRejected = true);
-
-            // Enters AvatarSelectionScreen
+            // Starts to download data and enters AvatarSelectionScreen
             FindObjectOfType<Button>().onClick.Invoke();
             await UniTask.WaitUntil(() =>
-                FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.AvatarSelectionScreen.ToString());
+                FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.ConfirmationScreen.ToString()
+                || FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.AvatarSelectionScreen.ToString());
+            if (FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.ConfirmationScreen.ToString())
+            {
+                foreach (var button in FindObjectsOfType<Button>())
+                {
+                    if (button.name == "YesButton")
+                    {
+                        button.onClick.Invoke();
+                        break;
+                    }
+                }
+                await UniTask.WaitUntil(() =>
+                    FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.AvatarSelectionScreen.ToString());
+            }
 
             // Enters VirtualSpace
             FindObjectOfType<Button>().onClick.Invoke();
-            await UniTask.WaitUntil(() => isPlaying || isConnectionApprovalRejected);
-            isPlayingDisposable.Dispose();
-            isConnectionApprovalRejectedDisposable.Dispose();
+
+            var appControlScope = FindObjectOfType<AppControlScope>();
+            var appState = appControlScope.Container.Resolve(typeof(AppState)) as AppState;
+            var ngoClient = appControlScope.Container.Resolve(typeof(NgoClient)) as NgoClient;
+
+            var isConnectionApprovalRejected = false;
+            {
+                var isPlaying = false;
+                using var isPlayingDisposable = appState.IsLoading
+                    .Skip(1)
+                    .Where(value => !value)
+                    .Subscribe(_ => isPlaying = true);
+
+                using var isConnectionApprovalRejectedDisposable =
+                    ngoClient.OnConnectionApprovalRejected
+                        .Subscribe(_ => isConnectionApprovalRejected = true);
+
+                await UniTask.WaitUntil(() => isPlaying || isConnectionApprovalRejected);
+            }
 
             if (isConnectionApprovalRejected)
             {

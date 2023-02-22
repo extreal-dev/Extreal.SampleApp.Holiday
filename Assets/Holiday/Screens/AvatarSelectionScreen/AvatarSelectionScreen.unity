@@ -404,6 +404,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 360caec5291977948acc07ab4a396e90, type: 3}
+--- !u!114 &198154704 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7073681647446423624, guid: 360caec5291977948acc07ab4a396e90,
+    type: 3}
+  m_PrefabInstance: {fileID: 198154703}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &348369551
 GameObject:
   m_ObjectHideFlags: 0
@@ -1577,6 +1589,8 @@ MonoBehaviour:
   nameInputField: {fileID: 482124420}
   avatarDropdown: {fileID: 430268681}
   goButton: {fileID: 1747442972}
+  title: {fileID: 198154704}
+  goButtonLabel: {fileID: 1747442973}
 --- !u!4 &1514294815
 Transform:
   m_ObjectHideFlags: 0
@@ -1938,6 +1952,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1747442973 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6277548127454747489, guid: 3feb1b83ab9ba634bbd8e6e055f3d860,
+    type: 3}
+  m_PrefabInstance: {fileID: 1747442971}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1768798032
 GameObject:
   m_ObjectHideFlags: 0
@@ -2233,7 +2259,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentReference:
-    TypeName: Extreal.SampleApp.Holiday.App.AppScope
+    TypeName: Extreal.SampleApp.Holiday.Controls.AppControl.AppControlScope
   autoRun: 1
   autoInjectGameObjects: []
   avatarSelectionScreenView: {fileID: 1514294814}

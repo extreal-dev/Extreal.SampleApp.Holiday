@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -11,13 +10,13 @@ using UniRx;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 namespace Extreal.SampleApp.Holiday.MultiplayServer
 {
     public class MultiplayServer : DisposableBase
     {
         private readonly NgoServer ngoServer;
+        private readonly GameObject playerPrefab;
 
         private bool isDisposed;
 
@@ -29,8 +28,11 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
 
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(MultiplayServer));
 
-        public MultiplayServer(NgoServer ngoServer)
-            => this.ngoServer = ngoServer;
+        public MultiplayServer(NgoServer ngoServer, GameObject playerPrefab)
+        {
+            this.ngoServer = ngoServer;
+            this.playerPrefab = playerPrefab;
+        }
 
         public void Initialize()
         {
@@ -44,7 +46,7 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
 
             ngoServer.OnServerStarted
                 .Subscribe(_ =>
-                    ngoServer.RegisterMessageHandler(MessageName.PlayerSpawn.ToString(), PlayerSpawnMessageHandlerAsync))
+                    ngoServer.RegisterMessageHandler(MessageName.PlayerSpawn.ToString(), PlayerSpawnMessageHandler))
                 .AddTo(disposables);
         }
 
@@ -63,14 +65,14 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
             await ngoServer.StartServerAsync();
         }
 
-        private void SendPlayerSpawned(ulong clientId)
+        private void SendPlayerSpawned(ulong objectId)
         {
             var messageStream = new FastBufferWriter(FixedString64Bytes.UTF8MaxLengthInBytes, Allocator.Temp);
-            ngoServer.SendMessageToClients(new List<ulong> { clientId }, MessageName.PlayerSpawned.ToString(),
-                messageStream);
+            messageStream.WriteValueSafe(objectId);
+            ngoServer.SendMessageToAllClients(MessageName.PlayerSpawned.ToString(), messageStream);
         }
 
-        private async void PlayerSpawnMessageHandlerAsync(ulong clientId, FastBufferReader messageStream)
+        private void PlayerSpawnMessageHandler(ulong clientId, FastBufferReader messageStream)
         {
             if (Logger.IsDebug())
             {
@@ -78,11 +80,11 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
             }
 
             messageStream.ReadValueSafe(out string avatarAssetName);
-            var result = Addressables.LoadAssetAsync<GameObject>(avatarAssetName);
-            var playerPrefab = await result.Task;
-            ngoServer.SpawnAsPlayerObject(clientId, playerPrefab);
+            var spawnedPlayer = ngoServer.SpawnAsPlayerObject(clientId, playerPrefab);
+            spawnedPlayer.GetComponent<NetworkThirdPersonController>().AvatarPath = avatarAssetName;
 
-            SendPlayerSpawned(clientId);
+            var spawnedObjectId = spawnedPlayer.GetComponent<NetworkObject>().NetworkObjectId;
+            SendPlayerSpawned(spawnedObjectId);
         }
 
         private async UniTaskVoid OutputMemoryStatisticsAsync()

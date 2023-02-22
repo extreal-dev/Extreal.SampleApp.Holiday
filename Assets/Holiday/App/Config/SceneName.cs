@@ -7,17 +7,20 @@
         LightControl = 103,
         InputControl = 101,
         NotificationControl = 102,
+        AppControl = 107,
         MultiplayControl = 104,
         TextChatControl = 105,
         VoiceChatControl = 106,
+        VirtualSpaceControl = 108,
 
         // Screens
         BackgroundScreen = 204,
         LoadingScreen = 203,
+        ConfirmationScreen = 205,
         TitleScreen = 200,
         AvatarSelectionScreen = 201,
 
         // Spaces
-        VirtualSpace = 300,
+        // VirtualSpace = 300,
     }
 }
