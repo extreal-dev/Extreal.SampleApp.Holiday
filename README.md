@@ -25,10 +25,10 @@
   - Create an avatar prefab about `Michelle` in the same way as above.
 - Create a `ChatConfig` from the Create Assets menu in the `/Assets/Holiday/App/Config` directory and set the Vivox access information in the inspector.
   - Path in the Create Assets menu: `Holiday > ChatConfig`
-  - Add it to Addressables wi0th the name `ChatConfig`.
+  - Add it to Addressables with the name `ChatConfig`.
 - Create a `MultiplayConfig` from the Create Assets menu in the `/Assets/Holiday/App/Config` directory. Default values are set so there is no need to set them in the inspector.
   - Path in the Create Assets menu: `Holiday > MultiplayConfig`
-  - Add it to Addressables wi0th the name `MultiplayConfig`.
+  - Add it to Addressables with the name `MultiplayConfig`.
 - Open multiple Unity editors using [ParrelSync.](https://github.com/VeriorPies/ParrelSync). ParrelSync is already installed in this project.
 - Run a multiplayer server.
   - Run the following scene: `/Assets/Holiday.MultiplayServer/MultilayServer`
