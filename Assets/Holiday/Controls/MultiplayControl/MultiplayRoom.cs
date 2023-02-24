@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -11,6 +12,7 @@ using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 {
@@ -46,13 +48,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 
             this.ngoClient.OnConnected
                 .Subscribe(_ =>
-                {
-                    ngoClient.RegisterMessageHandler(MessageName.PlayerSpawned.ToString(), PlayerSpawnedMessageHandler);
-                    foreach (var spawnedObject in NetworkManager.Singleton.SpawnManager.SpawnedObjects.Values)
-                    {
-                        SetCharacterAvatarAsync(spawnedObject).Forget();
-                    }
-                })
+                    ngoClient.RegisterMessageHandler(MessageName.PlayerSpawned.ToString(), PlayerSpawnedMessageHandler))
                 .AddTo(disposables);
 
             this.ngoClient.OnDisconnecting
@@ -109,30 +105,52 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 
         private void PlayerSpawnedMessageHandler(ulong senderClientId, FastBufferReader messagePayload)
         {
-            messagePayload.ReadValueSafe(out ulong objectId);
-            var spawnedObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[objectId];
+            messagePayload.ReadValueSafe(out SpawnedMessage spawnedMessage);
+            var spawnedObject = SpawnedObjects[spawnedMessage.NetworkObjectId];
             if (spawnedObject.IsOwner)
             {
                 isPlayerSpawned.Value = true;
+                Controller(spawnedObject).AvatarAssetName.Value = spawnedMessage.AvatarAssetName;
+                SetAvatarForExistingSpawnedObjects(ownerId: spawnedMessage.NetworkObjectId);
             }
-            SetCharacterAvatarAsync(spawnedObject).Forget();
+            SetAvatarAsync(spawnedObject, spawnedMessage.AvatarAssetName).Forget();
         }
 
-        private static async UniTask SetCharacterAvatarAsync(NetworkObject spawnedObject)
+        private static Dictionary<ulong, NetworkObject> SpawnedObjects
+            => NetworkManager.Singleton.SpawnManager.SpawnedObjects;
+
+        private static NetworkThirdPersonController Controller(NetworkObject networkObject)
+            => networkObject.GetComponent<NetworkThirdPersonController>();
+
+        private static void SetAvatarForExistingSpawnedObjects(ulong ownerId)
         {
-            var controller = spawnedObject.GetComponent<NetworkThirdPersonController>();
-            await UniTask.WaitWhile(() => string.IsNullOrEmpty(controller.AvatarPath));
+            foreach (var existingObject in SpawnedObjects.Values)
+            {
+                if (ownerId != existingObject.NetworkObjectId)
+                {
+                    SetAvatarAsync(existingObject, Controller(existingObject).AvatarAssetName.Value, restore: true).Forget();
+                }
+            }
+        }
 
-            var avatarPath = controller.AvatarPath;
-            var result = Addressables.LoadAssetAsync<GameObject>(avatarPath);
-            var playerAvatarPrefab = await result.Task;
-            var playerAvatar = UnityEngine.Object.Instantiate(playerAvatarPrefab, spawnedObject.transform);
+        private static async UniTask SetAvatarAsync(NetworkObject networkObject, string avatarAssetName, bool restore = false)
+        {
+            var avatarObject = await LoadAvatarAsync(avatarAssetName, networkObject.transform);
+            Controller(networkObject).SetAvatar(avatarObject.GetComponent<AvatarProvider>().Avatar, restore);
+        }
 
-            var avatar = playerAvatar.GetComponent<AvatarProvider>().Avatar;
-            var animator = spawnedObject.GetComponent<Animator>();
-            controller.SaveAnimValues();
-            animator.avatar = avatar;
-            controller.RestoreAnimValues();
+        private static async UniTask<GameObject> LoadAvatarAsync(string avatarAssetName, Transform parent)
+        {
+            AsyncOperationHandle<GameObject> result = default;
+            try
+            {
+                result = Addressables.LoadAssetAsync<GameObject>(avatarAssetName);
+                return UnityEngine.Object.Instantiate(await result.Task, parent);
+            }
+            finally
+            {
+                Addressables.Release(result);
+            }
         }
     }
 }

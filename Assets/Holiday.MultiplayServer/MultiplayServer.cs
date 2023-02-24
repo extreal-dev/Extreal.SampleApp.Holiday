@@ -65,13 +65,6 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
             await ngoServer.StartServerAsync();
         }
 
-        private void SendPlayerSpawned(ulong objectId)
-        {
-            var messageStream = new FastBufferWriter(FixedString64Bytes.UTF8MaxLengthInBytes, Allocator.Temp);
-            messageStream.WriteValueSafe(objectId);
-            ngoServer.SendMessageToAllClients(MessageName.PlayerSpawned.ToString(), messageStream);
-        }
-
         private void PlayerSpawnMessageHandler(ulong clientId, FastBufferReader messageStream)
         {
             if (Logger.IsDebug())
@@ -80,11 +73,18 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
             }
 
             messageStream.ReadValueSafe(out string avatarAssetName);
-            var spawnedPlayer = ngoServer.SpawnAsPlayerObject(clientId, playerPrefab);
-            spawnedPlayer.GetComponent<NetworkThirdPersonController>().AvatarPath = avatarAssetName;
 
+            var spawnedPlayer = ngoServer.SpawnAsPlayerObject(clientId, playerPrefab);
             var spawnedObjectId = spawnedPlayer.GetComponent<NetworkObject>().NetworkObjectId;
-            SendPlayerSpawned(spawnedObjectId);
+
+            SendPlayerSpawnedToAllClients(spawnedObjectId, avatarAssetName);
+        }
+
+        private void SendPlayerSpawnedToAllClients(ulong objectId, string avatarAssetName)
+        {
+            var messageStream = new FastBufferWriter(FixedString64Bytes.UTF8MaxLengthInBytes, Allocator.Temp);
+            messageStream.WriteValueSafe(new SpawnedMessage(objectId, avatarAssetName));
+            ngoServer.SendMessageToAllClients(MessageName.PlayerSpawned.ToString(), messageStream);
         }
 
         private async UniTaskVoid OutputMemoryStatisticsAsync()
