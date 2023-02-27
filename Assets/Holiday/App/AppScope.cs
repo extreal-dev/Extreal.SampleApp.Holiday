@@ -6,6 +6,7 @@ using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.App.Data;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 #if UNITY_ANDROID
 using UnityEngine.Android;
 #endif
@@ -26,6 +27,7 @@ namespace Extreal.SampleApp.Holiday.App
 
             var logLevel = InitializeLogging();
             InitializeMicrophone();
+            InitializeAssets();
 
             var logger = LoggingManager.GetLogger(nameof(AppScope));
             if (logger.IsDebug())
@@ -59,6 +61,13 @@ namespace Extreal.SampleApp.Holiday.App
             {
                 Permission.RequestUserPermission(Permission.Microphone);
             }
+#endif
+        }
+
+        private static void InitializeAssets()
+        {
+#if !HOLIDAY_PROD
+            Caching.ClearCache();
 #endif
         }
 
