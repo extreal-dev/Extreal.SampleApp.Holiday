@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Security.Cryptography;
@@ -149,7 +149,7 @@ public class CustomAssetBundleResource : IAssetBundleResource
         {
             CompleteBundleLoad(dhAssetBundle.assetBundle);
             uwrAsyncOp.webRequest.Dispose();
-            uwrAsyncOperation.webRequest.Dispose();
+            uwrAsyncOperation?.webRequest.Dispose();
             uwrAsyncOperation = null;
             if (File.Exists(bundleFilePath))
             {
