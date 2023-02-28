@@ -7,7 +7,7 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
     {
         public static string MemoryUtilizationDumpFile { get; private set; }
         public static int MaxCapacity { get; private set; } = 90;
-        public static float Lifetime { get; private set; } = 0f;
+        public static float Lifetime { get; private set; }
 
         private const string ExecCommand = "HolidayServer.x86_64";
 
