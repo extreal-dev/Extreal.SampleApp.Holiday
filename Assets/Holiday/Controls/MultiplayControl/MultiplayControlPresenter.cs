@@ -5,6 +5,7 @@ using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.App.Config;
 using UniRx;
+using UnityEngine.AddressableAssets;
 
 namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 {
@@ -35,17 +36,20 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
         {
         }
 
-        protected override async void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
+        protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
         {
-            var multiplayConfig = await assetProvider.LoadAssetAsync<MultiplayConfig>(nameof(MultiplayConfig));
+            var multiplayConfig = assetProvider.LoadAsset<MultiplayConfig>(nameof(MultiplayConfig));
             multiplayRoom = new MultiplayRoom(ngoClient, multiplayConfig.ToNgoConfig(), assetProvider);
+            Addressables.Release(multiplayConfig);
             stageDisposables.Add(multiplayRoom);
 
             multiplayRoom.IsPlayerSpawned
                 .Subscribe(appState.SetInMultiplay)
                 .AddTo(stageDisposables);
 
-            var appConfig = (await assetProvider.LoadAssetAsync<AppConfigRepository>(nameof(AppConfigRepository))).ToAppConfig();
+            var appConfigRepository = assetProvider.LoadAsset<AppConfigRepository>(nameof(AppConfigRepository));
+            var appConfig = appConfigRepository.ToAppConfig();
+            Addressables.Release(appConfigRepository);
 
             multiplayRoom.OnConnectionApprovalRejected
                 .Subscribe(_ =>

@@ -35,7 +35,7 @@ namespace Extreal.SampleApp.Holiday.Screens.ConfirmationScreen
                 })
                 .AddTo(sceneDisposables);
 
-            confirmationScreenView.YesButtonClicked
+            confirmationScreenView.OkButtonClicked
                 .Subscribe(_ =>
                 {
                     confirmationScreenView.Hide();
@@ -43,7 +43,7 @@ namespace Extreal.SampleApp.Holiday.Screens.ConfirmationScreen
                 })
                 .AddTo(sceneDisposables);
 
-            confirmationScreenView.NoButtonClicked
+            confirmationScreenView.CancelButtonClicked
                 .Subscribe(_ =>
                 {
                     confirmationScreenView.Hide();

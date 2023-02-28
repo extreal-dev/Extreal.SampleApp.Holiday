@@ -6,6 +6,7 @@ using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.App.Config;
 using UniRx;
+using UnityEngine.AddressableAssets;
 
 namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
 {
@@ -39,7 +40,7 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
                 .Subscribe(message => textChatChannel.SendMessage(message))
                 .AddTo(sceneDisposables);
 
-        protected override async void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
+        protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
         {
             textChatChannel = new TextChatChannel(vivoxClient, $"HolidayTextChat{stageName}");
             stageDisposables.Add(textChatChannel);
@@ -52,8 +53,9 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
                 .Subscribe(textChatControlView.ShowMessage)
                 .AddTo(stageDisposables);
 
-            var appConfig = (await assetProvider.LoadAssetAsync<AppConfigRepository>(nameof(AppConfigRepository)))
-                .ToAppConfig();
+            var appConfigRepository = assetProvider.LoadAsset<AppConfigRepository>(nameof(AppConfigRepository));
+            var appConfig = appConfigRepository.ToAppConfig();
+            Addressables.Release(appConfigRepository);
 
             textChatChannel.OnUnexpectedDisconnected
                 .Subscribe(_ => appState.SetNotification(appConfig.ChatUnexpectedDisconnectedErrorMessage))

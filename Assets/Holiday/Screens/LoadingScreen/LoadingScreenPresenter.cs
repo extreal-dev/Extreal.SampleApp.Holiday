@@ -33,7 +33,15 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
                 .AddTo(sceneDisposables);
 
             assetProvider.OnDownloading
-                .Subscribe(loadingScreenView.SetDownloadStatus)
+                .Subscribe(status =>
+                {
+                    loadingScreenView.Show();
+                    loadingScreenView.SetDownloadStatus(status);
+                    if (status.IsDone)
+                    {
+                        loadingScreenView.Hide();
+                    }
+                })
                 .AddTo(sceneDisposables);
 
             appState.OnNotificationReceived

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Extreal.SampleApp.Holiday.App;
 using TMPro;
 using UnityEngine;
@@ -28,8 +29,9 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
         {
             var total = AppUtils.GetSizeUnit(status.TotalBytes);
             var downloaded = AppUtils.GetSizeUnit(status.DownloadedBytes);
-            loadedPercent.text = $"{status.Percent * 100}%" +
-                                 $"({downloaded.Item1}{downloaded.Item2}/{total.Item1}{total.Item2})";
+            loadedPercent.text = $"{status.Percent * 100:F0}%" +
+                                 Environment.NewLine +
+                                 $"( {downloaded.Item1}{downloaded.Item2} / {total.Item1}{total.Item2} )";
         }
     }
 }

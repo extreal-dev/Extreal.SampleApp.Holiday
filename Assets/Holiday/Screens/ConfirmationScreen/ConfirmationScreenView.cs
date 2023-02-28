@@ -14,10 +14,10 @@ namespace Extreal.SampleApp.Holiday.Screens.ConfirmationScreen
         [SerializeField] private Button okButton;
         [SerializeField] private Button cancelButton;
 
-        public IObservable<Unit> YesButtonClicked
+        public IObservable<Unit> OkButtonClicked
             => okButton.OnClickAsObservable().TakeUntilDestroy(this);
 
-        public IObservable<Unit> NoButtonClicked
+        public IObservable<Unit> CancelButtonClicked
             => cancelButton.OnClickAsObservable().TakeUntilDestroy(this);
 
         [SuppressMessage("Style", "IDE0051")]

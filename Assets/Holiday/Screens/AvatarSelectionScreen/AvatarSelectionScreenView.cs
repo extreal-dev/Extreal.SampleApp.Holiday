@@ -7,6 +7,7 @@ using Extreal.SampleApp.Holiday.App.Config;
 using TMPro;
 using UniRx;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
 using VContainer;
 
@@ -25,9 +26,11 @@ namespace Extreal.SampleApp.Holiday.Screens.AvatarSelectionScreen
         private readonly List<string> avatarNames = new List<string>();
 
         [SuppressMessage("Style", "IDE0051"), SuppressMessage("Style", "CC0061")]
-        private async void Awake()
+        private void Awake()
         {
-            var appConfig = (await assetProvider.LoadAssetAsync<AppConfigRepository>(nameof(AppConfigRepository))).ToAppConfig();
+            var appConfigRepository = assetProvider.LoadAsset<AppConfigRepository>(nameof(AppConfigRepository));
+            var appConfig = appConfigRepository.ToAppConfig();
+            Addressables.Release(appConfigRepository);
             title.text = appConfig.AvatarSelectionTitle;
             goButtonLabel.text = appConfig.AvatarSelectionGoButtonLabel;
         }

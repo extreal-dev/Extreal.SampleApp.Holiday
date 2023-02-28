@@ -26,7 +26,7 @@ namespace Extreal.SampleApp.Holiday.App.Common
         public async UniTask DownloadAsync(
             string assetName, TimeSpan downloadStatusInterval = default, Action nextAction = null)
         {
-            if (await GetDownloadSizeAsync(assetName) == 0)
+            if (await GetDownloadSizeAsync(assetName) != 0)
             {
                 await DownloadDependenciesAsync(assetName, downloadStatusInterval);
             }
@@ -45,22 +45,16 @@ namespace Extreal.SampleApp.Holiday.App.Common
         {
             var handle = Addressables.DownloadDependenciesAsync(assetName);
 
-            var isFirst = true;
+            onDownloading.OnNext(handle.GetDownloadStatus());
             var downloadStatus = default(DownloadStatus);
-            while (!handle.IsDone && !downloadStatus.IsDone)
+            while (!handle.IsDone)
             {
                 var prevDownloadStatus = downloadStatus;
                 downloadStatus = handle.GetDownloadStatus();
-                if (isFirst)
-                {
-                    isFirst = false;
-                    onDownloading.OnNext(downloadStatus);
-                }
-                else if (prevDownloadStatus.DownloadedBytes != downloadStatus.DownloadedBytes)
+                if (prevDownloadStatus.DownloadedBytes != downloadStatus.DownloadedBytes)
                 {
                     onDownloading.OnNext(downloadStatus);
                 }
-
                 if (interval == default)
                 {
                     await UniTask.Yield();
@@ -70,6 +64,7 @@ namespace Extreal.SampleApp.Holiday.App.Common
                     await UniTask.Delay(interval);
                 }
             }
+            onDownloading.OnNext(handle.GetDownloadStatus());
 
             ReleaseHandle(handle);
         }

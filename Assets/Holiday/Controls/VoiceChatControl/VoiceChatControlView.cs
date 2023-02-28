@@ -5,6 +5,7 @@ using Extreal.SampleApp.Holiday.App.Config;
 using TMPro;
 using UniRx;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
 using VContainer;
 
@@ -26,9 +27,11 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
         private string muteOnButtonLabel;
 
         [SuppressMessage("Style", "IDE0051"), SuppressMessage("Style", "CC0061")]
-        private async void Awake()
+        private void Awake()
         {
-            var appConfig = (await assetProvider.LoadAssetAsync<AppConfigRepository>(nameof(AppConfigRepository))).ToAppConfig();
+            var appConfigRepository = assetProvider.LoadAsset<AppConfigRepository>(nameof(AppConfigRepository));
+            var appConfig = appConfigRepository.ToAppConfig();
+            Addressables.Release(appConfigRepository);
             muteOffButtonLabel = appConfig.VoiceChatMuteOffButtonLabel;
             muteOnButtonLabel = appConfig.VoiceChatMuteOnButtonLabel;
             mainColor = mutedString.color;

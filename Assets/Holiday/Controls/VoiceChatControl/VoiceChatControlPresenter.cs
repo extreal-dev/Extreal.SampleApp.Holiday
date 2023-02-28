@@ -5,6 +5,7 @@ using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.App.Config;
 using UniRx;
+using UnityEngine.AddressableAssets;
 
 namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
 {
@@ -38,7 +39,7 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
                 .Subscribe(_ => voiceChatChannel.ToggleMuteAsync().Forget())
                 .AddTo(sceneDisposables);
 
-        protected override async void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
+        protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
         {
             voiceChatChannel = new VoiceChatChannel(vivoxClient, $"HolidayVoiceChat{stageName}");
             stageDisposables.Add(voiceChatChannel);
@@ -51,7 +52,9 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
                 .Subscribe(voiceChatScreenView.ToggleMute)
                 .AddTo(stageDisposables);
 
-            var appConfig = (await assetProvider.LoadAssetAsync<AppConfigRepository>(nameof(AppConfigRepository))).ToAppConfig();
+            var appConfigRepository = assetProvider.LoadAsset<AppConfigRepository>(nameof(AppConfigRepository));
+            var appConfig = appConfigRepository.ToAppConfig();
+            Addressables.Release(appConfigRepository);
 
             voiceChatChannel.OnUnexpectedDisconnected
                 .Subscribe(_ => appState.SetNotification(appConfig.ChatUnexpectedDisconnectedErrorMessage))

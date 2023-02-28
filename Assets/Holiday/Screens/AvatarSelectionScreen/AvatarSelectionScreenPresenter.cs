@@ -7,6 +7,7 @@ using Extreal.SampleApp.Holiday.App.Avatars;
 using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.App.Config;
 using UniRx;
+using UnityEngine.AddressableAssets;
 
 namespace Extreal.SampleApp.Holiday.Screens.AvatarSelectionScreen
 {
@@ -31,14 +32,16 @@ namespace Extreal.SampleApp.Holiday.Screens.AvatarSelectionScreen
             this.assetProvider = assetProvider;
         }
 
-        protected override async void Initialize(
+        protected override void Initialize(
             StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables)
         {
             avatarSelectionScreenView.OnNameChanged
                 .Subscribe(appState.SetPlayerName)
                 .AddTo(sceneDisposables);
 
-            var avatarService = (await assetProvider.LoadAssetAsync<AvatarRepository>(nameof(AvatarRepository))).ToAvatarService();
+            var avatarRepository = assetProvider.LoadAsset<AvatarRepository>(nameof(AvatarRepository));
+            var avatarService = avatarRepository.ToAvatarService();
+            Addressables.Release(avatarRepository);
 
             avatarSelectionScreenView.OnAvatarChanged
                 .Subscribe(avatarName =>
@@ -53,9 +56,12 @@ namespace Extreal.SampleApp.Holiday.Screens.AvatarSelectionScreen
                 .AddTo(sceneDisposables);
         }
 
-        protected override async void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
+        protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
         {
-            var avatarService = (await assetProvider.LoadAssetAsync<AvatarRepository>(nameof(AvatarRepository))).ToAvatarService();
+            var avatarRepository = assetProvider.LoadAsset<AvatarRepository>(nameof(AvatarRepository));
+            var avatarService = avatarRepository.ToAvatarService();
+            Addressables.Release(avatarRepository);
+
             var avatars = avatarService.Avatars;
             if (appState.Avatar.Value == null)
             {

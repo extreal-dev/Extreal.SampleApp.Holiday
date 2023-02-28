@@ -505,12 +505,22 @@ PrefabInstance:
     - target: {fileID: 7073681647446423624, guid: 360caec5291977948acc07ab4a396e90,
         type: 3}
       propertyPath: m_text
-      value: 100.00%
+      value: 100%(100GB/100GB)
       objectReference: {fileID: 0}
     - target: {fileID: 7073681647446423624, guid: 360caec5291977948acc07ab4a396e90,
         type: 3}
       propertyPath: m_fontSize
       value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 7073681647446423624, guid: 360caec5291977948acc07ab4a396e90,
+        type: 3}
+      propertyPath: m_margin.x
+      value: -605.0124
+      objectReference: {fileID: 0}
+    - target: {fileID: 7073681647446423624, guid: 360caec5291977948acc07ab4a396e90,
+        type: 3}
+      propertyPath: m_margin.z
+      value: -160.87033
       objectReference: {fileID: 0}
     - target: {fileID: 7073681647446423624, guid: 360caec5291977948acc07ab4a396e90,
         type: 3}
@@ -520,12 +530,12 @@ PrefabInstance:
     - target: {fileID: 7073681647446423624, guid: 360caec5291977948acc07ab4a396e90,
         type: 3}
       propertyPath: m_VerticalAlignment
-      value: 1024
+      value: 8192
       objectReference: {fileID: 0}
     - target: {fileID: 7073681647446423624, guid: 360caec5291977948acc07ab4a396e90,
         type: 3}
       propertyPath: m_HorizontalAlignment
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7073681647446423630, guid: 360caec5291977948acc07ab4a396e90,
         type: 3}
@@ -615,12 +625,12 @@ PrefabInstance:
     - target: {fileID: 7073681647446423631, guid: 360caec5291977948acc07ab4a396e90,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -100
+      value: -698
       objectReference: {fileID: 0}
     - target: {fileID: 7073681647446423631, guid: 360caec5291977948acc07ab4a396e90,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 100
+      value: 194
       objectReference: {fileID: 0}
     - target: {fileID: 7073681647446423631, guid: 360caec5291977948acc07ab4a396e90,
         type: 3}
