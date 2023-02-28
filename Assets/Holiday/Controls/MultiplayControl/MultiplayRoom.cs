@@ -6,13 +6,14 @@ using Cysharp.Threading.Tasks;
 using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
 using Extreal.Integration.Multiplay.NGO;
+using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.MultiplayCommon;
 using UniRx;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
+using Object = UnityEngine.Object;
 
 namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 {
@@ -32,6 +33,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 
         private readonly NgoClient ngoClient;
         private readonly NgoConfig ngoConfig;
+        private readonly AssetProvider assetProvider;
 
         [SuppressMessage("Usage", "CC0033")]
         private readonly CompositeDisposable disposables = new CompositeDisposable();
@@ -41,10 +43,11 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(MultiplayRoom));
 
-        public MultiplayRoom(NgoClient ngoClient, NgoConfig ngoConfig)
+        public MultiplayRoom(NgoClient ngoClient, NgoConfig ngoConfig, AssetProvider assetProvider)
         {
             this.ngoClient = ngoClient;
             this.ngoConfig = ngoConfig;
+            this.assetProvider = assetProvider;
 
             this.ngoClient.OnConnected
                 .Subscribe(_ =>
@@ -122,7 +125,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
         private static NetworkThirdPersonController Controller(NetworkObject networkObject)
             => networkObject.GetComponent<NetworkThirdPersonController>();
 
-        private static void SetAvatarForExistingSpawnedObjects(ulong ownerId)
+        private void SetAvatarForExistingSpawnedObjects(ulong ownerId)
         {
             foreach (var existingObject in SpawnedObjects.Values)
             {
@@ -133,23 +136,26 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
             }
         }
 
-        private static async UniTask SetAvatarAsync(NetworkObject networkObject, string avatarAssetName, bool restore = false)
+        private async UniTask SetAvatarAsync(NetworkObject networkObject, string avatarAssetName, bool restore = false)
         {
             var avatarObject = await LoadAvatarAsync(avatarAssetName, networkObject.transform);
             Controller(networkObject).SetAvatar(avatarObject.GetComponent<AvatarProvider>().Avatar, restore);
         }
 
-        private static async UniTask<GameObject> LoadAvatarAsync(string avatarAssetName, Transform parent)
+        private async UniTask<GameObject> LoadAvatarAsync(string avatarAssetName, Transform parent)
         {
-            AsyncOperationHandle<GameObject> result = default;
+            GameObject prefab = null;
             try
             {
-                result = Addressables.LoadAssetAsync<GameObject>(avatarAssetName);
-                return UnityEngine.Object.Instantiate(await result.Task, parent);
+                prefab = await assetProvider.LoadAssetAsync<GameObject>(avatarAssetName);
+                return Object.Instantiate(prefab, parent);
             }
             finally
             {
-                Addressables.Release(result);
+                if (prefab != null)
+                {
+                    Addressables.Release(prefab);
+                }
             }
         }
     }

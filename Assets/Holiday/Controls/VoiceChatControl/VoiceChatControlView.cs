@@ -1,5 +1,7 @@
 ﻿using System;
-using Extreal.SampleApp.Holiday.App.Data;
+using System.Diagnostics.CodeAnalysis;
+using Extreal.SampleApp.Holiday.App.Common;
+using Extreal.SampleApp.Holiday.App.Config;
 using TMPro;
 using UniRx;
 using UnityEngine;
@@ -14,22 +16,27 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
         [SerializeField] private Image muteImage;
         [SerializeField] private TMP_Text mutedString;
 
-        [Inject] private DataRepository dataRepository;
+        [Inject] private AssetProvider assetProvider;
 
         public IObservable<Unit> OnMuteButtonClicked
             => muteButton.OnClickAsObservable().TakeUntilDestroy(this);
 
         private Color mainColor;
+        private string muteOffButtonLabel;
+        private string muteOnButtonLabel;
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0051")]
-        private void Awake()
-            => mainColor = mutedString.color;
+        [SuppressMessage("Style", "IDE0051"), SuppressMessage("Style", "CC0061")]
+        private async void Awake()
+        {
+            var appConfig = (await assetProvider.LoadAssetAsync<AppConfigRepository>(nameof(AppConfigRepository))).ToAppConfig();
+            muteOffButtonLabel = appConfig.VoiceChatMuteOffButtonLabel;
+            muteOnButtonLabel = appConfig.VoiceChatMuteOnButtonLabel;
+            mainColor = mutedString.color;
+        }
 
         public void ToggleMute(bool isMute)
         {
-            mutedString.text = isMute
-                ? dataRepository.AppConfig.VoiceChatMuteOffButtonLabel
-                : dataRepository.AppConfig.VoiceChatMuteOnButtonLabel;
+            mutedString.text = isMute ? muteOffButtonLabel : muteOnButtonLabel;
             mutedString.color = isMute ? mainColor : Color.white;
             muteImage.color = isMute ? Color.white : mainColor;
         }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using TMPro;
 using UniRx;
@@ -11,14 +11,14 @@ namespace Extreal.SampleApp.Holiday.Screens.ConfirmationScreen
     {
         [SerializeField] private GameObject screen;
         [SerializeField] private TMP_Text confirmationText;
-        [SerializeField] private Button yesButton;
-        [SerializeField] private Button noButton;
+        [SerializeField] private Button okButton;
+        [SerializeField] private Button cancelButton;
 
         public IObservable<Unit> YesButtonClicked
-            => yesButton.OnClickAsObservable().TakeUntilDestroy(this);
+            => okButton.OnClickAsObservable().TakeUntilDestroy(this);
 
         public IObservable<Unit> NoButtonClicked
-            => noButton.OnClickAsObservable().TakeUntilDestroy(this);
+            => cancelButton.OnClickAsObservable().TakeUntilDestroy(this);
 
         [SuppressMessage("Style", "IDE0051")]
         private void Start()

@@ -6,7 +6,6 @@ using Extreal.SampleApp.Holiday.App.Config;
 using UniRx;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.ResourceProviders;
-using UnityEngine.SceneManagement;
 
 namespace Extreal.SampleApp.Holiday.Controls.VirtualSpaceControl
 {
@@ -14,6 +13,7 @@ namespace Extreal.SampleApp.Holiday.Controls.VirtualSpaceControl
     {
         private readonly VirtualSpaceControlView virtualSpaceControlView;
         private readonly AppState appState;
+        private readonly AssetProvider assetProvider;
 
         private SceneInstance scene;
 
@@ -21,20 +21,22 @@ namespace Extreal.SampleApp.Holiday.Controls.VirtualSpaceControl
         (
             StageNavigator<StageName, SceneName> stageNavigator,
             VirtualSpaceControlView virtualSpaceControlView,
-            AppState appState
+            AppState appState,
+            AssetProvider assetProvider
         ) : base(stageNavigator)
         {
             this.virtualSpaceControlView = virtualSpaceControlView;
             this.appState = appState;
+            this.assetProvider = assetProvider;
         }
 
         protected override void Initialize(
             StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables)
         {
             virtualSpaceControlView.OnBackButtonClicked
-                .Subscribe(async _ =>
+                .Subscribe(_ =>
                 {
-                    await UnloadVirtualSceneAsync();
+                    UnloadVirtualSceneAsync().Forget();
                     stageNavigator.ReplaceAsync(StageName.AvatarSelectionStage).Forget();
                 })
                 .AddTo(sceneDisposables);
@@ -50,13 +52,13 @@ namespace Extreal.SampleApp.Holiday.Controls.VirtualSpaceControl
         {
         }
 
-        private async UniTaskVoid LoadVirtualSceneAsync()
+        private async UniTask LoadVirtualSceneAsync()
         {
-            scene = await Addressables.LoadSceneAsync("VirtualSpace", LoadSceneMode.Additive).Task;
+            scene = await assetProvider.LoadSceneAsync("VirtualSpace");
             appState.GotReadyToUseSpace();
         }
 
         private async UniTask UnloadVirtualSceneAsync()
-            => _ = await Addressables.UnloadSceneAsync(scene).Task;
+            => await Addressables.UnloadSceneAsync(scene);
     }
 }

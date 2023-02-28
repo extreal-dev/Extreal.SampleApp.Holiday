@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
 using Extreal.SampleApp.Holiday.App.Avatars;
+using Extreal.SampleApp.Holiday.Screens.ConfirmationScreen;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.App
@@ -26,6 +27,10 @@ namespace Extreal.SampleApp.Holiday.App
         public IObservable<string> OnNotificationReceived => onNotificationReceived;
         [SuppressMessage("Usage", "CC0033")]
         private readonly Subject<string> onNotificationReceived = new Subject<string>();
+
+        public IObservable<Confirmation> OnConfirmationReceived => onConfirmationReceived;
+        [SuppressMessage("Usage", "CC0033")]
+        private readonly Subject<Confirmation> onConfirmationReceived = new Subject<Confirmation>();
 
         public IObservable<Unit> SpaceIsReady => spaceIsReady;
         [SuppressMessage("Usage", "CC0033")]
@@ -83,6 +88,16 @@ namespace Extreal.SampleApp.Holiday.App
             onNotificationReceived.OnNext(message);
         }
 
+        public void SetConfirmation(Confirmation confirmation)
+        {
+            if (Logger.IsDebug())
+            {
+                Logger.LogDebug($"OnConfirmationReceived: {confirmation.Message}");
+            }
+
+            onConfirmationReceived.OnNext(confirmation);
+        }
+
         protected override void ReleaseManagedResources()
         {
             playerName.Dispose();
@@ -93,6 +108,7 @@ namespace Extreal.SampleApp.Holiday.App
             inAudio.Dispose();
             isLoading.Dispose();
             onNotificationReceived.Dispose();
+            onConfirmationReceived.Dispose();
             disposables.Dispose();
         }
     }

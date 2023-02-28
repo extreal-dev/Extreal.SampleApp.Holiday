@@ -484,7 +484,7 @@ PrefabInstance:
     - target: {fileID: 6277548127454747489, guid: 3feb1b83ab9ba634bbd8e6e055f3d860,
         type: 3}
       propertyPath: m_text
-      value: YES
+      value: OK
       objectReference: {fileID: 0}
     - target: {fileID: 6277548127454747489, guid: 3feb1b83ab9ba634bbd8e6e055f3d860,
         type: 3}
@@ -499,7 +499,7 @@ PrefabInstance:
     - target: {fileID: 6277548127454747489, guid: 3feb1b83ab9ba634bbd8e6e055f3d860,
         type: 3}
       propertyPath: m_fontColor32.rgba
-      value: 4294967295
+      value: 4284575743
       objectReference: {fileID: 0}
     - target: {fileID: 6307249710144826396, guid: 3feb1b83ab9ba634bbd8e6e055f3d860,
         type: 3}
@@ -539,7 +539,7 @@ PrefabInstance:
     - target: {fileID: 6307249710144826396, guid: 3feb1b83ab9ba634bbd8e6e055f3d860,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 300
+      value: 360
       objectReference: {fileID: 0}
     - target: {fileID: 6307249710144826396, guid: 3feb1b83ab9ba634bbd8e6e055f3d860,
         type: 3}
@@ -584,7 +584,7 @@ PrefabInstance:
     - target: {fileID: 6307249710144826396, guid: 3feb1b83ab9ba634bbd8e6e055f3d860,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 250
+      value: 280
       objectReference: {fileID: 0}
     - target: {fileID: 6307249710144826396, guid: 3feb1b83ab9ba634bbd8e6e055f3d860,
         type: 3}
@@ -609,7 +609,7 @@ PrefabInstance:
     - target: {fileID: 8357966206805703900, guid: 3feb1b83ab9ba634bbd8e6e055f3d860,
         type: 3}
       propertyPath: m_Name
-      value: YesButton
+      value: OkButton
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3feb1b83ab9ba634bbd8e6e055f3d860, type: 3}
@@ -656,8 +656,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   screen: {fileID: 763873986}
   confirmationText: {fileID: 1072993406}
-  yesButton: {fileID: 1958588610}
-  noButton: {fileID: 2104956247}
+  okButton: {fileID: 1958588610}
+  cancelButton: {fileID: 2104956247}
 --- !u!4 &1961358534
 Transform:
   m_ObjectHideFlags: 0
@@ -698,7 +698,7 @@ PrefabInstance:
     - target: {fileID: 6277548127454747489, guid: 3feb1b83ab9ba634bbd8e6e055f3d860,
         type: 3}
       propertyPath: m_text
-      value: NO
+      value: Cancel
       objectReference: {fileID: 0}
     - target: {fileID: 6277548127454747489, guid: 3feb1b83ab9ba634bbd8e6e055f3d860,
         type: 3}
@@ -713,7 +713,7 @@ PrefabInstance:
     - target: {fileID: 6277548127454747489, guid: 3feb1b83ab9ba634bbd8e6e055f3d860,
         type: 3}
       propertyPath: m_fontColor32.rgba
-      value: 4294967295
+      value: 4284575743
       objectReference: {fileID: 0}
     - target: {fileID: 6307249710144826396, guid: 3feb1b83ab9ba634bbd8e6e055f3d860,
         type: 3}
@@ -753,7 +753,7 @@ PrefabInstance:
     - target: {fileID: 6307249710144826396, guid: 3feb1b83ab9ba634bbd8e6e055f3d860,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 300
+      value: 360
       objectReference: {fileID: 0}
     - target: {fileID: 6307249710144826396, guid: 3feb1b83ab9ba634bbd8e6e055f3d860,
         type: 3}
@@ -798,7 +798,7 @@ PrefabInstance:
     - target: {fileID: 6307249710144826396, guid: 3feb1b83ab9ba634bbd8e6e055f3d860,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -250
+      value: -280
       objectReference: {fileID: 0}
     - target: {fileID: 6307249710144826396, guid: 3feb1b83ab9ba634bbd8e6e055f3d860,
         type: 3}
@@ -823,7 +823,7 @@ PrefabInstance:
     - target: {fileID: 8357966206805703900, guid: 3feb1b83ab9ba634bbd8e6e055f3d860,
         type: 3}
       propertyPath: m_Name
-      value: NoButton
+      value: CancelButton
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3feb1b83ab9ba634bbd8e6e055f3d860, type: 3}

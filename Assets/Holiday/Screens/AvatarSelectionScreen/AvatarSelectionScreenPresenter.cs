@@ -3,9 +3,9 @@ using Cysharp.Threading.Tasks;
 using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App;
+using Extreal.SampleApp.Holiday.App.Avatars;
 using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.App.Config;
-using Extreal.SampleApp.Holiday.App.Data;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.Screens.AvatarSelectionScreen
@@ -16,32 +16,34 @@ namespace Extreal.SampleApp.Holiday.Screens.AvatarSelectionScreen
 
         private readonly AvatarSelectionScreenView avatarSelectionScreenView;
         private readonly AppState appState;
-        private readonly DataRepository dataRepository;
+        private readonly AssetProvider assetProvider;
 
         public AvatarSelectionScreenPresenter
         (
             StageNavigator<StageName, SceneName> stageNavigator,
             AvatarSelectionScreenView avatarSelectionScreenView,
             AppState appState,
-            DataRepository dataRepository
+            AssetProvider assetProvider
         ) : base(stageNavigator)
         {
             this.avatarSelectionScreenView = avatarSelectionScreenView;
             this.appState = appState;
-            this.dataRepository = dataRepository;
+            this.assetProvider = assetProvider;
         }
 
-        protected override void Initialize(
+        protected override async void Initialize(
             StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables)
         {
             avatarSelectionScreenView.OnNameChanged
                 .Subscribe(appState.SetPlayerName)
                 .AddTo(sceneDisposables);
 
+            var avatarService = (await assetProvider.LoadAssetAsync<AvatarRepository>(nameof(AvatarRepository))).ToAvatarService();
+
             avatarSelectionScreenView.OnAvatarChanged
                 .Subscribe(avatarName =>
                 {
-                    var avatar = dataRepository.AvatarService.FindAvatarByName(avatarName);
+                    var avatar = avatarService.FindAvatarByName(avatarName);
                     appState.SetAvatar(avatar);
                 })
                 .AddTo(sceneDisposables);
@@ -51,9 +53,10 @@ namespace Extreal.SampleApp.Holiday.Screens.AvatarSelectionScreen
                 .AddTo(sceneDisposables);
         }
 
-        protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
+        protected override async void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
         {
-            var avatars = dataRepository.AvatarService.Avatars;
+            var avatarService = (await assetProvider.LoadAssetAsync<AvatarRepository>(nameof(AvatarRepository))).ToAvatarService();
+            var avatars = avatarService.Avatars;
             if (appState.Avatar.Value == null)
             {
                 appState.SetAvatar(avatars.First());

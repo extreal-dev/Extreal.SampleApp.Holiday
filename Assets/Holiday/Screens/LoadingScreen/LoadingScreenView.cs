@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Extreal.SampleApp.Holiday.App;
 using TMPro;
 using UnityEngine;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
 {
@@ -22,7 +24,12 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
         public void Hide()
             => screen.SetActive(false);
 
-        public void SetLoadedPercent(string percent)
-            => loadedPercent.text = percent;
+        public void SetDownloadStatus(DownloadStatus status)
+        {
+            var total = AppUtils.GetSizeUnit(status.TotalBytes);
+            var downloaded = AppUtils.GetSizeUnit(status.DownloadedBytes);
+            loadedPercent.text = $"{status.Percent * 100}%" +
+                                 $"({downloaded.Item1}{downloaded.Item2}/{total.Item1}{total.Item2})";
+        }
     }
 }

@@ -2,7 +2,6 @@
 using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.App.Config;
-using Extreal.SampleApp.Holiday.App.Data;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.Screens.TitleScreen
@@ -10,30 +9,28 @@ namespace Extreal.SampleApp.Holiday.Screens.TitleScreen
     public class TitleScreenPresenter : StagePresenterBase
     {
         private readonly TitleScreenView titleScreenView;
-        private readonly DataRepository dataRepository;
+        private readonly AssetDownloadHelper assetDownloadHelper;
 
         public TitleScreenPresenter
         (
             StageNavigator<StageName, SceneName> stageNavigator,
             TitleScreenView titleScreenView,
-            DataRepository dataRepository
+            AssetDownloadHelper assetDownloadHelper
         ) : base(stageNavigator)
         {
             this.titleScreenView = titleScreenView;
-            this.dataRepository = dataRepository;
+            this.assetDownloadHelper = assetDownloadHelper;
         }
 
         protected override void Initialize(
-            StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables)
-        {
+            StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables) =>
             titleScreenView.OnGoButtonClicked
-                .Subscribe(_ => dataRepository.GetDownloadSizeAsync().Forget())
+                .Subscribe(_ =>
+                {
+                    const string commonAssetName = nameof(AppConfigRepository);
+                    assetDownloadHelper.DownloadAsync(commonAssetName, StageName.AvatarSelectionStage).Forget();
+                })
                 .AddTo(sceneDisposables);
-
-            dataRepository.OnLoaded
-                .Subscribe(_ => stageNavigator.ReplaceAsync(StageName.AvatarSelectionStage).Forget())
-                .AddTo(sceneDisposables);
-        }
 
         protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
         {

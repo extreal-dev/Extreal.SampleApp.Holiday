@@ -1,8 +1,7 @@
-using Cysharp.Threading.Tasks;
-using Extreal.Core.StageNavigation;
+﻿using Extreal.Core.StageNavigation;
+using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.App.Config;
-using Extreal.SampleApp.Holiday.App.Data;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.Screens.ConfirmationScreen
@@ -10,36 +9,46 @@ namespace Extreal.SampleApp.Holiday.Screens.ConfirmationScreen
     public class ConfirmationScreenPresenter : StagePresenterBase
     {
         private readonly ConfirmationScreenView confirmationScreenView;
-        private readonly DataRepository dataRepository;
+        private readonly AppState appState;
 
         public ConfirmationScreenPresenter
         (
             StageNavigator<StageName, SceneName> stageNavigator,
             ConfirmationScreenView confirmationScreenView,
-            DataRepository dataRepository
+            AppState appState
         ) : base(stageNavigator)
         {
             this.confirmationScreenView = confirmationScreenView;
-            this.dataRepository = dataRepository;
+            this.appState = appState;
         }
 
         protected override void Initialize(
             StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables)
         {
-            dataRepository.OnConfirm
-                .Subscribe(confirmationScreenView.Show)
+            var confirmation = default(Confirmation);
+
+            appState.OnConfirmationReceived
+                .Subscribe(c =>
+                {
+                    confirmation = c;
+                    confirmationScreenView.Show(c.Message);
+                })
                 .AddTo(sceneDisposables);
 
             confirmationScreenView.YesButtonClicked
                 .Subscribe(_ =>
                 {
                     confirmationScreenView.Hide();
-                    dataRepository.LoadAsync().Forget();
+                    confirmation.OkAction?.Invoke();
                 })
                 .AddTo(sceneDisposables);
 
             confirmationScreenView.NoButtonClicked
-                .Subscribe(_ => confirmationScreenView.Hide())
+                .Subscribe(_ =>
+                {
+                    confirmationScreenView.Hide();
+                    confirmation.CancelAction?.Invoke();
+                })
                 .AddTo(sceneDisposables);
         }
 

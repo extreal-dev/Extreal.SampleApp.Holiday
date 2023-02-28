@@ -2,7 +2,6 @@
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.App.Config;
-using Extreal.SampleApp.Holiday.App.Data;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
@@ -10,19 +9,19 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
     public class LoadingScreenPresenter : StagePresenterBase
     {
         private readonly LoadingScreenView loadingScreenView;
-        private readonly DataRepository dataRepository;
+        private readonly AssetProvider assetProvider;
         private readonly AppState appState;
 
         public LoadingScreenPresenter
         (
             StageNavigator<StageName, SceneName> stageNavigator,
             LoadingScreenView loadingScreenView,
-            DataRepository dataRepository,
+            AssetProvider assetProvider,
             AppState appState
         ) : base(stageNavigator)
         {
             this.loadingScreenView = loadingScreenView;
-            this.dataRepository = dataRepository;
+            this.assetProvider = assetProvider;
             this.appState = appState;
         }
 
@@ -33,8 +32,8 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
                 .Subscribe(OnLoadingChanged)
                 .AddTo(sceneDisposables);
 
-            dataRepository.LoadedPercent
-                .Subscribe(loadingScreenView.SetLoadedPercent)
+            assetProvider.OnDownloading
+                .Subscribe(loadingScreenView.SetDownloadStatus)
                 .AddTo(sceneDisposables);
 
             appState.OnNotificationReceived

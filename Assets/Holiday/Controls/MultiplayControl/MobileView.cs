@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Diagnostics.CodeAnalysis;
+using UnityEngine;
 
 namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 {
@@ -7,7 +8,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
         [SerializeField] private GameObject joysticksCanvas;
 
 #if UNITY_STANDALONE
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0051")]
+        [SuppressMessage("Style", "IDE0051")]
         private void Awake()
             => joysticksCanvas.SetActive(false);
 #endif

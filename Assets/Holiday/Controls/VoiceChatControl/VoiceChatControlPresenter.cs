@@ -4,7 +4,6 @@ using Extreal.Integration.Chat.Vivox;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.App.Config;
-using Extreal.SampleApp.Holiday.App.Data;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
@@ -14,7 +13,7 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
         private readonly VivoxClient vivoxClient;
         private readonly VoiceChatControlView voiceChatScreenView;
         private readonly AppState appState;
-        private readonly DataRepository dataRepository;
+        private readonly AssetProvider assetProvider;
 
         private VoiceChatChannel voiceChatChannel;
 
@@ -24,13 +23,13 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
             VivoxClient vivoxClient,
             VoiceChatControlView voiceChatScreenView,
             AppState appState,
-            DataRepository dataRepository
+            AssetProvider assetProvider
         ) : base(stageNavigator)
         {
             this.vivoxClient = vivoxClient;
             this.voiceChatScreenView = voiceChatScreenView;
             this.appState = appState;
-            this.dataRepository = dataRepository;
+            this.assetProvider = assetProvider;
         }
 
         protected override void Initialize(
@@ -39,7 +38,7 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
                 .Subscribe(_ => voiceChatChannel.ToggleMuteAsync().Forget())
                 .AddTo(sceneDisposables);
 
-        protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
+        protected override async void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
         {
             voiceChatChannel = new VoiceChatChannel(vivoxClient, $"HolidayVoiceChat{stageName}");
             stageDisposables.Add(voiceChatChannel);
@@ -52,12 +51,14 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
                 .Subscribe(voiceChatScreenView.ToggleMute)
                 .AddTo(stageDisposables);
 
+            var appConfig = (await assetProvider.LoadAssetAsync<AppConfigRepository>(nameof(AppConfigRepository))).ToAppConfig();
+
             voiceChatChannel.OnUnexpectedDisconnected
-                .Subscribe(_ => appState.SetNotification(dataRepository.AppConfig.ChatUnexpectedDisconnectedErrorMessage))
+                .Subscribe(_ => appState.SetNotification(appConfig.ChatUnexpectedDisconnectedErrorMessage))
                 .AddTo(stageDisposables);
 
             voiceChatChannel.OnConnectFailed
-                .Subscribe(_ => appState.SetNotification(dataRepository.AppConfig.ChatConnectFailedErrorMessage))
+                .Subscribe(_ => appState.SetNotification(appConfig.ChatConnectFailedErrorMessage))
                 .AddTo(stageDisposables);
 
             voiceChatChannel.JoinAsync().Forget();

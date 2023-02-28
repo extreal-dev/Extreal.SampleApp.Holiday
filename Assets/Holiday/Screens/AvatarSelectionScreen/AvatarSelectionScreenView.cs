@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Extreal.SampleApp.Holiday.App.Data;
+using Extreal.SampleApp.Holiday.App.Common;
+using Extreal.SampleApp.Holiday.App.Config;
 using TMPro;
 using UniRx;
 using UnityEngine;
@@ -19,15 +20,16 @@ namespace Extreal.SampleApp.Holiday.Screens.AvatarSelectionScreen
         [SerializeField] private TMP_Text title;
         [SerializeField] private TMP_Text goButtonLabel;
 
-        [Inject] private DataRepository dataRepository;
+        [Inject] private AssetProvider assetProvider;
 
         private readonly List<string> avatarNames = new List<string>();
 
-        [SuppressMessage("Style", "IDE0051")]
-        private void Awake()
+        [SuppressMessage("Style", "IDE0051"), SuppressMessage("Style", "CC0061")]
+        private async void Awake()
         {
-            title.text = dataRepository.AppConfig.AvatarSelectionTitle;
-            goButtonLabel.text = dataRepository.AppConfig.AvatarSelectionGoButtonLabel;
+            var appConfig = (await assetProvider.LoadAssetAsync<AppConfigRepository>(nameof(AppConfigRepository))).ToAppConfig();
+            title.text = appConfig.AvatarSelectionTitle;
+            goButtonLabel.text = appConfig.AvatarSelectionGoButtonLabel;
         }
 
         public void Initialize(List<string> avatarNames)

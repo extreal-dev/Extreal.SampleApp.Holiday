@@ -5,7 +5,6 @@ using Extreal.Integration.Chat.Vivox;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.App.Config;
-using Extreal.SampleApp.Holiday.App.Data;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
@@ -15,7 +14,7 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
         private readonly VivoxClient vivoxClient;
         private readonly TextChatControlView textChatControlView;
         private readonly AppState appState;
-        private readonly DataRepository dataRepository;
+        private readonly AssetProvider assetProvider;
 
         private TextChatChannel textChatChannel;
 
@@ -25,13 +24,13 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
             VivoxClient vivoxClient,
             TextChatControlView textChatControlView,
             AppState appState,
-            DataRepository dataRepository
+            AssetProvider assetProvider
         ) : base(stageNavigator)
         {
             this.vivoxClient = vivoxClient;
             this.textChatControlView = textChatControlView;
             this.appState = appState;
-            this.dataRepository = dataRepository;
+            this.assetProvider = assetProvider;
         }
 
         [SuppressMessage("CodeCracker", "CC0020")]
@@ -40,7 +39,7 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
                 .Subscribe(message => textChatChannel.SendMessage(message))
                 .AddTo(sceneDisposables);
 
-        protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
+        protected override async void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
         {
             textChatChannel = new TextChatChannel(vivoxClient, $"HolidayTextChat{stageName}");
             stageDisposables.Add(textChatChannel);
@@ -53,12 +52,15 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
                 .Subscribe(textChatControlView.ShowMessage)
                 .AddTo(stageDisposables);
 
+            var appConfig = (await assetProvider.LoadAssetAsync<AppConfigRepository>(nameof(AppConfigRepository)))
+                .ToAppConfig();
+
             textChatChannel.OnUnexpectedDisconnected
-                .Subscribe(_ => appState.SetNotification(dataRepository.AppConfig.ChatUnexpectedDisconnectedErrorMessage))
+                .Subscribe(_ => appState.SetNotification(appConfig.ChatUnexpectedDisconnectedErrorMessage))
                 .AddTo(stageDisposables);
 
             textChatChannel.OnConnectFailed
-                .Subscribe(_ => appState.SetNotification(dataRepository.AppConfig.ChatConnectFailedErrorMessage))
+                .Subscribe(_ => appState.SetNotification(appConfig.ChatConnectFailedErrorMessage))
                 .AddTo(stageDisposables);
 
             textChatChannel.JoinAsync().Forget();

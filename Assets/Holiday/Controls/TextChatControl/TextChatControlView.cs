@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using Extreal.SampleApp.Holiday.App.Data;
+using Extreal.SampleApp.Holiday.App.Common;
+using Extreal.SampleApp.Holiday.App.Config;
 using TMPro;
 using UniRx;
 using UnityEngine;
@@ -17,16 +18,19 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
         [SerializeField] private Transform messageRoot;
         [SerializeField] private GameObject textChatPrefab;
 
-        [Inject] private DataRepository dataRepository;
+        [Inject] private AssetProvider assetProvider;
 
         public IObservable<string> OnSendButtonClicked => onSendButtonClicked.AddTo(this);
         [SuppressMessage("CodeCracker", "CC0033")]
         private readonly Subject<string> onSendButtonClicked = new Subject<string>();
 
-#pragma warning disable IDE0051
-        private void Awake()
+        [SuppressMessage("CodeQuality", "IDE0051"), SuppressMessage("Style", "CC0061")]
+        private async void Awake()
         {
-            sendButtonLabel.text = dataRepository.AppConfig.TextChatSendButtonLabel;
+            var appConfig = (await assetProvider.LoadAssetAsync<AppConfigRepository>(nameof(AppConfigRepository)))
+                .ToAppConfig();
+
+            sendButtonLabel.text = appConfig.TextChatSendButtonLabel;
 
             sendButton.OnClickAsObservable()
                 .TakeUntilDestroy(this)
@@ -37,9 +41,9 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
                 });
         }
 
+        [SuppressMessage("CodeQuality", "IDE0051")]
         private void OnDestroy()
             => onSendButtonClicked.Dispose();
-#pragma warning restore IDE0051
 
         public void ShowMessage(string message)
             => Instantiate(textChatPrefab, messageRoot)

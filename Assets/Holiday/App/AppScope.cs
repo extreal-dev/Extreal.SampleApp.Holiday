@@ -3,16 +3,14 @@ using Cysharp.Threading.Tasks;
 #endif
 using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
+using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.App.Config;
-using Extreal.SampleApp.Holiday.App.Data;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
+using VContainer;
+using VContainer.Unity;
 #if UNITY_ANDROID
 using UnityEngine.Android;
 #endif
-using VContainer;
-using VContainer.Unity;
-using LogLevel = Extreal.Core.Logging.LogLevel;
 
 namespace Extreal.SampleApp.Holiday.App
 {
@@ -82,10 +80,10 @@ namespace Extreal.SampleApp.Holiday.App
             builder.RegisterComponent(stageConfig).AsImplementedInterfaces();
             builder.Register<StageNavigator<StageName, SceneName>>(Lifetime.Singleton);
 
-            builder.Register<AddressablesDataLoader>(Lifetime.Singleton).AsImplementedInterfaces();
-            builder.Register<DataRepository>(Lifetime.Singleton);
-
             builder.Register<AppState>(Lifetime.Singleton);
+
+            builder.Register<AssetProvider>(Lifetime.Singleton);
+            builder.Register<AssetDownloadHelper>(Lifetime.Singleton);
 
             builder.RegisterEntryPoint<AppPresenter>();
         }
