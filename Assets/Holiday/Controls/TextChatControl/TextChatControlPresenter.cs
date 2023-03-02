@@ -6,7 +6,6 @@ using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.App.Config;
 using UniRx;
-using UnityEngine.AddressableAssets;
 
 namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
 {
@@ -15,7 +14,7 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
         private readonly VivoxClient vivoxClient;
         private readonly TextChatControlView textChatControlView;
         private readonly AppState appState;
-        private readonly AssetProvider assetProvider;
+        private readonly AssetHelper assetHelper;
 
         private TextChatChannel textChatChannel;
 
@@ -25,13 +24,13 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
             VivoxClient vivoxClient,
             TextChatControlView textChatControlView,
             AppState appState,
-            AssetProvider assetProvider
+            AssetHelper assetHelper
         ) : base(stageNavigator)
         {
             this.vivoxClient = vivoxClient;
             this.textChatControlView = textChatControlView;
             this.appState = appState;
-            this.assetProvider = assetProvider;
+            this.assetHelper = assetHelper;
         }
 
         [SuppressMessage("CodeCracker", "CC0020")]
@@ -53,16 +52,12 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
                 .Subscribe(textChatControlView.ShowMessage)
                 .AddTo(stageDisposables);
 
-            var appConfigRepository = assetProvider.LoadAsset<AppConfigRepository>(nameof(AppConfigRepository));
-            var appConfig = appConfigRepository.ToAppConfig();
-            Addressables.Release(appConfigRepository);
-
             textChatChannel.OnUnexpectedDisconnected
-                .Subscribe(_ => appState.SetNotification(appConfig.ChatUnexpectedDisconnectedErrorMessage))
+                .Subscribe(_ => appState.SetNotification(assetHelper.AppConfig.ChatUnexpectedDisconnectedErrorMessage))
                 .AddTo(stageDisposables);
 
             textChatChannel.OnConnectFailed
-                .Subscribe(_ => appState.SetNotification(appConfig.ChatConnectFailedErrorMessage))
+                .Subscribe(_ => appState.SetNotification(assetHelper.AppConfig.ChatConnectFailedErrorMessage))
                 .AddTo(stageDisposables);
 
             textChatChannel.JoinAsync().Forget();

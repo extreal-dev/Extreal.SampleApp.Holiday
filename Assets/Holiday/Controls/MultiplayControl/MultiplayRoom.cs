@@ -33,7 +33,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 
         private readonly NgoClient ngoClient;
         private readonly NgoConfig ngoConfig;
-        private readonly AssetProvider assetProvider;
+        private readonly AssetHelper assetHelper;
 
         [SuppressMessage("Usage", "CC0033")]
         private readonly CompositeDisposable disposables = new CompositeDisposable();
@@ -41,13 +41,15 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
         [SuppressMessage("Usage", "CC0033")]
         private readonly CancellationTokenSource cts = new CancellationTokenSource();
 
+        private readonly Dictionary<string, GameObject> loadedAvatars = new Dictionary<string, GameObject>();
+
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(MultiplayRoom));
 
-        public MultiplayRoom(NgoClient ngoClient, NgoConfig ngoConfig, AssetProvider assetProvider)
+        public MultiplayRoom(NgoClient ngoClient, NgoConfig ngoConfig, AssetHelper assetHelper)
         {
             this.ngoClient = ngoClient;
             this.ngoConfig = ngoConfig;
-            this.assetProvider = assetProvider;
+            this.assetHelper = assetHelper;
 
             this.ngoClient.OnConnected
                 .Subscribe(_ =>
@@ -70,6 +72,10 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
             onConnectFailed.Dispose();
             isPlayerSpawned.Dispose();
             disposables.Dispose();
+            foreach (var avatar in loadedAvatars)
+            {
+                Addressables.Release(avatar.Value);
+            }
         }
 
         public async UniTask JoinAsync(string avatarAssetName)
@@ -138,25 +144,19 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 
         private async UniTask SetAvatarAsync(NetworkObject networkObject, string avatarAssetName, bool restore = false)
         {
-            var avatarObject = await LoadAvatarAsync(avatarAssetName, networkObject.transform);
+            var prefab = await LoadAvatarAsync(avatarAssetName);
+            var avatarObject = Object.Instantiate(prefab, networkObject.transform);
             Controller(networkObject).SetAvatar(avatarObject.GetComponent<AvatarProvider>().Avatar, restore);
         }
 
-        private async UniTask<GameObject> LoadAvatarAsync(string avatarAssetName, Transform parent)
+        public async UniTask<GameObject> LoadAvatarAsync(string avatarAssetName)
         {
-            GameObject prefab = null;
-            try
+            if (!loadedAvatars.TryGetValue(avatarAssetName, out var avatar))
             {
-                prefab = await assetProvider.LoadAssetAsync<GameObject>(avatarAssetName);
-                return Object.Instantiate(prefab, parent);
+                avatar = await assetHelper.LoadAsync<GameObject>(avatarAssetName);
+                loadedAvatars.Add(avatarAssetName, avatar);
             }
-            finally
-            {
-                if (prefab != null)
-                {
-                    Addressables.Release(prefab);
-                }
-            }
+            return avatar;
         }
     }
 }

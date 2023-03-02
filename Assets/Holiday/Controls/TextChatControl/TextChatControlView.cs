@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using Extreal.SampleApp.Holiday.App.Common;
-using Extreal.SampleApp.Holiday.App.Config;
 using TMPro;
 using UniRx;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
 using VContainer;
 
@@ -19,7 +17,7 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
         [SerializeField] private Transform messageRoot;
         [SerializeField] private GameObject textChatPrefab;
 
-        [Inject] private AssetProvider assetProvider;
+        [Inject] private AssetHelper assetHelper;
 
         public IObservable<string> OnSendButtonClicked => onSendButtonClicked.AddTo(this);
         [SuppressMessage("CodeCracker", "CC0033")]
@@ -28,11 +26,7 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
         [SuppressMessage("CodeQuality", "IDE0051"), SuppressMessage("Style", "CC0061")]
         private void Awake()
         {
-            var appConfigRepository = assetProvider.LoadAsset<AppConfigRepository>(nameof(AppConfigRepository));
-            var appConfig = appConfigRepository.ToAppConfig();
-            Addressables.Release(appConfigRepository);
-
-            sendButtonLabel.text = appConfig.TextChatSendButtonLabel;
+            sendButtonLabel.text = assetHelper.AppConfig.TextChatSendButtonLabel;
 
             sendButton.OnClickAsObservable()
                 .TakeUntilDestroy(this)

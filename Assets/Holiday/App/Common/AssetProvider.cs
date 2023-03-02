@@ -24,13 +24,13 @@ namespace Extreal.SampleApp.Holiday.App.Common
         protected override void ReleaseManagedResources() => onDownloading.Dispose();
 
         public async UniTask DownloadAsync(
-            string assetName, TimeSpan downloadStatusInterval = default, Action nextAction = null)
+            string assetName, TimeSpan downloadStatusInterval = default, Func<UniTask> nextFunc = null)
         {
             if (await GetDownloadSizeAsync(assetName) != 0)
             {
                 await DownloadDependenciesAsync(assetName, downloadStatusInterval);
             }
-            nextAction?.Invoke();
+            nextFunc?.Invoke();
         }
 
         public async UniTask<long> GetDownloadSizeAsync(string assetName)
@@ -80,32 +80,10 @@ namespace Extreal.SampleApp.Holiday.App.Common
             return asset;
         }
 
-        public T LoadAsset<T>(string assetName)
-        {
-            var handle = Addressables.LoadAssetAsync<T>(assetName);
-            var asset = handle.WaitForCompletion();
-            if (handle.Status == AsyncOperationStatus.Failed)
-            {
-                ReleaseHandle(handle);
-            }
-            return asset;
-        }
-
         public async UniTask<SceneInstance> LoadSceneAsync(string assetName, LoadSceneMode loadMode = LoadSceneMode.Additive)
         {
             var handle = Addressables.LoadSceneAsync(assetName, loadMode);
             var scene = await handle.Task;
-            if (handle.Status == AsyncOperationStatus.Failed)
-            {
-                ReleaseHandle(handle);
-            }
-            return scene;
-        }
-
-        public SceneInstance LoadScene(string assetName, LoadSceneMode loadMode = LoadSceneMode.Additive)
-        {
-            var handle = Addressables.LoadSceneAsync(assetName, loadMode);
-            var scene = handle.WaitForCompletion();
             if (handle.Status == AsyncOperationStatus.Failed)
             {
                 ReleaseHandle(handle);

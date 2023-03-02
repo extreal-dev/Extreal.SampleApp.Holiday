@@ -5,7 +5,6 @@ using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.App.Config;
 using UniRx;
-using UnityEngine.AddressableAssets;
 
 namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 {
@@ -14,7 +13,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
         private readonly StageNavigator<StageName, SceneName> stageNavigator;
         private readonly NgoClient ngoClient;
         private readonly AppState appState;
-        private readonly AssetProvider assetProvider;
+        private readonly AssetHelper assetHelper;
         private MultiplayRoom multiplayRoom;
 
         public MultiplayControlPresenter
@@ -22,13 +21,13 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
             StageNavigator<StageName, SceneName> stageNavigator,
             NgoClient ngoClient,
             AppState appState,
-            AssetProvider assetProvider
+            AssetHelper assetHelper
         ) : base(stageNavigator)
         {
             this.stageNavigator = stageNavigator;
             this.ngoClient = ngoClient;
             this.appState = appState;
-            this.assetProvider = assetProvider;
+            this.assetHelper = assetHelper;
         }
 
         protected override void Initialize(
@@ -38,34 +37,24 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 
         protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
         {
-            var multiplayConfig = assetProvider.LoadAsset<MultiplayConfig>(nameof(MultiplayConfig));
-            multiplayRoom = new MultiplayRoom(ngoClient, multiplayConfig.ToNgoConfig(), assetProvider);
-            Addressables.Release(multiplayConfig);
-            stageDisposables.Add(multiplayRoom);
-
-            multiplayRoom.IsPlayerSpawned
-                .Subscribe(appState.SetInMultiplay)
-                .AddTo(stageDisposables);
-
-            var appConfigRepository = assetProvider.LoadAsset<AppConfigRepository>(nameof(AppConfigRepository));
-            var appConfig = appConfigRepository.ToAppConfig();
-            Addressables.Release(appConfigRepository);
+            multiplayRoom = new MultiplayRoom(ngoClient, assetHelper.NgoConfig, assetHelper);
+            multiplayRoom.IsPlayerSpawned.Subscribe(appState.SetInMultiplay).AddTo(stageDisposables);
 
             multiplayRoom.OnConnectionApprovalRejected
                 .Subscribe(_ =>
                 {
-                    appState.SetNotification(appConfig.MultiplayConnectionApprovalRejectedErrorMessage);
+                    appState.SetNotification(assetHelper.AppConfig.MultiplayConnectionApprovalRejectedErrorMessage);
                     stageNavigator.ReplaceAsync(StageName.AvatarSelectionStage);
                 })
                 .AddTo(stageDisposables);
 
             multiplayRoom.OnUnexpectedDisconnected
                 .Subscribe(_ =>
-                    appState.SetNotification(appConfig.MultiplayUnexpectedDisconnectedErrorMessage))
+                    appState.SetNotification(assetHelper.AppConfig.MultiplayUnexpectedDisconnectedErrorMessage))
                 .AddTo(stageDisposables);
 
             multiplayRoom.OnConnectFailed
-                .Subscribe(_ => appState.SetNotification(appConfig.MultiplayConnectFailedErrorMessage))
+                .Subscribe(_ => appState.SetNotification(assetHelper.AppConfig.MultiplayConnectFailedErrorMessage))
                 .AddTo(stageDisposables);
 
             appState.SpaceIsReady

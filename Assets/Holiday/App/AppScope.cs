@@ -83,7 +83,7 @@ namespace Extreal.SampleApp.Holiday.App
             builder.Register<AppState>(Lifetime.Singleton);
 
             builder.Register<AssetProvider>(Lifetime.Singleton);
-            builder.Register<AssetDownloadHelper>(Lifetime.Singleton);
+            builder.Register<AssetHelper>(Lifetime.Singleton);
 
             builder.RegisterEntryPoint<AppPresenter>();
         }

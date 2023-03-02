@@ -5,7 +5,6 @@ using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.App.Config;
 using UniRx;
-using UnityEngine.AddressableAssets;
 
 namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
 {
@@ -14,7 +13,7 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
         private readonly VivoxClient vivoxClient;
         private readonly VoiceChatControlView voiceChatScreenView;
         private readonly AppState appState;
-        private readonly AssetProvider assetProvider;
+        private readonly AssetHelper assetHelper;
 
         private VoiceChatChannel voiceChatChannel;
 
@@ -24,13 +23,13 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
             VivoxClient vivoxClient,
             VoiceChatControlView voiceChatScreenView,
             AppState appState,
-            AssetProvider assetProvider
+            AssetHelper assetHelper
         ) : base(stageNavigator)
         {
             this.vivoxClient = vivoxClient;
             this.voiceChatScreenView = voiceChatScreenView;
             this.appState = appState;
-            this.assetProvider = assetProvider;
+            this.assetHelper = assetHelper;
         }
 
         protected override void Initialize(
@@ -52,16 +51,12 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
                 .Subscribe(voiceChatScreenView.ToggleMute)
                 .AddTo(stageDisposables);
 
-            var appConfigRepository = assetProvider.LoadAsset<AppConfigRepository>(nameof(AppConfigRepository));
-            var appConfig = appConfigRepository.ToAppConfig();
-            Addressables.Release(appConfigRepository);
-
             voiceChatChannel.OnUnexpectedDisconnected
-                .Subscribe(_ => appState.SetNotification(appConfig.ChatUnexpectedDisconnectedErrorMessage))
+                .Subscribe(_ => appState.SetNotification(assetHelper.AppConfig.ChatUnexpectedDisconnectedErrorMessage))
                 .AddTo(stageDisposables);
 
             voiceChatChannel.OnConnectFailed
-                .Subscribe(_ => appState.SetNotification(appConfig.ChatConnectFailedErrorMessage))
+                .Subscribe(_ => appState.SetNotification(assetHelper.AppConfig.ChatConnectFailedErrorMessage))
                 .AddTo(stageDisposables);
 
             voiceChatChannel.JoinAsync().Forget();

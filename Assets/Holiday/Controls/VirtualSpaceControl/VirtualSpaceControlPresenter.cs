@@ -32,25 +32,14 @@ namespace Extreal.SampleApp.Holiday.Controls.VirtualSpaceControl
 
         protected override void Initialize(
             StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables)
-        {
-            virtualSpaceControlView.OnBackButtonClicked
-                .Subscribe(_ =>
-                {
-                    UnloadVirtualSceneAsync().Forget();
-                    stageNavigator.ReplaceAsync(StageName.AvatarSelectionStage).Forget();
-                })
+            => virtualSpaceControlView.OnBackButtonClicked
+                .Subscribe(_ => stageNavigator.ReplaceAsync(StageName.AvatarSelectionStage).Forget())
                 .AddTo(sceneDisposables);
 
-            LoadVirtualSceneAsync().Forget();
-        }
-
         protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
-        {
-        }
+            => LoadVirtualSceneAsync().Forget();
 
-        protected override void OnStageExiting(StageName stageName)
-        {
-        }
+        protected override void OnStageExiting(StageName stageName) => UnloadVirtualSceneAsync().Forget();
 
         private async UniTask LoadVirtualSceneAsync()
         {
@@ -58,7 +47,6 @@ namespace Extreal.SampleApp.Holiday.Controls.VirtualSpaceControl
             appState.GotReadyToUseSpace();
         }
 
-        private async UniTask UnloadVirtualSceneAsync()
-            => await Addressables.UnloadSceneAsync(scene);
+        private async UniTask UnloadVirtualSceneAsync() => await Addressables.UnloadSceneAsync(scene);
     }
 }
