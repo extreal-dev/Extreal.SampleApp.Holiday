@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Cysharp.Threading.Tasks;
 using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App;
@@ -46,7 +45,7 @@ namespace Extreal.SampleApp.Holiday.Screens.AvatarSelectionScreen
                 .AddTo(sceneDisposables);
 
             avatarSelectionScreenView.OnGoButtonClicked
-                .Subscribe(_ => stageNavigator.ReplaceAsync(StageName.VirtualStage).Forget())
+                .Subscribe(_ => assetHelper.DownloadSpaceAssetAsync("VirtualSpace", StageName.VirtualStage))
                 .AddTo(sceneDisposables);
         }
 

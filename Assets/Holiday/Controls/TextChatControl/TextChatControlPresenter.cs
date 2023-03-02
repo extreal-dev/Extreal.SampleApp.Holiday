@@ -45,7 +45,7 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
             stageDisposables.Add(textChatChannel);
 
             textChatChannel.OnConnected
-                .Subscribe(appState.SetInText)
+                .Subscribe(appState.SetTextChatReady)
                 .AddTo(stageDisposables);
 
             textChatChannel.OnMessageReceived
@@ -53,11 +53,11 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
                 .AddTo(stageDisposables);
 
             textChatChannel.OnUnexpectedDisconnected
-                .Subscribe(_ => appState.SetNotification(assetHelper.AppConfig.ChatUnexpectedDisconnectedErrorMessage))
+                .Subscribe(_ => appState.Notify(assetHelper.AppConfig.ChatUnexpectedDisconnectedErrorMessage))
                 .AddTo(stageDisposables);
 
             textChatChannel.OnConnectFailed
-                .Subscribe(_ => appState.SetNotification(assetHelper.AppConfig.ChatConnectFailedErrorMessage))
+                .Subscribe(_ => appState.Notify(assetHelper.AppConfig.ChatConnectFailedErrorMessage))
                 .AddTo(stageDisposables);
 
             textChatChannel.JoinAsync().Forget();
@@ -65,7 +65,7 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
 
         protected override void OnStageExiting(StageName stageName)
         {
-            appState.SetInText(false);
+            appState.SetTextChatReady(false);
             textChatChannel.Leave();
         }
     }

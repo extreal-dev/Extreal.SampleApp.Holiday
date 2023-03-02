@@ -39,7 +39,7 @@ EditorBuildSettings:
     path: Assets/Holiday/Controls/VoiceChatControl/VoiceChatControl.unity
     guid: ddc3394fd410a514483bd603ff8cdd92
   - enabled: 1
-    path: Assets/Holiday/Controls/VirtualSpaceControl/VirtualSpaceControl.unity
+    path: Assets/Holiday/Controls/SpaceControl/SpaceControl.unity
     guid: c7d9a9c4f1a34124199c3b84cd5fceda
   - enabled: 1
     path: Assets/Holiday/Screens/BackgroundScreen/BackgroundScreen.unity

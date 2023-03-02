@@ -17,11 +17,15 @@ namespace Extreal.SampleApp.Holiday.App.Common
     [SuppressMessage("Design", "CC0091")]
     public class AssetProvider : DisposableBase
     {
-        public IObservable<DownloadStatus> OnDownloading => onDownloading;
+        public IObservable<Unit> OnDownloading => onDownloading;
         [SuppressMessage("Usage", "CC0033")]
-        private readonly Subject<DownloadStatus> onDownloading = new Subject<DownloadStatus>();
+        private readonly Subject<Unit> onDownloading = new Subject<Unit>();
 
-        protected override void ReleaseManagedResources() => onDownloading.Dispose();
+        public IObservable<DownloadStatus> OnDownloaded => onDownloaded;
+        [SuppressMessage("Usage", "CC0033")]
+        private readonly Subject<DownloadStatus> onDownloaded = new Subject<DownloadStatus>();
+
+        protected override void ReleaseManagedResources() => onDownloaded.Dispose();
 
         public async UniTask DownloadAsync(
             string assetName, TimeSpan downloadStatusInterval = default, Func<UniTask> nextFunc = null)
@@ -43,9 +47,11 @@ namespace Extreal.SampleApp.Holiday.App.Common
 
         private async UniTask DownloadDependenciesAsync(string assetName, TimeSpan interval = default)
         {
+            onDownloading.OnNext(Unit.Default);
+
             var handle = Addressables.DownloadDependenciesAsync(assetName);
 
-            onDownloading.OnNext(handle.GetDownloadStatus());
+            onDownloaded.OnNext(handle.GetDownloadStatus());
             var downloadStatus = default(DownloadStatus);
             while (!handle.IsDone)
             {
@@ -53,7 +59,7 @@ namespace Extreal.SampleApp.Holiday.App.Common
                 downloadStatus = handle.GetDownloadStatus();
                 if (prevDownloadStatus.DownloadedBytes != downloadStatus.DownloadedBytes)
                 {
-                    onDownloading.OnNext(downloadStatus);
+                    onDownloaded.OnNext(downloadStatus);
                 }
                 if (interval == default)
                 {
@@ -64,7 +70,7 @@ namespace Extreal.SampleApp.Holiday.App.Common
                     await UniTask.Delay(interval);
                 }
             }
-            onDownloading.OnNext(handle.GetDownloadStatus());
+            onDownloaded.OnNext(handle.GetDownloadStatus());
 
             ReleaseHandle(handle);
         }

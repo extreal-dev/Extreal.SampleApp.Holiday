@@ -44,7 +44,7 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
             stageDisposables.Add(voiceChatChannel);
 
             voiceChatChannel.OnConnected
-                .Subscribe(appState.SetInAudio)
+                .Subscribe(appState.SetVoiceChatReady)
                 .AddTo(stageDisposables);
 
             voiceChatChannel.OnMuted
@@ -52,11 +52,11 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
                 .AddTo(stageDisposables);
 
             voiceChatChannel.OnUnexpectedDisconnected
-                .Subscribe(_ => appState.SetNotification(assetHelper.AppConfig.ChatUnexpectedDisconnectedErrorMessage))
+                .Subscribe(_ => appState.Notify(assetHelper.AppConfig.ChatUnexpectedDisconnectedErrorMessage))
                 .AddTo(stageDisposables);
 
             voiceChatChannel.OnConnectFailed
-                .Subscribe(_ => appState.SetNotification(assetHelper.AppConfig.ChatConnectFailedErrorMessage))
+                .Subscribe(_ => appState.Notify(assetHelper.AppConfig.ChatConnectFailedErrorMessage))
                 .AddTo(stageDisposables);
 
             voiceChatChannel.JoinAsync().Forget();
@@ -64,7 +64,7 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
 
         protected override void OnStageExiting(StageName stageName)
         {
-            appState.SetInAudio(false);
+            appState.SetVoiceChatReady(false);
             voiceChatChannel.Leave();
         }
     }

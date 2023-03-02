@@ -37,34 +37,44 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 
         protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
         {
-            multiplayRoom = new MultiplayRoom(ngoClient, assetHelper.NgoConfig, assetHelper);
-            multiplayRoom.IsPlayerSpawned.Subscribe(appState.SetInMultiplay).AddTo(stageDisposables);
+            multiplayRoom = new MultiplayRoom(
+                ngoClient, assetHelper.NgoConfig, assetHelper, appState.Avatar.Value.AssetName);
+
+            multiplayRoom.IsPlayerSpawned
+                .Subscribe(appState.SetMultiplayReady)
+                .AddTo(stageDisposables);
 
             multiplayRoom.OnConnectionApprovalRejected
                 .Subscribe(_ =>
                 {
-                    appState.SetNotification(assetHelper.AppConfig.MultiplayConnectionApprovalRejectedErrorMessage);
+                    appState.Notify(assetHelper.AppConfig.MultiplayConnectionApprovalRejectedErrorMessage);
                     stageNavigator.ReplaceAsync(StageName.AvatarSelectionStage);
                 })
                 .AddTo(stageDisposables);
 
             multiplayRoom.OnUnexpectedDisconnected
                 .Subscribe(_ =>
-                    appState.SetNotification(assetHelper.AppConfig.MultiplayUnexpectedDisconnectedErrorMessage))
+                    appState.Notify(assetHelper.AppConfig.MultiplayUnexpectedDisconnectedErrorMessage))
                 .AddTo(stageDisposables);
 
             multiplayRoom.OnConnectFailed
-                .Subscribe(_ => appState.SetNotification(assetHelper.AppConfig.MultiplayConnectFailedErrorMessage))
+                .Subscribe(_ => appState.Notify(assetHelper.AppConfig.MultiplayConnectFailedErrorMessage))
                 .AddTo(stageDisposables);
 
-            appState.SpaceIsReady
-                .Subscribe(_ => multiplayRoom.JoinAsync(appState.Avatar.Value.AssetName).Forget())
+            appState.SpaceReady
+                .Subscribe(ready =>
+                {
+                    if (ready)
+                    {
+                        multiplayRoom.JoinAsync().Forget();
+                    }
+                })
                 .AddTo(stageDisposables);
         }
 
         protected override void OnStageExiting(StageName stageName)
         {
-            appState.SetInMultiplay(false);
+            appState.SetMultiplayReady(false);
             multiplayRoom.LeaveAsync().Forget();
         }
     }

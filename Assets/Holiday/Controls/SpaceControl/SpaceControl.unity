@@ -485,4 +485,4 @@ MonoBehaviour:
     TypeName: Extreal.SampleApp.Holiday.Controls.AppControl.AppControlScope
   autoRun: 1
   autoInjectGameObjects: []
-  virtualSpaceControlView: {fileID: 783326799}
+  spaceControlView: {fileID: 783326799}

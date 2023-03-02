@@ -47,6 +47,16 @@ namespace Extreal.SampleApp.Holiday.App.Common
             DownloadAsync(nameof(AppConfigRepository), nextFunc).Forget();
         }
 
+        public void DownloadSpaceAssetAsync(string spaceName, StageName nextStage)
+        {
+            Func<UniTask> nextFunc = async () =>
+            {
+                await stageNavigator.ReplaceAsync(nextStage);
+                appState.LoadSpace(spaceName);
+            };
+            DownloadAsync(spaceName, nextFunc).Forget();
+        }
+
         [SuppressMessage("Design", "CC0031")]
         private async UniTask<TResult> LoadAsync<TAsset, TResult>(Func<TAsset, TResult> toFunc)
         {
@@ -66,7 +76,7 @@ namespace Extreal.SampleApp.Holiday.App.Common
                     Logger.LogDebug($"Download asset: {assetName}");
                 }
                 var sizeUnit = AppUtils.GetSizeUnit(size);
-                appState.SetConfirmation(new Confirmation(
+                appState.Confirm(new Confirmation(
                     $"Download {sizeUnit.Item1:F2}{sizeUnit.Item2} of data.",
                     () => assetProvider.DownloadAsync(assetName, nextFunc: nextFunc).Forget()));
             }
@@ -76,6 +86,7 @@ namespace Extreal.SampleApp.Holiday.App.Common
                 {
                     Logger.LogDebug($"No download asset: {assetName}");
                 }
+                nextFunc?.Invoke();
             }
         }
 

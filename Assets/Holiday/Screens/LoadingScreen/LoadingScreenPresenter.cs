@@ -28,44 +28,28 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
         protected override void Initialize(
             StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables)
         {
-            appState.IsLoading
-                .Subscribe(OnLoadingChanged)
-                .AddTo(sceneDisposables);
-
-            assetProvider.OnDownloading
-                .Subscribe(status =>
-                {
-                    loadingScreenView.Show();
-                    loadingScreenView.SetDownloadStatus(status);
-                    if (status.IsDone)
-                    {
-                        loadingScreenView.Hide();
-                    }
-                })
+            appState.PlayingReady
+                .Subscribe(ready => loadingScreenView.ToggleVisibility(!ready))
                 .AddTo(sceneDisposables);
 
             appState.OnNotificationReceived
-                .Subscribe(_ => loadingScreenView.Hide())
+                .Subscribe(_ => loadingScreenView.ToggleVisibility(false))
                 .AddTo(sceneDisposables);
-        }
 
-        private void OnLoadingChanged(bool isLoading)
-        {
-            if (isLoading)
-            {
-                loadingScreenView.Show();
-            }
-            else
-            {
-                loadingScreenView.Hide();
-            }
+            assetProvider.OnDownloading
+                .Subscribe(_ => loadingScreenView.ToggleVisibility(true))
+                .AddTo(sceneDisposables);
+
+            assetProvider.OnDownloaded
+                .Subscribe(loadingScreenView.SetDownloadStatus)
+                .AddTo(sceneDisposables);
         }
 
         protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
         {
-            if (AppUtils.IsSpace(stageName))
+            if (!AppUtils.IsSpace(stageName))
             {
-                appState.SetIsLoading(true);
+                loadingScreenView.ToggleVisibility(false);
             }
         }
 

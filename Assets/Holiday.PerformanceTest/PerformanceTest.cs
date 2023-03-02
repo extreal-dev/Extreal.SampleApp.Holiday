@@ -97,7 +97,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
             var isConnectionApprovalRejected = false;
             {
                 var isPlaying = false;
-                using var isPlayingDisposable = appState.IsLoading
+                using var isPlayingDisposable = appState.PlayingReady
                     .Skip(1)
                     .Where(value => !value)
                     .Subscribe(_ => isPlaying = true);

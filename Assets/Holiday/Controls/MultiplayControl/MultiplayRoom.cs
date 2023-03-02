@@ -34,6 +34,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
         private readonly NgoClient ngoClient;
         private readonly NgoConfig ngoConfig;
         private readonly AssetHelper assetHelper;
+        private readonly string avatarAssetName;
 
         [SuppressMessage("Usage", "CC0033")]
         private readonly CompositeDisposable disposables = new CompositeDisposable();
@@ -45,11 +46,12 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(MultiplayRoom));
 
-        public MultiplayRoom(NgoClient ngoClient, NgoConfig ngoConfig, AssetHelper assetHelper)
+        public MultiplayRoom(NgoClient ngoClient, NgoConfig ngoConfig, AssetHelper assetHelper, string avatarAssetName)
         {
             this.ngoClient = ngoClient;
             this.ngoConfig = ngoConfig;
             this.assetHelper = assetHelper;
+            this.avatarAssetName = avatarAssetName;
 
             this.ngoClient.OnConnected
                 .Subscribe(_ =>
@@ -78,7 +80,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
             }
         }
 
-        public async UniTask JoinAsync(string avatarAssetName)
+        public async UniTask JoinAsync()
         {
             try
             {
@@ -118,11 +120,20 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
             var spawnedObject = SpawnedObjects[spawnedMessage.NetworkObjectId];
             if (spawnedObject.IsOwner)
             {
-                isPlayerSpawned.Value = true;
-                Controller(spawnedObject).AvatarAssetName.Value = spawnedMessage.AvatarAssetName;
-                SetAvatarForExistingSpawnedObjects(ownerId: spawnedMessage.NetworkObjectId);
+                HandleOwnerAsync(spawnedMessage, spawnedObject).Forget();
             }
-            SetAvatarAsync(spawnedObject, spawnedMessage.AvatarAssetName).Forget();
+            else
+            {
+                SetAvatarAsync(spawnedObject, spawnedMessage.AvatarAssetName).Forget();
+            }
+        }
+
+        private async UniTask HandleOwnerAsync(SpawnedMessage spawnedMessage, NetworkObject spawnedObject)
+        {
+            Controller(spawnedObject).AvatarAssetName.Value = spawnedMessage.AvatarAssetName;
+            SetAvatarForExistingSpawnedObjects(ownerId: spawnedMessage.NetworkObjectId);
+            await SetAvatarAsync(spawnedObject, spawnedMessage.AvatarAssetName);
+            isPlayerSpawned.Value = true;
         }
 
         private static Dictionary<ulong, NetworkObject> SpawnedObjects
@@ -137,7 +148,8 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
             {
                 if (ownerId != existingObject.NetworkObjectId)
                 {
-                    SetAvatarAsync(existingObject, Controller(existingObject).AvatarAssetName.Value, restore: true).Forget();
+                    string avatarName = Controller(existingObject).AvatarAssetName.Value;
+                    SetAvatarAsync(existingObject, avatarName, restore: true).Forget();
                 }
             }
         }

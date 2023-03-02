@@ -8,55 +8,54 @@ using UniRx;
 
 namespace Extreal.SampleApp.Holiday.App
 {
+    [SuppressMessage("Usage", "CC0033")]
     public class AppState : DisposableBase
     {
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(AppState));
 
-        public IReadOnlyReactiveProperty<string> PlayerName => playerName;
-        [SuppressMessage("Usage", "CC0033")]
+        public IReadOnlyReactiveProperty<string> PlayerName => playerName.AddTo(disposables);
         private readonly ReactiveProperty<string> playerName = new ReactiveProperty<string>("Guest");
 
-        public IReadOnlyReactiveProperty<Avatar> Avatar => avatar;
-        [SuppressMessage("Usage", "CC0033")]
-        private readonly ReactiveProperty<Avatar> avatar = new ReactiveProperty<Avatar>();
+        public IReadOnlyReactiveProperty<Avatar> Avatar => avatar.AddTo(disposables);
+        private readonly ReactiveProperty<Avatar> avatar = new ReactiveProperty<Avatar>(null);
 
-        public IObservable<bool> IsLoading => isLoading;
-        [SuppressMessage("Usage", "CC0033")]
-        private readonly BoolReactiveProperty isLoading = new BoolReactiveProperty(false);
+        public IReadOnlyReactiveProperty<string> SpaceName => spaceName.AddTo(disposables);
+        private readonly ReactiveProperty<string> spaceName = new ReactiveProperty<string>(null);
 
-        public IObservable<string> OnNotificationReceived => onNotificationReceived;
-        [SuppressMessage("Usage", "CC0033")]
+        public IReadOnlyReactiveProperty<bool> PlayingReady => playingReady.AddTo(disposables);
+        private readonly ReactiveProperty<bool> playingReady = new ReactiveProperty<bool>(false);
+
+        public IReadOnlyReactiveProperty<bool> SpaceReady => spaceReady.AddTo(disposables);
+        private readonly ReactiveProperty<bool> spaceReady = new ReactiveProperty<bool>(false);
+
+        public IObservable<string> OnNotificationReceived => onNotificationReceived.AddTo(disposables);
         private readonly Subject<string> onNotificationReceived = new Subject<string>();
 
-        public IObservable<Confirmation> OnConfirmationReceived => onConfirmationReceived;
-        [SuppressMessage("Usage", "CC0033")]
+        public IObservable<Confirmation> OnConfirmationReceived => onConfirmationReceived.AddTo(disposables);
         private readonly Subject<Confirmation> onConfirmationReceived = new Subject<Confirmation>();
 
-        public IObservable<Unit> SpaceIsReady => spaceIsReady;
-        [SuppressMessage("Usage", "CC0033")]
-        private readonly Subject<Unit> spaceIsReady = new Subject<Unit>();
+        private readonly BoolReactiveProperty multiplayReady = new BoolReactiveProperty(false);
+        private readonly BoolReactiveProperty textChatReady = new BoolReactiveProperty(false);
+        private readonly BoolReactiveProperty voiceChatReady = new BoolReactiveProperty(false);
 
-        [SuppressMessage("Usage", "CC0033")]
-        private readonly BoolReactiveProperty inMultiplay = new BoolReactiveProperty(false);
-        [SuppressMessage("Usage", "CC0033")]
-        private readonly BoolReactiveProperty inText = new BoolReactiveProperty(false);
-        [SuppressMessage("Usage", "CC0033")]
-        private readonly BoolReactiveProperty inAudio = new BoolReactiveProperty(false);
-
-        [SuppressMessage("Usage", "CC0033")]
         private readonly CompositeDisposable disposables = new CompositeDisposable();
 
         public AppState()
-            => inMultiplay.Merge(inText, inAudio)
+        {
+            multiplayReady.AddTo(disposables);
+            textChatReady.AddTo(disposables);
+            voiceChatReady.AddTo(disposables);
+
+            MonitorPlayingReadyStatus();
+            RestorePlayingReadyStatus();
+        }
+
+        private void MonitorPlayingReadyStatus() =>
+            multiplayReady.Merge(textChatReady, voiceChatReady, spaceReady)
                 .Where(_ =>
                 {
-                    if (Logger.IsDebug())
-                    {
-                        Logger.LogDebug(
-                            $"inMultiplay: {inMultiplay.Value}, inText: {inText.Value}, inAudio: {inAudio.Value}");
-                    }
-
-                    return inMultiplay.Value && inText.Value && inAudio.Value;
+                    LogWaitingStatus();
+                    return multiplayReady.Value && textChatReady.Value && voiceChatReady.Value && spaceReady.Value;
                 })
                 .Subscribe(_ =>
                 {
@@ -64,52 +63,71 @@ namespace Extreal.SampleApp.Holiday.App
                     {
                         Logger.LogDebug("Ready to play");
                     }
-
-                    isLoading.Value = false;
+                    playingReady.Value = true;
                 })
                 .AddTo(disposables);
 
-        public void GotReadyToUseSpace() => spaceIsReady.OnNext(Unit.Default);
+        private void RestorePlayingReadyStatus() =>
+            multiplayReady.Merge(textChatReady, voiceChatReady, spaceReady)
+                .Where(_ =>
+                {
+                    LogWaitingStatus();
+                    return !multiplayReady.Value && !textChatReady.Value && !voiceChatReady.Value && !spaceReady.Value;
+                })
+                .Subscribe(_ =>
+                {
+                    if (Logger.IsDebug())
+                    {
+                        Logger.LogDebug("Stop playing");
+                    }
+                    playingReady.Value = false;
+                })
+                .AddTo(disposables);
+
+        private void LogWaitingStatus()
+        {
+            if (Logger.IsDebug())
+            {
+                Logger.LogDebug($"Multiplay, TextChat, VoiceChat, Space Ready: " +
+                                $"{multiplayReady.Value}, {textChatReady.Value}, " +
+                                $"{voiceChatReady.Value}, {spaceReady.Value}");
+            }
+        }
 
         public void SetPlayerName(string playerName) => this.playerName.Value = playerName;
         public void SetAvatar(Avatar avatar) => this.avatar.Value = avatar;
-        public void SetIsLoading(bool value) => isLoading.Value = value;
-        public void SetInMultiplay(bool value) => inMultiplay.Value = value;
-        public void SetInText(bool value) => inText.Value = value;
-        public void SetInAudio(bool value) => inAudio.Value = value;
+        public void SetMultiplayReady(bool ready) => multiplayReady.Value = ready;
+        public void SetTextChatReady(bool ready) => textChatReady.Value = ready;
+        public void SetVoiceChatReady(bool ready) => voiceChatReady.Value = ready;
+        public void SetSpaceReady(bool ready) => spaceReady.Value = ready;
 
-        public void SetNotification(string message)
+        public void Notify(string message)
         {
             if (Logger.IsDebug())
             {
-                Logger.LogDebug($"OnNotificationReceived: {message}");
+                Logger.LogDebug($"Notification received: {message}");
             }
-
             onNotificationReceived.OnNext(message);
         }
 
-        public void SetConfirmation(Confirmation confirmation)
+        public void Confirm(Confirmation confirmation)
         {
             if (Logger.IsDebug())
             {
-                Logger.LogDebug($"OnConfirmationReceived: {confirmation.Message}");
+                Logger.LogDebug($"Confirmation received: {confirmation.Message}");
             }
-
             onConfirmationReceived.OnNext(confirmation);
         }
 
-        protected override void ReleaseManagedResources()
+        public void LoadSpace(string spaceName)
         {
-            playerName.Dispose();
-            avatar.Dispose();
-            spaceIsReady.Dispose();
-            inMultiplay.Dispose();
-            inText.Dispose();
-            inAudio.Dispose();
-            isLoading.Dispose();
-            onNotificationReceived.Dispose();
-            onConfirmationReceived.Dispose();
-            disposables.Dispose();
+            if (Logger.IsDebug())
+            {
+                Logger.LogDebug($"Space name received: {spaceName}");
+            }
+            this.spaceName.Value = spaceName;
         }
+
+        protected override void ReleaseManagedResources() => disposables.Dispose();
     }
 }

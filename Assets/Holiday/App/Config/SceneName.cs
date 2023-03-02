@@ -11,7 +11,7 @@
         MultiplayControl = 104,
         TextChatControl = 105,
         VoiceChatControl = 106,
-        VirtualSpaceControl = 108,
+        SpaceControl = 108,
 
         // Screens
         BackgroundScreen = 204,
