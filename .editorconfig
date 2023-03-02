@@ -419,6 +419,8 @@ dotnet_naming_rule.parameters_rule.severity             = warning
 dotnet_diagnostic.IDE0044.severity = none
 # Move using directory into the namespace
 # dotnet_diagnostic.IDE0065.severity = none
+# Use local function instead of lambda
+dotnet_diagnostic.IDE0039.severity = none
 # Simplify 'new' expression
 dotnet_diagnostic.IDE0090.severity = none
 # 'Xxxxx' should call GC.SuppressFinalize inside the Dispose method.
