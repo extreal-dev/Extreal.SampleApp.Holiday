@@ -55,6 +55,10 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
 
         protected override void OnStageExiting(StageName stageName)
         {
+            if (AppUtils.IsSpace(stageName))
+            {
+                loadingScreenView.ToggleVisibility(true);
+            }
         }
     }
 }
