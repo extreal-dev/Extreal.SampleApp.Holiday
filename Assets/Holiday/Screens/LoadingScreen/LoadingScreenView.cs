@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using Extreal.Core.Logging;
 using Extreal.SampleApp.Holiday.App;
 using TMPro;
 using UnityEngine;
@@ -9,6 +10,8 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
 {
     public class LoadingScreenView : MonoBehaviour
     {
+        private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(LoadingScreenView));
+
         [SerializeField] private GameObject screen;
         [SerializeField] private TMP_Text loadedPercent;
 
@@ -17,6 +20,11 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
 
         public void ToggleVisibility(bool isVisible)
         {
+            if (Logger.IsDebug())
+            {
+                var status = isVisible ? "ON" : "OFF";
+                Logger.LogDebug($"Loading: {status}");
+            }
             ClearLoadedPercent();
             screen.SetActive(isVisible);
         }

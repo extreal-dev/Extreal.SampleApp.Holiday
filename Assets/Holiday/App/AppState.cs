@@ -69,11 +69,7 @@ namespace Extreal.SampleApp.Holiday.App
 
         private void RestorePlayingReadyStatus() =>
             multiplayReady.Merge(textChatReady, voiceChatReady, spaceReady)
-                .Where(_ =>
-                {
-                    LogWaitingStatus();
-                    return !multiplayReady.Value && !textChatReady.Value && !voiceChatReady.Value && !spaceReady.Value;
-                })
+                .Where(_ => !multiplayReady.Value && !textChatReady.Value && !voiceChatReady.Value && !spaceReady.Value)
                 .Subscribe(_ =>
                 {
                     if (Logger.IsDebug())
@@ -96,6 +92,7 @@ namespace Extreal.SampleApp.Holiday.App
 
         public void SetPlayerName(string playerName) => this.playerName.Value = playerName;
         public void SetAvatar(Avatar avatar) => this.avatar.Value = avatar;
+        public void SetSpaceName(string spaceName) => this.spaceName.Value = spaceName;
         public void SetMultiplayReady(bool ready) => multiplayReady.Value = ready;
         public void SetTextChatReady(bool ready) => textChatReady.Value = ready;
         public void SetVoiceChatReady(bool ready) => voiceChatReady.Value = ready;
@@ -117,15 +114,6 @@ namespace Extreal.SampleApp.Holiday.App
                 Logger.LogDebug($"Confirmation received: {confirmation.Message}");
             }
             onConfirmationReceived.OnNext(confirmation);
-        }
-
-        public void LoadSpace(string spaceName)
-        {
-            if (Logger.IsDebug())
-            {
-                Logger.LogDebug($"Space name received: {spaceName}");
-            }
-            this.spaceName.Value = spaceName;
         }
 
         protected override void ReleaseManagedResources() => disposables.Dispose();

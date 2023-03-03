@@ -165,7 +165,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
         {
             if (!loadedAvatars.TryGetValue(avatarAssetName, out var avatar))
             {
-                avatar = await assetHelper.LoadAsync<GameObject>(avatarAssetName);
+                avatar = await assetHelper.LoadAssetAsync<GameObject>(avatarAssetName);
                 loadedAvatars.Add(avatarAssetName, avatar);
             }
             return avatar;

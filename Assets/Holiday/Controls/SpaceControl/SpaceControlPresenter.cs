@@ -34,26 +34,13 @@ namespace Extreal.SampleApp.Holiday.Controls.SpaceControl
         }
 
         protected override void Initialize(
-            StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables)
-        {
-            appState.SpaceName
-                .Subscribe(spaceName =>
-                {
-                    if (spaceName != null)
-                    {
-                        LoadSpaceAsync(spaceName).Forget();
-                    }
-                })
-                .AddTo(sceneDisposables);
-
+            StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables) =>
             spaceControlView.OnBackButtonClicked
                 .Subscribe(_ => stageNavigator.ReplaceAsync(StageName.AvatarSelectionStage).Forget())
                 .AddTo(sceneDisposables);
-        }
 
         protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
-        {
-        }
+            => LoadSpaceAsync(appState.SpaceName.Value).Forget();
 
         private async UniTask LoadSpaceAsync(string spaceName)
         {

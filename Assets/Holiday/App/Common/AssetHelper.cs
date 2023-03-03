@@ -10,6 +10,7 @@ using Extreal.SampleApp.Holiday.App.Avatars;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.Screens.ConfirmationScreen;
 using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.ResourceProviders;
 
 namespace Extreal.SampleApp.Holiday.App.Common
 {
@@ -49,12 +50,14 @@ namespace Extreal.SampleApp.Holiday.App.Common
 
         public void DownloadSpaceAssetAsync(string spaceName, StageName nextStage)
         {
+#pragma warning disable CS1998
             Func<UniTask> nextFunc = async () =>
             {
-                await stageNavigator.ReplaceAsync(nextStage);
-                appState.LoadSpace(spaceName);
+                appState.SetSpaceName(spaceName);
+                stageNavigator.ReplaceAsync(nextStage).Forget();
             };
             DownloadAsync(spaceName, nextFunc).Forget();
+#pragma warning restore CS1998
         }
 
         [SuppressMessage("Design", "CC0031")]
@@ -90,6 +93,7 @@ namespace Extreal.SampleApp.Holiday.App.Common
             }
         }
 
-        public UniTask<T> LoadAsync<T>(string assetName) => assetProvider.LoadAssetAsync<T>(assetName);
+        public UniTask<T> LoadAssetAsync<T>(string assetName) => assetProvider.LoadAssetAsync<T>(assetName);
+        public UniTask<SceneInstance> LoadSceneAsync(string assetName) => assetProvider.LoadSceneAsync(assetName);
     }
 }
