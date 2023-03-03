@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e060591487f2c2c40a44a849bde87714, type: 3}
-  m_Name: BuildScriptOnDemandEncrypt
+  m_Name: BuildScriptEncrypt
   m_EditorClassIdentifier: 
   instanceProviderType:
     m_AssemblyName: Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null

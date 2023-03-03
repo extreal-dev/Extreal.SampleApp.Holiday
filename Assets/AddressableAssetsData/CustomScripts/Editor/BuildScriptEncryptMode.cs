@@ -1,10 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+using UnityEditor;
+using UnityEditor.AddressableAssets;
+using UnityEditor.AddressableAssets.Build;
 using UnityEditor.AddressableAssets.Build.BuildPipelineTasks;
+using UnityEditor.AddressableAssets.Build.DataBuilders;
 using UnityEditor.AddressableAssets.Settings;
 using UnityEditor.AddressableAssets.Settings.GroupSchemas;
 using UnityEditor.Build.Pipeline;
@@ -20,23 +25,22 @@ using UnityEngine.Build.Pipeline;
 using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.ResourceManagement.Util;
 using static UnityEditor.AddressableAssets.Build.ContentUpdateScript;
+using Debug = UnityEngine.Debug;
 
-namespace UnityEditor.AddressableAssets.Build.DataBuilders
+namespace MyCustom
 {
-    using Debug = UnityEngine.Debug;
-
     /// <summary>
     /// Build scripts used for player builds and running with bundles in the editor.
     /// </summary>
-    [CreateAssetMenu(fileName = "BuildScriptOnDemandEncrypt.asset", menuName = "Addressables/Content Builders/OnDemand Encrypt Build Script")]
-    public class BuildScriptOnDemandEncryptMode : BuildScriptBase
+    [CreateAssetMenu(fileName = "BuildScriptEncrypt.asset", menuName = "Addressables/Content Builders/Encrypt Build Script")]
+    public class BuildScriptEncryptMode : BuildScriptBase
     {
         /// <inheritdoc />
         public override string Name
         {
             get
             {
-                return "OnDemand Encrypt Build Script";
+                return "Encrypt Build Script";
             }
         }
 
@@ -99,7 +103,7 @@ namespace UnityEditor.AddressableAssets.Build.DataBuilders
                 DisableCatalogUpdateOnStartup = aaSettings.DisableCatalogUpdateOnStartup,
                 IsLocalCatalogInBundle = aaSettings.BundleLocalCatalog,
 #if UNITY_2019_3_OR_NEWER
-                AddressablesVersion = PackageManager.PackageInfo.FindForAssembly(typeof(Addressables).Assembly)?.version,
+                AddressablesVersion = UnityEditor.PackageManager.PackageInfo.FindForAssembly(typeof(Addressables).Assembly)?.version,
 #endif
                 MaxConcurrentWebRequests = aaSettings.MaxConcurrentWebRequests,
                 CatalogRequestsTimeout = aaSettings.CatalogRequestsTimeout
@@ -1107,19 +1111,23 @@ namespace UnityEditor.AddressableAssets.Build.DataBuilders
                     outputBundles[i] = StripHashFromBundleLocation(outputBundles[i]);
 
                 bundleRenameMap.Add(buildBundles[i], outputBundles[i]);
-                MoveFileToDestinationWithTimestampIfDifferent(srcPath, targetPath, Log);
-                AddPostCatalogUpdatesInternal(assetGroup, postCatalogUpdateCallbacks, dataEntry, targetPath, registry);
 
                 //========================================================================================
-                // 追記箇所
-                // グループのスキーマに、復号しつつ読み込みするカスタムProviderが設定されているなら暗号化を施す
-                if (assetGroup.GetSchema<BundledAssetGroupSchema>()?.AssetBundleProviderType.ClassName ==
-                nameof(CustomAssetBundleProvider))
+                // POSTSCRIPT
+                // If the group's schema has a custom Provider that reads while decrypting, encrypt it.
+                // Otherwise, use the original processing.
+                if (typeof(CryptoAssetBundleProviderBase).IsAssignableFrom(schema.AssetBundleProviderType.Value))
                 {
-                    EncryptUsingAesStream(targetPath);
+                    Encrypt(srcPath, targetPath, schema, dataEntry.Data as AssetBundleRequestOptions);
                 }
-                // 追記ここまで
+                else
+                {
+                    MoveFileToDestinationWithTimestampIfDifferent(srcPath, targetPath, Log);
+                }
+                // POSTSCRIPT ENDS HERE
                 //========================================================================================
+
+                AddPostCatalogUpdatesInternal(assetGroup, postCatalogUpdateCallbacks, dataEntry, targetPath, registry);
 
                 registry.AddFile(targetPath);
             }
@@ -1250,21 +1258,38 @@ namespace UnityEditor.AddressableAssets.Build.DataBuilders
                 File.Exists(settingsPath);
         }
 
-        /// <summary>
-        /// AESStreamを使ってAssetBundleを暗号化する
-        /// </summary>
-        /// <param name="bundlePath">暗号化のソルトにファイル名を使用する</param>
-        static void EncryptUsingAesStream(string bundlePath)
+        //========================================================================================
+        // POSTSCRIPT
+        // Encrypts the file in srcPath and writes to the file in destPath.
+        [SuppressMessage("CodeCracker", "CC0022")]
+        private static void Encrypt
+        (
+            string srcPath,
+            string destPath,
+            BundledAssetGroupSchema schema,
+            AssetBundleRequestOptions options
+        )
         {
-            var bundleName = Path.GetFileNameWithoutExtension(bundlePath);
-            // uniqueSaltはStream毎にユニークにする必要がある
-            // 今回はAssetBundle名を設定
-            var uniqueSalt = Encoding.UTF8.GetBytes(bundleName);
-            // 暗号化してファイルに上書きする
-            var data = File.ReadAllBytes(bundlePath);
-            using var baseStream = new FileStream(bundlePath, FileMode.OpenOrCreate);
-            using var cryptor = new AesCbcStream(baseStream, "password", uniqueSalt, System.Security.Cryptography.CryptoStreamMode.Write);
-            cryptor.Write(data, 0, data.Length);
+            var dirName = Path.GetDirectoryName(destPath);
+            if (!Directory.Exists(dirName))
+            {
+                Directory.CreateDirectory(dirName);
+            }
+
+            {
+                using var srcStream = new FileStream(srcPath, FileMode.Open, FileAccess.Read);
+                using var destStream = new FileStream(destPath, FileMode.OpenOrCreate, FileAccess.Write);
+                var provider = schema.AssetBundleProviderType.Value
+                                .GetConstructor(Array.Empty<Type>())
+                                .Invoke(default) as CryptoAssetBundleProviderBase;
+                using var encryptor = provider.CryptoStreamGetter.GetEncryptStream(destStream, options);
+                srcStream.CopyTo(encryptor);
+            }
+
+            options.BundleSize = GetFileSize(destPath);
+            File.Delete(srcPath);
         }
+        // POSTSCRIPT ENDS HERE
+        //========================================================================================
     }
 }
