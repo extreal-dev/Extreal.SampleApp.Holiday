@@ -1,5 +1,4 @@
-﻿using Cysharp.Threading.Tasks;
-using Extreal.Core.StageNavigation;
+﻿using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.App.Config;
@@ -30,7 +29,7 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
             StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables)
         {
             appState.PlayingReady
-                .Subscribe(ready => ToggleVisibilityAsync(!ready).Forget())
+                .Subscribe(ready => loadingScreenView.ToggleVisibility(!ready))
                 .AddTo(sceneDisposables);
 
             appState.OnNotificationReceived
@@ -44,12 +43,6 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
             assetProvider.OnDownloaded
                 .Subscribe(loadingScreenView.SetDownloadStatus)
                 .AddTo(sceneDisposables);
-        }
-
-        private async UniTask ToggleVisibilityAsync(bool isVisible)
-        {
-            await UniTask.DelayFrame(1);
-            loadingScreenView.ToggleVisibility(isVisible);
         }
 
         protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
