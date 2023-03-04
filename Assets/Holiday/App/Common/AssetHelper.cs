@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using Cysharp.Threading.Tasks;
-using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
 using Extreal.Integration.Chat.Vivox;
@@ -14,7 +13,7 @@ using UnityEngine.ResourceManagement.ResourceProviders;
 
 namespace Extreal.SampleApp.Holiday.App.Common
 {
-    public class AssetHelper : DisposableBase
+    public class AssetHelper
     {
         public AppConfig AppConfig { get; private set; }
         public VivoxAppConfig VivoxAppConfig { get; private set; }
@@ -39,10 +38,10 @@ namespace Extreal.SampleApp.Holiday.App.Common
         {
             Func<UniTask> nextFunc = async () =>
             {
-                AppConfig = await LoadAsync<AppConfigRepository, AppConfig>(asset => asset.ToAppConfig());
-                VivoxAppConfig = await LoadAsync<ChatConfig, VivoxAppConfig>(asset => asset.ToVivoxAppConfig());
-                NgoConfig = await LoadAsync<MultiplayConfig, NgoConfig>(asset => asset.ToNgoConfig());
-                AvatarService = await LoadAsync<AvatarRepository, AvatarService>(asset => asset.ToAvatarService());
+                AppConfig = await LoadWithAutoReleaseAsync<AppConfigRepository, AppConfig>(asset => asset.ToAppConfig());
+                VivoxAppConfig = await LoadWithAutoReleaseAsync<ChatConfig, VivoxAppConfig>(asset => asset.ToVivoxAppConfig());
+                NgoConfig = await LoadWithAutoReleaseAsync<MultiplayConfig, NgoConfig>(asset => asset.ToNgoConfig());
+                AvatarService = await LoadWithAutoReleaseAsync<AvatarRepository, AvatarService>(asset => asset.ToAvatarService());
                 stageNavigator.ReplaceAsync(nextStage).Forget();
             };
             DownloadAsync(nameof(AppConfigRepository), nextFunc).Forget();
@@ -61,7 +60,7 @@ namespace Extreal.SampleApp.Holiday.App.Common
         }
 
         [SuppressMessage("Design", "CC0031")]
-        private async UniTask<TResult> LoadAsync<TAsset, TResult>(Func<TAsset, TResult> toFunc)
+        private async UniTask<TResult> LoadWithAutoReleaseAsync<TAsset, TResult>(Func<TAsset, TResult> toFunc)
         {
             var asset = await assetProvider.LoadAssetAsync<TAsset>(typeof(TAsset).Name);
             var result = toFunc(asset);
@@ -81,7 +80,7 @@ namespace Extreal.SampleApp.Holiday.App.Common
                 var sizeUnit = AppUtils.GetSizeUnit(size);
                 appState.Confirm(new Confirmation(
                     $"Download {sizeUnit.Item1:F2}{sizeUnit.Item2} of data.",
-                    () => assetProvider.DownloadAsync(assetName, nextFunc: nextFunc).Forget()));
+                    () => DownloadOrNotifyErrorAsync(assetName, nextFunc).Forget()));
             }
             else
             {
@@ -90,6 +89,23 @@ namespace Extreal.SampleApp.Holiday.App.Common
                     Logger.LogDebug($"No download asset: {assetName}");
                 }
                 nextFunc?.Invoke();
+            }
+        }
+
+        private async UniTask DownloadOrNotifyErrorAsync(string assetName, Func<UniTask> nextFunc)
+        {
+            try
+            {
+                await assetProvider.DownloadAsync(assetName, nextFunc: nextFunc);
+            }
+            catch (Exception e)
+            {
+                if (Logger.IsDebug())
+                {
+                    Logger.LogDebug("Exception occurred when downloading assets!", e);
+                }
+                // Asset download error, so the message is hard coded.
+                appState.Notify("Download has failed.");
             }
         }
 

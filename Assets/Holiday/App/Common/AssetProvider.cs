@@ -53,7 +53,7 @@ namespace Extreal.SampleApp.Holiday.App.Common
 
             onDownloaded.OnNext(handle.GetDownloadStatus());
             var downloadStatus = default(DownloadStatus);
-            while (!handle.IsDone)
+            while (handle.Status == AsyncOperationStatus.None) // None: the operation is still in progress.
             {
                 var prevDownloadStatus = downloadStatus;
                 downloadStatus = handle.GetDownloadStatus();

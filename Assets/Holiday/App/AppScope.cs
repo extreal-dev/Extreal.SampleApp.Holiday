@@ -6,6 +6,7 @@ using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.App.Config;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using VContainer;
 using VContainer.Unity;
 #if UNITY_ANDROID
@@ -22,10 +23,12 @@ namespace Extreal.SampleApp.Holiday.App
         {
             QualitySettings.vSyncCount = 0;
             Application.targetFrameRate = 60;
+            Addressables.ResourceManager.WebRequestOverride = unityWebRequest => unityWebRequest.timeout = 5;
+
+            ClearAssetBundleCacheOnDev();
 
             var logLevel = InitializeLogging();
             InitializeMicrophone();
-            InitializeAssets();
 
             var logger = LoggingManager.GetLogger(nameof(AppScope));
             if (logger.IsDebug())
@@ -62,7 +65,7 @@ namespace Extreal.SampleApp.Holiday.App
 #endif
         }
 
-        private static void InitializeAssets()
+        private static void ClearAssetBundleCacheOnDev()
         {
 #if !HOLIDAY_PROD
             Caching.ClearCache();
