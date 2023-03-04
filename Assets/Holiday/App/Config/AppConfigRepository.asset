@@ -18,10 +18,8 @@ MonoBehaviour:
   voiceChatMuteOffButtonLabel: OFF
   avatarSelectionGoButtonLabel: Go
   virtualSpaceBackButtonLabel: Back
-  multiplayConnectionApprovalRejectedErrorMessage: The space is full
-  multiplayUnexpectedDisconnectedErrorMessage: Unexpected disconnection from multiplay
-    server has occurred
-  multiplayConnectFailedErrorMessage: Connection to multiplay server is failed
-  chatUnexpectedDisconnectedErrorMessage: Unexpected disconnection from vivox server
-    has occurred
-  chatConnectFailedErrorMessage: Connection to vivox server is failed
+  multiplayConnectionApprovalRejectedErrorMessage: Space is full.
+  multiplayUnexpectedDisconnectedErrorMessage: Multiplayer connection has been lost.
+  multiplayConnectFailedErrorMessage: Connection to multiplayer has failed.
+  chatUnexpectedDisconnectedErrorMessage: Chat connection has been lost.
+  chatConnectFailedErrorMessage: Connection to chat has failed.
