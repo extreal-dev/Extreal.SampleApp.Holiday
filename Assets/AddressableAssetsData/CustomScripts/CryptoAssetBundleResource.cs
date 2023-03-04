@@ -230,6 +230,12 @@ namespace MyCustom
             {
                 if (uwr.result != UnityWebRequest.Result.Success)
                 {
+                    var exception = new RemoteProviderException
+                    (
+                        $"Download has failed. result:{uwr.result} path:{path}",
+                        provideHandle.Location
+                    );
+                    provideHandle.Complete<CustomAssetBundleResource>(null, false, exception);
                     return;
                 }
                 Decrypt(downloadFilePath);
