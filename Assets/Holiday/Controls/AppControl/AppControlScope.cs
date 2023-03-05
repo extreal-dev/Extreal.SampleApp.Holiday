@@ -1,6 +1,5 @@
 ﻿using Extreal.Integration.Chat.Vivox;
 using Extreal.Integration.Multiplay.NGO;
-using Extreal.SampleApp.Holiday.App.Avatars;
 using Extreal.SampleApp.Holiday.App.Common;
 using Unity.Netcode;
 using UnityEngine;
@@ -16,8 +15,6 @@ namespace Extreal.SampleApp.Holiday.Controls.AppControl
 
         protected override void Configure(IContainerBuilder builder)
         {
-            builder.Register<AvatarService>(Lifetime.Singleton);
-
             builder.RegisterComponent(networkManager);
             builder.Register<NgoClient>(Lifetime.Singleton);
 

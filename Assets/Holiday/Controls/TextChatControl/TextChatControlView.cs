@@ -26,7 +26,7 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
         [SuppressMessage("CodeQuality", "IDE0051"), SuppressMessage("Style", "CC0061")]
         private void Awake()
         {
-            sendButtonLabel.text = assetHelper.AppConfig.TextChatSendButtonLabel;
+            sendButtonLabel.text = assetHelper.MessageConfig.TextChatSendButtonLabel;
 
             sendButton.OnClickAsObservable()
                 .TakeUntilDestroy(this)

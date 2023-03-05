@@ -27,8 +27,8 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
         [SuppressMessage("Style", "IDE0051"), SuppressMessage("Style", "CC0061")]
         private void Awake()
         {
-            muteOffButtonLabel = assetHelper.AppConfig.VoiceChatMuteOffButtonLabel;
-            muteOnButtonLabel = assetHelper.AppConfig.VoiceChatMuteOnButtonLabel;
+            muteOffButtonLabel = assetHelper.MessageConfig.VoiceChatMuteOffButtonLabel;
+            muteOnButtonLabel = assetHelper.MessageConfig.VoiceChatMuteOnButtonLabel;
             mainColor = mutedString.color;
         }
 

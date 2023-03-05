@@ -52,11 +52,11 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
                 .AddTo(stageDisposables);
 
             voiceChatChannel.OnUnexpectedDisconnected
-                .Subscribe(_ => appState.Notify(assetHelper.AppConfig.ChatUnexpectedDisconnectedErrorMessage))
+                .Subscribe(_ => appState.Notify(assetHelper.MessageConfig.ChatUnexpectedDisconnectedErrorMessage))
                 .AddTo(stageDisposables);
 
             voiceChatChannel.OnConnectFailed
-                .Subscribe(_ => appState.Notify(assetHelper.AppConfig.ChatConnectFailedErrorMessage))
+                .Subscribe(_ => appState.Notify(assetHelper.MessageConfig.ChatConnectFailedErrorMessage))
                 .AddTo(stageDisposables);
 
             voiceChatChannel.JoinAsync().Forget();

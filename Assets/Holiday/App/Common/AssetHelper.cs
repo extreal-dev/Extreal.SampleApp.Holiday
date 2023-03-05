@@ -1,29 +1,33 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using Cysharp.Threading.Tasks;
+using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
 using Extreal.Integration.Chat.Vivox;
 using Extreal.Integration.Multiplay.NGO;
-using Extreal.SampleApp.Holiday.App.Avatars;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.Screens.ConfirmationScreen;
+using UniRx;
 using UnityEngine.ResourceManagement.ResourceProviders;
 
 namespace Extreal.SampleApp.Holiday.App.Common
 {
-    public class AssetHelper
+    public class AssetHelper : DisposableBase
     {
-        public AppConfig AppConfig { get; private set; }
+        public MessageConfig MessageConfig { get; private set; }
         public VivoxAppConfig VivoxAppConfig { get; private set; }
         public NgoConfig NgoConfig { get; private set; }
-        public AvatarService AvatarService { get; private set; }
+        public AvatarConfig AvatarConfig { get; private set; }
 
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(AssetHelper));
 
         private readonly StageNavigator<StageName, SceneName> stageNavigator;
         private readonly AssetProvider assetProvider;
         private readonly AppState appState;
+
+        [SuppressMessage("Usage", "CC0033")]
+        private readonly CompositeDisposable disposables = new CompositeDisposable();
 
         public AssetHelper(
             StageNavigator<StageName, SceneName> stageNavigator, AssetProvider assetProvider, AppState appState)
@@ -37,14 +41,17 @@ namespace Extreal.SampleApp.Holiday.App.Common
         {
             Func<UniTask> nextFunc = async () =>
             {
-                AppConfig = await LoadWithAutoReleaseAsync<AppConfigRepository, AppConfig>(asset => asset.ToAppConfig());
+                disposables.Clear();
+                MessageConfig = await LoadAsync<MessageConfig>();
+                AvatarConfig = await LoadAsync<AvatarConfig>();
                 VivoxAppConfig = await LoadWithAutoReleaseAsync<ChatConfig, VivoxAppConfig>(asset => asset.ToVivoxAppConfig());
                 NgoConfig = await LoadWithAutoReleaseAsync<MultiplayConfig, NgoConfig>(asset => asset.ToNgoConfig());
-                AvatarService = await LoadWithAutoReleaseAsync<AvatarRepository, AvatarService>(asset => asset.ToAvatarService());
                 stageNavigator.ReplaceAsync(nextStage).Forget();
             };
-            DownloadAsync(nameof(AppConfigRepository), nextFunc).Forget();
+            DownloadAsync(nameof(MessageConfig), nextFunc).Forget();
         }
+
+        protected override void ReleaseManagedResources() => disposables.Dispose();
 
         public void DownloadSpaceAssetAsync(string spaceName, StageName nextStage)
         {
@@ -62,10 +69,17 @@ namespace Extreal.SampleApp.Holiday.App.Common
         private async UniTask<TResult> LoadWithAutoReleaseAsync<TAsset, TResult>(
             Func<TAsset, TResult> toFunc)
         {
-            var disposable = await assetProvider.LoadAssetAsync<TAsset>(typeof(TAsset).Name);
+            var disposable = await assetProvider.LoadAsset<TAsset>();
             var result = toFunc(disposable.Result);
             disposable.Dispose();
             return result;
+        }
+
+        private async UniTask<TAsset> LoadAsync<TAsset>()
+        {
+            var disposable = await assetProvider.LoadAsset<TAsset>();
+            disposables.Add(disposable);
+            return disposable.Result;
         }
 
         private async UniTask DownloadAsync(string assetName, Func<UniTask> nextFunc)

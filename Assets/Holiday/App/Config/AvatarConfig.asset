@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5810712392b714c4c8e3d8c24fb08760, type: 3}
-  m_Name: AvatarRepository
+  m_Script: {fileID: 11500000, guid: 76bbeefee2804b8aa26989dba40f2d86, type: 3}
+  m_Name: AvatarConfig
   m_EditorClassIdentifier: 
   avatars:
   - name: Armature

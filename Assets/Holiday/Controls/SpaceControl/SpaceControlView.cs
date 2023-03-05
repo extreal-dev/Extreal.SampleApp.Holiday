@@ -18,6 +18,6 @@ namespace Extreal.SampleApp.Holiday.Controls.SpaceControl
         public IObservable<Unit> OnBackButtonClicked
             => backButton.OnClickAsObservable().TakeUntilDestroy(this);
 
-        private void Awake() => backButtonLabel.text = assetHelper.AppConfig.VirtualSpaceBackButtonLabel;
+        private void Awake() => backButtonLabel.text = assetHelper.MessageConfig.VirtualSpaceBackButtonLabel;
     }
 }

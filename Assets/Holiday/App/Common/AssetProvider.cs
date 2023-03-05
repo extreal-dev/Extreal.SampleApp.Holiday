@@ -86,6 +86,8 @@ namespace Extreal.SampleApp.Holiday.App.Common
             return new AssetDisposable<T>(asset);
         }
 
+        public UniTask<AssetDisposable<T>> LoadAsset<T>() => LoadAssetAsync<T>(typeof(T).Name);
+
         public async UniTask<AssetDisposable<SceneInstance>> LoadSceneAsync(string assetName, LoadSceneMode loadMode = LoadSceneMode.Additive)
         {
             var handle = Addressables.LoadSceneAsync(assetName, loadMode);

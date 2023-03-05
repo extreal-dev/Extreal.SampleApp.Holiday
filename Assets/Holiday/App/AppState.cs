@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
-using Extreal.SampleApp.Holiday.App.Avatars;
+using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.Screens.ConfirmationScreen;
 using UniRx;
 
@@ -16,8 +16,8 @@ namespace Extreal.SampleApp.Holiday.App
         public IReadOnlyReactiveProperty<string> PlayerName => playerName.AddTo(disposables);
         private readonly ReactiveProperty<string> playerName = new ReactiveProperty<string>("Guest");
 
-        public IReadOnlyReactiveProperty<Avatar> Avatar => avatar.AddTo(disposables);
-        private readonly ReactiveProperty<Avatar> avatar = new ReactiveProperty<Avatar>(null);
+        public IReadOnlyReactiveProperty<AvatarConfig.Avatar> Avatar => avatar.AddTo(disposables);
+        private readonly ReactiveProperty<AvatarConfig.Avatar> avatar = new ReactiveProperty<AvatarConfig.Avatar>(null);
 
         public IReadOnlyReactiveProperty<string> SpaceName => spaceName.AddTo(disposables);
         private readonly ReactiveProperty<string> spaceName = new ReactiveProperty<string>(null);
@@ -91,7 +91,7 @@ namespace Extreal.SampleApp.Holiday.App
         }
 
         public void SetPlayerName(string playerName) => this.playerName.Value = playerName;
-        public void SetAvatar(Avatar avatar) => this.avatar.Value = avatar;
+        public void SetAvatar(AvatarConfig.Avatar avatar) => this.avatar.Value = avatar;
         public void SetSpaceName(string spaceName) => this.spaceName.Value = spaceName;
         public void SetMultiplayReady(bool ready) => multiplayReady.Value = ready;
         public void SetTextChatReady(bool ready) => textChatReady.Value = ready;

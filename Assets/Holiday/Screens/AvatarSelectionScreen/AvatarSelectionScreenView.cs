@@ -26,8 +26,8 @@ namespace Extreal.SampleApp.Holiday.Screens.AvatarSelectionScreen
         [SuppressMessage("Style", "IDE0051"), SuppressMessage("Style", "CC0061")]
         private void Awake()
         {
-            title.text = assetHelper.AppConfig.AvatarSelectionTitle;
-            goButtonLabel.text = assetHelper.AppConfig.AvatarSelectionGoButtonLabel;
+            title.text = assetHelper.MessageConfig.AvatarSelectionTitle;
+            goButtonLabel.text = assetHelper.MessageConfig.AvatarSelectionGoButtonLabel;
         }
 
         public void Initialize(List<string> avatarNames)

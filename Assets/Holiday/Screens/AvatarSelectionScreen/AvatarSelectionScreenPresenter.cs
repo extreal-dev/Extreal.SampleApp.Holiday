@@ -39,7 +39,7 @@ namespace Extreal.SampleApp.Holiday.Screens.AvatarSelectionScreen
             avatarSelectionScreenView.OnAvatarChanged
                 .Subscribe(avatarName =>
                 {
-                    var avatar = assetHelper.AvatarService.FindAvatarByName(avatarName);
+                    var avatar = assetHelper.AvatarConfig.Avatars.First(avatar => avatar.Name == avatarName);
                     appState.SetAvatar(avatar);
                 })
                 .AddTo(sceneDisposables);
@@ -51,7 +51,7 @@ namespace Extreal.SampleApp.Holiday.Screens.AvatarSelectionScreen
 
         protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
         {
-            var avatars = assetHelper.AvatarService.Avatars;
+            var avatars = assetHelper.AvatarConfig.Avatars;
             if (appState.Avatar.Value == null)
             {
                 appState.SetAvatar(avatars.First());
