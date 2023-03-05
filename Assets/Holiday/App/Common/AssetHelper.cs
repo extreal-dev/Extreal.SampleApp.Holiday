@@ -8,7 +8,6 @@ using Extreal.Integration.Multiplay.NGO;
 using Extreal.SampleApp.Holiday.App.Avatars;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.Screens.ConfirmationScreen;
-using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.ResourceProviders;
 
 namespace Extreal.SampleApp.Holiday.App.Common
@@ -60,11 +59,12 @@ namespace Extreal.SampleApp.Holiday.App.Common
         }
 
         [SuppressMessage("Design", "CC0031")]
-        private async UniTask<TResult> LoadWithAutoReleaseAsync<TAsset, TResult>(Func<TAsset, TResult> toFunc)
+        private async UniTask<TResult> LoadWithAutoReleaseAsync<TAsset, TResult>(
+            Func<TAsset, TResult> toFunc)
         {
-            var asset = await assetProvider.LoadAssetAsync<TAsset>(typeof(TAsset).Name);
-            var result = toFunc(asset);
-            Addressables.Release(asset);
+            var disposable = await assetProvider.LoadAssetAsync<TAsset>(typeof(TAsset).Name);
+            var result = toFunc(disposable.Result);
+            disposable.Dispose();
             return result;
         }
 
@@ -109,7 +109,10 @@ namespace Extreal.SampleApp.Holiday.App.Common
             }
         }
 
-        public UniTask<T> LoadAssetAsync<T>(string assetName) => assetProvider.LoadAssetAsync<T>(assetName);
-        public UniTask<SceneInstance> LoadSceneAsync(string assetName) => assetProvider.LoadSceneAsync(assetName);
+        public UniTask<AssetDisposable<T>> LoadAssetAsync<T>(string assetName)
+            => assetProvider.LoadAssetAsync<T>(assetName);
+
+        public UniTask<AssetDisposable<SceneInstance>> LoadSceneAsync(string assetName)
+            => assetProvider.LoadSceneAsync(assetName);
     }
 }

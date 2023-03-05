@@ -12,7 +12,6 @@ using UniRx;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using Object = UnityEngine.Object;
 
 namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
@@ -41,7 +40,8 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
         [SuppressMessage("Usage", "CC0033")]
         private readonly CancellationTokenSource cts = new CancellationTokenSource();
 
-        private readonly Dictionary<string, GameObject> loadedAvatars = new Dictionary<string, GameObject>();
+        private readonly Dictionary<string, AssetDisposable<GameObject>> loadedAvatars
+            = new Dictionary<string, AssetDisposable<GameObject>>();
 
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(MultiplayRoom));
 
@@ -73,10 +73,6 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
             onConnectFailed.Dispose();
             isPlayerSpawned.Dispose();
             disposables.Dispose();
-            foreach (var avatar in loadedAvatars)
-            {
-                Addressables.Release(avatar.Value);
-            }
         }
 
         public async UniTask JoinAsync()
@@ -155,19 +151,27 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 
         private async UniTask SetAvatarAsync(NetworkObject networkObject, string avatarAssetName, bool restore = false)
         {
-            var prefab = await LoadAvatarAsync(avatarAssetName);
-            var avatarObject = Object.Instantiate(prefab, networkObject.transform);
+            var assetDisposable = await LoadAvatarAsync(avatarAssetName);
+            var avatarObject = Object.Instantiate(assetDisposable.Result, networkObject.transform);
             Controller(networkObject).SetAvatar(avatarObject.GetComponent<AvatarProvider>().Avatar, restore);
         }
 
-        public async UniTask<GameObject> LoadAvatarAsync(string avatarAssetName)
+        public async UniTask<AssetDisposable<GameObject>> LoadAvatarAsync(string avatarAssetName)
         {
-            if (!loadedAvatars.TryGetValue(avatarAssetName, out var avatar))
+            if (!loadedAvatars.TryGetValue(avatarAssetName, out var assetDisposable))
             {
-                avatar = await assetHelper.LoadAssetAsync<GameObject>(avatarAssetName);
-                loadedAvatars.Add(avatarAssetName, avatar);
+                assetDisposable = await assetHelper.LoadAssetAsync<GameObject>(avatarAssetName);
+                if (loadedAvatars.TryAdd(avatarAssetName, assetDisposable))
+                {
+                    disposables.Add(assetDisposable);
+                }
+                else
+                {
+                    assetDisposable.Dispose();
+                    assetDisposable = loadedAvatars[avatarAssetName];
+                }
             }
-            return avatar;
+            return assetDisposable;
         }
     }
 }

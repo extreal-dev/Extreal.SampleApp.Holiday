@@ -39,6 +39,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
         {
             multiplayRoom = new MultiplayRoom(
                 ngoClient, assetHelper.NgoConfig, assetHelper, appState.Avatar.Value.AssetName);
+            stageDisposables.Add(multiplayRoom);
 
             multiplayRoom.IsPlayerSpawned
                 .Subscribe(appState.SetMultiplayReady)

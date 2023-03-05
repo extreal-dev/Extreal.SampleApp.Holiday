@@ -75,7 +75,7 @@ namespace Extreal.SampleApp.Holiday.App.Common
             ReleaseHandle(handle);
         }
 
-        public async UniTask<T> LoadAssetAsync<T>(string assetName)
+        public async UniTask<AssetDisposable<T>> LoadAssetAsync<T>(string assetName)
         {
             var handle = Addressables.LoadAssetAsync<T>(assetName);
             var asset = await handle.Task;
@@ -83,10 +83,10 @@ namespace Extreal.SampleApp.Holiday.App.Common
             {
                 ReleaseHandle(handle);
             }
-            return asset;
+            return new AssetDisposable<T>(asset);
         }
 
-        public async UniTask<SceneInstance> LoadSceneAsync(string assetName, LoadSceneMode loadMode = LoadSceneMode.Additive)
+        public async UniTask<AssetDisposable<SceneInstance>> LoadSceneAsync(string assetName, LoadSceneMode loadMode = LoadSceneMode.Additive)
         {
             var handle = Addressables.LoadSceneAsync(assetName, loadMode);
             var scene = await handle.Task;
@@ -94,7 +94,7 @@ namespace Extreal.SampleApp.Holiday.App.Common
             {
                 ReleaseHandle(handle);
             }
-            return scene;
+            return new AssetDisposable<SceneInstance>(scene);
         }
 
         private static void ReleaseHandle(AsyncOperationHandle handle)
