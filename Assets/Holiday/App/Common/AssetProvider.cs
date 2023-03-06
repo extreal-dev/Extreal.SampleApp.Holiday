@@ -25,7 +25,11 @@ namespace Extreal.SampleApp.Holiday.App.Common
         [SuppressMessage("Usage", "CC0033")]
         private readonly Subject<DownloadStatus> onDownloaded = new Subject<DownloadStatus>();
 
-        protected override void ReleaseManagedResources() => onDownloaded.Dispose();
+        protected override void ReleaseManagedResources()
+        {
+            onDownloading.Dispose();
+            onDownloaded.Dispose();
+        }
 
         public async UniTask DownloadAsync(
             string assetName, TimeSpan downloadStatusInterval = default, Func<UniTask> nextFunc = null)
