@@ -69,9 +69,8 @@ namespace Extreal.SampleApp.Holiday.App.Common
         private async UniTask<TResult> LoadWithAutoReleaseAsync<TAsset, TResult>(
             Func<TAsset, TResult> toFunc)
         {
-            var disposable = await assetProvider.LoadAsset<TAsset>();
+            using var disposable = await assetProvider.LoadAsset<TAsset>();
             var result = toFunc(disposable.Result);
-            disposable.Dispose();
             return result;
         }
 
