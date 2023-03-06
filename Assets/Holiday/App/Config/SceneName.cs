@@ -7,7 +7,7 @@
         LightControl = 103,
         InputControl = 101,
         NotificationControl = 102,
-        AppControl = 107,
+        ClientControl = 107,
         MultiplayControl = 104,
         TextChatControl = 105,
         VoiceChatControl = 106,
@@ -19,8 +19,5 @@
         ConfirmationScreen = 205,
         TitleScreen = 200,
         AvatarSelectionScreen = 201,
-
-        // Spaces
-        // VirtualSpace = 300,
     }
 }

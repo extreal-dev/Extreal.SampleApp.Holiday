@@ -7,7 +7,7 @@ using Extreal.Core.Logging;
 using Extreal.Integration.Multiplay.NGO;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.Config;
-using Extreal.SampleApp.Holiday.Controls.AppControl;
+using Extreal.SampleApp.Holiday.Controls.ClientControl;
 using StarterAssets;
 using TMPro;
 using UniRx;
@@ -90,7 +90,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
             // Enters VirtualSpace
             FindObjectOfType<Button>().onClick.Invoke();
 
-            var appControlScope = FindObjectOfType<AppControlScope>();
+            var appControlScope = FindObjectOfType<ClientControlScope>();
             var appState = appControlScope.Container.Resolve(typeof(AppState)) as AppState;
             var ngoClient = appControlScope.Container.Resolve(typeof(NgoClient)) as NgoClient;
 

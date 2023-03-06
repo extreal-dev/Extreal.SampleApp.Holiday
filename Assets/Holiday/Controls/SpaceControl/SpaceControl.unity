@@ -482,7 +482,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentReference:
-    TypeName: Extreal.SampleApp.Holiday.Controls.AppControl.AppControlScope
+    TypeName: Extreal.SampleApp.Holiday.App.AppScope
   autoRun: 1
   autoInjectGameObjects: []
   spaceControlView: {fileID: 783326799}

@@ -6,9 +6,9 @@ using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
-namespace Extreal.SampleApp.Holiday.Controls.AppControl
+namespace Extreal.SampleApp.Holiday.Controls.ClientControl
 {
-    public class AppControlScope : LifetimeScope
+    public class ClientControlScope : LifetimeScope
     {
         [SerializeField]
         private NetworkManager networkManager;
@@ -22,7 +22,7 @@ namespace Extreal.SampleApp.Holiday.Controls.AppControl
             builder.RegisterComponent(assetHelper.VivoxAppConfig);
             builder.Register<VivoxClient>(Lifetime.Singleton);
 
-            builder.RegisterEntryPoint<AppControlPresenter>();
+            builder.RegisterEntryPoint<ClientControlPresenter>();
         }
     }
 }

@@ -27,7 +27,7 @@ EditorBuildSettings:
     path: Assets/Holiday/Controls/NotificationControl/NotificationControl.unity
     guid: e4acbeab3ecfaf245818307d1eb010bf
   - enabled: 1
-    path: Assets/Holiday/Controls/AppControl/AppControl.unity
+    path: Assets/Holiday/Controls/ClientControl/ClientControl.unity
     guid: f8e9d9e073b728e45b22ca0cb8e23f56
   - enabled: 1
     path: Assets/Holiday/Controls/MultiplayControl/MultiplayControl.unity
