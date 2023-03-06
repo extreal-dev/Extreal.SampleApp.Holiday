@@ -101,7 +101,7 @@ namespace Extreal.SampleApp.Holiday.App.Common
                 {
                     Logger.LogDebug($"No download asset: {assetName}");
                 }
-                nextFunc?.Invoke();
+                nextFunc?.Invoke().Forget();
             }
         }
 
