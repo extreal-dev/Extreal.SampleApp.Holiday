@@ -38,7 +38,7 @@ namespace Extreal.SampleApp.Holiday.App.Common
             {
                 await DownloadDependenciesAsync(assetName, downloadStatusInterval);
             }
-            nextFunc?.Invoke();
+            nextFunc?.Invoke().Forget();
         }
 
         public async UniTask<long> GetDownloadSizeAsync(string assetName)
