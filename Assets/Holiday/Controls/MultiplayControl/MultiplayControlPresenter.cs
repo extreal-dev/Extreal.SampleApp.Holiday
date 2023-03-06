@@ -63,13 +63,8 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
                 .AddTo(stageDisposables);
 
             appState.SpaceReady
-                .Subscribe(ready =>
-                {
-                    if (ready)
-                    {
-                        multiplayRoom.JoinAsync().Forget();
-                    }
-                })
+                .Where(ready => ready)
+                .Subscribe(_ => multiplayRoom.JoinAsync().Forget())
                 .AddTo(stageDisposables);
         }
 
