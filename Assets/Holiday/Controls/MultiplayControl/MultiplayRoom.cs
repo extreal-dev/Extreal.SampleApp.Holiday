@@ -43,6 +43,9 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
         private readonly Dictionary<string, AssetDisposable<GameObject>> loadedAvatars
             = new Dictionary<string, AssetDisposable<GameObject>>();
 
+        private static Dictionary<ulong, NetworkObject> SpawnedObjects
+            => NetworkManager.Singleton.SpawnManager.SpawnedObjects;
+
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(MultiplayRoom));
 
         public MultiplayRoom(NgoClient ngoClient, NgoConfig ngoConfig, AssetHelper assetHelper, string avatarAssetName)
@@ -130,9 +133,6 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
             await SetAvatarAsync(spawnedObject, spawnedMessage.AvatarAssetName);
             isPlayerSpawned.Value = true;
         }
-
-        private static Dictionary<ulong, NetworkObject> SpawnedObjects
-            => NetworkManager.Singleton.SpawnManager.SpawnedObjects;
 
         private static NetworkThirdPersonController Controller(NetworkObject networkObject)
             => networkObject.GetComponent<NetworkThirdPersonController>();
