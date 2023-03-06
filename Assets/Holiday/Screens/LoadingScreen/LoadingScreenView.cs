@@ -41,7 +41,7 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
                 var downloaded = AppUtils.GetSizeUnit(status.DownloadedBytes);
                 loadedPercent.text = $"{status.Percent * 100:F0}%" +
                                      Environment.NewLine +
-                                     $"( {downloaded.Item1}{downloaded.Item2} / {total.Item1}{total.Item2} )";
+                                     $"({downloaded.Item1}{downloaded.Item2}/{total.Item1}{total.Item2})";
             }
         }
 
