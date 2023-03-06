@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.Common.System;
@@ -139,7 +140,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 
         private void SetAvatarForExistingSpawnedObjects(ulong ownerId)
         {
-            foreach (var existingObject in SpawnedObjects.Values)
+            foreach (var existingObject in SpawnedObjects.Values.ToArray())
             {
                 if (ownerId != existingObject.NetworkObjectId)
                 {
