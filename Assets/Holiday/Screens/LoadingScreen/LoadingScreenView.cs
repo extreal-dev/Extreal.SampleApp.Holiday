@@ -18,7 +18,7 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
         [SuppressMessage("Style", "IDE0051")]
         private void Start() => screen.SetActive(false);
 
-        public void ToggleVisibility(bool isVisible)
+        public void SwitchVisibility(bool isVisible)
         {
             if (Logger.IsDebug())
             {

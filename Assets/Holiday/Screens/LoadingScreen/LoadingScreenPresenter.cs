@@ -29,15 +29,15 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
             StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables)
         {
             appState.PlayingReady
-                .Subscribe(ready => loadingScreenView.ToggleVisibility(!ready))
+                .Subscribe(ready => loadingScreenView.SwitchVisibility(!ready))
                 .AddTo(sceneDisposables);
 
             appState.OnNotificationReceived
-                .Subscribe(_ => loadingScreenView.ToggleVisibility(false))
+                .Subscribe(_ => loadingScreenView.SwitchVisibility(false))
                 .AddTo(sceneDisposables);
 
             assetProvider.OnDownloading
-                .Subscribe(_ => loadingScreenView.ToggleVisibility(true))
+                .Subscribe(_ => loadingScreenView.SwitchVisibility(true))
                 .AddTo(sceneDisposables);
 
             assetProvider.OnDownloaded
@@ -49,7 +49,7 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
         {
             if (!AppUtils.IsSpace(stageName))
             {
-                loadingScreenView.ToggleVisibility(false);
+                loadingScreenView.SwitchVisibility(false);
             }
         }
 
@@ -57,7 +57,7 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
         {
             if (AppUtils.IsSpace(stageName))
             {
-                loadingScreenView.ToggleVisibility(true);
+                loadingScreenView.SwitchVisibility(true);
             }
         }
     }
