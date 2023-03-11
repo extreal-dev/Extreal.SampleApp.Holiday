@@ -9,7 +9,7 @@ using UnityEngine.InputSystem;
 /* Note: animations are called via the controller for both the character and capsule using animator null checks
  */
 
-namespace Extreal.SampleApp.Holiday.MultiplayCommon
+namespace Extreal.SampleApp.Holiday.Common.Multiplay
 {
 #pragma warning disable
     [RequireComponent(typeof(CharacterController))]

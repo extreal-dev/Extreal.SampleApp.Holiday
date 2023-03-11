@@ -5,7 +5,7 @@ using Cysharp.Threading.Tasks;
 using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
 using Extreal.Integration.Multiplay.NGO;
-using Extreal.SampleApp.Holiday.MultiplayCommon;
+using Extreal.SampleApp.Holiday.Common.Multiplay;
 using UniRx;
 using Unity.Collections;
 using Unity.Netcode;

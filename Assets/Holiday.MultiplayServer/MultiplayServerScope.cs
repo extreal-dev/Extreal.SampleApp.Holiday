@@ -1,5 +1,6 @@
 ﻿using Extreal.Core.Logging;
 using Extreal.Integration.Multiplay.NGO;
+using Extreal.SampleApp.Holiday.Common.Config;
 using Unity.Netcode;
 using UnityEngine;
 using VContainer;
@@ -10,17 +11,19 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
 {
     public class MultiplayServerScope : LifetimeScope
     {
+        [SerializeField] private LoggingConfig loggingConfig;
         [SerializeField] private NetworkManager networkManager;
         [SerializeField] private GameObject playerPrefab;
 
-        private static void InitializeApp()
+        private void InitializeApp()
         {
 #if HOLIDAY_PROD
-            const LogLevel logLevel = LogLevel.Info;
+            LoggingManager.Initialize();
 #else
-            const LogLevel logLevel = LogLevel.Debug;
+            var checker = new LogLevelLogOutputChecker(loggingConfig.CategoryFilters);
+            var writer = new UnityDebugLogWriter(loggingConfig.LogFormats);
+            LoggingManager.Initialize(LogLevel.Debug, checker, writer);
 #endif
-            LoggingManager.Initialize(logLevel: logLevel);
         }
 
         protected override void Awake()

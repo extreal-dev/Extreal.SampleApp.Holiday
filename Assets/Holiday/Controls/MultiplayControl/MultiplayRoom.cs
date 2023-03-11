@@ -9,7 +9,7 @@ using Extreal.Core.Logging;
 using Extreal.Integration.Multiplay.NGO;
 using Extreal.SampleApp.Holiday.App.Avatars;
 using Extreal.SampleApp.Holiday.App.Common;
-using Extreal.SampleApp.Holiday.MultiplayCommon;
+using Extreal.SampleApp.Holiday.Common.Multiplay;
 using UniRx;
 using Unity.Collections;
 using Unity.Netcode;

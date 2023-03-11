@@ -1,8 +1,8 @@
 ﻿using Unity.Netcode.Components;
 
-namespace Extreal.SampleApp.Holiday.MultiplayCommon
+namespace Extreal.SampleApp.Holiday.Common.Multiplay
 {
-    public class ClientNetworkAnimator : NetworkAnimator
+    public class ClientNetworkTransform : NetworkTransform
     {
         protected override bool OnIsServerAuthoritative() => false;
     }

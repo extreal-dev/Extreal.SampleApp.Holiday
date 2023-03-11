@@ -5,6 +5,7 @@ using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.App.Config;
+using Extreal.SampleApp.Holiday.Common.Config;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using VContainer;
@@ -17,13 +18,15 @@ namespace Extreal.SampleApp.Holiday.App
 {
     public class AppScope : LifetimeScope
     {
+        [SerializeField] private LoggingConfig loggingConfig;
         [SerializeField] private StageConfig stageConfig;
 
-        private static void InitializeApp()
+        private void InitializeApp()
         {
             QualitySettings.vSyncCount = 0;
             Application.targetFrameRate = 60;
-            Addressables.ResourceManager.WebRequestOverride = unityWebRequest => unityWebRequest.timeout = 5;
+            const int timeout = 5;
+            Addressables.ResourceManager.WebRequestOverride = unityWebRequest => unityWebRequest.timeout = timeout;
 
             ClearAssetBundleCacheOnDev();
 
@@ -33,18 +36,21 @@ namespace Extreal.SampleApp.Holiday.App
             var logger = LoggingManager.GetLogger(nameof(AppScope));
             if (logger.IsDebug())
             {
-                logger.LogDebug($"targetFrameRage: {Application.targetFrameRate}, logLevel: {logLevel}");
+                logger.LogDebug($"targetFrameRate: {Application.targetFrameRate}, unityWebRequest.timeout: {timeout}, logLevel: {logLevel}");
             }
         }
 
-        private static LogLevel InitializeLogging()
+        private LogLevel InitializeLogging()
         {
 #if HOLIDAY_PROD
             const LogLevel logLevel = LogLevel.Info;
+            LoggingManager.Initialize(logLevel: logLevel);
 #else
             const LogLevel logLevel = LogLevel.Debug;
+            var checker = new LogLevelLogOutputChecker(loggingConfig.CategoryFilters);
+            var writer = new UnityDebugLogWriter(loggingConfig.LogFormats);
+            LoggingManager.Initialize(logLevel, checker, writer);
 #endif
-            LoggingManager.Initialize(logLevel: logLevel);
             return logLevel;
         }
 

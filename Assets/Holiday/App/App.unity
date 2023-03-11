@@ -156,6 +156,7 @@ MonoBehaviour:
     TypeName: 
   autoRun: 1
   autoInjectGameObjects: []
+  loggingConfig: {fileID: 11400000, guid: 4ea8b9c6d5a9395468e5ddfeb77fc270, type: 2}
   stageConfig: {fileID: 11400000, guid: d1b93e8ee48890443a2040ea71dba396, type: 2}
 --- !u!4 &1287753623
 Transform:

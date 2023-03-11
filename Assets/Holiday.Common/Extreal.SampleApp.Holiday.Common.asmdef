@@ -1,6 +1,6 @@
 {
-    "name": "Extreal.SampleApp.Holiday.MultiplayCommon",
-    "rootNamespace": "Extreal.SampleApp.Holiday.MultiplayCommon",
+    "name": "Extreal.SampleApp.Holiday.Common",
+    "rootNamespace": "Extreal.SampleApp.Holiday.Common",
     "references": [
         "Unity.Collections",
         "Unity.InputSystem",
@@ -9,6 +9,7 @@
         "Unity.Netcode.Components",
         "Unity.TextMeshPro",
         "StarterAsserts",
+        "Extreal.Core.Logging",
         "Extreal.SampleApp.Holiday.Analyzer"
     ],
     "includePlatforms": [

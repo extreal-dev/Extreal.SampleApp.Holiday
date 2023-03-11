@@ -1,7 +1,7 @@
 ﻿using Unity.Collections;
 using Unity.Netcode;
 
-namespace Extreal.SampleApp.Holiday.MultiplayCommon
+namespace Extreal.SampleApp.Holiday.Common.Multiplay
 {
     public struct NetworkString : INetworkSerializable
     {
