@@ -3,6 +3,7 @@ using Cysharp.Threading.Tasks;
 using Extreal.Integration.Chat.Vivox;
 using Extreal.SampleApp.Holiday.Controls.Common;
 using UniRx;
+using VivoxUnity;
 
 namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
 {
@@ -16,7 +17,7 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
         public TextChatChannel(VivoxClient vivoxClient, string channelName) : base(vivoxClient, channelName)
             => this.vivoxClient = vivoxClient;
 
-        protected override UniTask ConnectAsync(string channelName)
+        protected override UniTask<ChannelId> ConnectAsync(string channelName)
             => vivoxClient.ConnectAsync(new VivoxChannelConfig(channelName, ChatType.TextOnly, transmissionSwitch: false));
 
         public void SendMessage(string message)

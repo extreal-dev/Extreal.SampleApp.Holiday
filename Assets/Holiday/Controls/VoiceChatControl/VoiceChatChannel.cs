@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using Extreal.Integration.Chat.Vivox;
 using Extreal.SampleApp.Holiday.Controls.Common;
 using UniRx;
+using VivoxUnity;
 
 namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
 {
@@ -21,7 +22,7 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
             SetMuteAsync(true).Forget();
         }
 
-        protected override UniTask ConnectAsync(string channelName)
+        protected override UniTask<ChannelId> ConnectAsync(string channelName)
             => vivoxClient.ConnectAsync(new VivoxChannelConfig(channelName, ChatType.AudioOnly));
 
         public UniTask ToggleMuteAsync() => SetMuteAsync(!onMuted.Value);

@@ -42,31 +42,13 @@ namespace Extreal.SampleApp.Holiday.Controls.Common
             this.vivoxClient = vivoxClient;
             this.channelName = channelName;
 
-            async void OnConnected(ChannelId channelId)
-            {
-                ChannelId = channelId;
-                var channelSession = vivoxClient.LoginSession.GetChannelSession(ChannelId);
-                try
-                {
-                    await UniTask.WaitUntil(
-                        () => channelSession.ChannelState == ConnectionState.Connected,
-                        cancellationToken: cts.Token);
-                }
-                catch (Exception)
-                {
-                    return;
-                }
-
-                onConnected.Value = true;
-            }
-
-            vivoxClient.OnChannelSessionAdded
-                .Where(channelId => channelId.Name == channelName)
-                .Subscribe(OnConnected)
+            vivoxClient.OnUserConnected
+                .Where(participant => participant.IsSelf)
+                .Subscribe(_ => onConnected.Value = true)
                 .AddTo(Disposables);
 
-            vivoxClient.OnChannelSessionRemoved
-                .Where(channelId => channelId.Name == channelName)
+            vivoxClient.OnUserDisconnected
+                .Where(participant => participant.IsSelf)
                 .Subscribe(_ => onConnected.Value = false)
                 .AddTo(Disposables);
         }
@@ -90,7 +72,7 @@ namespace Extreal.SampleApp.Holiday.Controls.Common
 
             try
             {
-                await ConnectAsync(channelName);
+                ChannelId = await ConnectAsync(channelName);
             }
             catch (TimeoutException)
             {
@@ -101,7 +83,7 @@ namespace Extreal.SampleApp.Holiday.Controls.Common
         protected bool IsLoggedIn
             => vivoxClient.LoginSession?.State == LoginState.LoggedIn;
 
-        protected abstract UniTask ConnectAsync(string channelName);
+        protected abstract UniTask<ChannelId> ConnectAsync(string channelName);
 
         public void Leave()
         {
