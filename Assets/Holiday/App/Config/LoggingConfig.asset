@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d3808746a2446378f00713b7905e246, type: 3}
   m_Name: LoggingConfig
   m_EditorClassIdentifier: 
-  categoryFilters:
-  - AppState
+  categoryFilters: []
   logFormats:
   - category: StageNavigator
     color: {r: 0.24313726, g: 0.75686276, b: 0.827451, a: 0}
