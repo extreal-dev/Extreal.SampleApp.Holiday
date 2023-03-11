@@ -14,13 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   categoryFilters: []
   logFormats:
-  - category: StageNavigator
-    color: {r: 0.24313726, g: 0.75686276, b: 0.827451, a: 0}
-  - category: VivoxClient
-    color: {r: 1, g: 0.6039216, b: 0, a: 0}
-  - category: NgoClient
-    color: {r: 1, g: 0.08627451, b: 0.3647059, a: 0}
   - category: SafeDisposer
-    color: {r: 0.9647059, g: 0.96862745, b: 0.84313726, a: 0}
+    color: {r: 1, g: 0.5137255, b: 0.46666667, a: 0}
+  - category: AssetDisposable
+    color: {r: 1, g: 0.5137255, b: 0.46666667, a: 0}
+  - category: StageNavigator
+    color: {r: 0.6156863, g: 0.88235295, b: 0.43529412, a: 0}
+  - category: VivoxClient
+    color: {r: 0.21176471, g: 0.84705883, b: 0.7176471, a: 0}
+  - category: NgoClient
+    color: {r: 0.3254902, g: 0.6862745, b: 1, a: 0}
   - category: AppState
-    color: {r: 0.654902, g: 1, b: 0.5137255, a: 0}
+    color: {r: 0.87058824, g: 0.43529412, b: 1, a: 0}
+  - category: AssetHelper
+    color: {r: 1, g: 0.45490196, b: 0.7372549, a: 0}
