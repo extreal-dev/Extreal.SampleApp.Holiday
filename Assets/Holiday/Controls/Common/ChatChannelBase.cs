@@ -85,7 +85,13 @@ namespace Extreal.SampleApp.Holiday.Controls.Common
 
         protected abstract UniTask<ChannelId> ConnectAsync(string channelName);
 
-        public void Leave() => vivoxClient.Disconnect(ChannelId);
+        public void Leave()
+        {
+            if (ChannelId != null)
+            {
+                vivoxClient.Disconnect(ChannelId);
+            }
+        }
 
         protected override void ReleaseManagedResources()
         {
