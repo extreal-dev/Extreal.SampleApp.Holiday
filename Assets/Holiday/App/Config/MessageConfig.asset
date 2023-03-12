@@ -18,8 +18,14 @@ MonoBehaviour:
   voiceChatMuteOffButtonLabel: OFF
   avatarSelectionGoButtonLabel: Go
   virtualSpaceBackButtonLabel: Back
-  multiplayConnectionApprovalRejectedErrorMessage: Space is full.
-  multiplayUnexpectedDisconnectedErrorMessage: Multiplayer connection has been lost.
-  multiplayConnectFailedErrorMessage: Connection to multiplayer has failed.
-  chatUnexpectedDisconnectedErrorMessage: Chat connection has been lost.
-  chatConnectFailedErrorMessage: Connection to chat has failed.
+  multiplayConnectionApprovalRejectedMessage: Space is full.
+  multiplayConnectRetryMessage: 'Reconnect to multiplayer : {0}'
+  multiplayConnectRetrySuccessMessage: Successfully reconnected to multiplayer.
+  multiplayConnectRetryFailureMessage: Failed to reconnect to multiplayer. If you
+    wish to reconnect, please re-enter the space.
+  multiplayUnexpectedDisconnectedMessage: Multiplayer disconnected unexpectedly.
+  chatConnectRetryMessage: 'Reconnect to chat : {0}'
+  chatConnectRetrySuccessMessage: Successfully reconnected to chat.
+  chatConnectRetryFailureMessage: Failed to reconnect to chat. If you wish to reconnect,
+    please re-enter the space.
+  chatUnexpectedDisconnectedMessage: Chat disconnected unexpectedly.

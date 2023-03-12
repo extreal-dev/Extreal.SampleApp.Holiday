@@ -12,6 +12,7 @@
         TextChatControl = 105,
         VoiceChatControl = 106,
         SpaceControl = 108,
+        RetryStatusControl = 109,
 
         // Screens
         BackgroundScreen = 204,

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using Cysharp.Threading.Tasks;
+using Extreal.Core.Common.Retry;
 using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
@@ -18,6 +19,7 @@ namespace Extreal.SampleApp.Holiday.App.Common
         public MessageConfig MessageConfig { get; private set; }
         public VivoxAppConfig VivoxAppConfig { get; private set; }
         public NgoConfig NgoConfig { get; private set; }
+        public IRetryStrategy NgoClientRetryStrategy { get; private set; }
         public AvatarConfig AvatarConfig { get; private set; }
 
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(AssetHelper));
@@ -42,10 +44,12 @@ namespace Extreal.SampleApp.Holiday.App.Common
             Func<UniTask> nextFunc = async () =>
             {
                 disposables.Clear();
-                MessageConfig = await LoadAsync<MessageConfig>();
-                AvatarConfig = await LoadAsync<AvatarConfig>();
-                VivoxAppConfig = await LoadWithAutoReleaseAsync<ChatConfig, VivoxAppConfig>(asset => asset.ToVivoxAppConfig());
-                NgoConfig = await LoadWithAutoReleaseAsync<MultiplayConfig, NgoConfig>(asset => asset.ToNgoConfig());
+                MessageConfig = await LoadAndAddToDisposablesAsync<MessageConfig>();
+                AvatarConfig = await LoadAndAddToDisposablesAsync<AvatarConfig>();
+                VivoxAppConfig = await LoadAndReleaseAsync<ChatConfig, VivoxAppConfig>(asset => asset.VivoxAppConfig);
+                (NgoConfig, NgoClientRetryStrategy) =
+                    await LoadAndReleaseAsync<MultiplayConfig, (NgoConfig, IRetryStrategy)>(
+                        asset => (asset.NgoConfig, asset.RetryStrategy));
                 stageNavigator.ReplaceAsync(nextStage).Forget();
             };
             DownloadAsync(nameof(MessageConfig), nextFunc).Forget();
@@ -66,7 +70,7 @@ namespace Extreal.SampleApp.Holiday.App.Common
         }
 
         [SuppressMessage("Design", "CC0031")]
-        private async UniTask<TResult> LoadWithAutoReleaseAsync<TAsset, TResult>(
+        private async UniTask<TResult> LoadAndReleaseAsync<TAsset, TResult>(
             Func<TAsset, TResult> toFunc)
         {
             using var disposable = await assetProvider.LoadAsset<TAsset>();
@@ -74,7 +78,7 @@ namespace Extreal.SampleApp.Holiday.App.Common
             return result;
         }
 
-        private async UniTask<TAsset> LoadAsync<TAsset>()
+        private async UniTask<TAsset> LoadAndAddToDisposablesAsync<TAsset>()
         {
             var disposable = await assetProvider.LoadAsset<TAsset>();
             disposables.Add(disposable);

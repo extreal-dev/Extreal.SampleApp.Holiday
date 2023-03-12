@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
 using Extreal.SampleApp.Holiday.App.Config;
+using Extreal.SampleApp.Holiday.Controls.RetryStatusControl;
 using Extreal.SampleApp.Holiday.Screens.ConfirmationScreen;
 using UniRx;
 
@@ -33,6 +34,9 @@ namespace Extreal.SampleApp.Holiday.App
 
         public IObservable<Confirmation> OnConfirmationReceived => onConfirmationReceived.AddTo(disposables);
         private readonly Subject<Confirmation> onConfirmationReceived = new Subject<Confirmation>();
+
+        public IObservable<RetryStatus> OnRetryStatusReceived => onRetryStatusReceived.AddTo(disposables);
+        private readonly Subject<RetryStatus> onRetryStatusReceived = new Subject<RetryStatus>();
 
         private readonly BoolReactiveProperty multiplayReady = new BoolReactiveProperty(false);
         private readonly BoolReactiveProperty textChatReady = new BoolReactiveProperty(false);
@@ -114,6 +118,15 @@ namespace Extreal.SampleApp.Holiday.App
                 Logger.LogDebug($"Confirmation received: {confirmation.Message}");
             }
             onConfirmationReceived.OnNext(confirmation);
+        }
+
+        public void Retry(RetryStatus retryStatus)
+        {
+            if (Logger.IsDebug())
+            {
+                Logger.LogDebug($"Retry status received: {retryStatus.State} {retryStatus.Message}");
+            }
+            onRetryStatusReceived.OnNext(retryStatus);
         }
 
         protected override void ReleaseManagedResources() => disposables.Dispose();

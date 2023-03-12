@@ -13,7 +13,6 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
         private readonly VivoxClient vivoxClient;
         private readonly VoiceChatControlView voiceChatScreenView;
         private readonly AppState appState;
-        private readonly AssetHelper assetHelper;
 
         private VoiceChatChannel voiceChatChannel;
 
@@ -22,14 +21,12 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
             StageNavigator<StageName, SceneName> stageNavigator,
             VivoxClient vivoxClient,
             VoiceChatControlView voiceChatScreenView,
-            AppState appState,
-            AssetHelper assetHelper
+            AppState appState
         ) : base(stageNavigator)
         {
             this.vivoxClient = vivoxClient;
             this.voiceChatScreenView = voiceChatScreenView;
             this.appState = appState;
-            this.assetHelper = assetHelper;
         }
 
         protected override void Initialize(
@@ -49,14 +46,6 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
 
             voiceChatChannel.OnMuted
                 .Subscribe(voiceChatScreenView.ToggleMute)
-                .AddTo(stageDisposables);
-
-            voiceChatChannel.OnUnexpectedDisconnected
-                .Subscribe(_ => appState.Notify(assetHelper.MessageConfig.ChatUnexpectedDisconnectedErrorMessage))
-                .AddTo(stageDisposables);
-
-            voiceChatChannel.OnConnectFailed
-                .Subscribe(_ => appState.Notify(assetHelper.MessageConfig.ChatConnectFailedErrorMessage))
                 .AddTo(stageDisposables);
 
             voiceChatChannel.JoinAsync().Forget();

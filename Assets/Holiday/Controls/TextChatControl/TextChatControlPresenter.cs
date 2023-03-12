@@ -14,7 +14,6 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
         private readonly VivoxClient vivoxClient;
         private readonly TextChatControlView textChatControlView;
         private readonly AppState appState;
-        private readonly AssetHelper assetHelper;
 
         private TextChatChannel textChatChannel;
 
@@ -23,14 +22,12 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
             StageNavigator<StageName, SceneName> stageNavigator,
             VivoxClient vivoxClient,
             TextChatControlView textChatControlView,
-            AppState appState,
-            AssetHelper assetHelper
+            AppState appState
         ) : base(stageNavigator)
         {
             this.vivoxClient = vivoxClient;
             this.textChatControlView = textChatControlView;
             this.appState = appState;
-            this.assetHelper = assetHelper;
         }
 
         [SuppressMessage("CodeCracker", "CC0020")]
@@ -50,14 +47,6 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
 
             textChatChannel.OnMessageReceived
                 .Subscribe(textChatControlView.ShowMessage)
-                .AddTo(stageDisposables);
-
-            textChatChannel.OnUnexpectedDisconnected
-                .Subscribe(_ => appState.Notify(assetHelper.MessageConfig.ChatUnexpectedDisconnectedErrorMessage))
-                .AddTo(stageDisposables);
-
-            textChatChannel.OnConnectFailed
-                .Subscribe(_ => appState.Notify(assetHelper.MessageConfig.ChatConnectFailedErrorMessage))
                 .AddTo(stageDisposables);
 
             textChatChannel.JoinAsync().Forget();

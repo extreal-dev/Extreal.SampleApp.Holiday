@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Extreal.SampleApp.Holiday.App.Config
 {
@@ -15,11 +16,16 @@ namespace Extreal.SampleApp.Holiday.App.Config
         [SerializeField] private string avatarSelectionGoButtonLabel;
         [SerializeField] private string virtualSpaceBackButtonLabel;
 
-        [SerializeField] private string multiplayConnectionApprovalRejectedErrorMessage;
-        [SerializeField] private string multiplayUnexpectedDisconnectedErrorMessage;
-        [SerializeField] private string multiplayConnectFailedErrorMessage;
-        [SerializeField] private string chatUnexpectedDisconnectedErrorMessage;
-        [SerializeField] private string chatConnectFailedErrorMessage;
+        [SerializeField] private string multiplayConnectionApprovalRejectedMessage;
+        [SerializeField] private string multiplayConnectRetryMessage;
+        [SerializeField] private string multiplayConnectRetrySuccessMessage;
+        [SerializeField] private string multiplayConnectRetryFailureMessage;
+        [SerializeField] private string multiplayUnexpectedDisconnectedMessage;
+
+        [SerializeField] private string chatConnectRetryMessage;
+        [SerializeField] private string chatConnectRetrySuccessMessage;
+        [SerializeField] private string chatConnectRetryFailureMessage;
+        [SerializeField] private string chatUnexpectedDisconnectedMessage;
 
         public string AvatarSelectionTitle => avatarSelectionTitle;
 
@@ -29,12 +35,15 @@ namespace Extreal.SampleApp.Holiday.App.Config
         public string AvatarSelectionGoButtonLabel => avatarSelectionGoButtonLabel;
         public string VirtualSpaceBackButtonLabel => virtualSpaceBackButtonLabel;
 
-        public string MultiplayConnectionApprovalRejectedErrorMessage =>
-            multiplayConnectionApprovalRejectedErrorMessage;
+        public string MultiplayConnectionApprovalRejectedMessage => multiplayConnectionApprovalRejectedMessage;
+        public string MultiplayConnectRetryMessage => multiplayConnectRetryMessage;
+        public string MultiplayConnectRetrySuccessMessage => multiplayConnectRetrySuccessMessage;
+        public string MultiplayConnectRetryFailureMessage => multiplayConnectRetryFailureMessage;
+        public string MultiplayUnexpectedDisconnectedMessage => multiplayUnexpectedDisconnectedMessage;
 
-        public string MultiplayUnexpectedDisconnectedErrorMessage => multiplayUnexpectedDisconnectedErrorMessage;
-        public string MultiplayConnectFailedErrorMessage => multiplayConnectFailedErrorMessage;
-        public string ChatUnexpectedDisconnectedErrorMessage => chatUnexpectedDisconnectedErrorMessage;
-        public string ChatConnectFailedErrorMessage => chatConnectFailedErrorMessage;
+        public string ChatConnectRetryMessage => chatConnectRetryMessage;
+        public string ChatConnectRetrySuccessMessage => chatConnectRetrySuccessMessage;
+        public string ChatConnectRetryFailureMessage => chatConnectRetryFailureMessage;
+        public string ChatUnexpectedDisconnectedMessage => chatUnexpectedDisconnectedMessage;
     }
 }

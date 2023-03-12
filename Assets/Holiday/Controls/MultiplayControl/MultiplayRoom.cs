@@ -20,9 +20,6 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 {
     public class MultiplayRoom : DisposableBase
     {
-        public IObservable<Unit> OnConnectionApprovalRejected => ngoClient.OnConnectionApprovalRejected;
-        public IObservable<Unit> OnUnexpectedDisconnected => ngoClient.OnUnexpectedDisconnected;
-
         public IObservable<Unit> OnConnectFailed => onConnectFailed;
         [SuppressMessage("Usage", "CC0033")]
         private readonly Subject<Unit> onConnectFailed = new Subject<Unit>();
@@ -34,7 +31,6 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
         private readonly NgoClient ngoClient;
         private readonly NgoConfig ngoConfig;
         private readonly AssetHelper assetHelper;
-        private readonly string avatarAssetName;
 
         [SuppressMessage("Usage", "CC0033")]
         private readonly CompositeDisposable disposables = new CompositeDisposable();
@@ -55,11 +51,13 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
             this.ngoClient = ngoClient;
             this.ngoConfig = ngoConfig;
             this.assetHelper = assetHelper;
-            this.avatarAssetName = avatarAssetName;
 
             this.ngoClient.OnConnected
                 .Subscribe(_ =>
-                    ngoClient.RegisterMessageHandler(MessageName.PlayerSpawned.ToString(), PlayerSpawnedMessageHandler))
+                {
+                    ngoClient.RegisterMessageHandler(MessageName.PlayerSpawned.ToString(), PlayerSpawnedMessageHandler);
+                    SendPlayerSpawn(avatarAssetName);
+                })
                 .AddTo(disposables);
 
             this.ngoClient.OnDisconnecting
@@ -75,32 +73,13 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
         {
             cts.Cancel();
             cts.Dispose();
-            onConnectFailed.Dispose();
             isPlayerSpawned.Dispose();
             disposables.Dispose();
         }
 
-        public async UniTask JoinAsync()
-        {
-            try
-            {
-                await ngoClient.ConnectAsync(ngoConfig, cts.Token);
-            }
-            catch (TimeoutException)
-            {
-                onConnectFailed.OnNext(Unit.Default);
-                return;
-            }
-            catch (OperationCanceledException)
-            {
-                return;
-            }
+        public UniTask JoinAsync() => ngoClient.ConnectAsync(ngoConfig, cts.Token);
 
-            SendPlayerSpawn(avatarAssetName);
-        }
-
-        public async UniTask LeaveAsync()
-            => await ngoClient.DisconnectAsync();
+        public UniTask LeaveAsync() => ngoClient.DisconnectAsync();
 
         private void SendPlayerSpawn(string avatarAssetName)
         {

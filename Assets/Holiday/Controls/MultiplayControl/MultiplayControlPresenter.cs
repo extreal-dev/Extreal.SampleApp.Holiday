@@ -45,23 +45,6 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
                 .Subscribe(appState.SetMultiplayReady)
                 .AddTo(stageDisposables);
 
-            multiplayRoom.OnConnectionApprovalRejected
-                .Subscribe(_ =>
-                {
-                    appState.Notify(assetHelper.MessageConfig.MultiplayConnectionApprovalRejectedErrorMessage);
-                    stageNavigator.ReplaceAsync(StageName.AvatarSelectionStage);
-                })
-                .AddTo(stageDisposables);
-
-            multiplayRoom.OnUnexpectedDisconnected
-                .Subscribe(_ =>
-                    appState.Notify(assetHelper.MessageConfig.MultiplayUnexpectedDisconnectedErrorMessage))
-                .AddTo(stageDisposables);
-
-            multiplayRoom.OnConnectFailed
-                .Subscribe(_ => appState.Notify(assetHelper.MessageConfig.MultiplayConnectFailedErrorMessage))
-                .AddTo(stageDisposables);
-
             appState.SpaceReady
                 .Where(ready => ready)
                 .Subscribe(_ => multiplayRoom.JoinAsync().Forget())
