@@ -3,7 +3,8 @@ using Cysharp.Threading.Tasks;
 #endif
 using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
-using Extreal.SampleApp.Holiday.App.Common;
+using Extreal.Integration.Assets.Addressables;
+using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.Common.Config;
 using UnityEngine;

@@ -2,6 +2,7 @@
 using Extreal.Core.StageNavigation;
 using Extreal.Integration.Multiplay.NGO;
 using Extreal.SampleApp.Holiday.App;
+using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.App.Config;
 using UniRx;
@@ -10,7 +11,6 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 {
     public class MultiplayControlPresenter : StagePresenterBase
     {
-        private readonly StageNavigator<StageName, SceneName> stageNavigator;
         private readonly NgoClient ngoClient;
         private readonly AppState appState;
         private readonly AssetHelper assetHelper;
@@ -24,7 +24,6 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
             AssetHelper assetHelper
         ) : base(stageNavigator)
         {
-            this.stageNavigator = stageNavigator;
             this.ngoClient = ngoClient;
             this.appState = appState;
             this.assetHelper = assetHelper;

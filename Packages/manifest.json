@@ -21,6 +21,7 @@
     "jp.co.tis.extreal.core.common": "https://github.com/extreal-dev/Extreal.Core.Common.git#1.0.0-next.2",
     "jp.co.tis.extreal.core.logging": "https://github.com/extreal-dev/Extreal.Core.Logging.git#1.1.0-next.1",
     "jp.co.tis.extreal.core.stagenavigation": "https://github.com/extreal-dev/Extreal.Core.StageNavigation.git#1.1.0-next.2",
+    "jp.co.tis.extreal.integration.assets.addressables": "https://github.com/extreal-dev/Extreal.Integration.Assets.Addressables.git#1.0.0-next.1",
     "jp.co.tis.extreal.integration.chat.vivox": "https://github.com/extreal-dev/Extreal.Integration.Chat.Vivox.git#1.1.0-next.2",
     "jp.co.tis.extreal.integration.multiplay.ngo": "https://github.com/extreal-dev/Extreal.Integration.Multiplay.NGO.git#1.1.0-next.2",
     "jp.hadashikick.vcontainer": "1.13.0",

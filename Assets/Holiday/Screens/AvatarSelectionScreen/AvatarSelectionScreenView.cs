@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Extreal.SampleApp.Holiday.App.Common;
+using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using TMPro;
 using UniRx;
 using UnityEngine;

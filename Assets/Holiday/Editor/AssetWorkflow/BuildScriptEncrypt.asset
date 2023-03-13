@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e060591487f2c2c40a44a849bde87714, type: 3}
+  m_Script: {fileID: 11500000, guid: 18bd2574e615b33429ad56879a3cca61, type: 3}
   m_Name: BuildScriptEncrypt
   m_EditorClassIdentifier: 
   instanceProviderType:

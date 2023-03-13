@@ -5,6 +5,7 @@ using Extreal.Core.Common.Retry;
 using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
+using Extreal.Integration.Assets.Addressables;
 using Extreal.Integration.Chat.Vivox;
 using Extreal.Integration.Multiplay.NGO;
 using Extreal.SampleApp.Holiday.App.Config;
@@ -12,7 +13,7 @@ using Extreal.SampleApp.Holiday.Screens.ConfirmationScreen;
 using UniRx;
 using UnityEngine.ResourceManagement.ResourceProviders;
 
-namespace Extreal.SampleApp.Holiday.App.Common
+namespace Extreal.SampleApp.Holiday.App.AssetWorkflow
 {
     public class AssetHelper : DisposableBase
     {
@@ -73,14 +74,14 @@ namespace Extreal.SampleApp.Holiday.App.Common
         private async UniTask<TResult> LoadAndReleaseAsync<TAsset, TResult>(
             Func<TAsset, TResult> toFunc)
         {
-            using var disposable = await assetProvider.LoadAsset<TAsset>();
+            using var disposable = await assetProvider.LoadAssetAsync<TAsset>();
             var result = toFunc(disposable.Result);
             return result;
         }
 
         private async UniTask<TAsset> LoadAndAddToDisposablesAsync<TAsset>()
         {
-            var disposable = await assetProvider.LoadAsset<TAsset>();
+            var disposable = await assetProvider.LoadAssetAsync<TAsset>();
             disposables.Add(disposable);
             return disposable.Result;
         }

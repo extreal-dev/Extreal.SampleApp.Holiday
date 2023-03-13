@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using Extreal.Core.Logging;
+using Extreal.Integration.Assets.Addressables;
 using Extreal.SampleApp.Holiday.App;
 using TMPro;
 using UnityEngine;
-using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
 {
@@ -29,7 +29,7 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
             screen.SetActive(isVisible);
         }
 
-        public void SetDownloadStatus(DownloadStatus status)
+        public void SetDownloadStatus(NamedDownloadStatus status)
         {
             if (status.IsDone)
             {
