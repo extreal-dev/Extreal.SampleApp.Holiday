@@ -44,6 +44,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d57c51f5be2793546828e3518fc49122, type: 2}
   - {fileID: 11400000, guid: a103d381e22f4cb4c8c8ee4801c6ebaf, type: 2}
   - {fileID: 11400000, guid: 5ed5c3f447c830a4eb4cf3b808b10549, type: 2}
+  - {fileID: 11400000, guid: 7b2ad813c3811e540927b4ed7827ba8b, type: 2}
   - {fileID: 11400000, guid: 3690275dd6cff1f40bbf019beeae03db, type: 2}
   - {fileID: 11400000, guid: a8353f781d61b5448aea1da7aebe2cc5, type: 2}
   - {fileID: 11400000, guid: 23600d5897353724188096bee71f4962, type: 2}
@@ -58,7 +59,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1d6a98455576f6d47a6def88d1baf8b8, type: 2}
   - {fileID: 11400000, guid: 418a8a9f6fb9d8a40bbdaee5ea3d3ff1, type: 2}
   - {fileID: 11400000, guid: ca6a71fa23c3b8b4dbaf92ffa9e9f495, type: 2}
-  - {fileID: 11400000, guid: 7b2ad813c3811e540927b4ed7827ba8b, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
@@ -91,7 +91,7 @@ MonoBehaviour:
       - m_Id: 6cc7f50c87664584ba7690908e9d1bd0
         m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
       - m_Id: bfd6bf59170f8934dae7ab70a80c51a0
-        m_Value: ServerData/[BuildTarget]/[Extreal.SampleApp.Holiday.App.AssetWorkflow.Custom.AppVariables.HolidayVersion]
+        m_Value: ServerData/[BuildTarget]/[UnityEngine.Application.version]
       - m_Id: b265ebd845b3b074c829603b1d1f6854
         m_Value: http://[PrivateIpAddress]:[HostingServicePort]
     - m_InheritedParent: 
@@ -105,9 +105,9 @@ MonoBehaviour:
       - m_Id: 6cc7f50c87664584ba7690908e9d1bd0
         m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
       - m_Id: bfd6bf59170f8934dae7ab70a80c51a0
-        m_Value: ServerData/[BuildTarget]/[Extreal.SampleApp.Holiday.App.AssetWorkflow.Custom.AppVariables.HolidayVersion]
+        m_Value: ServerData/[BuildTarget]/[UnityEngine.Application.version]
       - m_Id: b265ebd845b3b074c829603b1d1f6854
-        m_Value: '[Extreal.SampleApp.Holiday.App.AssetWorkflow.Custom.SecretVariables.ServerAddress]/[Extreal.SampleApp.Holiday.App.AssetWorkflow.Custom.AppVariables.HolidayVersion]'
+        m_Value: '[Extreal.SampleApp.Holiday.App.AssetWorkflow.Custom.SecretVariables.ServerAddress]/[UnityEngine.Application.version]'
     m_ProfileEntryNames:
     - m_Id: 866e4ed709877a44ea8967ee81fffa21
       m_Name: BuildTarget
