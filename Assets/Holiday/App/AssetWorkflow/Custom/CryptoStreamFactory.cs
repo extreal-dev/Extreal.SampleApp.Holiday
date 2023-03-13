@@ -3,7 +3,6 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using Extreal.Integration.Assets.Addressables.ResourceProviders;
-using UnityEngine;
 using UnityEngine.ResourceManagement.ResourceProviders;
 
 namespace Extreal.SampleApp.Holiday.App.AssetWorkflow.Custom
@@ -11,16 +10,15 @@ namespace Extreal.SampleApp.Holiday.App.AssetWorkflow.Custom
     public class CryptoStreamFactory : ICryptoStreamFactory
     {
         public CryptoStream CreateEncryptStream(Stream baseStream, AssetBundleRequestOptions options)
-            => CreateCryptoStream(baseStream, options, CryptoStreamMode.Write);
-
-        public CryptoStream CreateDecryptStream(Stream baseStream, AssetBundleRequestOptions options)
-            => CreateCryptoStream(baseStream, options, CryptoStreamMode.Read);
-
-        private static CryptoStream CreateCryptoStream(
-            Stream baseStream, AssetBundleRequestOptions options, CryptoStreamMode mode)
         {
             using var aes = CreateAesManaged(options);
-            return new CryptoStream(baseStream, aes.CreateEncryptor(), mode);
+            return new CryptoStream(baseStream, aes.CreateEncryptor(), CryptoStreamMode.Write);
+        }
+
+        public CryptoStream CreateDecryptStream(Stream baseStream, AssetBundleRequestOptions options)
+        {
+            using var aes = CreateAesManaged(options);
+            return new CryptoStream(baseStream, aes.CreateDecryptor(), CryptoStreamMode.Read);
         }
 
         [SuppressMessage("Usage", "CC0022")]
@@ -35,9 +33,6 @@ namespace Extreal.SampleApp.Holiday.App.AssetWorkflow.Custom
             var key = keyGen.GetBytes(keyLength / 8);
             var iv = ivGen.GetBytes(keyLength / 8);
 
-            //Debug.Log($"{options.BundleName}-{Hex(key)}");
-            //Debug.Log($"{options.BundleName}-{Hex(iv)}");
-
             return new AesManaged
             {
                 BlockSize = keyLength,
@@ -47,16 +42,6 @@ namespace Extreal.SampleApp.Holiday.App.AssetWorkflow.Custom
                 Key = key,
                 IV = iv
             };
-        }
-
-        private static string Hex(byte[] bytes)
-        {
-            var str = new StringBuilder();
-            foreach (var t in bytes)
-            {
-                str.Append(t.ToString("X2"));
-            }
-            return str.ToString();
         }
     }
 }
