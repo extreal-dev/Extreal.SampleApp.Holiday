@@ -337,11 +337,11 @@
       "hash": "36e2abaa6c7a1d21ec35627a3e8506077a41f5c1"
     },
     "jp.co.tis.extreal.core.logging": {
-      "version": "https://github.com/extreal-dev/Extreal.Core.Logging.git#1.1.0-next.1",
+      "version": "https://github.com/extreal-dev/Extreal.Core.Logging.git#1.1.0-next.2",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "e29bd411f9644624be23a09b4c59ae173fc89199"
+      "hash": "a31276ac1627d93b91bf01f4005ccb0d34637d96"
     },
     "jp.co.tis.extreal.core.stagenavigation": {
       "version": "https://github.com/extreal-dev/Extreal.Core.StageNavigation.git#1.1.0-next.2",
