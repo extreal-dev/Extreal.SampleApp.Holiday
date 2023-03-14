@@ -39,7 +39,7 @@ MonoBehaviour:
     m_Id: b265ebd845b3b074c829603b1d1f6854
   m_ContentStateBuildPath: 
   m_BuildAddressablesWithPlayerBuild: 0
-  m_overridePlayerVersion: '[Extreal.SampleApp.Holiday.App.AssetWorkflow.Custom.AppVariables.HolidayVersion]'
+  m_overridePlayerVersion: '[UnityEngine.Application.version]'
   m_GroupAssets:
   - {fileID: 11400000, guid: d57c51f5be2793546828e3518fc49122, type: 2}
   - {fileID: 11400000, guid: a103d381e22f4cb4c8c8ee4801c6ebaf, type: 2}
