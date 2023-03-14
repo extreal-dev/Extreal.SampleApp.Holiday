@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using TMPro;
 using UniRx;
@@ -18,6 +19,7 @@ namespace Extreal.SampleApp.Holiday.Controls.SpaceControl
         public IObservable<Unit> OnBackButtonClicked
             => backButton.OnClickAsObservable().TakeUntilDestroy(this);
 
+        [SuppressMessage("Usage", "IDE0051")]
         private void Awake() => backButtonLabel.text = assetHelper.MessageConfig.VirtualSpaceBackButtonLabel;
     }
 }

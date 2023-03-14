@@ -1,6 +1,7 @@
 ﻿#if UNITY_IOS
 using Cysharp.Threading.Tasks;
 #endif
+using System.Diagnostics.CodeAnalysis;
 using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
 using Extreal.Integration.Assets.Addressables;
@@ -72,6 +73,7 @@ namespace Extreal.SampleApp.Holiday.App
 #endif
         }
 
+        [SuppressMessage("Design", "IDE0022")]
         private static void ClearAssetBundleCacheOnDev()
         {
 #if !HOLIDAY_PROD

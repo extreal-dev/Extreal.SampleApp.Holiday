@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Diagnostics.CodeAnalysis;
+using TMPro;
 using UnityEngine;
 
 namespace Extreal.SampleApp.Holiday.Controls.RetryStatusControl
@@ -8,6 +9,7 @@ namespace Extreal.SampleApp.Holiday.Controls.RetryStatusControl
         [SerializeField] private GameObject canvas;
         [SerializeField] private TMP_Text message;
 
+        [SuppressMessage("Usage", "IDE0051")]
         private void Start() => canvas.SetActive(false);
 
         public void Show(string message)
