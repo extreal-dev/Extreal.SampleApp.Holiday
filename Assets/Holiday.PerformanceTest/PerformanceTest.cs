@@ -77,7 +77,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
             {
                 foreach (var button in FindObjectsOfType<Button>())
                 {
-                    if (button.name == "YesButton")
+                    if (button.name == "OkButton")
                     {
                         button.onClick.Invoke();
                         break;
@@ -89,36 +89,53 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
 
             // Enters VirtualSpace
             FindObjectOfType<Button>().onClick.Invoke();
+            await UniTask.WaitUntil(() =>
+                            FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.ConfirmationScreen.ToString()
+                            || FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.TextChatControl.ToString());
+            if (FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.ConfirmationScreen.ToString())
+            {
+                foreach (var button in FindObjectsOfType<Button>())
+                {
+                    if (button.name == "OkButton")
+                    {
+                        button.onClick.Invoke();
+                        break;
+                    }
+                }
+                await UniTask.WaitUntil(() =>
+                    FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.TextChatControl.ToString());
+            }
 
             var appControlScope = FindObjectOfType<ClientControlScope>();
             var appState = appControlScope.Container.Resolve(typeof(AppState)) as AppState;
             var ngoClient = appControlScope.Container.Resolve(typeof(NgoClient)) as NgoClient;
 
-            var isConnectionApprovalRejected = false;
             {
-                var isPlaying = false;
+                var playingReady = false;
+                var isConnectionApprovalRejected = false;
+
                 using var isPlayingDisposable = appState.PlayingReady
                     .Skip(1)
-                    .Where(value => !value)
-                    .Subscribe(_ => isPlaying = true);
+                    .Where(value => value)
+                    .Subscribe(_ => playingReady = true);
 
                 using var isConnectionApprovalRejectedDisposable =
                     ngoClient.OnConnectionApprovalRejected
                         .Subscribe(_ => isConnectionApprovalRejected = true);
 
-                await UniTask.WaitUntil(() => isPlaying || isConnectionApprovalRejected);
-            }
+                await UniTask.WaitUntil(() => playingReady || isConnectionApprovalRejected);
 
-            if (isConnectionApprovalRejected)
-            {
+                if (isConnectionApprovalRejected)
+                {
 #if UNITY_EDITOR
-                UnityEditor.EditorApplication.isPlaying = false;
+                    UnityEditor.EditorApplication.isPlaying = false;
 #elif UNITY_STANDALONE
-                Application.Quit();
+                    Application.Quit();
 #endif
+                }
             }
 
-            NetworkObject player = null;
+            var player = default(NetworkObject);
             foreach (var networkObject in NetworkManager.Singleton.SpawnManager.SpawnedObjects.Values)
             {
                 if (networkObject.IsOwner)
