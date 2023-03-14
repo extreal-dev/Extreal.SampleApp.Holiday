@@ -86,7 +86,7 @@ namespace Extreal.SampleApp.Holiday.App.AssetWorkflow
             return disposable.Result;
         }
 
-        private async UniTask DownloadAsync(string assetName, Func<UniTask> nextFunc)
+        private async UniTaskVoid DownloadAsync(string assetName, Func<UniTask> nextFunc)
         {
             var size = await assetProvider.GetDownloadSizeAsync(assetName);
             if (size != 0)
@@ -110,7 +110,7 @@ namespace Extreal.SampleApp.Holiday.App.AssetWorkflow
             }
         }
 
-        private async UniTask DownloadOrNotifyErrorAsync(string assetName, Func<UniTask> nextFunc)
+        private async UniTaskVoid DownloadOrNotifyErrorAsync(string assetName, Func<UniTask> nextFunc)
         {
             try
             {

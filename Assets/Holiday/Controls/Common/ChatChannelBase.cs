@@ -43,7 +43,7 @@ namespace Extreal.SampleApp.Holiday.Controls.Common
                 .AddTo(Disposables);
         }
 
-        public async UniTask JoinAsync()
+        public async UniTaskVoid JoinAsync()
             => ChannelId = await VivoxClient.ConnectAsync(CreateChannelConfig(channelName), cts.Token);
 
         protected abstract VivoxChannelConfig CreateChannelConfig(string channelName);

@@ -45,7 +45,7 @@ namespace Extreal.SampleApp.Holiday.Controls.RetryStatusControl
                 })
                 .AddTo(sceneDisposables);
 
-        private async UniTask HandleSuccessAsync(RetryStatus status)
+        private async UniTaskVoid HandleSuccessAsync(RetryStatus status)
         {
             retryStatusControlView.Show(status.Message);
             await UniTask.Delay(TimeSpan.FromSeconds(5));

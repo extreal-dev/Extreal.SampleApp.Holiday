@@ -58,7 +58,7 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
             disposables.Dispose();
         }
 
-        public async UniTask StartAsync()
+        public async UniTaskVoid StartAsync()
         {
             DestroyInLifetimeSecondsAsync().Forget();
             OutputMemoryStatisticsAsync().Forget();
