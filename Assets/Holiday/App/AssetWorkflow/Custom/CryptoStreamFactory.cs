@@ -10,15 +10,21 @@ namespace Extreal.SampleApp.Holiday.App.AssetWorkflow.Custom
     public class CryptoStreamFactory : ICryptoStreamFactory
     {
         public CryptoStream CreateEncryptStream(Stream baseStream, AssetBundleRequestOptions options)
-        {
-            using var aes = CreateAesManaged(options);
-            return new CryptoStream(baseStream, aes.CreateEncryptor(), CryptoStreamMode.Write);
-        }
+            => CreateCryptoStream(baseStream, options, CryptoStreamMode.Write);
 
         public CryptoStream CreateDecryptStream(Stream baseStream, AssetBundleRequestOptions options)
+            => CreateCryptoStream(baseStream, options, CryptoStreamMode.Read);
+
+        private static CryptoStream CreateCryptoStream
+        (
+            Stream baseStream,
+            AssetBundleRequestOptions options,
+            CryptoStreamMode mode
+        )
         {
             using var aes = CreateAesManaged(options);
-            return new CryptoStream(baseStream, aes.CreateDecryptor(), CryptoStreamMode.Read);
+            var cryptor = mode == CryptoStreamMode.Write ? aes.CreateEncryptor() : aes.CreateDecryptor();
+            return new CryptoStream(baseStream, cryptor, mode);
         }
 
         [SuppressMessage("Usage", "CC0022")]
