@@ -1,6 +1,6 @@
 ﻿namespace Extreal.SampleApp.Holiday.Controls.RetryStatusControl
 {
-    public struct RetryStatus
+    public readonly struct RetryStatus
     {
         public enum RunState
         {
@@ -9,8 +9,8 @@
             Failure
         }
 
-        public RunState State { get; private set; }
-        public string Message { get; private set; }
+        public RunState State { get; }
+        public string Message { get; }
 
         public RetryStatus(RunState state, string message = null)
         {
