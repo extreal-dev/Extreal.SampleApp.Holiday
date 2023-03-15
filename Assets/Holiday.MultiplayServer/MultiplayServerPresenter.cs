@@ -1,5 +1,4 @@
-﻿using Cysharp.Threading.Tasks;
-using VContainer.Unity;
+﻿using VContainer.Unity;
 
 namespace Extreal.SampleApp.Holiday.MultiplayServer
 {
