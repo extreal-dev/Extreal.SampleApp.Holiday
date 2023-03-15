@@ -1,0 +1,32 @@
+using Extreal.Core.StageNavigation;
+using Extreal.SampleApp.Holiday.App.Common;
+using Extreal.SampleApp.Holiday.App.Config;
+using UniRx;
+
+    #ROOTNAMESPACEBEGIN#
+public class #SCRIPTNAME# : StagePresenterBase
+{
+    public #SCRIPTNAME#
+    (
+        StageNavigator<StageName, SceneName> stageNavigator
+    ) : base(stageNavigator)
+    {
+    }
+
+    protected override void Initialize
+    (
+        StageNavigator<StageName, SceneName> stageNavigator,
+        CompositeDisposable sceneDisposables
+    )
+    {
+    }
+
+    protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
+    {
+    }
+
+    protected override void OnStageExiting(StageName stageName)
+    {
+    }
+}
+#ROOTNAMESPACEEND#
