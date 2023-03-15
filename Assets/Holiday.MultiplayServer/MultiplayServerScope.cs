@@ -2,6 +2,7 @@
 using Extreal.Integration.Multiplay.NGO;
 using Extreal.SampleApp.Holiday.Common.Config;
 using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -24,6 +25,15 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
             var writer = new UnityDebugLogWriter(loggingConfig.LogFormats);
             LoggingManager.Initialize(LogLevel.Debug, checker, writer);
 #endif
+            InitializeNetworkManager();
+        }
+
+        private void InitializeNetworkManager()
+        {
+            if (networkManager.NetworkConfig.NetworkTransport is UnityTransport unityTransport)
+            {
+                unityTransport.ConnectionData.Port = MultiplayServerArgumentHandler.Port;
+            }
         }
 
         protected override void Awake()

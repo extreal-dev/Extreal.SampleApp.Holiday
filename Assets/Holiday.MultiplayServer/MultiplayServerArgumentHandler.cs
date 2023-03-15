@@ -8,10 +8,14 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
         public static string MemoryUtilizationDumpFile { get; private set; }
         public static int MaxCapacity { get; private set; } = 90;
         public static float Lifetime { get; private set; }
+        public static ushort Port { get; private set; } = 7777;
 
         private const string ExecCommand = "HolidayServer.x86_64";
 
         static MultiplayServerArgumentHandler()
+            => ReadArgs();
+
+        private static void ReadArgs()
         {
             var args = Environment.GetCommandLineArgs();
             var argLength = args.Length;
@@ -24,6 +28,17 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
             {
                 switch (args[i])
                 {
+                    case "-p":
+                    case "--port":
+                    {
+                        if (!ushort.TryParse(args[++i], out var port))
+                        {
+                            DumpHelpWithErrorMessage();
+                            return;
+                        }
+                        Port = port;
+                        break;
+                    }
                     case "--memory-utilization-dump-file":
                     {
                         MemoryUtilizationDumpFile = args[++i];
@@ -65,7 +80,7 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
                     case "--help":
                     {
                         DumpHelp();
-                        break;
+                        return;
                     }
                     default:
                     {
@@ -86,13 +101,15 @@ namespace Extreal.SampleApp.Holiday.MultiplayServer
                 += $"Usage: {ExecCommand} [OPTION]...\n"
                     + "\n"
                     + "options:\n"
+                    + "  --port <ushort num>                  : Sets <ushort num> to the server port.\n"
+                    + "    (also -p <ushort num>)               If not specified, the server port is set to 7777."
                     + "  --memory-utilization-dump-file <file>: Gets the memory utilization and dumps to the <file>.\n"
                     + "                                         If not specified, the memory utilization is not measured.\n"
                     + "  --max-capacity <int num>             : Max capacity of the clients that can connect to this server.\n"
                     + "                                         If not specified/input 0 or lower, it is set to 90.\n"
                     + "  --lifetime <float num>               : The server will exit in <float num> seconds.\n"
                     + "    (also -l <float num>)                If not specified/input 0 or lower, it does not exit until Ctrl+C is pressed.\n"
-                    + "  --help (also -h)                     : Shows this help messages and exit.";
+                    + "  --help (also -h)                     : Shows this help messages and exit.\n";
 
             Console.Error.WriteLine(helpMessage);
             Application.Quit();
