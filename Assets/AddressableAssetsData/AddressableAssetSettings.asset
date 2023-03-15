@@ -45,20 +45,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a103d381e22f4cb4c8c8ee4801c6ebaf, type: 2}
   - {fileID: 11400000, guid: 5ed5c3f447c830a4eb4cf3b808b10549, type: 2}
   - {fileID: 11400000, guid: 7b2ad813c3811e540927b4ed7827ba8b, type: 2}
-  - {fileID: 11400000, guid: 3690275dd6cff1f40bbf019beeae03db, type: 2}
-  - {fileID: 11400000, guid: a8353f781d61b5448aea1da7aebe2cc5, type: 2}
-  - {fileID: 11400000, guid: 23600d5897353724188096bee71f4962, type: 2}
-  - {fileID: 11400000, guid: c23844af40f3ef6419a0624b551c0afa, type: 2}
-  - {fileID: 11400000, guid: b14924981b49cb84ea2d22500da1e675, type: 2}
-  - {fileID: 11400000, guid: e58931b69f7d0be4a8aaadf16a25f0c7, type: 2}
-  - {fileID: 11400000, guid: 052ac606efd90644c96ee2e49c8debe5, type: 2}
-  - {fileID: 11400000, guid: 4fdcab52a8bf12e45aef7eb34657a075, type: 2}
-  - {fileID: 11400000, guid: 588f31108b4b6a347b16f37496daa9e9, type: 2}
-  - {fileID: 11400000, guid: 2765aab04c45dfa49aab6d0fec6972d8, type: 2}
-  - {fileID: 11400000, guid: bfb8211e755c7c549b195322ba9eee6b, type: 2}
-  - {fileID: 11400000, guid: 1d6a98455576f6d47a6def88d1baf8b8, type: 2}
-  - {fileID: 11400000, guid: 418a8a9f6fb9d8a40bbdaee5ea3d3ff1, type: 2}
-  - {fileID: 11400000, guid: ca6a71fa23c3b8b4dbaf92ffa9e9f495, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
@@ -163,7 +149,7 @@ MonoBehaviour:
           m_Key: ContentRoot
         - m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
           m_ClassName: System.Boolean
-          m_Data: True
+          m_Data: False
           m_Key: IsEnabled
         - m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
           m_ClassName: System.String

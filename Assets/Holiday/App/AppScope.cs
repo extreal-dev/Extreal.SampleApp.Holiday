@@ -21,14 +21,15 @@ namespace Extreal.SampleApp.Holiday.App
 {
     public class AppScope : LifetimeScope
     {
+        [SerializeField] private AppConfig appConfig;
         [SerializeField] private LoggingConfig loggingConfig;
         [SerializeField] private StageConfig stageConfig;
 
         private void InitializeApp()
         {
-            QualitySettings.vSyncCount = 0;
-            Application.targetFrameRate = 60;
-            const int timeout = 5;
+            QualitySettings.vSyncCount = appConfig.VerticalSyncs;
+            Application.targetFrameRate = appConfig.TargetFrameRate;
+            var timeout = appConfig.AddressablesTimeoutSeconds;
             Addressables.ResourceManager.WebRequestOverride = unityWebRequest => unityWebRequest.timeout = timeout;
 
             ClearAssetBundleCacheOnDev();
@@ -96,7 +97,7 @@ namespace Extreal.SampleApp.Holiday.App
             builder.Register<AppState>(Lifetime.Singleton);
 
             builder.Register<AssetProvider>(Lifetime.Singleton)
-                .WithParameter<IRetryStrategy>(new CountingRetryStrategy());
+                .WithParameter<IRetryStrategy>(new CountingRetryStrategy(appConfig.AddressablesMaxRetryCount));
             builder.Register<AssetHelper>(Lifetime.Singleton);
 
             builder.RegisterEntryPoint<AppPresenter>();

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: AppConfig
+  m_Name: AppCommon
   m_EditorClassIdentifier: 
-  m_GroupName: AppConfig
+  m_GroupName: AppCommon
   m_Data:
     m_SerializedData: []
   m_GUID: f2b2967d531f20348b75f02e0528aacd
@@ -27,6 +27,14 @@ MonoBehaviour:
     m_SerializedLabels: []
   - m_GUID: c9621e13487611747aedb2e10c7c4aa5
     m_Address: AvatarConfig
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: ad169e6f761886e44b7d15bfffa4ab9f
+    m_Address: ChatConfig
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 07d044a8364d60c4b8c0a283190e30c8
+    m_Address: MultiplayConfig
     m_ReadOnly: 0
     m_SerializedLabels: []
   m_ReadOnly: 0

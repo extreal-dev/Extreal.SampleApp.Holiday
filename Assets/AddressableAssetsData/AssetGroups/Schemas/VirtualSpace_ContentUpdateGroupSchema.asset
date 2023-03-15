@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5834b5087d578d24c926ce20cd31e6d6, type: 3}
-  m_Name: AppConfig_ContentUpdateGroupSchema
+  m_Name: VirtualSpace_ContentUpdateGroupSchema
   m_EditorClassIdentifier: 
-  m_Group: {fileID: 11400000, guid: a103d381e22f4cb4c8c8ee4801c6ebaf, type: 2}
+  m_Group: {fileID: 11400000, guid: 5ed5c3f447c830a4eb4cf3b808b10549, type: 2}
   m_StaticContent: 0
