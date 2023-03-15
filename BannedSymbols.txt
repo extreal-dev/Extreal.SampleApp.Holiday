@@ -1,0 +1,7 @@
+M:UnityEngine.Debug.Log(System.Object);Do not use 'Debug.Log'. Instead, you can use 'ELogger.LogDebug'.
+M:UnityEngine.Debug.LogWarning(System.Object);Do not use 'Debug.LogWarning'. Instead, you can use 'ELogger.LogWarn'.
+M:UnityEngine.Debug.LogError(System.Object);Do not use 'Debug.LogError'. Instead, you can use 'ELogger.LogError'.
+M:UnityEngine.Debug.LogException(System.Object);Do not use 'Debug.LogException'. Instead, you can use 'ELogger.LogDebug', 'ELogger.LogWarn' or 'ELogger.LogError'.
+M:VContainer.ContainerBuilderExtensions.RegisterInstance``1(VContainer.IContainerBuilder,``0);Do not use 'RegisterInstance'. Instead, you can use 'RegisterComponent'.
+M:VContainer.ContainerBuilderExtensions.RegisterInstance``2(VContainer.IContainerBuilder,``0);Do not use 'RegisterInstance'. Instead, you can use 'RegisterComponent'.
+M:VContainer.ContainerBuilderExtensions.RegisterInstance``3(VContainer.IContainerBuilder,``0);Do not use 'RegisterInstance'. Instead, you can use 'RegisterComponent'.

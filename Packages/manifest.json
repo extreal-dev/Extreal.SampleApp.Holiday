@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.cysharp.csprojmodifier": "https://github.com/Cysharp/CsprojModifier.git?path=src/CsprojModifier/Assets/CsprojModifier",
     "com.unity.addressables": "1.19.19",
     "com.unity.build-report-inspector": "0.3.0-preview",
     "com.unity.cinemachine": "2.8.9",
