@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using Extreal.Core.Logging;
-using Extreal.Integration.Assets.Addressables;
+using Extreal.Integration.AssetWorkflow.Addressables;
 using Extreal.SampleApp.Holiday.App;
 using TMPro;
 using UnityEngine;
@@ -29,17 +29,17 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
             screen.SetActive(isVisible);
         }
 
-        public void SetDownloadStatus(NamedDownloadStatus status)
+        public void SetDownloadStatus(AssetDownloadStatus downloadStatus)
         {
-            if (status.IsDone)
+            if (downloadStatus.Status.IsDone)
             {
                 ClearLoadedPercent();
             }
             else
             {
-                var total = AppUtils.GetSizeUnit(status.TotalBytes);
-                var downloaded = AppUtils.GetSizeUnit(status.DownloadedBytes);
-                loadedPercent.text = $"{status.Percent * 100:F0}%" +
+                var total = AppUtils.GetSizeUnit(downloadStatus.Status.TotalBytes);
+                var downloaded = AppUtils.GetSizeUnit(downloadStatus.Status.DownloadedBytes);
+                loadedPercent.text = $"{downloadStatus.Status.Percent * 100:F0}%" +
                                      Environment.NewLine +
                                      $"({downloaded.Item1}{downloaded.Item2}/{total.Item1}{total.Item2})";
             }

@@ -5,7 +5,7 @@ using Extreal.Core.Common.Retry;
 using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
-using Extreal.Integration.Assets.Addressables;
+using Extreal.Integration.AssetWorkflow.Addressables;
 using Extreal.Integration.Chat.Vivox;
 using Extreal.Integration.Multiplay.NGO;
 using Extreal.SampleApp.Holiday.App.Config;

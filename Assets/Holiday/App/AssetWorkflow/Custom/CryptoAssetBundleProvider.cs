@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using Extreal.Integration.Assets.Addressables.ResourceProviders;
+using Extreal.Integration.AssetWorkflow.Addressables.Custom.ResourceProviders;
 
 namespace Extreal.SampleApp.Holiday.App.AssetWorkflow.Custom
 {

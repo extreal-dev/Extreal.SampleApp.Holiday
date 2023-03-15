@@ -2,7 +2,7 @@
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
-using Extreal.Integration.Assets.Addressables.ResourceProviders;
+using Extreal.Integration.AssetWorkflow.Addressables.Custom.ResourceProviders;
 using UnityEngine.ResourceManagement.ResourceProviders;
 
 namespace Extreal.SampleApp.Holiday.App.AssetWorkflow.Custom

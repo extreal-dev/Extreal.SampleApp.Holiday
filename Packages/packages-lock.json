@@ -355,18 +355,18 @@
       },
       "hash": "7b5b59367258430dc09eb7cd73c360056da948c7"
     },
-    "jp.co.tis.extreal.integration.assets.addressables": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.Assets.Addressables.git#1.0.0-next.1",
+    "jp.co.tis.extreal.integration.assetworkflow.addressables": {
+      "version": "https://github.com/extreal-dev/Extreal.Integration.AssetWorkflow.Addressables.git#1.0.0-next.2",
       "depth": 0,
       "source": "git",
       "dependencies": {
-        "jp.co.tis.extreal.core.logging": "1.0.0",
-        "jp.co.tis.extreal.core.common": "1.0.0-next.1",
+        "jp.co.tis.extreal.core.logging": "1.1.0-next.1",
+        "jp.co.tis.extreal.core.common": "1.0.0-next.2",
         "com.unity.addressables": "1.19.19",
         "com.cysharp.unitask": "2.3.3",
         "com.neuecc.unirx": "7.1.0"
       },
-      "hash": "2e873f1e5e51f249e93f60ef8b07f787de76161c"
+      "hash": "1479dcd09621859a897ecd54c59aadc437009dac"
     },
     "jp.co.tis.extreal.integration.chat.vivox": {
       "version": "https://github.com/extreal-dev/Extreal.Integration.Chat.Vivox.git#1.1.0-next.2",

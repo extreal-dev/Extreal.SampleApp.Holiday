@@ -6,7 +6,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
-using Extreal.Integration.Assets.Addressables;
+using Extreal.Integration.AssetWorkflow.Addressables;
 using Extreal.Integration.Multiplay.NGO;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Avatars;

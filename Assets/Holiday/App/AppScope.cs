@@ -2,9 +2,10 @@
 using Cysharp.Threading.Tasks;
 #endif
 using System.Diagnostics.CodeAnalysis;
+using Extreal.Core.Common.Retry;
 using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
-using Extreal.Integration.Assets.Addressables;
+using Extreal.Integration.AssetWorkflow.Addressables;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.Common.Config;
@@ -94,7 +95,8 @@ namespace Extreal.SampleApp.Holiday.App
 
             builder.Register<AppState>(Lifetime.Singleton);
 
-            builder.Register<AssetProvider>(Lifetime.Singleton);
+            builder.Register<AssetProvider>(Lifetime.Singleton)
+                .WithParameter<IRetryStrategy>(new CountingRetryStrategy());
             builder.Register<AssetHelper>(Lifetime.Singleton);
 
             builder.RegisterEntryPoint<AppPresenter>();
