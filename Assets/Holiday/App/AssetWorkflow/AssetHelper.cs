@@ -17,6 +17,11 @@ namespace Extreal.SampleApp.Holiday.App.AssetWorkflow
 {
     public class AssetHelper : DisposableBase
     {
+        public IObservable<string> OnDownloading => assetProvider.OnDownloading;
+        public IObservable<AssetDownloadStatus> OnDownloaded => assetProvider.OnDownloaded;
+        public IObservable<int> OnConnectRetrying => assetProvider.OnConnectRetrying;
+        public IObservable<bool> OnConnectRetried => assetProvider.OnConnectRetried;
+
         public MessageConfig MessageConfig { get; private set; }
         public VivoxAppConfig VivoxAppConfig { get; private set; }
         public NgoConfig NgoConfig { get; private set; }
@@ -30,21 +35,22 @@ namespace Extreal.SampleApp.Holiday.App.AssetWorkflow
         private readonly AppState appState;
 
         [SuppressMessage("Usage", "CC0033")]
-        private readonly CompositeDisposable disposables = new CompositeDisposable();
+        private readonly CompositeDisposable assetDisposables = new CompositeDisposable();
 
+        [SuppressMessage("Usage", "CC0022")]
         public AssetHelper(
-            StageNavigator<StageName, SceneName> stageNavigator, AssetProvider assetProvider, AppState appState)
+            AppConfig appConfig, StageNavigator<StageName, SceneName> stageNavigator, AppState appState)
         {
             this.stageNavigator = stageNavigator;
-            this.assetProvider = assetProvider;
             this.appState = appState;
+            assetProvider = new AssetProvider(new CountingRetryStrategy(appConfig.DownloadMaxRetryCount));
         }
 
         public void DownloadCommonAssetAsync(StageName nextStage)
         {
             Func<UniTask> nextFunc = async () =>
             {
-                disposables.Clear();
+                assetDisposables.Clear();
                 MessageConfig = await LoadAndAddToDisposablesAsync<MessageConfig>();
                 AvatarConfig = await LoadAndAddToDisposablesAsync<AvatarConfig>();
                 VivoxAppConfig = await LoadAndReleaseAsync<ChatConfig, VivoxAppConfig>(asset => asset.VivoxAppConfig);
@@ -56,9 +62,13 @@ namespace Extreal.SampleApp.Holiday.App.AssetWorkflow
             DownloadAsync(nameof(MessageConfig), nextFunc).Forget();
         }
 
-        protected override void ReleaseManagedResources() => disposables.Dispose();
+        protected override void ReleaseManagedResources()
+        {
+            assetDisposables.Dispose();
+            assetProvider.Dispose();
+        }
 
-        public void DownloadSpaceAssetAsync(string spaceName, StageName nextStage)
+        public void DownloadSpaceAsset(string spaceName, StageName nextStage)
         {
 #pragma warning disable CS1998
             Func<UniTask> nextFunc = async () =>
@@ -82,7 +92,7 @@ namespace Extreal.SampleApp.Holiday.App.AssetWorkflow
         private async UniTask<TAsset> LoadAndAddToDisposablesAsync<TAsset>()
         {
             var disposable = await assetProvider.LoadAssetAsync<TAsset>();
-            disposables.Add(disposable);
+            assetDisposables.Add(disposable);
             return disposable.Result;
         }
 
@@ -95,6 +105,7 @@ namespace Extreal.SampleApp.Holiday.App.AssetWorkflow
                 {
                     Logger.LogDebug($"Download asset: {assetName}");
                 }
+
                 var sizeUnit = AppUtils.GetSizeUnit(size);
                 appState.Confirm(new Confirmation(
                     $"Download {sizeUnit.Item1:F2}{sizeUnit.Item2} of data.",
@@ -106,26 +117,13 @@ namespace Extreal.SampleApp.Holiday.App.AssetWorkflow
                 {
                     Logger.LogDebug($"No download asset: {assetName}");
                 }
+
                 nextFunc?.Invoke().Forget();
             }
         }
 
         private async UniTaskVoid DownloadOrNotifyErrorAsync(string assetName, Func<UniTask> nextFunc)
-        {
-            try
-            {
-                await assetProvider.DownloadAsync(assetName, nextFunc: nextFunc);
-            }
-            catch (Exception e)
-            {
-                if (Logger.IsDebug())
-                {
-                    Logger.LogDebug("Exception occurred when downloading assets!", e);
-                }
-                // Asset download error, so the message is hard coded.
-                appState.Notify("Download has failed.");
-            }
-        }
+            => await assetProvider.DownloadAsync(assetName, nextFunc: nextFunc);
 
         public UniTask<AssetDisposable<T>> LoadAssetAsync<T>(string assetName)
             => assetProvider.LoadAssetAsync<T>(assetName);

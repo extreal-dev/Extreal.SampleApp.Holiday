@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Extreal.SampleApp.Holiday.App.Config;
+using Extreal.SampleApp.Holiday.Controls.RetryStatusControl;
 
 namespace Extreal.SampleApp.Holiday.App
 {
@@ -19,7 +20,24 @@ namespace Extreal.SampleApp.Holiday.App
                 size /= 1024;
                 count++;
             }
+
             return (size, Unit[count]);
+        }
+
+        public static void NotifyRetrying(AppState appState, string format, int retryCount)
+            => appState.Retry(new RetryStatus(RetryStatus.RunState.Retrying, string.Format(format, retryCount)));
+
+        public static void NotifyRetried(AppState appState, bool result, string successMessage, string failureMessage)
+        {
+            if (result)
+            {
+                appState.Retry(new RetryStatus(RetryStatus.RunState.Success, successMessage));
+            }
+            else
+            {
+                appState.Retry(new RetryStatus(RetryStatus.RunState.Failure));
+                appState.Notify(failureMessage);
+            }
         }
     }
 }

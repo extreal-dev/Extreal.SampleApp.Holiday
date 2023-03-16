@@ -13,8 +13,6 @@ namespace Extreal.SampleApp.Holiday.Controls.RetryStatusControl
         private readonly RetryStatusControlView retryStatusControlView;
         private readonly AppState appState;
 
-        private StageName stageName;
-
         public RetryStatusControlPresenter(
             StageNavigator<StageName, SceneName> stageNavigator,
             RetryStatusControlView retryStatusControlView,
@@ -27,7 +25,6 @@ namespace Extreal.SampleApp.Holiday.Controls.RetryStatusControl
         protected override void Initialize(
             StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables) =>
             appState.OnRetryStatusReceived
-                .Where(_ => AppUtils.IsSpace(stageName))
                 .Subscribe(status =>
                 {
                     if (status.State == RetryStatus.RunState.Retrying)
@@ -56,6 +53,8 @@ namespace Extreal.SampleApp.Holiday.Controls.RetryStatusControl
         {
         }
 
-        protected override void OnStageExiting(StageName stageName) => this.stageName = stageName;
+        protected override void OnStageExiting(StageName stageName)
+        {
+        }
     }
 }

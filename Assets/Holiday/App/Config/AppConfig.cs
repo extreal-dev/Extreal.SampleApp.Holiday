@@ -7,14 +7,20 @@ namespace Extreal.SampleApp.Holiday.App.Config
         fileName = nameof(AppConfig))]
     public class AppConfig : ScriptableObject
     {
-        [SerializeField] private int verticalSyncs = 0;
-        [SerializeField] private int targetFrameRate = 60;
-        [SerializeField] private int addressablesTimeoutSeconds = 5;
-        [SerializeField] private int addressablesMaxRetryCount = 6;
+        [SerializeField] private int verticalSyncs;
+        [SerializeField] private int targetFrameRate;
+        [SerializeField] private int downloadTimeoutSeconds;
+        [SerializeField] private int downloadMaxRetryCount;
+        [SerializeField] private string downloadConnectRetryMessage;
+        [SerializeField] private string downloadRetrySuccessMessage;
+        [SerializeField] private string downloadRetryFailureMessage;
 
         public int VerticalSyncs => verticalSyncs;
         public int TargetFrameRate => targetFrameRate;
-        public int AddressablesTimeoutSeconds => addressablesTimeoutSeconds;
-        public int AddressablesMaxRetryCount => addressablesMaxRetryCount;
+        public int DownloadTimeoutSeconds => downloadTimeoutSeconds;
+        public int DownloadMaxRetryCount => downloadMaxRetryCount;
+        public string DownloadConnectRetryMessage => downloadConnectRetryMessage;
+        public string DownloadRetrySuccessMessage => downloadRetrySuccessMessage;
+        public string DownloadRetryFailureMessage => downloadRetryFailureMessage;
     }
 }

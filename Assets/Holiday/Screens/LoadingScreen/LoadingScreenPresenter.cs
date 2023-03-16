@@ -1,6 +1,6 @@
 ﻿using Extreal.Core.StageNavigation;
-using Extreal.Integration.AssetWorkflow.Addressables;
 using Extreal.SampleApp.Holiday.App;
+using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.App.Config;
 using UniRx;
@@ -10,19 +10,19 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
     public class LoadingScreenPresenter : StagePresenterBase
     {
         private readonly LoadingScreenView loadingScreenView;
-        private readonly AssetProvider assetProvider;
+        private readonly AssetHelper assetHelper;
         private readonly AppState appState;
 
         public LoadingScreenPresenter
         (
             StageNavigator<StageName, SceneName> stageNavigator,
             LoadingScreenView loadingScreenView,
-            AssetProvider assetProvider,
+            AssetHelper assetHelper,
             AppState appState
         ) : base(stageNavigator)
         {
             this.loadingScreenView = loadingScreenView;
-            this.assetProvider = assetProvider;
+            this.assetHelper = assetHelper;
             this.appState = appState;
         }
 
@@ -37,11 +37,11 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
                 .Subscribe(_ => loadingScreenView.SwitchVisibility(false))
                 .AddTo(sceneDisposables);
 
-            assetProvider.OnDownloading
+            assetHelper.OnDownloading
                 .Subscribe(_ => loadingScreenView.SwitchVisibility(true))
                 .AddTo(sceneDisposables);
 
-            assetProvider.OnDownloaded
+            assetHelper.OnDownloaded
                 .Subscribe(loadingScreenView.SetDownloadStatus)
                 .AddTo(sceneDisposables);
         }

@@ -6,7 +6,6 @@ using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.App.Config;
-using Extreal.SampleApp.Holiday.Controls.RetryStatusControl;
 using UniRx;
 using VivoxUnity;
 
@@ -51,11 +50,15 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
                 .AddTo(sceneDisposables);
 
             ngoClient.OnConnectRetrying
-                .Subscribe(retryCount => NotifyRetrying(assetHelper.MessageConfig.MultiplayConnectRetryMessage, retryCount))
+                .Subscribe(retryCount => AppUtils.NotifyRetrying(
+                    appState,
+                    assetHelper.MessageConfig.MultiplayConnectRetryMessage,
+                    retryCount))
                 .AddTo(sceneDisposables);
 
             ngoClient.OnConnectRetried
-                .Subscribe(result => NotifyRetried(
+                .Subscribe(result => AppUtils.NotifyRetried(
+                    appState,
                     result,
                     assetHelper.MessageConfig.MultiplayConnectRetrySuccessMessage,
                     assetHelper.MessageConfig.MultiplayConnectRetryFailureMessage))
@@ -70,11 +73,15 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
         private void InitializeVivoxClient(CompositeDisposable sceneDisposables)
         {
             vivoxClient.OnConnectRetrying
-                .Subscribe(retryCount => NotifyRetrying(assetHelper.MessageConfig.ChatConnectRetryMessage, retryCount))
+                .Subscribe(retryCount => AppUtils.NotifyRetrying(
+                    appState,
+                    assetHelper.MessageConfig.ChatConnectRetryMessage,
+                    retryCount))
                 .AddTo(sceneDisposables);
 
             vivoxClient.OnConnectRetried
-                .Subscribe(result => NotifyRetried(
+                .Subscribe(result => AppUtils.NotifyRetried(
+                    appState,
                     result,
                     assetHelper.MessageConfig.ChatConnectRetrySuccessMessage,
                     assetHelper.MessageConfig.ChatConnectRetryFailureMessage))
@@ -86,22 +93,6 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
                 .AddTo(sceneDisposables);
 
             vivoxClient.LoginAsync(new VivoxAuthConfig(nameof(Holiday))).Forget();
-        }
-
-        private void NotifyRetrying(string format, int retryCount)
-            => appState.Retry(new RetryStatus(RetryStatus.RunState.Retrying, string.Format(format, retryCount)));
-
-        private void NotifyRetried(bool result, string successMessage, string failureMessage)
-        {
-            if (result)
-            {
-                appState.Retry(new RetryStatus(RetryStatus.RunState.Success, successMessage));
-            }
-            else
-            {
-                appState.Retry(new RetryStatus(RetryStatus.RunState.Failure));
-                appState.Notify(failureMessage);
-            }
         }
 
         protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)

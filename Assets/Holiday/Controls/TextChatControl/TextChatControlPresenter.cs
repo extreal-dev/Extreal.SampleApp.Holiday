@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Cysharp.Threading.Tasks;
 using Extreal.Core.StageNavigation;
 using Extreal.Integration.Chat.Vivox;
 using Extreal.SampleApp.Holiday.App;

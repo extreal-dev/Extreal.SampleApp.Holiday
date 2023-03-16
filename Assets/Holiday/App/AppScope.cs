@@ -2,10 +2,8 @@
 using Cysharp.Threading.Tasks;
 #endif
 using System.Diagnostics.CodeAnalysis;
-using Extreal.Core.Common.Retry;
 using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
-using Extreal.Integration.AssetWorkflow.Addressables;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.Common.Config;
@@ -29,7 +27,7 @@ namespace Extreal.SampleApp.Holiday.App
         {
             QualitySettings.vSyncCount = appConfig.VerticalSyncs;
             Application.targetFrameRate = appConfig.TargetFrameRate;
-            var timeout = appConfig.AddressablesTimeoutSeconds;
+            var timeout = appConfig.DownloadTimeoutSeconds;
             Addressables.ResourceManager.WebRequestOverride = unityWebRequest => unityWebRequest.timeout = timeout;
 
             ClearAssetBundleCacheOnDev();
@@ -40,7 +38,8 @@ namespace Extreal.SampleApp.Holiday.App
             var logger = LoggingManager.GetLogger(nameof(AppScope));
             if (logger.IsDebug())
             {
-                logger.LogDebug($"targetFrameRate: {Application.targetFrameRate}, unityWebRequest.timeout: {timeout}, logLevel: {logLevel}");
+                logger.LogDebug(
+                    $"targetFrameRate: {Application.targetFrameRate}, unityWebRequest.timeout: {timeout}, logLevel: {logLevel}");
             }
         }
 
@@ -91,13 +90,13 @@ namespace Extreal.SampleApp.Holiday.App
 
         protected override void Configure(IContainerBuilder builder)
         {
+            builder.RegisterComponent(appConfig);
+
             builder.RegisterComponent(stageConfig).AsImplementedInterfaces();
             builder.Register<StageNavigator<StageName, SceneName>>(Lifetime.Singleton);
 
             builder.Register<AppState>(Lifetime.Singleton);
 
-            builder.Register<AssetProvider>(Lifetime.Singleton)
-                .WithParameter<IRetryStrategy>(new CountingRetryStrategy(appConfig.AddressablesMaxRetryCount));
             builder.Register<AssetHelper>(Lifetime.Singleton);
 
             builder.RegisterEntryPoint<AppPresenter>();

@@ -46,7 +46,7 @@ namespace Extreal.SampleApp.Holiday.Screens.AvatarSelectionScreen
                 .AddTo(sceneDisposables);
 
             avatarSelectionScreenView.OnGoButtonClicked
-                .Subscribe(_ => assetHelper.DownloadSpaceAssetAsync("VirtualSpace", StageName.VirtualStage))
+                .Subscribe(_ => assetHelper.DownloadSpaceAsset("VirtualSpace", StageName.VirtualStage))
                 .AddTo(sceneDisposables);
         }
 
