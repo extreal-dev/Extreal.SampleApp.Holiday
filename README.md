@@ -6,6 +6,18 @@
 - Clone the repository.
 - Open the cloned directory in the Unity editor.
   - If "Link your Unity project" appears, close it without setting it.
+- Create the following class in the `Assets/Holiday/App/AssetWorkflow/Custom` directory.
+  ```csharp
+  namespace Extreal.SampleApp.Holiday.App.AssetWorkflow.Custom
+  {
+      public static class SecretVariables
+      {
+          public static string ServerAddress => "test";
+          public static string CryptAssetIv => "initialization-vector";
+          public static string CryptAssetPassword => "password";
+      }
+  }
+  ```
 - Refer to the following page to import Mixamo model files into your project.
   - [Mixamoの無料3DモデルをUnityにインポートする方法](https://zenn.dev/gaku_moriya/articles/d1b451b288786b)
     - Please implement from "3Dモデルを入手する" to "Materialの最適化".
