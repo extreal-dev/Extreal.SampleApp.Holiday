@@ -29,14 +29,6 @@ MonoBehaviour:
     m_Address: AvatarConfig
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: ad169e6f761886e44b7d15bfffa4ab9f
-    m_Address: ChatConfig
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 07d044a8364d60c4b8c0a283190e30c8
-    m_Address: MultiplayConfig
-    m_ReadOnly: 0
-    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 70324997c374a0844916ed3e0c6c273b, type: 2}
   m_SchemaSet:
