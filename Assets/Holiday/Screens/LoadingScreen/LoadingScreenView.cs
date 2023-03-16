@@ -25,26 +25,28 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
                 var status = isVisible ? "ON" : "OFF";
                 Logger.LogDebug($"Loading: {status}");
             }
-            ClearLoadedPercent();
+            if (!isVisible)
+            {
+                ClearLoadedPercent();
+            }
             screen.SetActive(isVisible);
         }
 
         public void SetDownloadStatus(AssetDownloadStatus downloadStatus)
         {
-            if (downloadStatus.Status.IsDone)
+            if (downloadStatus.Status.TotalBytes == 0L)
             {
-                ClearLoadedPercent();
+                return;
             }
-            else
-            {
-                var total = AppUtils.GetSizeUnit(downloadStatus.Status.TotalBytes);
-                var downloaded = AppUtils.GetSizeUnit(downloadStatus.Status.DownloadedBytes);
-                loadedPercent.text = $"{downloadStatus.Status.Percent * 100:F0}%" +
-                                     Environment.NewLine +
-                                     $"({downloaded.Item1}{downloaded.Item2}/{total.Item1}{total.Item2})";
-            }
+
+            var total = AppUtils.GetSizeUnit(downloadStatus.Status.TotalBytes);
+            var downloaded = AppUtils.GetSizeUnit(downloadStatus.Status.DownloadedBytes);
+            loadedPercent.text = $"{downloadStatus.Status.Percent * 100:F0}%" +
+                                 Environment.NewLine +
+                                 $"({downloaded.Item1}{downloaded.Item2}/{total.Item1}{total.Item2})";
         }
 
-        private void ClearLoadedPercent() => loadedPercent.text = string.Empty;
+        private void ClearLoadedPercent()
+            => loadedPercent.text = string.Empty;
     }
 }
