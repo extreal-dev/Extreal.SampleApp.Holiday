@@ -21,10 +21,6 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 {
     public class MultiplayRoom : DisposableBase
     {
-        public IObservable<Unit> OnConnectFailed => onConnectFailed;
-        [SuppressMessage("Usage", "CC0033")]
-        private readonly Subject<Unit> onConnectFailed = new Subject<Unit>();
-
         public IObservable<bool> IsPlayerSpawned => isPlayerSpawned;
         [SuppressMessage("Usage", "CC0033")]
         private readonly BoolReactiveProperty isPlayerSpawned = new BoolReactiveProperty(false);

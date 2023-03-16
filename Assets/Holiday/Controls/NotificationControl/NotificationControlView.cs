@@ -19,9 +19,6 @@ namespace Extreal.SampleApp.Holiday.Controls.NotificationControl
         [SuppressMessage("Style", "IDE0051")]
         private void Start() => canvas.SetActive(false);
 
-        public void Initialize(string okButtonLabel)
-            => this.okButtonLabel.text = okButtonLabel;
-
         public void Show(string message)
         {
             this.message.text = message;
