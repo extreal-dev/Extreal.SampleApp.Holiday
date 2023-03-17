@@ -87,6 +87,11 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                     FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.AvatarSelectionScreen.ToString());
             }
 
+            // Selects avatar
+            await UniTask.Yield();
+            var avatarDropdown = FindObjectOfType<TMP_Dropdown>();
+            avatarDropdown.value = UnityEngine.Random.Range(0, avatarDropdown.options.Count);
+
             // Enters VirtualSpace
             FindObjectOfType<Button>().onClick.Invoke();
             await UniTask.WaitUntil(() =>
