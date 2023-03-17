@@ -7,7 +7,7 @@ mkdir -p ../Logs/$date
 dir_count=`ls -l ../Data/$date | grep ^d | wc -l`
 
 dir_name=Logs/$date/$dir_count
-work_dir=../$dir_mame
+work_dir=../$dir_name
 memory_file_name=$work_dir/server_MemoryUtilization.txt
 log_file_name=$work_dir/server.log
 mkdir -p $work_dir
