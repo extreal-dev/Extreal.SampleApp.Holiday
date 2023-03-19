@@ -4,9 +4,7 @@
 
 - This application uses Vivox for voice and text chat. Create an account on [Vivox Developer Portal](https://developer.vivox.com/) and create an application to connect to from this application.
 - Clone the repository.
-- Open the cloned directory in the Unity editor.
-  - If "Link your Unity project" appears, close it without setting it.
-- Create the following class in the `Assets/Holiday/App/AssetWorkflow/Custom` directory.
+- Before opening in the Unity Editor, Create the following class in the `Assets/Holiday/App/AssetWorkflow/Custom` directory.
 
   ```csharp
   namespace Extreal.SampleApp.Holiday.App.AssetWorkflow.Custom
@@ -20,6 +18,8 @@
   }
   ```
 
+- Open the cloned directory in the Unity editor.
+    - If "Link your Unity project" appears, close it without setting it.
 - Refer to the following page to import Mixamo model files into your project.
   - [Mixamoの無料3DモデルをUnityにインポートする方法](https://zenn.dev/gaku_moriya/articles/d1b451b288786b)
     - Please implement from "3Dモデルを入手する" to "Materialの最適化".
