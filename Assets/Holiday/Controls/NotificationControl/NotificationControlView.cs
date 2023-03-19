@@ -12,7 +12,6 @@ namespace Extreal.SampleApp.Holiday.Controls.NotificationControl
         [SerializeField] private GameObject canvas;
         [SerializeField] private TMP_Text message;
         [SerializeField] private Button okButton;
-        [SerializeField] private TMP_Text okButtonLabel;
 
         public IObservable<Unit> OnOkButtonClicked => okButton.OnClickAsObservable().TakeUntilDestroy(this);
 

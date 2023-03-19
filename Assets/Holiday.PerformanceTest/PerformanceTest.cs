@@ -28,7 +28,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
         private readonly Vector3 movableRangeMin = new Vector3(-13f, 0f, -3f);
         private readonly Vector3 movableRangeMax = new Vector3(21f, 0f, 30f);
 
-        private readonly string[] messageReparatory = new string[]
+        private readonly string[] messageRepertoire = new string[]
         {
             "Hello", "Hello world", "Good morning", "Good afternoon", "Good evening", "Good night",
             "Nice", "Great", "Good", "Cute", "Beautiful", "Wonderful"
@@ -198,7 +198,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
 
                     if (UnityEngine.Random.Range(0, messagePeriod) == 1)
                     {
-                        var message = messageReparatory[UnityEngine.Random.Range(0, messageReparatory.Length)];
+                        var message = messageRepertoire[UnityEngine.Random.Range(0, messageRepertoire.Length)];
                         messageInput.text = message;
                         sendButton.onClick.Invoke();
 

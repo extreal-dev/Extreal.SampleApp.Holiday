@@ -1,4 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿#if UNITY_STANDALONE
+using System.Diagnostics.CodeAnalysis;
+#endif
 using UnityEngine;
 
 namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
