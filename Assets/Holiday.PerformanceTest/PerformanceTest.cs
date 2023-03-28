@@ -71,9 +71,8 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
             // Starts to download data and enters AvatarSelectionScreen
             FindObjectOfType<Button>().onClick.Invoke();
             await UniTask.WaitUntil(() =>
-                FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.ConfirmationScreen.ToString()
-                || FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.AvatarSelectionScreen.ToString());
-            if (FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.ConfirmationScreen.ToString())
+                ExistButtonOfSceneNamed(SceneName.ConfirmationScreen, SceneName.AvatarSelectionScreen));
+            if (ExistButtonOfSceneNamed(SceneName.ConfirmationScreen))
             {
                 foreach (var button in FindObjectsOfType<Button>())
                 {
@@ -83,8 +82,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                         break;
                     }
                 }
-                await UniTask.WaitUntil(() =>
-                    FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.AvatarSelectionScreen.ToString());
+                await UniTask.WaitUntil(() => ExistButtonOfSceneNamed(SceneName.AvatarSelectionScreen));
             }
 
             // Selects avatar
@@ -95,9 +93,8 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
             // Enters VirtualSpace
             FindObjectOfType<Button>().onClick.Invoke();
             await UniTask.WaitUntil(() =>
-                            FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.ConfirmationScreen.ToString()
-                            || FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.TextChatControl.ToString());
-            if (FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.ConfirmationScreen.ToString())
+                ExistButtonOfSceneNamed(SceneName.ConfirmationScreen, SceneName.TextChatControl));
+            if (ExistButtonOfSceneNamed(SceneName.ConfirmationScreen))
             {
                 foreach (var button in FindObjectsOfType<Button>())
                 {
@@ -107,8 +104,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                         break;
                     }
                 }
-                await UniTask.WaitUntil(() =>
-                    FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.TextChatControl.ToString());
+                await UniTask.WaitUntil(() => ExistButtonOfSceneNamed(SceneName.TextChatControl));
             }
 
             var appControlScope = FindObjectOfType<ClientControlScope>();
@@ -225,6 +221,21 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                     }
                 }
             }
+        }
+
+        private static bool ExistButtonOfSceneNamed(params SceneName[] sceneNames)
+        {
+            foreach (var button in FindObjectsOfType<Button>())
+            {
+                foreach (var sceneName in sceneNames)
+                {
+                    if (button.gameObject.scene.name == sceneName.ToString())
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         private bool InRange(Vector3 position)
