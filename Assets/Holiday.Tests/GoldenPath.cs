@@ -29,8 +29,10 @@ namespace Extreal.SampleApp.Holiday.Tests
             await SceneManager.LoadSceneAsync(nameof(App), LoadSceneMode.Additive);
             await UniTask.WaitUntil(() => Object.FindObjectOfType<Button>() != null);
             var titleGoButton = FindObjectOfTypeAndAssert<Button>();
+            var title = FindObjectOfTypeWithName<TMP_Text>("Title");
 
             Assert.That(titleGoButton.gameObject.scene.name, Is.EqualTo(SceneName.TitleScreen.ToString()));
+            Assert.That(title.text, Is.EqualTo(nameof(Holiday)));
 
             var appScope = FindObjectOfTypeAndAssert<AppScope>();
             var appState = appScope.Container.Resolve(typeof(AppState)) as AppState;
@@ -42,9 +44,21 @@ namespace Extreal.SampleApp.Holiday.Tests
                 ExistButtonOfSceneNamed(SceneName.ConfirmationScreen, SceneName.AvatarSelectionScreen));
             if (ExistButtonOfSceneNamed(SceneName.ConfirmationScreen))
             {
+                // Pushes cancel button
                 PushButtonNamed("CancelButton");
+                await UniTask.Yield();
+                Assert.That(ExistButtonOfSceneNamed(SceneName.TitleScreen), Is.True);
+                Assert.That(ExistButtonOfSceneNamed(SceneName.ConfirmationScreen), Is.False);
+
+                // Pushes ok button
                 titleGoButton.onClick.Invoke();
+                await UniTask.WaitUntil(() => ExistButtonOfSceneNamed(SceneName.ConfirmationScreen));
                 PushButtonNamed("OkButton");
+                await UniTask.Yield();
+
+                var loadedPercent = FindObjectOfTypeWithName<TMP_Text>("LoadedPercent");
+                Assert.That(loadedPercent.text, Does.Contain("%"));
+
                 await UniTask.WaitUntil(() => ExistButtonOfSceneNamed(SceneName.AvatarSelectionScreen));
             }
 
@@ -62,14 +76,30 @@ namespace Extreal.SampleApp.Holiday.Tests
             // Selects avatar
             var avatarDropdown = FindObjectOfTypeAndAssert<TMP_Dropdown>();
             avatarDropdown.value = avatarDropdown.options.Count - 1;
+            await UniTask.Yield();
 
             // Starts to download data and enters VirtualSpace
-            FindObjectOfTypeAndAssert<Button>().onClick.Invoke();
+            var avatarSelectionGoButton = FindObjectOfTypeAndAssert<Button>();
+            avatarSelectionGoButton.onClick.Invoke();
             await UniTask.WaitUntil(() =>
                 ExistButtonOfSceneNamed(SceneName.ConfirmationScreen, SceneName.SpaceControl));
             if (ExistButtonOfSceneNamed(SceneName.ConfirmationScreen))
             {
+                // Pushes cancel button
+                PushButtonNamed("CancelButton");
+                await UniTask.Yield();
+                Assert.That(ExistButtonOfSceneNamed(SceneName.AvatarSelectionScreen), Is.True);
+                Assert.That(ExistButtonOfSceneNamed(SceneName.ConfirmationScreen), Is.False);
+
+                // Pushes ok button
+                avatarSelectionGoButton.onClick.Invoke();
+                await UniTask.WaitUntil(() => ExistButtonOfSceneNamed(SceneName.ConfirmationScreen));
                 PushButtonNamed("OkButton");
+                await UniTask.Yield();
+
+                var loadedPercent = FindObjectOfTypeWithName<TMP_Text>("LoadedPercent");
+                Assert.That(loadedPercent.text, Does.Contain("%"));
+
                 await UniTask.WaitUntil(() => ExistButtonOfSceneNamed(SceneName.SpaceControl));
             }
 
@@ -78,6 +108,42 @@ namespace Extreal.SampleApp.Holiday.Tests
             Assert.That(ngoClient, Is.Not.Null);
 
             await WaitForPlayingReadyAsync(appState, ngoClient);
+
+            // Toggles mute
+            var muteLabel = FindObjectOfTypeWithName<TMP_Text>("MuteLabel");
+            Assert.That(muteLabel.text, Is.EqualTo("OFF"));
+
+            PushButtonNamed("MuteButton");
+            await UniTask.WaitUntil(() => muteLabel.text != "OFF");
+            Assert.That(muteLabel.text, Is.EqualTo("ON"));
+
+            PushButtonNamed("MuteButton");
+            await UniTask.WaitUntil(() => muteLabel.text != "ON");
+            Assert.That(muteLabel.text, Is.EqualTo("OFF"));
+
+            // Sends a message
+            const string message = "Make another player join to the space";
+            var messageInput = FindObjectOfTypeAndAssert<TMP_InputField>();
+            messageInput.text = message;
+            PushButtonNamed("SendButton");
+
+            await UniTask.WaitUntil(() => Object.FindObjectOfType<TextChatMessageView>() != null);
+
+            var messageText = FindObjectOfTypeAndAssert<TextChatMessageView>().GetComponent<TMP_Text>();
+            Assert.That(messageText, Is.Not.Null);
+            Assert.That(messageText.text, Is.EqualTo(message));
+
+            await UniTask.WaitUntil(() =>
+            {
+                if (Object.FindObjectOfType<TextChatMessageView>() == null)
+                {
+                    messageInput.text = message;
+                    PushButtonNamed("SendButton");
+                }
+                return NetworkManager.Singleton.SpawnManager.SpawnedObjects.Values.Count > 1;
+            });
+
+            await UniTask.WaitUntil(() => Object.FindObjectOfType<TextChatMessageView>() == null);
 
             // Gets player
             var playerInput = default(StarterAssetsInputs);
@@ -118,33 +184,6 @@ namespace Extreal.SampleApp.Holiday.Tests
 
             Assert.That(playerInput.transform.position.y - initYPosition, Is.Positive);
 
-            // Unmute
-            PushButtonNamed("MuteButton");
-
-            // Sends a message
-            const string message = "Make another player join to the space";
-            var messageInput = FindObjectOfTypeAndAssert<TMP_InputField>();
-            messageInput.text = message;
-            PushButtonNamed("SendButton");
-
-            await UniTask.WaitUntil(() => Object.FindObjectOfType<TextChatMessageView>() != null);
-
-            var messageText = FindObjectOfTypeAndAssert<TextChatMessageView>().GetComponent<TMP_Text>();
-            Assert.That(messageText, Is.Not.Null);
-            Assert.That(messageText.text, Is.EqualTo(message));
-
-            await UniTask.WaitUntil(() =>
-            {
-                if (Object.FindObjectOfType<TextChatMessageView>() == null)
-                {
-                    messageInput.text = message;
-                    PushButtonNamed("SendButton");
-                }
-                return NetworkManager.Singleton.SpawnManager.SpawnedObjects.Values.Count > 1;
-            });
-
-            await UniTask.WaitUntil(() => Object.FindObjectOfType<TextChatMessageView>() == null);
-
             // Go back to AvatarSelectionScreen
             PushButtonNamed("SpaceButton");
             await UniTask.WaitUntil(() => ExistButtonOfSceneNamed(SceneName.AvatarSelectionScreen));
@@ -170,6 +209,19 @@ namespace Extreal.SampleApp.Holiday.Tests
             var obj = Object.FindObjectOfType<T>();
             Assert.That(obj, Is.Not.Null);
             return obj;
+        }
+
+        private static T FindObjectOfTypeWithName<T>(string name) where T : Object
+        {
+            foreach (var obj in Object.FindObjectsOfType<T>())
+            {
+                if (obj.name == name)
+                {
+                    return obj;
+                }
+            }
+            Assert.Fail("The object must be obtained");
+            return null;
         }
 
         private static bool ExistButtonOfSceneNamed(params SceneName[] sceneNames)
