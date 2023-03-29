@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Cysharp.Threading.Tasks;
+using Extreal.Core.Logging;
 using Extreal.Integration.Multiplay.NGO;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.Config;
@@ -22,10 +23,13 @@ namespace Extreal.SampleApp.Holiday.Tests
 {
     public class GoldenPath
     {
+        private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(GoldenPath));
+
         [UnityTest]
         public IEnumerator GoldenPathTest() => UniTask.ToCoroutine(async () =>
         {
             // Loads application
+            Logger.LogInfo("Loads application");
             await SceneManager.LoadSceneAsync(nameof(App), LoadSceneMode.Additive);
             await UniTask.WaitUntil(() => Object.FindObjectOfType<Button>() != null);
             var titleGoButton = FindObjectOfTypeAndAssert<Button>();
@@ -34,23 +38,28 @@ namespace Extreal.SampleApp.Holiday.Tests
             Assert.That(titleGoButton.gameObject.scene.name, Is.EqualTo(SceneName.TitleScreen.ToString()));
             Assert.That(title.text, Is.EqualTo(nameof(Holiday)));
 
+            // Gets AppState
+            Logger.LogInfo("Gets AppState");
             var appScope = FindObjectOfTypeAndAssert<AppScope>();
             var appState = appScope.Container.Resolve(typeof(AppState)) as AppState;
             Assert.That(appState, Is.Not.Null);
 
             // Starts to download data and enters AvatarSelectionScreen
+            Logger.LogInfo("Starts to download data and enters AvatarSelectionScreen");
             titleGoButton.onClick.Invoke();
             await UniTask.WaitUntil(() =>
                 ExistButtonOfSceneNamed(SceneName.ConfirmationScreen, SceneName.AvatarSelectionScreen));
             if (ExistButtonOfSceneNamed(SceneName.ConfirmationScreen))
             {
-                // Pushes cancel button
+                // Cancels to download AppConfig
+                Logger.LogInfo("Cancels to download AppConfig");
                 PushButtonNamed("CancelButton");
                 await UniTask.Yield();
                 Assert.That(ExistButtonOfSceneNamed(SceneName.TitleScreen), Is.True);
                 Assert.That(ExistButtonOfSceneNamed(SceneName.ConfirmationScreen), Is.False);
 
-                // Pushes ok button
+                // Downloads AppConfig
+                Logger.LogInfo("Downloads AppConfig");
                 titleGoButton.onClick.Invoke();
                 await UniTask.WaitUntil(() => ExistButtonOfSceneNamed(SceneName.ConfirmationScreen));
                 PushButtonNamed("OkButton");
@@ -63,6 +72,7 @@ namespace Extreal.SampleApp.Holiday.Tests
             }
 
             // Inputs player name
+            Logger.LogInfo("Inputs player name");
             var playerNameInputField = FindObjectOfTypeAndAssert<TMP_InputField>();
 
             playerNameInputField.Select();
@@ -74,24 +84,28 @@ namespace Extreal.SampleApp.Holiday.Tests
             Assert.That(appState.PlayerName.Value, Is.EqualTo(nameof(GoldenPath)));
 
             // Selects avatar
+            Logger.LogInfo("Selects avatar");
             var avatarDropdown = FindObjectOfTypeAndAssert<TMP_Dropdown>();
             avatarDropdown.value = avatarDropdown.options.Count - 1;
             await UniTask.Yield();
 
             // Starts to download data and enters VirtualSpace
+            Logger.LogInfo("Starts to download data and enters VirtualSpace");
             var avatarSelectionGoButton = FindObjectOfTypeAndAssert<Button>();
             avatarSelectionGoButton.onClick.Invoke();
             await UniTask.WaitUntil(() =>
                 ExistButtonOfSceneNamed(SceneName.ConfirmationScreen, SceneName.SpaceControl));
             if (ExistButtonOfSceneNamed(SceneName.ConfirmationScreen))
             {
-                // Pushes cancel button
+                // Cancels to download VirtualSpace
+                Logger.LogInfo("Cancels to download VirtualSpace");
                 PushButtonNamed("CancelButton");
                 await UniTask.Yield();
                 Assert.That(ExistButtonOfSceneNamed(SceneName.AvatarSelectionScreen), Is.True);
                 Assert.That(ExistButtonOfSceneNamed(SceneName.ConfirmationScreen), Is.False);
 
-                // Pushes ok button
+                // Download VirtualSpace
+                Logger.LogInfo("Download VirtualSpace");
                 avatarSelectionGoButton.onClick.Invoke();
                 await UniTask.WaitUntil(() => ExistButtonOfSceneNamed(SceneName.ConfirmationScreen));
                 PushButtonNamed("OkButton");
@@ -103,13 +117,18 @@ namespace Extreal.SampleApp.Holiday.Tests
                 await UniTask.WaitUntil(() => ExistButtonOfSceneNamed(SceneName.SpaceControl));
             }
 
+            // Gets NgoClient
+            Logger.LogInfo("Gets NgoClient");
             var appControlScope = FindObjectOfTypeAndAssert<ClientControlScope>();
             var ngoClient = appControlScope.Container.Resolve(typeof(NgoClient)) as NgoClient;
             Assert.That(ngoClient, Is.Not.Null);
 
+            // Waits for ready to play
+            Logger.LogInfo("Waits for ready to play");
             await WaitForPlayingReadyAsync(appState, ngoClient);
 
             // Toggles mute
+            Logger.LogInfo("Toggles mute");
             var muteLabel = FindObjectOfTypeWithName<TMP_Text>("MuteLabel");
             Assert.That(muteLabel.text, Is.EqualTo("OFF"));
 
@@ -122,6 +141,7 @@ namespace Extreal.SampleApp.Holiday.Tests
             Assert.That(muteLabel.text, Is.EqualTo("OFF"));
 
             // Sends a message
+            Logger.LogInfo("Sends a message");
             const string message = "Make another player join to the space";
             var messageInput = FindObjectOfTypeAndAssert<TMP_InputField>();
             messageInput.text = message;
@@ -133,6 +153,8 @@ namespace Extreal.SampleApp.Holiday.Tests
             Assert.That(messageText, Is.Not.Null);
             Assert.That(messageText.text, Is.EqualTo(message));
 
+            // Waits for another player's joining
+            Logger.LogInfo("Waits for another player's joining");
             await UniTask.WaitUntil(() =>
             {
                 if (Object.FindObjectOfType<TextChatMessageView>() == null)
@@ -146,6 +168,7 @@ namespace Extreal.SampleApp.Holiday.Tests
             await UniTask.WaitUntil(() => Object.FindObjectOfType<TextChatMessageView>() == null);
 
             // Gets player
+            Logger.LogInfo("Gets player");
             var playerInput = default(StarterAssetsInputs);
             foreach (var networkObject in NetworkManager.Singleton.SpawnManager.SpawnedObjects.Values)
             {
@@ -158,6 +181,7 @@ namespace Extreal.SampleApp.Holiday.Tests
             Assert.That(playerInput, Is.Not.Null);
 
             // Moves player
+            Logger.LogInfo("Moves player");
             const float moveDuration = 1f;
             var moveDirection = Vector2.up;
             var initZPosition = playerInput.transform.position.z;
@@ -178,17 +202,20 @@ namespace Extreal.SampleApp.Holiday.Tests
             Assert.That(moveDistances[1] - moveDistances[0], Is.Positive);
 
             // Makes player jump
+            Logger.LogInfo("Makes player jump");
             var initYPosition = playerInput.transform.position.y;
             playerInput.JumpInput(true);
             await UniTask.Delay(TimeSpan.FromSeconds(0.5));
 
             Assert.That(playerInput.transform.position.y - initYPosition, Is.Positive);
 
-            // Go back to AvatarSelectionScreen
+            // Goes back to AvatarSelectionScreen
+            Logger.LogInfo("Goes back to AvatarSelectionScreen");
             PushButtonNamed("SpaceButton");
             await UniTask.WaitUntil(() => ExistButtonOfSceneNamed(SceneName.AvatarSelectionScreen));
 
             // Waits for not ready to play
+            Logger.LogInfo("Waits for not ready to play");
             {
                 var playingReady = true;
 
@@ -200,6 +227,7 @@ namespace Extreal.SampleApp.Holiday.Tests
             }
 
             // Enters VirtualSpace again
+            Logger.LogInfo("Enters VirtualSpace again");
             FindObjectOfTypeAndAssert<Button>().onClick.Invoke();
             await WaitForPlayingReadyAsync(appState, ngoClient);
         });
