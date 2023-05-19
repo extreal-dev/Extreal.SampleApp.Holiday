@@ -1,7 +1,9 @@
 {
-    "name": "Extreal.SampleApp.Holiday.PerformanceTest",
-    "rootNamespace": "Extreal.SampleApp.Holiday.PerformanceTest",
+    "name": "Extreal.SampleApp.Holiday.Tests",
+    "rootNamespace": "Extreal.SampleApp.Holiday.Tests",
     "references": [
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
         "Extreal.SampleApp.Holiday",
         "Cinemachine",
         "Unity.ResourceManager",
@@ -20,16 +22,17 @@
         "Extreal.Integration.Multiplay.NGO",
         "Extreal.Integration.Chat.Vivox"
     ],
-    "includePlatforms": [
-        "Editor",
-        "WindowsStandalone64"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
-    "overrideReferences": false,
-    "precompiledReferences": [],
-    "autoReferenced": true,
-    "defineConstraints": [],
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
     "versionDefines": [],
     "noEngineReferences": false
 }

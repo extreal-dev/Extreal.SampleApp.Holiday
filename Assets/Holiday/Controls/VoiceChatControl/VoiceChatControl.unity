@@ -448,7 +448,7 @@ GameObject:
   - component: {fileID: 4841007888461499573}
   - component: {fileID: 7639063601383415804}
   m_Layer: 5
-  m_Name: Label
+  m_Name: MuteLabel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -467,7 +467,7 @@ GameObject:
   - component: {fileID: 1469821048492739082}
   - component: {fileID: 6568589697678686254}
   m_Layer: 5
-  m_Name: ScreenButton
+  m_Name: MuteButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

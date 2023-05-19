@@ -11,7 +11,7 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
     {
         public IObservable<bool> OnMuted => onMuted.AddTo(Disposables);
         [SuppressMessage("CodeCracker", "CC0033")]
-        private readonly ReactiveProperty<bool> onMuted = new ReactiveProperty<bool>();
+        private readonly ReactiveProperty<bool> onMuted = new ReactiveProperty<bool>(true);
 
         public VoiceChatChannel(VivoxClient vivoxClient, string channelName) : base(vivoxClient, channelName)
             => SetMuteAsync(true).Forget();
