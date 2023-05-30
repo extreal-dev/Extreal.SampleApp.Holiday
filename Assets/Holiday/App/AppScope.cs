@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using System.Diagnostics.CodeAnalysis;
 using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
+using Extreal.SampleApp.Holiday.App.AppUsage;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.Common.Config;
@@ -22,6 +23,7 @@ namespace Extreal.SampleApp.Holiday.App
         [SerializeField] private AppConfig appConfig;
         [SerializeField] private LoggingConfig loggingConfig;
         [SerializeField] private StageConfig stageConfig;
+        [SerializeField] private AppUsageConfig appUsageConfig;
 
         private void InitializeApp()
         {
@@ -98,6 +100,9 @@ namespace Extreal.SampleApp.Holiday.App
             builder.Register<AppState>(Lifetime.Singleton);
 
             builder.Register<AssetHelper>(Lifetime.Singleton);
+
+            builder.RegisterComponent(appUsageConfig);
+            builder.Register<AppUsageManager>(Lifetime.Singleton);
 
             builder.RegisterEntryPoint<AppPresenter>();
         }

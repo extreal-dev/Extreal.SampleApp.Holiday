@@ -30,9 +30,14 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
         }
 
         [SuppressMessage("CodeCracker", "CC0020")]
-        protected override void Initialize(StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables)
-            => textChatControlView.OnSendButtonClicked
-                .Subscribe(message => textChatChannel.SendMessage(message))
+        protected override void Initialize(StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables) =>
+            textChatControlView.OnSendButtonClicked
+                .Where(message => !string.IsNullOrWhiteSpace(message))
+                .Subscribe(message =>
+                {
+                    textChatChannel.SendMessage(message);
+                    appState.StageState.CountUpTextChats();
+                })
                 .AddTo(sceneDisposables);
 
         protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)

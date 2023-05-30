@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
+using Extreal.SampleApp.Holiday.App.AppUsage;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.Controls.RetryStatusControl;
 using Extreal.SampleApp.Holiday.Screens.ConfirmationScreen;
@@ -43,6 +44,8 @@ namespace Extreal.SampleApp.Holiday.App
         private readonly BoolReactiveProperty voiceChatReady = new BoolReactiveProperty(false);
 
         private readonly CompositeDisposable disposables = new CompositeDisposable();
+
+        public StageState StageState { get; private set; }
 
         public AppState()
         {
@@ -101,6 +104,7 @@ namespace Extreal.SampleApp.Holiday.App
         public void SetTextChatReady(bool ready) => textChatReady.Value = ready;
         public void SetVoiceChatReady(bool ready) => voiceChatReady.Value = ready;
         public void SetSpaceReady(bool ready) => spaceReady.Value = ready;
+        public void SetStage(StageName stageName) => StageState = new StageState(stageName);
 
         public void Notify(string message)
         {
