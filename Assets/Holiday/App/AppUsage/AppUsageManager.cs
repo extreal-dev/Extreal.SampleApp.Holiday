@@ -33,6 +33,7 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
         {
             Application.logMessageReceived -= CollectErrorStatus;
             disposables.Dispose();
+            Application.wantsToQuit -= WantsToQuit;
         }
 
         public void CollectAppUsage()
@@ -49,9 +50,25 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
                 .AddTo(disposables);
 
             stageNavigator.OnStageTransitioning
-                .Where(_ => appState.StageState != null)
-                .Hook(_ => Send(appState.StageState.ToStageUsage()))
+                .Hook(_ => SendStageUsage())
                 .AddTo(disposables);
+
+            Application.wantsToQuit += WantsToQuit;
+        }
+
+        private void SendStageUsage()
+        {
+            if (appState.StageState == null)
+            {
+                return;
+            }
+            Send(appState.StageState.ToStageUsage());
+        }
+
+        private bool WantsToQuit()
+        {
+            SendStageUsage();
+            return true;
         }
 
         private void Send(AppUsageBase appUsageBase) => Send(GetClientId(), appUsageBase);
@@ -59,7 +76,7 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
         private void Send(string clientId, AppUsageBase appUsageBase)
         {
             appUsageBase.ClientId = clientId;
-            appUsageBase.StageName = appState.StageState.StageName.ToString();
+            appUsageBase.StageName = appState.StageState?.StageName.ToString();
             Logger.LogInfo(JsonUtility.ToJson(appUsageBase));
         }
 
