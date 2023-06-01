@@ -12,6 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b82c72c81b742948a57f0c6113f9539, type: 3}
   m_Name: AppUsageConfig
   m_EditorClassIdentifier: 
+  enable: 1
+  orgId: tenant1
+  pushUrl: http://localhost:3100/loki/api/v1/push
+  timeoutSeconds: 5
   clientIdKey: Holiday_client_id
-  resourceUsageCollectPeriodSeconds: 5
+  resourceUsageCollectPeriodSeconds: 10
   maxStackTraceLength: 500

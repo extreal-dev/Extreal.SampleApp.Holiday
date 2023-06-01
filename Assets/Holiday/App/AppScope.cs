@@ -25,6 +25,9 @@ namespace Extreal.SampleApp.Holiday.App
         [SerializeField] private StageConfig stageConfig;
         [SerializeField] private AppUsageConfig appUsageConfig;
 
+        [SuppressMessage("Usage", "CC0033")]
+        private readonly AppState appState = new AppState();
+
         private void InitializeApp()
         {
             QualitySettings.vSyncCount = appConfig.VerticalSyncs;
@@ -32,7 +35,7 @@ namespace Extreal.SampleApp.Holiday.App
             var timeout = appConfig.DownloadTimeoutSeconds;
             Addressables.ResourceManager.WebRequestOverride = unityWebRequest => unityWebRequest.timeout = timeout;
 
-            ClearAssetBundleCacheOnDev();
+            ClearCacheOnDev();
 
             var logLevel = InitializeLogging();
             InitializeMicrophone();
@@ -49,12 +52,12 @@ namespace Extreal.SampleApp.Holiday.App
         {
 #if HOLIDAY_PROD
             const LogLevel logLevel = LogLevel.Info;
-            LoggingManager.Initialize(logLevel: logLevel);
+            LoggingManager.Initialize(logLevel: logLevel, writer: new AppUsageLogWriter(appUsageConfig, appState));
 #else
             const LogLevel logLevel = LogLevel.Debug;
             var checker = new LogLevelLogOutputChecker(loggingConfig.CategoryFilters);
             var writer = new UnityDebugLogWriter(loggingConfig.LogFormats);
-            LoggingManager.Initialize(logLevel, checker, writer);
+            LoggingManager.Initialize(logLevel, checker, new AppUsageLogWriter(appUsageConfig, appState, writer));
 #endif
             return logLevel;
         }
@@ -77,10 +80,11 @@ namespace Extreal.SampleApp.Holiday.App
         }
 
         [SuppressMessage("Design", "IDE0022")]
-        private static void ClearAssetBundleCacheOnDev()
+        private void ClearCacheOnDev()
         {
 #if !HOLIDAY_PROD
             Caching.ClearCache();
+            PlayerPrefs.DeleteKey(appUsageConfig.ClientIdKey);
 #endif
         }
 
@@ -97,7 +101,7 @@ namespace Extreal.SampleApp.Holiday.App
             builder.RegisterComponent(stageConfig).AsImplementedInterfaces();
             builder.Register<StageNavigator<StageName, SceneName>>(Lifetime.Singleton);
 
-            builder.Register<AppState>(Lifetime.Singleton);
+            builder.RegisterComponent(appState);
 
             builder.Register<AssetHelper>(Lifetime.Singleton);
 
@@ -105,6 +109,12 @@ namespace Extreal.SampleApp.Holiday.App
             builder.Register<AppUsageManager>(Lifetime.Singleton);
 
             builder.RegisterEntryPoint<AppPresenter>();
+        }
+
+        protected override void OnDestroy()
+        {
+            appState.Dispose();
+            base.OnDestroy();
         }
     }
 }

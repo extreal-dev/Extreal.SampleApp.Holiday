@@ -31,13 +31,22 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
 
         protected override void ReleaseUnmanagedResources()
         {
-            Application.logMessageReceived -= CollectErrorStatus;
             disposables.Dispose();
+
+            if (!appUsageConfig.Enable)
+            {
+                return;
+            }
+            Application.logMessageReceived -= CollectErrorStatus;
             Application.wantsToQuit -= WantsToQuit;
         }
 
         public void CollectAppUsage()
         {
+            if (!appUsageConfig.Enable)
+            {
+                return;
+            }
             CollectStageUsage(stageNavigator, appState);
             CollectResourceUsage();
             Application.logMessageReceived += CollectErrorStatus;
@@ -50,49 +59,45 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
                 .AddTo(disposables);
 
             stageNavigator.OnStageTransitioning
-                .Hook(_ => SendStageUsage())
+                .Hook(_ => CollectStageUsage())
                 .AddTo(disposables);
 
             Application.wantsToQuit += WantsToQuit;
         }
 
-        private void SendStageUsage()
+        private void CollectStageUsage()
         {
             if (appState.StageState == null)
             {
                 return;
             }
-            Send(appState.StageState.ToStageUsage());
+            Collect(appState.StageState.ToStageUsage());
         }
 
         private bool WantsToQuit()
         {
-            SendStageUsage();
+            CollectStageUsage();
             return true;
         }
 
-        private void Send(AppUsageBase appUsageBase) => Send(GetClientId(), appUsageBase);
+        private void Collect(AppUsageBase appUsageBase)
+            => Logger.LogInfo(AppUsageUtils.ToJson(appUsageBase, GetClientId(), appState));
 
-        private void Send(string clientId, AppUsageBase appUsageBase)
-        {
-            appUsageBase.ClientId = clientId;
-            appUsageBase.StageName = appState.StageState?.StageName.ToString();
-            Logger.LogInfo(JsonUtility.ToJson(appUsageBase));
-        }
+        private void Collect(string clientId, AppUsageBase appUsageBase)
+            => Logger.LogInfo(AppUsageUtils.ToJson(appUsageBase, clientId, appState));
 
         private string GetClientId()
         {
-            if (!PlayerPrefs.HasKey(appUsageConfig.ClientIdKey))
+            var clientId = AppUsageUtils.GetClientId(appUsageConfig);
+            if (clientId.IsGenerated)
             {
-                var clientId = Guid.NewGuid().ToString();
-                CollectFirstUse(clientId);
-                PlayerPrefs.SetString(appUsageConfig.ClientIdKey, clientId);
+                CollectFirstUse(clientId.Value);
             }
-            return PlayerPrefs.GetString(appUsageConfig.ClientIdKey);
+            return clientId.Value;
         }
 
         private void CollectFirstUse(string clientId) =>
-            Send(clientId, new FirstUse
+            Collect(clientId, new FirstUse
             {
                 UsageId = nameof(FirstUse),
                 OS = SystemInfo.operatingSystem,
@@ -104,7 +109,7 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
 
         private void CollectResourceUsage() =>
             Observable.Timer(TimeSpan.Zero, TimeSpan.FromSeconds(appUsageConfig.ResourceUsageCollectPeriodSeconds))
-                .Hook(_ => Send(new ResourceUsage
+                .Hook(_ => Collect(new ResourceUsage
                 {
                     UsageId = nameof(ResourceUsage),
                     TotalReservedMemoryMb = AppUtils.ToMb(Profiler.GetTotalReservedMemoryLong()),
@@ -120,17 +125,7 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
             {
                 return;
             }
-            if (!string.IsNullOrEmpty(stackTrace) && stackTrace.Length > appUsageConfig.MaxStackTraceLength)
-            {
-                stackTrace = $"{stackTrace.Substring(0, appUsageConfig.MaxStackTraceLength)}...";
-            }
-            Send(new ErrorStatus
-            {
-                UsageId = nameof(ErrorStatus),
-                ErrorMessage = logString,
-                StackTrace = stackTrace,
-                ErrorType = type.ToString()
-            });
+            Collect(ErrorStatus.Of(logString, stackTrace, type, appUsageConfig));
         }
     }
 }
