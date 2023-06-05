@@ -22,7 +22,20 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
         private readonly AppState appState;
         private readonly AppUsageConfig appUsageConfig;
 
-        public AppUsageManager(StageNavigator<StageName, SceneName> stageNavigator, AppState appState, AppUsageConfig appUsageConfig)
+        private IObservable<string> OnFirstUsed => onFirstUsed.AddTo(disposables);
+        [SuppressMessage("Usage", "CC0033")]
+        private readonly Subject<string> onFirstUsed = new Subject<string>();
+
+        private IObservable<Unit> OnApplicationExiting => onApplicationExiting.AddTo(disposables);
+        [SuppressMessage("Usage", "CC0033")]
+        private readonly Subject<Unit> onApplicationExiting = new Subject<Unit>();
+
+        private IObservable<ErrorLog> OnErrorOccured => onErrorOccured.AddTo(disposables);
+        [SuppressMessage("Usage", "CC0033")]
+        private readonly Subject<ErrorLog> onErrorOccured = new Subject<ErrorLog>();
+
+        public AppUsageManager(StageNavigator<StageName, SceneName> stageNavigator, AppState appState,
+            AppUsageConfig appUsageConfig)
         {
             this.stageNavigator = stageNavigator;
             this.appState = appState;
@@ -37,8 +50,9 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
             {
                 return;
             }
-            Application.logMessageReceived -= CollectErrorStatus;
+
             Application.wantsToQuit -= WantsToQuit;
+            Application.logMessageReceived -= LogMessageReceived;
         }
 
         public void CollectAppUsage()
@@ -47,10 +61,70 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
             {
                 return;
             }
+
+            Application.wantsToQuit += WantsToQuit;
+            Application.logMessageReceived += LogMessageReceived;
+
+            CollectFirstUse();
             CollectStageUsage(stageNavigator, appState);
             CollectResourceUsage();
-            Application.logMessageReceived += CollectErrorStatus;
+            CollectErrorStatus();
         }
+
+        private bool WantsToQuit()
+        {
+            onApplicationExiting.OnNext(Unit.Default);
+            return true;
+        }
+
+        private void LogMessageReceived(string logString, string stackTrace, LogType type)
+            => onErrorOccured.OnNext(new ErrorLog(logString, stackTrace, type));
+
+        private class ErrorLog
+        {
+            public readonly string LogString;
+            public readonly string StackTrace;
+            public readonly LogType LogType;
+
+            public ErrorLog(string logString, string stackTrace, LogType type)
+            {
+                LogString = logString;
+                StackTrace = stackTrace;
+                LogType = type;
+            }
+        }
+
+        private void Collect(AppUsageBase appUsageBase, string clientId = null)
+            => Logger.LogInfo(AppUsageUtils.ToJson(appUsageBase, clientId ?? GetClientId(), appState));
+
+        private string GetClientId()
+        {
+            var clientId = AppUsageUtils.GetClientId(appUsageConfig);
+            if (clientId.IsGenerated)
+            {
+                onFirstUsed.OnNext(clientId.Value);
+            }
+
+            return clientId.Value;
+        }
+
+        private void CollectFirstUse() =>
+            OnFirstUsed
+                .Hook(clientId =>
+                {
+                    Collect(
+                        new FirstUse
+                        {
+                            UsageId = nameof(FirstUse),
+                            OS = SystemInfo.operatingSystem,
+                            DeviceModel = SystemInfo.deviceModel,
+                            DeviceType = SystemInfo.deviceType.ToString(),
+                            DeviceId = SystemInfo.deviceUniqueIdentifier,
+                            ProcessorType = SystemInfo.processorType
+                        },
+                        clientId);
+                })
+                .AddTo(disposables);
 
         private void CollectStageUsage(StageNavigator<StageName, SceneName> stageNavigator, AppState appState)
         {
@@ -58,54 +132,24 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
                 .Hook(appState.SetStage)
                 .AddTo(disposables);
 
+            Action collect = () =>
+            {
+                if (appState.StageState == null)
+                {
+                    return;
+                }
+                Collect(appState.StageState.ToStageUsage());
+            };
+
             stageNavigator.OnStageTransitioning
-                .Hook(_ => CollectStageUsage())
+                .Hook(_ => collect())
                 .AddTo(disposables);
 
-            Application.wantsToQuit += WantsToQuit;
+            OnApplicationExiting
+                .Where(_ => appState.StageState != null)
+                .Hook(_ => collect())
+                .AddTo(disposables);
         }
-
-        private void CollectStageUsage()
-        {
-            if (appState.StageState == null)
-            {
-                return;
-            }
-            Collect(appState.StageState.ToStageUsage());
-        }
-
-        private bool WantsToQuit()
-        {
-            CollectStageUsage();
-            return true;
-        }
-
-        private void Collect(AppUsageBase appUsageBase)
-            => Logger.LogInfo(AppUsageUtils.ToJson(appUsageBase, GetClientId(), appState));
-
-        private void Collect(string clientId, AppUsageBase appUsageBase)
-            => Logger.LogInfo(AppUsageUtils.ToJson(appUsageBase, clientId, appState));
-
-        private string GetClientId()
-        {
-            var clientId = AppUsageUtils.GetClientId(appUsageConfig);
-            if (clientId.IsGenerated)
-            {
-                CollectFirstUse(clientId.Value);
-            }
-            return clientId.Value;
-        }
-
-        private void CollectFirstUse(string clientId) =>
-            Collect(clientId, new FirstUse
-            {
-                UsageId = nameof(FirstUse),
-                OS = SystemInfo.operatingSystem,
-                DeviceModel = SystemInfo.deviceModel,
-                DeviceType = SystemInfo.deviceType.ToString(),
-                DeviceId = SystemInfo.deviceUniqueIdentifier,
-                ProcessorType = SystemInfo.processorType
-            });
 
         private void CollectResourceUsage() =>
             Observable.Timer(TimeSpan.Zero, TimeSpan.FromSeconds(appUsageConfig.ResourceUsageCollectPeriodSeconds))
@@ -119,13 +163,17 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
                 }))
                 .AddTo(disposables);
 
-        private void CollectErrorStatus(string logString, string stackTrace, LogType type)
-        {
-            if (type != LogType.Error && type != LogType.Exception)
-            {
-                return;
-            }
-            Collect(ErrorStatus.Of(logString, stackTrace, type, appUsageConfig));
-        }
+        private void CollectErrorStatus() =>
+            OnErrorOccured
+                .Hook(errorLog =>
+                {
+                    if (errorLog.LogType != LogType.Error && errorLog.LogType != LogType.Exception)
+                    {
+                        return;
+                    }
+
+                    Collect(ErrorStatus.Of(errorLog.LogString, errorLog.StackTrace, errorLog.LogType, appUsageConfig));
+                })
+                .AddTo(disposables);
     }
 }
