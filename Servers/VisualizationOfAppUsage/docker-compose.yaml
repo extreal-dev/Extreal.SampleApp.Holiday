@@ -45,17 +45,6 @@ services:
     networks:
       <<: *loki-dns
 
-  promtail:
-    image: grafana/promtail:2.8.2
-    volumes:
-      - ./promtail-local-config.yaml:/etc/promtail/config.yaml:ro
-      - /var/run/docker.sock:/var/run/docker.sock
-    command: -config.file=/etc/promtail/config.yaml
-    depends_on:
-      - gateway
-    networks:
-      - loki
-
   minio:
     image: minio/minio
     entrypoint:
@@ -146,20 +135,6 @@ services:
               auth_basic off;
             }
 
-            location = /api/prom/push {
-              proxy_pass       http://write:3100\$$request_uri;
-            }
-
-            location = /api/prom/tail {
-              proxy_pass       http://read:3100\$$request_uri;
-              proxy_set_header Upgrade \$$http_upgrade;
-              proxy_set_header Connection "upgrade";
-            }
-
-            location ~ /api/prom/.* {
-              proxy_pass       http://read:3100\$$request_uri;
-            }
-
             location = /loki/api/v1/push {
               proxy_pass       http://write:3100\$$request_uri;
             }
@@ -184,11 +159,5 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - loki
-
-  flog:
-    image: mingrammer/flog
-    command: -f json -d 1s -l
     networks:
       - loki
