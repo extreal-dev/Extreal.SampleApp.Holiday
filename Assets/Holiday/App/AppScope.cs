@@ -25,9 +25,6 @@ namespace Extreal.SampleApp.Holiday.App
         [SerializeField] private StageConfig stageConfig;
         [SerializeField] private AppUsageConfig appUsageConfig;
 
-        [SuppressMessage("Usage", "CC0033")]
-        private readonly AppState appState = new AppState();
-
         private void InitializeApp()
         {
             QualitySettings.vSyncCount = appConfig.VerticalSyncs;
@@ -52,14 +49,24 @@ namespace Extreal.SampleApp.Holiday.App
         {
 #if HOLIDAY_PROD
             const LogLevel logLevel = LogLevel.Info;
-            LoggingManager.Initialize(logLevel: logLevel, writer: new AppUsageLogWriter(appUsageConfig, appState));
+            LoggingManager.Initialize(logLevel: logLevel, writer: new AppUsageLogWriter(appUsageConfig, appStateProvider));
 #else
             const LogLevel logLevel = LogLevel.Debug;
             var checker = new LogLevelLogOutputChecker(loggingConfig.CategoryFilters);
-            var writer = new UnityDebugLogWriter(loggingConfig.LogFormats);
-            LoggingManager.Initialize(logLevel, checker, new AppUsageLogWriter(appUsageConfig, appState, writer));
+            var defaultWriter = new UnityDebugLogWriter(loggingConfig.LogFormats);
+            var writer = new AppUsageLogWriter(appUsageConfig, appStateProvider, defaultWriter);
+            LoggingManager.Initialize(logLevel, checker, writer);
 #endif
             return logLevel;
+        }
+
+        private readonly AppStateProvider appStateProvider = new AppStateProvider();
+
+        public class AppStateProvider
+        {
+            public AppState AppState { get; private set; }
+            internal AppStateProvider() {}
+            internal void Init() => AppState = new AppState();
         }
 
         private static void InitializeMicrophone()
@@ -101,7 +108,8 @@ namespace Extreal.SampleApp.Holiday.App
             builder.RegisterComponent(stageConfig).AsImplementedInterfaces();
             builder.Register<StageNavigator<StageName, SceneName>>(Lifetime.Singleton);
 
-            builder.RegisterComponent(appState);
+            appStateProvider.Init();
+            builder.RegisterComponent(appStateProvider.AppState);
 
             builder.Register<AssetHelper>(Lifetime.Singleton);
 
@@ -109,12 +117,6 @@ namespace Extreal.SampleApp.Holiday.App
             builder.Register<AppUsageManager>(Lifetime.Singleton);
 
             builder.RegisterEntryPoint<AppPresenter>();
-        }
-
-        protected override void OnDestroy()
-        {
-            appState.Dispose();
-            base.OnDestroy();
         }
     }
 }

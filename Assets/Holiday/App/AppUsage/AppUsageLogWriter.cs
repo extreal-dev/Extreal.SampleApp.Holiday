@@ -12,13 +12,16 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
     public class AppUsageLogWriter : ILogWriter
     {
         private readonly AppUsageConfig appUsageConfig;
-        private readonly AppState appState;
+        private readonly AppScope.AppStateProvider appStateProvider;
         private readonly ILogWriter defaultLogWriter;
 
-        public AppUsageLogWriter(AppUsageConfig appUsageConfig, AppState appState, ILogWriter defaultLogWriter = null)
+        public AppUsageLogWriter(
+            AppUsageConfig appUsageConfig,
+            AppScope.AppStateProvider appStateProvider,
+            ILogWriter defaultLogWriter = null)
         {
             this.appUsageConfig = appUsageConfig;
-            this.appState = appState;
+            this.appStateProvider = appStateProvider;
             this.defaultLogWriter = defaultLogWriter ?? new UnityDebugLogWriter();
         }
 
@@ -79,6 +82,7 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
                 Debug.Log($"{nameof(AppUsageLogWriter)}:{statusCode}");
                 Debug.Log(jsonLogLine);
             }
+
             if (exception != null)
             {
                 Debug.Log(exception.Message + Environment.NewLine + exception.StackTrace);
@@ -98,7 +102,7 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
         private void SendErrorLog(string message, Exception exception = null)
         {
             var errorStatus = ErrorStatus.Of(message, exception?.StackTrace, LogType.Error, appUsageConfig);
-            SendAppUsage(AppUsageUtils.ToJson(errorStatus, appUsageConfig, appState));
+            SendAppUsage(AppUsageUtils.ToJson(errorStatus, appUsageConfig, appStateProvider.AppState));
         }
     }
 }
