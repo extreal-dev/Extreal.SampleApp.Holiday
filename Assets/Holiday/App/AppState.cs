@@ -2,7 +2,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
-using Extreal.SampleApp.Holiday.App.AppUsage;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.Controls.RetryStatusControl;
 using Extreal.SampleApp.Holiday.Screens.ConfirmationScreen;
@@ -108,10 +107,7 @@ namespace Extreal.SampleApp.Holiday.App
 
         public void Notify(string message)
         {
-            if (Logger.IsDebug())
-            {
-                Logger.LogDebug($"Notification received: {message}");
-            }
+            Logger.LogError(message);
             onNotificationReceived.OnNext(message);
         }
 
