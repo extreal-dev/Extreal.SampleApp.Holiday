@@ -5,15 +5,14 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
 {
     public class StageState
     {
-        public StageName StageName => stageName;
+        public StageName StageName { get; }
 
-        private readonly StageName stageName;
         private readonly Stopwatch stopwatch;
         private int numberOfTextChatsSent;
 
         public StageState(StageName stageName)
         {
-            this.stageName = stageName;
+            StageName = stageName;
             stopwatch = new Stopwatch();
             stopwatch.Start();
         }
