@@ -1,29 +1,29 @@
 # Visualization fo App Usage
 
-Grafanaのダッシュボードを準備します。
-Docker Composeを使ってGrafanaを起動し、ブラウザでGrafanaアクセスしてダッシュボードを使います。
+Prepare a Grafana dashboard.
+Start Grafana using Docker Compose and use the dashboard with Grafana access in your browser.
 
-1. Docker ComposeでGrafanaを起動します。
+1. Start Grafana with Docker Compose.
     ```
     $ docker-compose up -d
     ```
-1. しばらくしてからサービスが起動したかを確認します。STATUSが全てhealthyになっていればOKです。
+1. After a few moments, check to see if the service has started, and if STATUS is all healthy, it is OK.
     ```
     $ docker-compose ps
     ```
-    unhealthyになっているサービスがある場合は個別に再起動します。
+    If any services are unhealthy, restart them individually.
     ```
     $ docker-compose restart <<service>>
     ```
-1. ブラウザでlocalhost:3000を指定してGrafanaにアクセスします。
-1. Sign inを選択します。
+1. Access Grafana by specifying localhost:3000 in your browser.
+1. Select Sign in.
     - username: admin
     - password: admin
-    - adminの新しいパスワードを設定します。
-1. Grafanaのトップページが表示されます。左側のメニューアイコンからDashboardsを選択します。
-1. 右側のNewプルダウンからImportを選択します。
-    1. このREADMEと同じ場所にあるholiday-dashboard.jsonをアップロードします。
-    1. LokiプルダウンからLokiを選択します。
-    1. Importを選択します。
-1. ダッシュボードが表示されれば準備完了です。
+    - Set a new password for admin.
+1. The Grafana home page will appear. Select Dashboards from the menu icons on the left.
+1. Select Import from the New pull-down on the right.
+    1. Upload holiday-dashboard.json in the same location as this README.
+    1. Select Loki from the Loki pull-down menu.
+    1. Select Import.
+1. Once the dashboard appears, you are ready to go.
 
