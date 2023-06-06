@@ -128,17 +128,18 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
 
         private void CollectStageUsage(StageNavigator<StageName, SceneName> stageNavigator, AppState appState)
         {
-            stageNavigator.OnStageTransitioned
-                .Hook(appState.SetStage)
-                .AddTo(disposables);
-
             Action collect = () =>
             {
                 if (appState.StageState == null)
                 {
                     return;
                 }
-                Collect(appState.StageState.ToStageUsage());
+                Collect(new StageUsage
+                {
+                    UsageId = nameof(StageUsage),
+                    StayTimeSeconds = appState.StageState.StayTimeSeconds,
+                    NumberOfTextChatsSent = appState.StageState.NumberOfTextChatsSent
+                });
             };
 
             stageNavigator.OnStageTransitioning

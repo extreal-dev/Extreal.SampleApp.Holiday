@@ -53,6 +53,10 @@ namespace Extreal.SampleApp.Holiday.App
                     appConfig.DownloadRetryFailureMessage))
                 .AddTo(disposables);
 
+            stageNavigator.OnStageTransitioned
+                .Subscribe(appState.SetStage)
+                .AddTo(disposables);
+
             appUsageManager.CollectAppUsage();
         }
 
