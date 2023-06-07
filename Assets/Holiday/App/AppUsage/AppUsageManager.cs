@@ -147,7 +147,6 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
                 .AddTo(disposables);
 
             OnApplicationExiting
-                .Where(_ => appState.StageState != null)
                 .Hook(_ => collect())
                 .AddTo(disposables);
         }
