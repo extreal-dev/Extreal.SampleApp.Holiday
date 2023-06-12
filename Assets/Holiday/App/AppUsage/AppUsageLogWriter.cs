@@ -25,7 +25,7 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
             this.defaultLogWriter = defaultLogWriter ?? new UnityDebugLogWriter();
         }
 
-        private const string AppStageCategory = nameof(AppUsage);
+        private const string AppUsageCategory = nameof(AppUsage);
 
         public void Log(LogLevel logLevel, string logCategory, string message, Exception exception = null)
         {
@@ -35,7 +35,7 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
                 return;
             }
 
-            if (AppStageCategory == logCategory)
+            if (AppUsageCategory == logCategory)
             {
                 SendAppUsage(message);
             }
