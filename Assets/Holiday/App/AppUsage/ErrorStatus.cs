@@ -7,9 +7,10 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
     {
         public string ErrorType;
         public string ErrorMessage;
+        public string ExceptionMessage;
         public string StackTrace;
 
-        public static ErrorStatus Of(string logString, string stackTrace, LogType type, AppUsageConfig appUsageConfig)
+        public static ErrorStatus Of(string logString, string exceptionMessage, string stackTrace, LogType type, AppUsageConfig appUsageConfig)
         {
             if (!string.IsNullOrEmpty(stackTrace) && stackTrace.Length > appUsageConfig.MaxStackTraceLength)
             {
@@ -19,6 +20,7 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
             {
                 UsageId = nameof(ErrorStatus),
                 ErrorMessage = logString,
+                ExceptionMessage = exceptionMessage,
                 StackTrace = stackTrace,
                 ErrorType = type.ToString()
             };

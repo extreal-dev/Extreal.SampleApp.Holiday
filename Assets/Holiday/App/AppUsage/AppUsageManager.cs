@@ -170,7 +170,8 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
                         return;
                     }
 
-                    Collect(ErrorStatus.Of(errorLog.LogString, errorLog.StackTrace, errorLog.LogType, appUsageConfig));
+                    Collect(ErrorStatus.Of(
+                        errorLog.LogString, null, errorLog.StackTrace, errorLog.LogType, appUsageConfig));
                 })
                 .AddTo(disposables);
     }

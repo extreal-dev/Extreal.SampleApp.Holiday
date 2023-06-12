@@ -101,7 +101,7 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
 
         private void SendErrorLog(string message, Exception exception = null)
         {
-            var errorStatus = ErrorStatus.Of(message, exception?.StackTrace, LogType.Error, appUsageConfig);
+            var errorStatus = ErrorStatus.Of(message, exception?.Message, exception?.StackTrace, LogType.Error, appUsageConfig);
             SendAppUsage(AppUsageUtils.ToJson(errorStatus, appUsageConfig, appStateProvider.AppState));
         }
     }
