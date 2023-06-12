@@ -26,6 +26,6 @@ namespace Extreal.SampleApp.Holiday.App
             stopwatch.Start();
         }
 
-        public void CountUpTextChats() => NumberOfTextChatsSent += 1;
+        public void CountUpTextChats() => NumberOfTextChatsSent++;
     }
 }
