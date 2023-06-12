@@ -66,6 +66,7 @@ crashlytics-build.properties
 # Application config scriptable object
 ChatConfig.asset*
 MultiplayConfig.asset*
+AppUsageConfig.asset*
 
 # Addressables connection server config
 SecretVariables.cs*
