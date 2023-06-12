@@ -14,7 +14,7 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
         {
             if (!string.IsNullOrEmpty(stackTrace) && stackTrace.Length > appUsageConfig.MaxStackTraceLength)
             {
-                stackTrace = $"{stackTrace.Substring(0, appUsageConfig.MaxStackTraceLength)}...";
+                stackTrace = $"{stackTrace[..appUsageConfig.MaxStackTraceLength]}...";
             }
             return new ErrorStatus
             {
