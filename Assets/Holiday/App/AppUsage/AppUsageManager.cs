@@ -163,16 +163,9 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
 
         private void CollectErrorStatus() =>
             OnErrorOccured
-                .Hook(errorLog =>
-                {
-                    if (errorLog.LogType is not LogType.Error and not LogType.Exception)
-                    {
-                        return;
-                    }
-
-                    Collect(ErrorStatus.Of(
-                        errorLog.LogString, null, errorLog.StackTrace, errorLog.LogType, appUsageConfig));
-                })
+                .Where(errorLog => errorLog.LogType is LogType.Error or LogType.Exception)
+                .Hook(errorLog => Collect(ErrorStatus.Of(
+                    errorLog.LogString, null, errorLog.StackTrace, errorLog.LogType, appUsageConfig)))
                 .AddTo(disposables);
     }
 }
