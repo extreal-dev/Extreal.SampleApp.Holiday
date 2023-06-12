@@ -24,6 +24,6 @@ Start Grafana using Docker Compose and use the dashboard with Grafana access in 
 1. Select `Import` from the New pull-down on the right.
     1. Upload `holiday-dashboard.json` in the same location as this README.
     1. Select `Loki` from the Loki pull-down menu.
-    1. Select `Import`.
+    1. Click `Import`.
 1. Once the dashboard appears, you are ready to go.
 
