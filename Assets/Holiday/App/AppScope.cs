@@ -62,6 +62,11 @@ namespace Extreal.SampleApp.Holiday.App
 
         private readonly AppStateProvider appStateProvider = new AppStateProvider();
 
+        // The provider is added to pass AppState to LogWriter. AppState gets the logger to output logs.
+        // Therefore, if AppState is created before log output is initialized,
+        // only AppState acquires the logger before initialization, resulting in inconsistency.
+        // In order to resolve this issue, the provider is introduced and AppState is passed to LogWriter
+        // while delaying the timing of AppState creation.
         public class AppStateProvider
         {
             public AppState AppState { get; private set; }
