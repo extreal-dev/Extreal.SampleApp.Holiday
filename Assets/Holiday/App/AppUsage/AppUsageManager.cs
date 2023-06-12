@@ -111,7 +111,6 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
         private void CollectFirstUse() =>
             OnFirstUsed
                 .Hook(clientId =>
-                {
                     Collect(
                         new FirstUse
                         {
@@ -122,8 +121,7 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
                             DeviceId = SystemInfo.deviceUniqueIdentifier,
                             ProcessorType = SystemInfo.processorType
                         },
-                        clientId);
-                })
+                        clientId))
                 .AddTo(disposables);
 
         private void CollectStageUsage(StageNavigator<StageName, SceneName> stageNavigator, AppState appState)
@@ -167,7 +165,7 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
             OnErrorOccured
                 .Hook(errorLog =>
                 {
-                    if (errorLog.LogType != LogType.Error && errorLog.LogType != LogType.Exception)
+                    if (errorLog.LogType is not LogType.Error and not LogType.Exception)
                     {
                         return;
                     }

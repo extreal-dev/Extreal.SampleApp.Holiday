@@ -65,7 +65,7 @@ namespace Extreal.SampleApp.Holiday.App
         public class AppStateProvider
         {
             public AppState AppState { get; private set; }
-            internal AppStateProvider() {}
+            internal AppStateProvider() { }
             internal void Init() => AppState = new AppState();
         }
 
