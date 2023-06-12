@@ -5,7 +5,7 @@ networks:
   loki:
 
 services:
-  read:
+  loki-read:
     image: grafana/loki:2.8.2
     command: "-config.file=/etc/loki/config.yaml -target=read"
     ports:
@@ -26,7 +26,7 @@ services:
         aliases:
           - loki
 
-  write:
+  loki-write:
     image: grafana/loki:2.8.2
     command: "-config.file=/etc/loki/config.yaml -target=write"
     ports:
@@ -110,8 +110,8 @@ services:
   gateway:
     image: nginx:latest
     depends_on:
-      - read
-      - write
+      - loki-read
+      - loki-write
     entrypoint:
       - sh
       - -euc
@@ -136,17 +136,17 @@ services:
             }
 
             location = /loki/api/v1/push {
-              proxy_pass       http://write:3100\$$request_uri;
+              proxy_pass       http://loki-write:3100\$$request_uri;
             }
 
             location = /loki/api/v1/tail {
-              proxy_pass       http://read:3100\$$request_uri;
+              proxy_pass       http://loki-read:3100\$$request_uri;
               proxy_set_header Upgrade \$$http_upgrade;
               proxy_set_header Connection "upgrade";
             }
 
             location ~ /loki/api/.* {
-              proxy_pass       http://read:3100\$$request_uri;
+              proxy_pass       http://loki-read:3100\$$request_uri;
             }
           }
         }
