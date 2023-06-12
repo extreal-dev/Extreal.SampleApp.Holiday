@@ -40,6 +40,6 @@ namespace Extreal.SampleApp.Holiday.App
             }
         }
 
-        public static long ToMb(long bytes) => (long)((bytes >> 10) / 1024f);
+        public static long ToMb(long bytes) => bytes >> 20;
     }
 }
