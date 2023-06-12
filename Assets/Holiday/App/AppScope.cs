@@ -91,7 +91,7 @@ namespace Extreal.SampleApp.Holiday.App
 #endif
         }
 
-        [SuppressMessage("Design", "IDE0022")]
+        [SuppressMessage("Design", "IDE0022"), SuppressMessage("Design", "CC0091")]
         private void ClearCacheOnDev()
         {
 #if !HOLIDAY_PROD
