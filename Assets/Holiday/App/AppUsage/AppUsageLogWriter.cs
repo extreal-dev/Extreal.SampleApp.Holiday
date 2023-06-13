@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.Logging;
+using Extreal.SampleApp.Holiday.App.AppUsage.Collectors;
 using Extreal.SampleApp.Holiday.App.Config;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -101,7 +102,8 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
 
         private void SendErrorLog(string message, Exception exception = null)
         {
-            var errorStatus = ErrorStatus.Of(message, exception?.Message, exception?.StackTrace, LogType.Error, appUsageConfig);
+            var errorStatus = ErrorStatusCollector.ErrorStatus.Of(
+                message, exception?.Message, exception?.StackTrace, LogType.Error, appUsageConfig);
             SendAppUsage(AppUsageUtils.ToJson(errorStatus, appUsageConfig, appStateProvider.AppState));
         }
     }
