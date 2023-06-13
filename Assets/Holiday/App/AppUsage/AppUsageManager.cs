@@ -80,6 +80,7 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
         private void LogMessageReceived(string logString, string stackTrace, LogType type)
             => onErrorOccured.OnNext(new ErrorLog(logString, stackTrace, type));
 
+        [SuppressMessage("Usage", "IDE1006")]
         private class ErrorLog
         {
             public readonly string LogString;

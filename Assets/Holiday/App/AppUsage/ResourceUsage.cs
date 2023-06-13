@@ -1,5 +1,8 @@
-﻿namespace Extreal.SampleApp.Holiday.App.AppUsage
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Extreal.SampleApp.Holiday.App.AppUsage
 {
+    [SuppressMessage("Usage", "IDE1006")]
     public class ResourceUsage : AppUsageBase
     {
         public long TotalReservedMemoryMb;

@@ -1,8 +1,10 @@
-﻿using Extreal.SampleApp.Holiday.App.Config;
+﻿using System.Diagnostics.CodeAnalysis;
+using Extreal.SampleApp.Holiday.App.Config;
 using UnityEngine;
 
 namespace Extreal.SampleApp.Holiday.App.AppUsage
 {
+    [SuppressMessage("Usage", "IDE1006")]
     public class ErrorStatus : AppUsageBase
     {
         public string ErrorType;
