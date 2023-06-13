@@ -39,5 +39,7 @@ namespace Extreal.SampleApp.Holiday.App
                 appState.Notify(failureMessage);
             }
         }
+
+        public static long ToMb(long bytes) => bytes >> 20;
     }
 }

@@ -1,0 +1,50 @@
+---
+server:
+  http_listen_port: 3100
+memberlist:
+  join_members:
+    - loki:7946
+schema_config:
+  configs:
+    - from: 2021-08-01
+      store: boltdb-shipper
+      object_store: s3
+      schema: v11
+      index:
+        prefix: index_
+        period: 24h
+common:
+  path_prefix: /loki
+  replication_factor: 1
+  storage:
+    s3:
+      endpoint: minio:9000
+      insecure: true
+      bucketnames: loki-data
+      access_key_id: loki
+      secret_access_key: supersecret
+      s3forcepathstyle: true
+  ring:
+    kvstore:
+      store: memberlist
+ruler:
+  storage:
+    s3:
+      bucketnames: loki-ruler
+
+query_range:
+  align_queries_with_step: true
+  max_retries: 5
+  parallelise_shardable_queries: true
+  cache_results: true
+
+frontend:
+  log_queries_longer_than: 5s
+  compress_responses: true
+  max_outstanding_per_tenant: 2048
+
+query_scheduler:
+  max_outstanding_requests_per_tenant: 1024
+
+querier:
+  query_ingesters_within: 2h

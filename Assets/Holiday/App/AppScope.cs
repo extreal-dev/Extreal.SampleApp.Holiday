@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using System.Diagnostics.CodeAnalysis;
 using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
+using Extreal.SampleApp.Holiday.App.AppUsage;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.Common.Config;
@@ -22,6 +23,7 @@ namespace Extreal.SampleApp.Holiday.App
         [SerializeField] private AppConfig appConfig;
         [SerializeField] private LoggingConfig loggingConfig;
         [SerializeField] private StageConfig stageConfig;
+        [SerializeField] private AppUsageConfig appUsageConfig;
 
         private void InitializeApp()
         {
@@ -30,7 +32,7 @@ namespace Extreal.SampleApp.Holiday.App
             var timeout = appConfig.DownloadTimeoutSeconds;
             Addressables.ResourceManager.WebRequestOverride = unityWebRequest => unityWebRequest.timeout = timeout;
 
-            ClearAssetBundleCacheOnDev();
+            ClearCacheOnDev();
 
             var logLevel = InitializeLogging();
             InitializeMicrophone();
@@ -47,14 +49,29 @@ namespace Extreal.SampleApp.Holiday.App
         {
 #if HOLIDAY_PROD
             const LogLevel logLevel = LogLevel.Info;
-            LoggingManager.Initialize(logLevel: logLevel);
+            LoggingManager.Initialize(logLevel: logLevel, writer: new AppUsageLogWriter(appUsageConfig, appStateProvider));
 #else
             const LogLevel logLevel = LogLevel.Debug;
             var checker = new LogLevelLogOutputChecker(loggingConfig.CategoryFilters);
-            var writer = new UnityDebugLogWriter(loggingConfig.LogFormats);
+            var defaultWriter = new UnityDebugLogWriter(loggingConfig.LogFormats);
+            var writer = new AppUsageLogWriter(appUsageConfig, appStateProvider, defaultWriter);
             LoggingManager.Initialize(logLevel, checker, writer);
 #endif
             return logLevel;
+        }
+
+        private readonly AppStateProvider appStateProvider = new AppStateProvider();
+
+        // The provider is added to pass AppState to LogWriter. AppState gets the logger to output logs.
+        // Therefore, if AppState is created before log output is initialized,
+        // only AppState acquires the logger before initialization, resulting in inconsistency.
+        // In order to resolve this issue, the provider is introduced and AppState is passed to LogWriter
+        // while delaying the timing of AppState creation.
+        public class AppStateProvider
+        {
+            public AppState AppState { get; private set; }
+            internal AppStateProvider() { }
+            internal void Init() => AppState = new AppState();
         }
 
         private static void InitializeMicrophone()
@@ -74,11 +91,12 @@ namespace Extreal.SampleApp.Holiday.App
 #endif
         }
 
-        [SuppressMessage("Design", "IDE0022")]
-        private static void ClearAssetBundleCacheOnDev()
+        [SuppressMessage("Design", "IDE0022"), SuppressMessage("Design", "CC0091")]
+        private void ClearCacheOnDev()
         {
 #if !HOLIDAY_PROD
             Caching.ClearCache();
+            PlayerPrefs.DeleteKey(appUsageConfig.ClientIdKey);
 #endif
         }
 
@@ -95,9 +113,13 @@ namespace Extreal.SampleApp.Holiday.App
             builder.RegisterComponent(stageConfig).AsImplementedInterfaces();
             builder.Register<StageNavigator<StageName, SceneName>>(Lifetime.Singleton);
 
-            builder.Register<AppState>(Lifetime.Singleton);
+            appStateProvider.Init();
+            builder.RegisterComponent(appStateProvider.AppState);
 
             builder.Register<AssetHelper>(Lifetime.Singleton);
+
+            builder.RegisterComponent(appUsageConfig);
+            builder.Register<AppUsageManager>(Lifetime.Singleton);
 
             builder.RegisterEntryPoint<AppPresenter>();
         }

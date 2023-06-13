@@ -416,6 +416,8 @@ dotnet_naming_rule.parameters_rule.style                = camel_case_style
 dotnet_naming_rule.parameters_rule.severity             = warning
 
 # Disable
+# Variable declarations can be broken down
+dotnet_diagnostic.IDE0042.severity = none
 # Make field readonly
 dotnet_diagnostic.IDE0044.severity = none
 # Move using directory into the namespace
@@ -424,6 +426,8 @@ dotnet_diagnostic.IDE0044.severity = none
 dotnet_diagnostic.IDE0039.severity = none
 # Simplify 'new' expression
 dotnet_diagnostic.IDE0090.severity = none
+# Possible JSON string detected
+dotnet_diagnostic.JSON002.severity = none
 # 'Xxxxx' should call GC.SuppressFinalize inside the Dispose method.
 dotnet_diagnostic.CC0029.severity = none
 # Ordering member inside this type.

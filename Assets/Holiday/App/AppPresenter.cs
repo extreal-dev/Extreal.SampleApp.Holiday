@@ -3,6 +3,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.Common.System;
 using Extreal.Core.StageNavigation;
+using Extreal.SampleApp.Holiday.App.AppUsage;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
 using UniRx;
@@ -16,6 +17,7 @@ namespace Extreal.SampleApp.Holiday.App
         private readonly StageNavigator<StageName, SceneName> stageNavigator;
         private readonly AssetHelper assetHelper;
         private readonly AppState appState;
+        private readonly AppUsageManager appUsageManager;
 
         [SuppressMessage("Usage", "CC0033")]
         private readonly CompositeDisposable disposables = new CompositeDisposable();
@@ -24,12 +26,14 @@ namespace Extreal.SampleApp.Holiday.App
             AppConfig appConfig,
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState,
-            AssetHelper assetHelper)
+            AssetHelper assetHelper,
+            AppUsageManager appUsageManager)
         {
             this.appConfig = appConfig;
             this.stageNavigator = stageNavigator;
             this.assetHelper = assetHelper;
             this.appState = appState;
+            this.appUsageManager = appUsageManager;
         }
 
         public void Initialize()
@@ -48,6 +52,12 @@ namespace Extreal.SampleApp.Holiday.App
                     appConfig.DownloadRetrySuccessMessage,
                     appConfig.DownloadRetryFailureMessage))
                 .AddTo(disposables);
+
+            stageNavigator.OnStageTransitioned
+                .Subscribe(appState.SetStage)
+                .AddTo(disposables);
+
+            appUsageManager.CollectAppUsage();
         }
 
         public async UniTask StartAsync(CancellationToken cancellation)

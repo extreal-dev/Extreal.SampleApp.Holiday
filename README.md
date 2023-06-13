@@ -43,9 +43,19 @@
 - Create a `MultiplayConfig` from the Create Assets menu in the `/Assets/Holiday/App/Config` directory. Default values are set so there is no need to set them in the inspector.
   - Path in the Create Assets menu: `Holiday > MultiplayConfig`
   - Add it to the default group of Addressables with the name `MultiplayConfig`.
+- Create a `AppUsageConfig` from the Create Assets menu in the `/Assets/Holiday/App/Config` directory. Default values are set so there is no need to set them in the inspector.
+  - Path in the Create Assets menu: `Holiday > AppUsageConfig`
+  - Set `AppUsageConfig` to the Scope object in the App scene from the Inspector.
 - Open multiple Unity editors using [ParrelSync.](https://github.com/VeriorPies/ParrelSync). ParrelSync is already installed in this project.
 - Run a multiplayer server.
   - Run the following scene: `/Assets/Holiday.MultiplayServer/MultilayServer`
 - Run the application.
   - Run the following scene: `/Assets/Holiday/App/App`
 - Enjoy playing!
+
+## How to visualize application usage
+
+- See [README](Servers/VisualizationOfAppUsage/README.md) to start Grafana/Loki.
+- Enable application usage visualization.
+  - Turn on the Enable field in AppUsageConfig.
+  - `/Assets/Holiday/App/Config/AppUsageConfig`

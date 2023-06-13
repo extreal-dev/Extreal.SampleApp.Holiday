@@ -85,7 +85,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.rider": {
-      "version": "3.0.18",
+      "version": "3.0.24",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -335,7 +335,7 @@
       "url": "https://package.openupm.com"
     },
     "jp.co.tis.extreal.core.common": {
-      "version": "https://github.com/extreal-dev/Extreal.Core.Common.git#1.0.0",
+      "version": "https://github.com/extreal-dev/Extreal.Core.Common.git#1.1.0-next.3",
       "depth": 0,
       "source": "git",
       "dependencies": {
@@ -343,7 +343,7 @@
         "com.cysharp.unitask": "2.3.3",
         "com.neuecc.unirx": "7.1.0"
       },
-      "hash": "2b59230e73c1297f064bbb466ecbc7c4f9f493a1"
+      "hash": "667d4a91ef4f4b82fe83bc174454817ec3155b4f"
     },
     "jp.co.tis.extreal.core.logging": {
       "version": "https://github.com/extreal-dev/Extreal.Core.Logging.git#1.1.0",
