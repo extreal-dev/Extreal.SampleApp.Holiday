@@ -47,7 +47,7 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
             this.appUsageCollectors = appUsageCollectors;
         }
 
-        protected override void ReleaseUnmanagedResources()
+        protected override void ReleaseManagedResources()
         {
             disposables.Dispose();
 
