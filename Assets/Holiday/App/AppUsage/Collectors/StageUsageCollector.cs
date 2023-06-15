@@ -1,37 +1,52 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using Extreal.Core.Common.Hook;
+using Extreal.Core.StageNavigation;
+using Extreal.SampleApp.Holiday.App.Config;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.App.AppUsage.Collectors
 {
     public class StageUsageCollector: IAppUsageCollector
     {
-        public IDisposable Collect(AppUsageManager appUsageManager)
+        private readonly AppState appState;
+        private readonly StageNavigator<StageName, SceneName> stageNavigator;
+        private readonly AppUsageEmitter appUsageEmitter;
+
+        public StageUsageCollector(
+            AppState appState, StageNavigator<StageName, SceneName> stageNavigator, AppUsageEmitter appUsageEmitter)
         {
-            Action collect = () =>
+            this.appState = appState;
+            this.stageNavigator = stageNavigator;
+            this.appUsageEmitter = appUsageEmitter;
+        }
+
+        public IDisposable Collect(Action<AppUsageBase> collect)
+        {
+            Action collectStageUsage = () =>
             {
-                var stageState = appUsageManager.AppState.StageState;
+                var stageState = appState.StageState;
                 if (stageState == null)
                 {
                     return;
                 }
-                appUsageManager.Collect(new StageUsage
-                {
-                    UsageId = nameof(StageUsage),
-                    StayTimeSeconds = stageState.StayTimeSeconds,
-                    NumberOfTextChatsSent = stageState.NumberOfTextChatsSent
-                });
+                collect?.Invoke(
+                    new StageUsage
+                    {
+                        UsageId = nameof(StageUsage),
+                        StayTimeSeconds = stageState.StayTimeSeconds,
+                        NumberOfTextChatsSent = stageState.NumberOfTextChatsSent
+                    });
             };
 
             var disposables = new CompositeDisposable();
 
-            appUsageManager.StageNavigator.OnStageTransitioning
-                .Hook(_ => collect())
+            stageNavigator.OnStageTransitioning
+                .Hook(_ => collectStageUsage())
                 .AddTo(disposables);
 
-            appUsageManager.OnApplicationExiting
-                .Hook(_ => collect())
+            appUsageEmitter.OnApplicationExiting
+                .Hook(_ => collectStageUsage())
                 .AddTo(disposables);
 
             return disposables;

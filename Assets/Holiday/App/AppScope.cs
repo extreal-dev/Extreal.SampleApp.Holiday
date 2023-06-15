@@ -1,7 +1,6 @@
 ﻿#if UNITY_IOS
 using Cysharp.Threading.Tasks;
 #endif
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
@@ -121,15 +120,12 @@ namespace Extreal.SampleApp.Holiday.App
             builder.Register<AssetHelper>(Lifetime.Singleton);
 
             builder.RegisterComponent(appUsageConfig);
-            builder.Register<AppUsageManager>(Lifetime.Singleton).WithParameter(
-                typeof(ICollection<IAppUsageCollector>),
-                new List<IAppUsageCollector>
-                {
-                    new FirstUseCollector(),
-                    new StageUsageCollector(),
-                    new ResourceUsageCollector(),
-                    new ErrorStatusCollector()
-                });
+            builder.Register<AppUsageEmitter>(Lifetime.Singleton);
+            builder.Register<FirstUseCollector>(Lifetime.Singleton).As<IAppUsageCollector>();
+            builder.Register<StageUsageCollector>(Lifetime.Singleton).As<IAppUsageCollector>();
+            builder.Register<ResourceUsageCollector>(Lifetime.Singleton).As<IAppUsageCollector>();
+            builder.Register<ErrorStatusCollector>(Lifetime.Singleton).As<IAppUsageCollector>();
+            builder.Register<AppUsageManager>(Lifetime.Singleton);
 
             builder.RegisterEntryPoint<AppPresenter>();
         }

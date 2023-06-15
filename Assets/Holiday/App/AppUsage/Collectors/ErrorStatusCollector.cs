@@ -9,16 +9,25 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage.Collectors
 {
     public class ErrorStatusCollector : IAppUsageCollector
     {
-        public IDisposable Collect(AppUsageManager appUsageManager) =>
-            appUsageManager.OnErrorOccured
+        private readonly AppUsageConfig appUsageConfig;
+        private readonly AppUsageEmitter appUsageEmitter;
+
+        public ErrorStatusCollector(AppUsageConfig appUsageConfig, AppUsageEmitter appUsageEmitter)
+        {
+            this.appUsageConfig = appUsageConfig;
+            this.appUsageEmitter = appUsageEmitter;
+        }
+
+        public IDisposable Collect(Action<AppUsageBase> collect) =>
+            appUsageEmitter.OnErrorOccured
                 .Where(errorLog => errorLog.LogType is LogType.Error or LogType.Exception)
-                .Hook(errorLog => appUsageManager.Collect(
+                .Hook(errorLog => collect?.Invoke(
                     ErrorStatus.Of(
                         errorLog.LogString,
                         null,
                         errorLog.StackTrace,
                         errorLog.LogType,
-                        appUsageManager.AppUsageConfig)));
+                        appUsageConfig)));
 
         [SuppressMessage("Usage", "IDE1006")]
         public class ErrorStatus : AppUsageBase

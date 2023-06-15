@@ -7,20 +7,22 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage.Collectors
 {
     public class FirstUseCollector : IAppUsageCollector
     {
-        public IDisposable Collect(AppUsageManager appUsageManager) =>
-            appUsageManager.OnFirstUsed
-                .Hook(clientId =>
-                    appUsageManager.Collect(
-                        new FirstUse
-                        {
-                            UsageId = nameof(FirstUse),
-                            OS = SystemInfo.operatingSystem,
-                            DeviceModel = SystemInfo.deviceModel,
-                            DeviceType = SystemInfo.deviceType.ToString(),
-                            DeviceId = SystemInfo.deviceUniqueIdentifier,
-                            ProcessorType = SystemInfo.processorType
-                        },
-                        clientId));
+        private readonly AppUsageEmitter appUsageEmitter;
+
+        public FirstUseCollector(AppUsageEmitter appUsageEmitter) => this.appUsageEmitter = appUsageEmitter;
+
+        public IDisposable Collect(Action<AppUsageBase> collect) =>
+            appUsageEmitter.OnFirstUsed
+                .Hook(_ => collect?.Invoke(
+                    new FirstUse
+                    {
+                        UsageId = nameof(FirstUse),
+                        OS = SystemInfo.operatingSystem,
+                        DeviceModel = SystemInfo.deviceModel,
+                        DeviceType = SystemInfo.deviceType.ToString(),
+                        DeviceId = SystemInfo.deviceUniqueIdentifier,
+                        ProcessorType = SystemInfo.processorType
+                    }));
     }
 
     [SuppressMessage("Usage", "IDE1006")]
