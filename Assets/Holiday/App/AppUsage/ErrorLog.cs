@@ -1,14 +1,12 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Extreal.SampleApp.Holiday.App.AppUsage
 {
-    [SuppressMessage("Usage", "IDE1006")]
     public class ErrorLog
     {
-        public readonly string LogString;
-        public readonly string StackTrace;
-        public readonly LogType LogType;
+        public string LogString { get; }
+        public string StackTrace { get; }
+        public LogType LogType { get; }
 
         public ErrorLog(string logString, string stackTrace, LogType type)
         {
