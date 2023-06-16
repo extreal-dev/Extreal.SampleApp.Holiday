@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App.AppUsage;
+using Extreal.SampleApp.Holiday.App.AppUsage.Collectors;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.Common.Config;
@@ -119,6 +120,11 @@ namespace Extreal.SampleApp.Holiday.App
             builder.Register<AssetHelper>(Lifetime.Singleton);
 
             builder.RegisterComponent(appUsageConfig);
+            builder.Register<AppUsageEmitter>(Lifetime.Singleton);
+            builder.Register<FirstUseCollector>(Lifetime.Singleton).As<IAppUsageCollector>();
+            builder.Register<StageUsageCollector>(Lifetime.Singleton).As<IAppUsageCollector>();
+            builder.Register<ResourceUsageCollector>(Lifetime.Singleton).As<IAppUsageCollector>();
+            builder.Register<ErrorStatusCollector>(Lifetime.Singleton).As<IAppUsageCollector>();
             builder.Register<AppUsageManager>(Lifetime.Singleton);
 
             builder.RegisterEntryPoint<AppPresenter>();
