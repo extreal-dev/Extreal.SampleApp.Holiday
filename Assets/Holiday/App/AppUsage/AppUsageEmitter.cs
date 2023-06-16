@@ -19,9 +19,9 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
         [SuppressMessage("Usage", "CC0033")]
         private readonly Subject<Unit> onApplicationExiting = new Subject<Unit>();
 
-        public IObservable<ErrorLog> OnErrorOccured => onErrorOccured.AddTo(disposables);
+        public IObservable<ErrorLog> OnErrorOccurred => onErrorOccurred.AddTo(disposables);
         [SuppressMessage("Usage", "CC0033")]
-        private readonly Subject<ErrorLog> onErrorOccured = new Subject<ErrorLog>();
+        private readonly Subject<ErrorLog> onErrorOccurred = new Subject<ErrorLog>();
 
         private bool isHandling;
 
@@ -52,7 +52,7 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage
         }
 
         private void LogMessageReceived(string logString, string stackTrace, LogType type)
-            => onErrorOccured.OnNext(new ErrorLog(logString, stackTrace, type));
+            => onErrorOccurred.OnNext(new ErrorLog(logString, stackTrace, type));
 
         public void PlayForFirstTime() => onFirstUsed.OnNext(Unit.Default);
     }

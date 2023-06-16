@@ -19,7 +19,7 @@ namespace Extreal.SampleApp.Holiday.App.AppUsage.Collectors
         }
 
         public IDisposable Collect(Action<AppUsageBase> collect) =>
-            appUsageEmitter.OnErrorOccured
+            appUsageEmitter.OnErrorOccurred
                 .Where(errorLog => errorLog.LogType is LogType.Error or LogType.Exception)
                 .Hook(errorLog => collect?.Invoke(
                     ErrorStatus.Of(
