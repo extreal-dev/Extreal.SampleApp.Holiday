@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: AddressableAssetSettings
   m_EditorClassIdentifier: 
   m_DefaultGroup: f2b2967d531f20348b75f02e0528aacd
-  m_CachedHash:
+  m_currentHash:
     serializedVersion: 2
     Hash: 00000000000000000000000000000000
   m_OptimizeCatalogSize: 0
@@ -32,11 +32,14 @@ MonoBehaviour:
   m_ShaderBundleNaming: 0
   m_ShaderBundleCustomNaming: 
   m_MonoScriptBundleNaming: 0
+  m_CheckForContentUpdateRestrictionsOption: 0
   m_MonoScriptBundleCustomNaming: 
   m_RemoteCatalogBuildPath:
     m_Id: bfd6bf59170f8934dae7ab70a80c51a0
   m_RemoteCatalogLoadPath:
     m_Id: b265ebd845b3b074c829603b1d1f6854
+  m_ContentStateBuildPathProfileVariableName: <default settings path>
+  m_CustomContentStateBuildPath: 
   m_ContentStateBuildPath: 
   m_BuildAddressablesWithPlayerBuild: 0
   m_overridePlayerVersion: '[UnityEngine.Application.version]'
@@ -127,7 +130,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 84a2cd675ce005b4c9066c20bff6af79, type: 2}
   - {fileID: 11400000, guid: 6297d17b6b94106439bceeb97db9cf1a, type: 2}
   - {fileID: 11400000, guid: 08331fb23997c7a4d8ae67fc5b6cf12a, type: 2}
-  - {fileID: 11400000, guid: ede7bec8b8ddaf549bb6847dbaeada3d, type: 2}
+  - {fileID: 11400000, guid: 01da6b5da8765ca428e681cb95d76213, type: 2}
   m_ActiveProfileId: 4f014b7c1b6ae4f4cb27b832046bb0bb
   m_HostingServicesManager:
     m_HostingServiceInfos:
@@ -149,7 +152,7 @@ MonoBehaviour:
           m_Key: ContentRoot
         - m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
           m_ClassName: System.Boolean
-          m_Data: False
+          m_Data: True
           m_Key: IsEnabled
         - m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
           m_ClassName: System.String
@@ -163,3 +166,4 @@ MonoBehaviour:
     m_NextInstanceId: 1
     m_RegisteredServiceTypeRefs:
     - UnityEditor.AddressableAssets.HostingServices.HttpHostingService, Unity.Addressables.Editor
+    m_PingTimeoutInMilliseconds: 5000

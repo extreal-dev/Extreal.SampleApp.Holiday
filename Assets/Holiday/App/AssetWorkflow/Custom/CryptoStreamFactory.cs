@@ -1,7 +1,9 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using Extreal.Core.Logging;
 using Extreal.Integration.AssetWorkflow.Addressables.Custom.ResourceProviders;
 using UnityEngine.ResourceManagement.ResourceProviders;
 
@@ -24,7 +26,49 @@ namespace Extreal.SampleApp.Holiday.App.AssetWorkflow.Custom
         {
             using var aes = CreateAesManaged(options);
             var cryptor = mode == CryptoStreamMode.Write ? aes.CreateEncryptor() : aes.CreateDecryptor();
-            return new CryptoStream(baseStream, cryptor, mode);
+            return new LoggingCryptoStream(baseStream, cryptor, mode);
+        }
+
+        public class LoggingCryptoStream : CryptoStream
+        {
+            private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(LoggingCryptoStream));
+
+            public LoggingCryptoStream(
+                Stream stream, ICryptoTransform transform, CryptoStreamMode mode) : base(stream, transform, mode)
+            {
+            }
+
+            public override int Read(byte[] buffer, int offset, int count)
+            {
+                try
+                {
+                    return base.Read(buffer, offset, count);
+                }
+                catch (Exception e)
+                {
+                    if (Logger.IsDebug())
+                    {
+                        Logger.LogError("Exception has occurred!", e);
+                    }
+                    throw;
+                }
+            }
+
+            public override void CopyTo(Stream destination, int bufferSize)
+            {
+                try
+                {
+                    base.CopyTo(destination, bufferSize);
+                }
+                catch (Exception e)
+                {
+                    if (Logger.IsDebug())
+                    {
+                        Logger.LogError("Exception has occurred!", e);
+                    }
+                    throw;
+                }
+            }
         }
 
         [SuppressMessage("Usage", "CC0022")]
