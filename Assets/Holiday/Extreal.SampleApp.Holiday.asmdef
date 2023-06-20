@@ -7,6 +7,7 @@
         "Unity.Addressables",
         "Unity.Collections",
         "Unity.TextMeshPro",
+        "Unity.WebRTC",
         "UniRx",
         "UniTask",
         "VContainer",
@@ -29,8 +30,10 @@
     ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
-    "overrideReferences": false,
-    "precompiledReferences": [],
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "SocketIOClient.dll"
+    ],
     "autoReferenced": true,
     "defineConstraints": [],
     "versionDefines": [],

@@ -86,6 +86,13 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.editorcoroutines": {
+      "version": "1.0.0",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
     "com.unity.ext.nunit": {
       "version": "2.0.3",
       "depth": 1,
@@ -337,6 +344,17 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.webrtc": {
+      "version": "3.0.0-pre.5",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.modules.jsonserialize": "1.0.0",
+        "com.unity.editorcoroutines": "1.0.0",
+        "com.unity.modules.audio": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.veriorpies.parrelsync": {
       "version": "1.5.2",
       "depth": 0,
@@ -421,6 +439,43 @@
         "com.unity.nuget.mono-cecil": "1.10.1"
       },
       "url": "https://package.openupm.com"
+    },
+    "org.kumas.nuget-importer": {
+      "version": "https://github.com/kumaS-nu/NuGet-importer-for-Unity.git?path=NuGetImporterForUnity/Packages/NuGet Importer",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "f61cf16941b98b9ffdb9cdfca0326b29cc6517ae"
+    },
+    "org.nuget.microsoft.bcl.asyncinterfaces": {
+      "version": "file:Microsoft.Bcl.AsyncInterfaces",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "org.nuget.socketioclient": {
+      "version": "file:SocketIOClient",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "org.nuget.system.runtime.compilerservices.unsafe": {
+      "version": "file:System.Runtime.CompilerServices.Unsafe",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "org.nuget.system.text.encodings.web": {
+      "version": "file:System.Text.Encodings.Web",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "org.nuget.system.text.json": {
+      "version": "file:System.Text.Json",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
