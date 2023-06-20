@@ -7,6 +7,7 @@ networks:
 services:
   loki-read:
     image: grafana/loki:2.8.2
+    restart: always
     command: "-config.file=/etc/loki/config.yaml -target=read"
     ports:
       - 3101:3100
@@ -28,6 +29,7 @@ services:
 
   loki-write:
     image: grafana/loki:2.8.2
+    restart: always
     command: "-config.file=/etc/loki/config.yaml -target=write"
     ports:
       - 3102:3100
@@ -47,6 +49,7 @@ services:
 
   minio:
     image: minio/minio:RELEASE.2023-06-16T02-41-06Z
+    restart: always
     entrypoint:
       - sh
       - -euc
@@ -73,6 +76,7 @@ services:
 
   grafana:
     image: grafana/grafana:10.0.0
+    restart: always
     environment:
       - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
       - GF_AUTH_ANONYMOUS_ENABLED=true
@@ -109,6 +113,7 @@ services:
 
   gateway:
     image: nginx:1.25.1
+    restart: always
     depends_on:
       - loki-read
       - loki-write
