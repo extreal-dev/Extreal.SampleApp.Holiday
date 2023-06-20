@@ -87,3 +87,11 @@ AvatarMichelle.prefab*
 
 # Docker data
 Servers/VisualizationOfAppUsage/.data
+
+# NuGet importer
+/[Aa]ssets/[Pp]ackages.meta
+/[Aa]ssets/[Pp]ackages/
+
+/[Nn]u[Gg]et/
+
+/[Pp]ackages/*/

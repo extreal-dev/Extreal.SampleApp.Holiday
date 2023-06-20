@@ -1,0 +1,34 @@
+{
+    "managedList": [
+        {
+            "packageName": "SocketIOClient",
+            "fileNames": [
+                "SocketIOClient"
+            ]
+        },
+        {
+            "packageName": "System.Text.Json",
+            "fileNames": [
+                "System.Text.Json"
+            ]
+        },
+        {
+            "packageName": "Microsoft.Bcl.AsyncInterfaces",
+            "fileNames": [
+                "Microsoft.Bcl.AsyncInterfaces"
+            ]
+        },
+        {
+            "packageName": "System.Text.Encodings.Web",
+            "fileNames": [
+                "System.Text.Encodings.Web"
+            ]
+        },
+        {
+            "packageName": "System.Runtime.CompilerServices.Unsafe",
+            "fileNames": [
+                "System.Runtime.CompilerServices.Unsafe"
+            ]
+        }
+    ]
+}
