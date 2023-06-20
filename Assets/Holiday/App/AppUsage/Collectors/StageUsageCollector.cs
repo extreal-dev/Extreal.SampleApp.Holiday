@@ -7,7 +7,7 @@ using UniRx;
 
 namespace Extreal.SampleApp.Holiday.App.AppUsage.Collectors
 {
-    public class StageUsageCollector: IAppUsageCollector
+    public class StageUsageCollector : IAppUsageCollector
     {
         private readonly AppState appState;
         private readonly StageNavigator<StageName, SceneName> stageNavigator;
