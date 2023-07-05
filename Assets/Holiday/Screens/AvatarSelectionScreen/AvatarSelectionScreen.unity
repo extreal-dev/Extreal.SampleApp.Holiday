@@ -104,7 +104,7 @@ NavMeshSettings:
   serializedVersion: 2
   m_ObjectHideFlags: 0
   m_BuildSettings:
-    serializedVersion: 2
+    serializedVersion: 3
     agentTypeID: 0
     agentRadius: 0.5
     agentHeight: 2
@@ -117,7 +117,7 @@ NavMeshSettings:
     cellSize: 0.16666667
     manualTileSize: 0
     tileSize: 256
-    accuratePlacement: 0
+    buildHeightMesh: 0
     maxJobWorkers: 0
     preserveTilesOutsideBounds: 0
     debug:
@@ -285,6 +285,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 1043676554}
     m_Modifications:
     - target: {fileID: 7073681647446423624, guid: 360caec5291977948acc07ab4a396e90,
@@ -403,6 +404,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 360caec5291977948acc07ab4a396e90, type: 3}
 --- !u!114 &198154704 stripped
 MonoBehaviour:
@@ -416,6 +420,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &198154705 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7073681647446423631, guid: 360caec5291977948acc07ab4a396e90,
+    type: 3}
+  m_PrefabInstance: {fileID: 198154703}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &348369551
 GameObject:
   m_ObjectHideFlags: 0
@@ -776,6 +786,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 8480354736583352232, guid: 31d7acdb6d79109489d5c76b6cf90305,
@@ -889,6 +900,25 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 8480354736852223547, guid: 31d7acdb6d79109489d5c76b6cf90305,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 198154705}
+    - targetCorrespondingSourceObject: {fileID: 8480354736852223547, guid: 31d7acdb6d79109489d5c76b6cf90305,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1747442974}
+    - targetCorrespondingSourceObject: {fileID: 8480354736852223547, guid: 31d7acdb6d79109489d5c76b6cf90305,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 482124419}
+    - targetCorrespondingSourceObject: {fileID: 8480354736852223547, guid: 31d7acdb6d79109489d5c76b6cf90305,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 430268680}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 31d7acdb6d79109489d5c76b6cf90305, type: 3}
 --- !u!224 &1043676554 stripped
 RectTransform:
@@ -1826,6 +1856,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 1043676554}
     m_Modifications:
     - target: {fileID: 6307249710144826396, guid: 3feb1b83ab9ba634bbd8e6e055f3d860,
@@ -1939,6 +1970,9 @@ PrefabInstance:
       value: ScreenButton
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3feb1b83ab9ba634bbd8e6e055f3d860, type: 3}
 --- !u!114 &1747442972 stripped
 MonoBehaviour:
@@ -1964,6 +1998,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &1747442974 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 6307249710144826396, guid: 3feb1b83ab9ba634bbd8e6e055f3d860,
+    type: 3}
+  m_PrefabInstance: {fileID: 1747442971}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1768798032
 GameObject:
   m_ObjectHideFlags: 0

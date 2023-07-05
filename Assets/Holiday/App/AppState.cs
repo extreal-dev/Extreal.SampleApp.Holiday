@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
 using Extreal.SampleApp.Holiday.App.Config;
+using Extreal.SampleApp.Holiday.App.P2P;
 using Extreal.SampleApp.Holiday.Controls.RetryStatusControl;
 using Extreal.SampleApp.Holiday.Screens.ConfirmationScreen;
 using UniRx;
@@ -14,20 +15,25 @@ namespace Extreal.SampleApp.Holiday.App
     {
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(AppState));
 
-        public IReadOnlyReactiveProperty<string> PlayerName => playerName.AddTo(disposables);
-        private readonly ReactiveProperty<string> playerName = new ReactiveProperty<string>("Guest");
+        public string PlayerName { get; private set; } = "Guest";
+        public AvatarConfig.Avatar Avatar { get; private set; }
+        public Role Role { get; private set; } = Role.Host;
 
-        public IReadOnlyReactiveProperty<AvatarConfig.Avatar> Avatar => avatar.AddTo(disposables);
-        private readonly ReactiveProperty<AvatarConfig.Avatar> avatar = new ReactiveProperty<AvatarConfig.Avatar>(null);
-
-        public IReadOnlyReactiveProperty<string> SpaceName => spaceName.AddTo(disposables);
-        private readonly ReactiveProperty<string> spaceName = new ReactiveProperty<string>(null);
+        public string GroupName { get; private set; } // Host only
+        public string GroupId { get; private set; } // Client only
+        public string SpaceName { get; private set; }
 
         public IReadOnlyReactiveProperty<bool> PlayingReady => playingReady.AddTo(disposables);
         private readonly ReactiveProperty<bool> playingReady = new ReactiveProperty<bool>(false);
 
         public IReadOnlyReactiveProperty<bool> SpaceReady => spaceReady.AddTo(disposables);
         private readonly ReactiveProperty<bool> spaceReady = new ReactiveProperty<bool>(false);
+
+        public IObservable<Message> OnMessageSent => onMessageSent.AddTo(disposables);
+        private readonly Subject<Message> onMessageSent = new Subject<Message>();
+
+        public IObservable<Message> OnMessageReceived => onMessageReceived.AddTo(disposables);
+        private readonly Subject<Message> onMessageReceived = new Subject<Message>();
 
         public IObservable<string> OnNotificationReceived => onNotificationReceived.AddTo(disposables);
         private readonly Subject<string> onNotificationReceived = new Subject<string>();
@@ -96,14 +102,21 @@ namespace Extreal.SampleApp.Holiday.App
             }
         }
 
-        public void SetPlayerName(string playerName) => this.playerName.Value = playerName;
-        public void SetAvatar(AvatarConfig.Avatar avatar) => this.avatar.Value = avatar;
-        public void SetSpaceName(string spaceName) => this.spaceName.Value = spaceName;
+        public void SetPlayerName(string playerName) => PlayerName = playerName;
+        public void SetAvatar(AvatarConfig.Avatar avatar) => Avatar = avatar;
+        public void SetRole(Role role) => Role = role;
+        public void SetGroupName(string groupName) => GroupName = groupName;
+        public void SetGroupId(string groupId) => GroupId = groupId;
+        public void SetSpaceName(string spaceName) => SpaceName = spaceName;
         public void SetMultiplayReady(bool ready) => multiplayReady.Value = ready;
         public void SetTextChatReady(bool ready) => textChatReady.Value = ready;
         public void SetVoiceChatReady(bool ready) => voiceChatReady.Value = ready;
         public void SetSpaceReady(bool ready) => spaceReady.Value = ready;
         public void SetStage(StageName stageName) => StageState = new StageState(stageName);
+
+        public void SendMessage(Message message) => onMessageSent.OnNext(message);
+
+        public void ReceivedMessage(Message message) => onMessageReceived.OnNext(message);
 
         public void Notify(string message)
         {

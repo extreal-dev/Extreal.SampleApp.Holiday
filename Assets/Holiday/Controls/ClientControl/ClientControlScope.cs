@@ -1,6 +1,8 @@
 ﻿using Extreal.Integration.Chat.Vivox;
 using Extreal.Integration.Multiplay.NGO;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
+using Extreal.SampleApp.Holiday.App.Extreal.NGO;
+using Extreal.SampleApp.Holiday.App.P2P;
 using Unity.Netcode;
 using UnityEngine;
 using VContainer;
@@ -17,8 +19,11 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
         {
             var assetHelper = Parent.Container.Resolve<AssetHelper>();
 
+            builder.Register<GroupManager>(Lifetime.Singleton);
+
             builder.RegisterComponent(networkManager);
-            builder.Register<NgoClient>(Lifetime.Singleton).WithParameter(assetHelper.NgoClientRetryStrategy);
+            builder.Register<NgoClient>(Lifetime.Singleton).WithParameter(assetHelper.NgoClientConfig.RetryStrategy);
+            builder.Register<NgoHost>(Lifetime.Singleton);
 
             builder.RegisterComponent(assetHelper.VivoxAppConfig);
             builder.Register<VivoxClient>(Lifetime.Singleton);

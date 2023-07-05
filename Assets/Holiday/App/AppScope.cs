@@ -8,7 +8,6 @@ using Extreal.SampleApp.Holiday.App.AppUsage;
 using Extreal.SampleApp.Holiday.App.AppUsage.Collectors;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
-using Extreal.SampleApp.Holiday.Common.Config;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using VContainer;

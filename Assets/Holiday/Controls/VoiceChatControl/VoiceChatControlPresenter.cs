@@ -1,8 +1,8 @@
 ﻿using Extreal.Core.StageNavigation;
 using Extreal.Integration.Chat.Vivox;
 using Extreal.SampleApp.Holiday.App;
-using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.App.Config;
+using Extreal.SampleApp.Holiday.App.Stages;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
@@ -11,30 +11,33 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
     {
         private readonly VivoxClient vivoxClient;
         private readonly VoiceChatControlView voiceChatScreenView;
-        private readonly AppState appState;
 
         private VoiceChatChannel voiceChatChannel;
 
         public VoiceChatControlPresenter
         (
             StageNavigator<StageName, SceneName> stageNavigator,
+            AppState appState,
             VivoxClient vivoxClient,
-            VoiceChatControlView voiceChatScreenView,
-            AppState appState
-        ) : base(stageNavigator)
+            VoiceChatControlView voiceChatScreenView
+        ) : base(stageNavigator, appState)
         {
             this.vivoxClient = vivoxClient;
             this.voiceChatScreenView = voiceChatScreenView;
-            this.appState = appState;
         }
 
         protected override void Initialize(
-            StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables) =>
-            voiceChatScreenView.OnMuteButtonClicked
+            StageNavigator<StageName, SceneName> stageNavigator,
+            AppState appState,
+            CompositeDisposable sceneDisposables)
+            => voiceChatScreenView.OnMuteButtonClicked
                 .Subscribe(_ => voiceChatChannel.ToggleMuteAsync().Forget())
                 .AddTo(sceneDisposables);
 
-        protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
+        protected override void OnStageEntered(
+            StageName stageName,
+            AppState appState,
+            CompositeDisposable stageDisposables)
         {
             voiceChatChannel = new VoiceChatChannel(vivoxClient, $"HolidayVoiceChat{stageName}");
             stageDisposables.Add(voiceChatChannel);
@@ -50,7 +53,9 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
             voiceChatChannel.JoinAsync().Forget();
         }
 
-        protected override void OnStageExiting(StageName stageName)
+        protected override void OnStageExiting(
+            StageName stageName,
+            AppState appState)
         {
             appState.SetVoiceChatReady(false);
             voiceChatChannel.Leave();

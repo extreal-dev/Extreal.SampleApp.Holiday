@@ -1,7 +1,7 @@
 ﻿using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App;
-using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.App.Config;
+using Extreal.SampleApp.Holiday.App.Stages;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.Screens.ConfirmationScreen
@@ -9,21 +9,19 @@ namespace Extreal.SampleApp.Holiday.Screens.ConfirmationScreen
     public class ConfirmationScreenPresenter : StagePresenterBase
     {
         private readonly ConfirmationScreenView confirmationScreenView;
-        private readonly AppState appState;
 
         public ConfirmationScreenPresenter
         (
             StageNavigator<StageName, SceneName> stageNavigator,
-            ConfirmationScreenView confirmationScreenView,
-            AppState appState
-        ) : base(stageNavigator)
-        {
-            this.confirmationScreenView = confirmationScreenView;
-            this.appState = appState;
-        }
+            AppState appState,
+            ConfirmationScreenView confirmationScreenView
+        ) : base(stageNavigator, appState)
+            => this.confirmationScreenView = confirmationScreenView;
 
         protected override void Initialize(
-            StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables)
+            StageNavigator<StageName, SceneName> stageNavigator,
+            AppState appState,
+            CompositeDisposable sceneDisposables)
         {
             var confirmation = default(Confirmation);
 
@@ -50,14 +48,6 @@ namespace Extreal.SampleApp.Holiday.Screens.ConfirmationScreen
                     confirmation.CancelAction?.Invoke();
                 })
                 .AddTo(sceneDisposables);
-        }
-
-        protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
-        {
-        }
-
-        protected override void OnStageExiting(StageName stageName)
-        {
         }
     }
 }

@@ -3,8 +3,8 @@ using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
-using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.App.Config;
+using Extreal.SampleApp.Holiday.App.Stages;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.Screens.AvatarSelectionScreen
@@ -13,25 +13,25 @@ namespace Extreal.SampleApp.Holiday.Screens.AvatarSelectionScreen
     {
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(AvatarSelectionScreenPresenter));
 
-        private readonly AvatarSelectionScreenView avatarSelectionScreenView;
-        private readonly AppState appState;
         private readonly AssetHelper assetHelper;
+        private readonly AvatarSelectionScreenView avatarSelectionScreenView;
 
         public AvatarSelectionScreenPresenter
         (
             StageNavigator<StageName, SceneName> stageNavigator,
-            AvatarSelectionScreenView avatarSelectionScreenView,
             AppState appState,
-            AssetHelper assetHelper
-        ) : base(stageNavigator)
+            AssetHelper assetHelper,
+            AvatarSelectionScreenView avatarSelectionScreenView
+        ) : base(stageNavigator, appState)
         {
-            this.avatarSelectionScreenView = avatarSelectionScreenView;
-            this.appState = appState;
             this.assetHelper = assetHelper;
+            this.avatarSelectionScreenView = avatarSelectionScreenView;
         }
 
         protected override void Initialize(
-            StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables)
+            StageNavigator<StageName, SceneName> stageNavigator,
+            AppState appState,
+            CompositeDisposable sceneDisposables)
         {
             avatarSelectionScreenView.OnNameChanged
                 .Subscribe(appState.SetPlayerName)
@@ -46,14 +46,17 @@ namespace Extreal.SampleApp.Holiday.Screens.AvatarSelectionScreen
                 .AddTo(sceneDisposables);
 
             avatarSelectionScreenView.OnGoButtonClicked
-                .Subscribe(_ => assetHelper.DownloadSpaceAsset("VirtualSpace", StageName.VirtualStage))
+                .Subscribe(_ => stageNavigator.ReplaceAsync(StageName.GroupSelectionStage))
                 .AddTo(sceneDisposables);
         }
 
-        protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
+        protected override void OnStageEntered(
+            StageName stageName,
+            AppState appState,
+            CompositeDisposable stageDisposables)
         {
             var avatars = assetHelper.AvatarConfig.Avatars;
-            if (appState.Avatar.Value == null)
+            if (appState.Avatar == null)
             {
                 appState.SetAvatar(avatars.First());
             }
@@ -61,16 +64,12 @@ namespace Extreal.SampleApp.Holiday.Screens.AvatarSelectionScreen
             var avatarNames = avatars.Select(avatar => avatar.Name).ToList();
             avatarSelectionScreenView.Initialize(avatarNames);
 
-            avatarSelectionScreenView.SetInitialValues(appState.PlayerName.Value, appState.Avatar.Value.Name);
+            avatarSelectionScreenView.SetInitialValues(appState.PlayerName, appState.Avatar.Name);
 
             if (Logger.IsDebug())
             {
-                Logger.LogDebug($"player: name: {appState.PlayerName.Value} avatar: {appState.Avatar.Value.Name}");
+                Logger.LogDebug($"player: name: {appState.PlayerName} avatar: {appState.Avatar.Name}");
             }
-        }
-
-        protected override void OnStageExiting(StageName stageName)
-        {
         }
     }
 }

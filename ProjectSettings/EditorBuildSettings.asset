@@ -5,12 +5,6 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Holiday.MultiplayServer/MultiplayServer.unity
-    guid: 20e830a4d95a9e349908a9b266e57785
-  - enabled: 0
-    path: Assets/Holiday.PerformanceTest/PerformanceTest.unity
-    guid: 6d9e9e50ba63d9742ab72714e3309779
   - enabled: 1
     path: Assets/Holiday/App/App.unity
     guid: d5a2b30336f757949b77910e8bd24532
@@ -42,7 +36,10 @@ EditorBuildSettings:
     path: Assets/Holiday/Controls/ClientControl/ClientControl.unity
     guid: f8e9d9e073b728e45b22ca0cb8e23f56
   - enabled: 1
-    path: Assets/Holiday/Controls/MultiplayControl/MultiplayControl.unity
+    path: Assets/Holiday/Controls/MultiplayHostControl/MultiplayHostControl.unity
+    guid: c1d03aca1fe85474a86a051916a25cdd
+  - enabled: 1
+    path: Assets/Holiday/Controls/MultiplayClientControl/MultiplayClientControl.unity
     guid: b1045e6b146d9aa4fb4c24b20e98b21a
   - enabled: 1
     path: Assets/Holiday/Controls/TextChatControl/TextChatControl.unity
@@ -59,6 +56,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Holiday/Screens/AvatarSelectionScreen/AvatarSelectionScreen.unity
     guid: d5fc57acb41ec3d4ca23670f58b9cd05
+  - enabled: 1
+    path: Assets/Holiday/Screens/GroupSelectionScreen/GroupSelectionScreen.unity
+    guid: 941aced16ea6a8d47b62dc2634433238
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 1c5b30508a76c8e49b630eaba074f4f3,
       type: 2}

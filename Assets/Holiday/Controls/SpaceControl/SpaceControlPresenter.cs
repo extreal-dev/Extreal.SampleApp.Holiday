@@ -3,8 +3,8 @@ using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
-using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.App.Config;
+using Extreal.SampleApp.Holiday.App.Stages;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.Controls.SpaceControl
@@ -20,10 +20,10 @@ namespace Extreal.SampleApp.Holiday.Controls.SpaceControl
         public SpaceControlPresenter
         (
             StageNavigator<StageName, SceneName> stageNavigator,
-            SpaceControlView spaceControlView,
             AppState appState,
+            SpaceControlView spaceControlView,
             AssetHelper assetHelper
-        ) : base(stageNavigator)
+        ) : base(stageNavigator, appState)
         {
             this.spaceControlView = spaceControlView;
             this.appState = appState;
@@ -31,13 +31,18 @@ namespace Extreal.SampleApp.Holiday.Controls.SpaceControl
         }
 
         protected override void Initialize(
-            StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables) =>
-            spaceControlView.OnBackButtonClicked
-                .Subscribe(_ => stageNavigator.ReplaceAsync(StageName.AvatarSelectionStage).Forget())
+            StageNavigator<StageName, SceneName> stageNavigator,
+            AppState appState,
+            CompositeDisposable sceneDisposables)
+            => spaceControlView.OnBackButtonClicked
+                .Subscribe(_ => stageNavigator.ReplaceAsync(StageName.GroupSelectionStage).Forget())
                 .AddTo(sceneDisposables);
 
-        protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
-            => LoadSpaceAsync(appState.SpaceName.Value, stageDisposables).Forget();
+        protected override void OnStageEntered(
+            StageName stageName,
+            AppState appState,
+            CompositeDisposable stageDisposables)
+            => LoadSpaceAsync(appState.SpaceName, stageDisposables).Forget();
 
         private async UniTaskVoid LoadSpaceAsync(string spaceName, CompositeDisposable stageDisposables)
         {
@@ -50,6 +55,9 @@ namespace Extreal.SampleApp.Holiday.Controls.SpaceControl
             appState.SetSpaceReady(true);
         }
 
-        protected override void OnStageExiting(StageName stageName) => appState.SetSpaceReady(false);
+        protected override void OnStageExiting(
+            StageName stageName,
+            AppState appState)
+            => appState.SetSpaceReady(false);
     }
 }
