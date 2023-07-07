@@ -58,4 +58,12 @@
         "files.encoding": "utf8bom",
     },
     "omnisharp.enableRoslynAnalyzers": true,
+    "deno.enable": true,
+    "deno.enablePaths": ["./Servers/P2P"],
+    "deno.unstable": true,
+    "deno.lint": true,
+    "editor.formatOnSave": true,
+    "[typescript]": {
+        "editor.defaultFormatter": "denoland.vscode-deno"
+    },
 }
