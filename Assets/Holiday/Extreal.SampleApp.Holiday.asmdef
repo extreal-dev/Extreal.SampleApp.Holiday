@@ -22,8 +22,9 @@
         "Extreal.Integration.Multiplay.NGO",
         "Extreal.Integration.Chat.Vivox",
         "Extreal.Integration.AssetWorkflow.Addressables",
-        "Extreal.SampleApp.Holiday.Common",
-        "Extreal.SampleApp.Holiday.Analyzer"
+        "Extreal.SampleApp.Holiday.Analyzer",
+        "Extreal.P2P.Dev",
+        "Extreal.NGO.Dev"
     ],
     "includePlatforms": [
         "Android",
@@ -33,10 +34,8 @@
     ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
-    "overrideReferences": true,
-    "precompiledReferences": [
-        "SocketIOClient.dll"
-    ],
+    "overrideReferences": false,
+    "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
     "versionDefines": [],

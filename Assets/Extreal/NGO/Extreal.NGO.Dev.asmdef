@@ -1,0 +1,24 @@
+{
+    "name": "Extreal.NGO.Dev",
+    "rootNamespace": "",
+    "references": [
+        "Unity.WebRTC",
+        "Unity.Netcode.Runtime",
+        "Unity.Netcode.Components",
+        "UniTask",
+        "UniRx",
+        "Extreal.Core.Logging",
+        "Extreal.Core.Common",
+        "Extreal.Integration.Multiplay.NGO",
+        "Extreal.P2P.Dev"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -4,7 +4,7 @@
     {
         PlayerSpawn,
         PlayerSpawned,
-        EveryoneRequest,
-        EveryonePublication,
+        SendToEveryone,
+        ReceivedFromEveryone,
     }
 }

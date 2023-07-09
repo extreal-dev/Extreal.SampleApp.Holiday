@@ -29,6 +29,9 @@ namespace Extreal.SampleApp.Holiday.App
         public IReadOnlyReactiveProperty<bool> SpaceReady => spaceReady.AddTo(disposables);
         private readonly ReactiveProperty<bool> spaceReady = new ReactiveProperty<bool>(false);
 
+        public IReadOnlyReactiveProperty<bool> P2PReady => p2PReady.AddTo(disposables);
+        private readonly ReactiveProperty<bool> p2PReady = new ReactiveProperty<bool>(false);
+
         public IObservable<Message> OnMessageSent => onMessageSent.AddTo(disposables);
         private readonly Subject<Message> onMessageSent = new Subject<Message>();
 
@@ -63,11 +66,15 @@ namespace Extreal.SampleApp.Holiday.App
         }
 
         private void MonitorPlayingReadyStatus() =>
-            multiplayReady.Merge(textChatReady, voiceChatReady, spaceReady)
+            multiplayReady.Merge(textChatReady, voiceChatReady, spaceReady, p2PReady)
                 .Where(_ =>
                 {
                     LogWaitingStatus();
-                    return multiplayReady.Value && textChatReady.Value && voiceChatReady.Value && spaceReady.Value;
+                    return multiplayReady.Value
+                           && textChatReady.Value
+                           && voiceChatReady.Value
+                           && spaceReady.Value
+                           && p2PReady.Value;
                 })
                 .Subscribe(_ =>
                 {
@@ -80,8 +87,12 @@ namespace Extreal.SampleApp.Holiday.App
                 .AddTo(disposables);
 
         private void RestorePlayingReadyStatus() =>
-            multiplayReady.Merge(textChatReady, voiceChatReady, spaceReady)
-                .Where(_ => !multiplayReady.Value && !textChatReady.Value && !voiceChatReady.Value && !spaceReady.Value)
+            multiplayReady.Merge(textChatReady, voiceChatReady, spaceReady, p2PReady)
+                .Where(_ => !multiplayReady.Value
+                            && !textChatReady.Value
+                            && !voiceChatReady.Value
+                            && !spaceReady.Value
+                            && !p2PReady.Value)
                 .Subscribe(_ =>
                 {
                     if (Logger.IsDebug())
@@ -96,9 +107,9 @@ namespace Extreal.SampleApp.Holiday.App
         {
             if (Logger.IsDebug())
             {
-                Logger.LogDebug($"Multiplay, TextChat, VoiceChat, Space Ready: " +
-                                $"{multiplayReady.Value}, {textChatReady.Value}, " +
-                                $"{voiceChatReady.Value}, {spaceReady.Value}");
+                Logger.LogDebug($"Space, P2P, Multiplay, TextChat, VoiceChat, Space Ready: "
+                                + $"{spaceReady.Value}, {p2PReady.Value}, {multiplayReady.Value}, "
+                                + $"{textChatReady.Value}, {voiceChatReady.Value}");
             }
         }
 
@@ -108,6 +119,7 @@ namespace Extreal.SampleApp.Holiday.App
         public void SetGroupName(string groupName) => GroupName = groupName;
         public void SetGroupId(string groupId) => GroupId = groupId;
         public void SetSpaceName(string spaceName) => SpaceName = spaceName;
+        public void SetP2PReady(bool ready) => p2PReady.Value = ready;
         public void SetMultiplayReady(bool ready) => multiplayReady.Value = ready;
         public void SetTextChatReady(bool ready) => textChatReady.Value = ready;
         public void SetVoiceChatReady(bool ready) => voiceChatReady.Value = ready;

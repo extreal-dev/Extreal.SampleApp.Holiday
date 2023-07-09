@@ -7,6 +7,7 @@ using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.App.P2P;
 using Extreal.SampleApp.Holiday.App.Stages;
 using UniRx;
+using UnityEngine;
 
 namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
 {
@@ -50,7 +51,7 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
                 .AddTo(sceneDisposables);
 
             groupSelectionScreenView.OnUpdateButtonClicked
-                .Subscribe(_ => groupManager.UpdateGroups())
+                .Subscribe(_ => groupManager.UpdateGroupsAsync().Forget())
                 .AddTo(sceneDisposables);
 
             groupSelectionScreenView.OnGoButtonClicked
@@ -66,7 +67,8 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
                 {
                     var groupNames = groups.Select(group => group.Name).ToArray();
                     groupSelectionScreenView.UpdateGroupNames(groupNames);
-                    appState.SetGroupId(groupNames.FirstOrDefault());
+                    appState.SetGroupId(
+                        groups.Count > 0 ? groupManager.FindByName(groupNames.FirstOrDefault()).Id : null);
                 })
                 .AddTo(sceneDisposables);
         }

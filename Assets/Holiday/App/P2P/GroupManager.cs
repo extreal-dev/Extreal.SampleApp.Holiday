@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using Extreal.Core.Common.System;
+using Extreal.P2P.Dev;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.App.P2P
@@ -20,17 +22,16 @@ namespace Extreal.SampleApp.Holiday.App.P2P
         [SuppressMessage("Usage", "CC0033")]
         private readonly CompositeDisposable disposables = new CompositeDisposable();
 
+        private readonly PeerClient peerClient;
+
+        public GroupManager(PeerClient peerClient) => this.peerClient = peerClient;
+
         protected override void ReleaseManagedResources() => disposables.Dispose();
 
-        public void UpdateGroups()
+        public async UniTask UpdateGroupsAsync()
         {
-            var result = new List<Group>
-            {
-                new Group("111", "Group 1"),
-                new Group("222", "Group 2"),
-                new Group("333", "Group 3"),
-            };
-            groups.Value = result;
+            var hosts = await peerClient.ListHostsAsync();
+            groups.Value = hosts.Select(host => new Group(host.Id, host.Name)).ToList();
         }
 
         public Group FindByName(string name) => groups.Value.First(groups => groups.Name == name);
