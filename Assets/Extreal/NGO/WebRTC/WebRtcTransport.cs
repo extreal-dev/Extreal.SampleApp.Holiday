@@ -25,13 +25,13 @@ namespace Extreal.NGO.WebRTC.Dev
             return evt.Type;
         }
 
-        public override bool StartClient() => StartAs(WebRtcRole.Client);
+        public override bool StartClient() => Connect();
 
-        public override bool StartServer() => StartAs(WebRtcRole.Host);
+        public override bool StartServer() => Connect();
 
-        private bool StartAs(WebRtcRole role)
+        private bool Connect()
         {
-            webRtcClient.Connect(role);
+            webRtcClient.Connect();
             return true;
         }
 
@@ -60,7 +60,7 @@ namespace Extreal.NGO.WebRTC.Dev
             {
                 Logger.LogDebug($"{nameof(Shutdown)}");
             }
-            webRtcClient.Shutdown();
+            webRtcClient.Clear();
         }
 
         public override void Initialize(NetworkManager networkManager = null)

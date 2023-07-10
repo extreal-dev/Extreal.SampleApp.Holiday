@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Extreal.Chat.Dev;
 using Extreal.Integration.Chat.Vivox;
 using Extreal.Integration.Multiplay.NGO;
 using Extreal.NGO.Dev;
@@ -37,12 +37,10 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
             builder.RegisterComponent(assetHelper.VivoxAppConfig);
             builder.Register<VivoxClient>(Lifetime.Singleton);
 
-            builder.RegisterEntryPoint<ClientControlPresenter>();
-        }
+            var textChatClient = TextChatClientProvider.Provide(peerClient);
+            builder.RegisterComponent(textChatClient);
 
-        private static PeerClient Hoge(IObjectResolver arg)
-        {
-            throw new NotImplementedException();
+            builder.RegisterEntryPoint<ClientControlPresenter>();
         }
     }
 }

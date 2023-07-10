@@ -24,7 +24,8 @@
         "Extreal.Integration.AssetWorkflow.Addressables",
         "Extreal.SampleApp.Holiday.Analyzer",
         "Extreal.P2P.Dev",
-        "Extreal.NGO.Dev"
+        "Extreal.NGO.Dev",
+        "Extreal.Chat.Dev"
     ],
     "includePlatforms": [
         "Android",

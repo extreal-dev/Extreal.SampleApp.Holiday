@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Extreal.Chat.Dev;
 using Extreal.Core.StageNavigation;
-using Extreal.Integration.Chat.Vivox;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.App.Stages;
@@ -10,20 +10,18 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
 {
     public class TextChatControlPresenter : StagePresenterBase
     {
-        private readonly VivoxClient vivoxClient;
+        private readonly TextChatClient textChatClient;
         private readonly TextChatControlView textChatControlView;
-
-        private TextChatChannel textChatChannel;
 
         public TextChatControlPresenter
         (
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState,
-            VivoxClient vivoxClient,
+            TextChatClient textChatClient,
             TextChatControlView textChatControlView
         ) : base(stageNavigator, appState)
         {
-            this.vivoxClient = vivoxClient;
+            this.textChatClient = textChatClient;
             this.textChatControlView = textChatControlView;
         }
 
@@ -36,7 +34,7 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
                 .Where(message => !string.IsNullOrWhiteSpace(message))
                 .Subscribe(message =>
                 {
-                    textChatChannel.SendMessage(message);
+                    textChatClient.Send(message);
                     appState.StageState.CountUpTextChats();
                 })
                 .AddTo(sceneDisposables);
@@ -46,18 +44,11 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
             AppState appState,
             CompositeDisposable stageDisposables)
         {
-            textChatChannel = new TextChatChannel(vivoxClient, $"HolidayTextChat{stageName}");
-            stageDisposables.Add(textChatChannel);
-
-            textChatChannel.OnConnected
-                .Subscribe(appState.SetTextChatReady)
-                .AddTo(stageDisposables);
-
-            textChatChannel.OnMessageReceived
+            textChatClient.OnMessageReceived
                 .Subscribe(textChatControlView.ShowMessage)
                 .AddTo(stageDisposables);
 
-            textChatChannel.JoinAsync().Forget();
+            appState.SetTextChatReady(true);
         }
 
         protected override void OnStageExiting(
@@ -65,7 +56,7 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
             AppState appState)
         {
             appState.SetTextChatReady(false);
-            textChatChannel.Leave();
+            textChatClient.Clear();
         }
     }
 }

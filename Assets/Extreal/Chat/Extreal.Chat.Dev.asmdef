@@ -1,0 +1,21 @@
+{
+    "name": "Extreal.Chat.Dev",
+    "rootNamespace": "",
+    "references": [
+        "Unity.WebRTC",
+        "UniTask",
+        "UniRx",
+        "Extreal.Core.Logging",
+        "Extreal.Core.Common",
+        "Extreal.P2P.Dev"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

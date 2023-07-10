@@ -169,8 +169,6 @@ namespace Extreal.P2P.Dev
             await SendMessageAsync(HostId, new Message { Type = "join" });
         }
 
-        private bool IsClient() => HostId is not null;
-
         private async UniTask SendOfferAsync(string to)
         {
             if (pcDict.ContainsKey(to))
@@ -315,6 +313,7 @@ namespace Extreal.P2P.Dev
         private async UniTask ReceiveOfferAsync(string from, RTCSessionDescription sd)
         {
             CreatePc(from, false);
+
             await HandlePcAsync(
                 nameof(ReceiveOfferAsync),
                 from,
@@ -322,11 +321,12 @@ namespace Extreal.P2P.Dev
                 {
                     await pc.SetRemoteDescription(ref sd);
                     await SendAnswerAsync(from);
-                    if (!IsRunning && IsClient())
-                    {
-                        FireOnStarted();
-                    }
                 });
+
+            if (!IsRunning && Role == PeerRole.Client)
+            {
+                FireOnStarted();
+            }
         }
 
         private UniTask SendAnswerAsync(string from)

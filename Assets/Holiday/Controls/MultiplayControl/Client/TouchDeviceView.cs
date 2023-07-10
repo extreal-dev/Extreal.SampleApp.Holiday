@@ -9,9 +9,6 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
         [SerializeField] private GameObject joysticksCanvas;
 
         [SuppressMessage("Style", "IDE0051"), SuppressMessage("Style", "IDE0022")]
-        private void Awake()
-        {
-            joysticksCanvas.SetActive(AppUtils.IsTouchDevice());
-        }
+        private void Awake() => joysticksCanvas.SetActive(AppUtils.IsTouchDevice());
     }
 }

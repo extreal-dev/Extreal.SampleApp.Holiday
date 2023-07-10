@@ -13,10 +13,15 @@ namespace Extreal.NGO.WebRTC.Dev
     {
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(NativeWebRtcClient));
 
+        private static readonly string Label = "multiplay";
+
         private readonly Dictionary<string, List<RTCDataChannel>> dcDict;
         private readonly IdMapper idMapper;
         private readonly Queue<WebRtcEvent> events;
+
         private readonly PeerClient peerClient;
+        private string connectedHostId;
+        private PeerRole connectedRole;
 
         public NativeWebRtcClient(NativePeerClient peerClient)
         {
@@ -24,6 +29,8 @@ namespace Extreal.NGO.WebRTC.Dev
             idMapper = new IdMapper();
             events = new Queue<WebRtcEvent>();
             this.peerClient = peerClient;
+            connectedHostId = null;
+            connectedRole = PeerRole.None;
             peerClient.AddPcCreateHook(CreatePc);
             peerClient.AddPcCloseHook(ClosePc);
         }
@@ -32,24 +39,34 @@ namespace Extreal.NGO.WebRTC.Dev
         {
             // In NGO, The client connects only to the host.
             // The host connects to all clients.
-            if (peerClient.Role == PeerRole.Client && id != peerClient.HostId)
+            if (connectedRole == PeerRole.Client && id != connectedHostId)
             {
                 return;
             }
 
             if (isOffer)
             {
-                var dc = pc.CreateDataChannel("multiplay");
-                HandleDc(id, true, dc);
+                var dc = pc.CreateDataChannel(Label);
+                HandleDc(id, dc);
             }
             else
             {
-                pc.OnDataChannel = (dc) => HandleDc(id, false, dc);
+                pc.OnDataChannel += (dc) => HandleDc(id, dc);
             }
         }
 
-        private void HandleDc(string id, bool isOffer, RTCDataChannel dc)
+        private void HandleDc(string id, RTCDataChannel dc)
         {
+            if (dc.Label != Label)
+            {
+                return;
+            }
+
+            if (Logger.IsDebug())
+            {
+                Logger.LogDebug($"New DataChannel: id={id} label={dc.Label}");
+            }
+
             if (!dcDict.ContainsKey(id))
             {
                 dcDict.Add(id, new List<RTCDataChannel>());
@@ -59,7 +76,8 @@ namespace Extreal.NGO.WebRTC.Dev
             dcDict[id].Add(dc);
             var clientId = idMapper.Get(id);
 
-            if (isOffer) // Host only
+            // Host only
+            if (connectedRole == PeerRole.Host)
             {
                 dc.OnOpen = () =>
                 {
@@ -116,20 +134,32 @@ namespace Extreal.NGO.WebRTC.Dev
             idMapper.Remove(id);
         }
 
-        public override void Connect(WebRtcRole role)
+        public override void Connect()
         {
+            connectedHostId = peerClient.HostId;
+            connectedRole = peerClient.Role;
             if (Logger.IsDebug())
             {
-                Logger.LogDebug($"{nameof(Connect)}: role={role}");
+                Logger.LogDebug($"{nameof(Connect)}: role={connectedRole}");
             }
-            Role = role;
-            if (Role == WebRtcRole.Client)
+
+            if (connectedRole == PeerRole.Client)
             {
-                var hostId = GetHostId();
-                if (hostId != HostIdNotFound)
-                {
-                    events.Enqueue(new WebRtcEvent(NetworkEvent.Connect, hostId));
-                }
+                FireNetworkEvent(NetworkEvent.Connect);
+            }
+        }
+
+        private void FireNetworkEvent(NetworkEvent networkEvent)
+        {
+            var hostId = GetHostId();
+            if (hostId != HostIdNotFound)
+            {
+                events.Enqueue(new WebRtcEvent(networkEvent, hostId));
+            }
+
+            if (Logger.IsDebug())
+            {
+                Logger.LogDebug($"{nameof(FireNetworkEvent)}: NetworkEvent={networkEvent} hostId={hostId}");
             }
         }
 
@@ -137,7 +167,7 @@ namespace Extreal.NGO.WebRTC.Dev
 
         private ulong GetHostId()
         {
-            var hostId = peerClient.HostId;
+            var hostId = connectedHostId;
             if (hostId is null)
             {
                 return HostIdNotFound;
@@ -149,7 +179,7 @@ namespace Extreal.NGO.WebRTC.Dev
         {
             if (clientId == NetworkManager.ServerClientId)
             {
-                clientId = idMapper.Get(peerClient.HostId);
+                clientId = idMapper.Get(connectedHostId);
             }
 
             if (!idMapper.Has(clientId))
@@ -192,17 +222,13 @@ namespace Extreal.NGO.WebRTC.Dev
 
         public override void Disconnect()
         {
-            if (Role == WebRtcRole.Client)
+            if (connectedRole == PeerRole.Client)
             {
-                var hostId = GetHostId();
-                if (hostId != HostIdNotFound)
-                {
-                    events.Enqueue(new WebRtcEvent(NetworkEvent.Disconnect, hostId));
-                }
+                FireNetworkEvent(NetworkEvent.Disconnect);
             }
         }
 
-        public override void Shutdown()
+        public override void Clear()
         {
             dcDict.Keys.ToList().ForEach(ClosePc);
             dcDict.Clear();

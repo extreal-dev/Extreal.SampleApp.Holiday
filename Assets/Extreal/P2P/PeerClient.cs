@@ -60,12 +60,14 @@ namespace Extreal.P2P.Dev
 
         public UniTask StartClientAsync(string hostId)
         {
+            Role = PeerRole.Client;
+            HostId = hostId;
+
             if (Logger.IsDebug())
             {
                 Logger.LogDebug($"Start client: hostId={HostId}");
             }
-            Role = PeerRole.Client;
-            HostId = hostId;
+
             return DoStartClientAsync();
         }
 

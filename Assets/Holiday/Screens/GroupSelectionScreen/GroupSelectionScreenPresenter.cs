@@ -7,7 +7,6 @@ using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.App.P2P;
 using Extreal.SampleApp.Holiday.App.Stages;
 using UniRx;
-using UnityEngine;
 
 namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
 {
