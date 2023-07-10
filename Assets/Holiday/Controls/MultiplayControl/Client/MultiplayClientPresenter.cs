@@ -50,6 +50,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
 
             appState.PlayingReady
                 .Skip(1)
+                .Where(ready => ready)
                 .Subscribe(_ => multiplayClient.ResetPosition())
                 .AddTo(sceneDisposables);
 
