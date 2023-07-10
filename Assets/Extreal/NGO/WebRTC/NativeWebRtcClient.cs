@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Extreal.Core.Logging;
 using Extreal.P2P.Dev;
 using Unity.Netcode;
@@ -29,6 +30,8 @@ namespace Extreal.NGO.WebRTC.Dev
 
         private void CreatePc(string id, bool isOffer, RTCPeerConnection pc)
         {
+            // In NGO, The client connects only to the host.
+            // The host connects to all clients.
             if (peerClient.Role == PeerRole.Client && id != peerClient.HostId)
             {
                 return;
@@ -93,7 +96,7 @@ namespace Extreal.NGO.WebRTC.Dev
 
         private static byte[] ToByte(byte[] message)
         {
-            var strBuf = System.Text.Encoding.ASCII.GetString(message);
+            var strBuf = Encoding.ASCII.GetString(message);
             var str2Array = strBuf.Split('-');
             var byteBuf = new byte[str2Array.Length];
             for(var i = 0; i < str2Array.Length; i++){
