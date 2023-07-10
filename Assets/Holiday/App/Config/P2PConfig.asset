@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: P2PConfig
   m_EditorClassIdentifier: 
   signalingUrl: http://127.0.0.1:3010
+  timeoutSeconds: 5

@@ -41,7 +41,10 @@ namespace Extreal.P2P.Dev
                 return;
             }
 
-            socket = new SocketIO(PeerConfig.Url);
+            socket = new SocketIO(PeerConfig.Url, new SocketIOOptions
+            {
+                ConnectionTimeout = PeerConfig.Timeout,
+            });
             socket.On("message", ReceiveMessage);
             socket.On("user disconnected", ReceiveUserDisconnected);
 
@@ -138,7 +141,7 @@ namespace Extreal.P2P.Dev
                 throw new HostNameAlreadyExistsException(startHostResponse.Message);
             }
 
-            SetStarted();
+            FireOnStarted();
         }
 
         public override async UniTask<List<Host>> ListHostsAsync()
@@ -321,7 +324,7 @@ namespace Extreal.P2P.Dev
                     await SendAnswerAsync(from);
                     if (!IsRunning && IsClient())
                     {
-                        SetStarted();
+                        FireOnStarted();
                     }
                 });
         }

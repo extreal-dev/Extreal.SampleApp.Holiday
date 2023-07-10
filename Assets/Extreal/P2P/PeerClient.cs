@@ -34,7 +34,7 @@ namespace Extreal.P2P.Dev
             }).AddTo(Disposables);
         }
 
-        protected void SetStarted() => onStarted.OnNext(Unit.Default);
+        protected void FireOnStarted() => onStarted.OnNext(Unit.Default);
 
         protected sealed override void ReleaseManagedResources()
         {
