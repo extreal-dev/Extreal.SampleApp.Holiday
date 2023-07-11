@@ -1,5 +1,4 @@
 ﻿using Extreal.Chat.Dev;
-using Extreal.Integration.Chat.Vivox;
 using Extreal.Integration.Multiplay.NGO;
 using Extreal.NGO.Dev;
 using Extreal.NGO.WebRTC.Dev;
@@ -15,8 +14,9 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
 {
     public class ClientControlScope : LifetimeScope
     {
-        [SerializeField]
-        private NetworkManager networkManager;
+        [SerializeField] private NetworkManager networkManager;
+        [SerializeField] private AudioSource inAudio;
+        [SerializeField] private AudioSource outAudio;
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -34,11 +34,10 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
             builder.Register<NgoHost>(Lifetime.Singleton);
             builder.Register<NgoClient>(Lifetime.Singleton).WithParameter(assetHelper.NgoClientConfig.RetryStrategy);
 
-            builder.RegisterComponent(assetHelper.VivoxAppConfig);
-            builder.Register<VivoxClient>(Lifetime.Singleton);
-
             var textChatClient = TextChatClientProvider.Provide(peerClient);
             builder.RegisterComponent(textChatClient);
+            var voiceChatClient = VoiceChatClientProvider.Provide(peerClient, inAudio, outAudio);
+            builder.RegisterComponent(voiceChatClient);
 
             builder.RegisterEntryPoint<ClientControlPresenter>();
         }

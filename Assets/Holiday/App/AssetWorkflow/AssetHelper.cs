@@ -6,9 +6,8 @@ using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
 using Extreal.Integration.AssetWorkflow.Addressables;
-using Extreal.Integration.Chat.Vivox;
-using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.P2P.Dev;
+using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.Screens.ConfirmationScreen;
 using UniRx;
 using UnityEngine.ResourceManagement.ResourceProviders;
@@ -24,7 +23,6 @@ namespace Extreal.SampleApp.Holiday.App.AssetWorkflow
 
         public MessageConfig MessageConfig { get; private set; }
         public PeerConfig PeerConfig { get; private set; }
-        public VivoxAppConfig VivoxAppConfig { get; private set; }
         public HostConfig NgoHostConfig { get; private set; }
         public ClientConfig NgoClientConfig { get; private set; }
         public AvatarConfig AvatarConfig { get; private set; }
@@ -55,7 +53,6 @@ namespace Extreal.SampleApp.Holiday.App.AssetWorkflow
                 MessageConfig = await LoadAndAddToDisposablesAsync<MessageConfig>();
                 PeerConfig = await LoadAndReleaseAsync<P2PConfig, PeerConfig>(asset => asset.PeerConfig);
                 AvatarConfig = await LoadAndAddToDisposablesAsync<AvatarConfig>();
-                VivoxAppConfig = await LoadAndReleaseAsync<ChatConfig, VivoxAppConfig>(asset => asset.VivoxAppConfig);
                 (NgoHostConfig, NgoClientConfig)
                     = await LoadAndReleaseAsync<MultiplayConfig, (HostConfig, ClientConfig)>(
                         asset => (asset.HostConfig, asset.ClientConfig));

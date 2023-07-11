@@ -13,11 +13,11 @@ namespace Extreal.Chat.Dev
 
         private static readonly string Label = "textchat";
 
-        private readonly Dictionary<string, List<RTCDataChannel>> dcDict;
+        private readonly Dictionary<string, RTCDataChannel> dcDict;
 
         public NativeTextChatClient(NativePeerClient peerClient)
         {
-            dcDict = new Dictionary<string, List<RTCDataChannel>>();
+            dcDict = new Dictionary<string, RTCDataChannel>();
             peerClient.AddPcCreateHook(CreatePc);
             peerClient.AddPcCloseHook(ClosePc);
         }
@@ -47,16 +47,8 @@ namespace Extreal.Chat.Dev
                 Logger.LogDebug($"New DataChannel: id={id} label={dc.Label}");
             }
 
-            if (!dcDict.ContainsKey(id))
-            {
-                dcDict.Add(id, new List<RTCDataChannel>());
-            }
-            dcDict[id].Add(dc);
-
-            dc.OnMessage = message =>
-            {
-                FireOnMessageReceived(Encoding.UTF8.GetString(message));
-            };
+            dcDict.Add(id, dc);
+            dc.OnMessage = message => FireOnMessageReceived(Encoding.UTF8.GetString(message));
         }
 
         private void ClosePc(string id)
@@ -65,15 +57,15 @@ namespace Extreal.Chat.Dev
             {
                 return;
             }
-            dcDict[id].ForEach(dc => dc.Close());
+            dcDict[id].Close();
             dcDict.Remove(id);
         }
 
         protected override void DoSend(string message)
         {
-            foreach (var id in dcDict.Keys)
+            foreach (var dc in dcDict.Values)
             {
-                dcDict[id].ForEach(dc => dc.Send(message));
+                dc.Send(message);
             }
         }
 

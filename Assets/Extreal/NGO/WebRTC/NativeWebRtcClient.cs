@@ -15,7 +15,7 @@ namespace Extreal.NGO.WebRTC.Dev
 
         private static readonly string Label = "multiplay";
 
-        private readonly Dictionary<string, List<RTCDataChannel>> dcDict;
+        private readonly Dictionary<string, RTCDataChannel> dcDict;
         private readonly IdMapper idMapper;
         private readonly Queue<WebRtcEvent> events;
 
@@ -27,7 +27,7 @@ namespace Extreal.NGO.WebRTC.Dev
 
         public NativeWebRtcClient(NativePeerClient peerClient)
         {
-            dcDict = new Dictionary<string, List<RTCDataChannel>>();
+            dcDict = new Dictionary<string, RTCDataChannel>();
             idMapper = new IdMapper();
             events = new Queue<WebRtcEvent>();
             disconnectedRemoteClients = new HashSet<ulong>();
@@ -72,13 +72,8 @@ namespace Extreal.NGO.WebRTC.Dev
                 Logger.LogDebug($"New DataChannel: id={id} label={dc.Label}");
             }
 
-            if (!dcDict.ContainsKey(id))
-            {
-                dcDict.Add(id, new List<RTCDataChannel>());
-                idMapper.Add(id);
-            }
-
-            dcDict[id].Add(dc);
+            dcDict.Add(id, dc);
+            idMapper.Add(id);
             var clientId = idMapper.Get(id);
 
             // Host only
@@ -131,7 +126,7 @@ namespace Extreal.NGO.WebRTC.Dev
             {
                 return;
             }
-            dcDict[id].ForEach(dc => dc.Close());
+            dcDict[id].Close();
             dcDict.Remove(id);
             idMapper.Remove(id);
         }
@@ -179,31 +174,11 @@ namespace Extreal.NGO.WebRTC.Dev
         {
             if (clientId == NetworkManager.ServerClientId)
             {
-                clientId = idMapper.Get(peerClient.HostId);
+                clientId = GetHostId(peerClient.HostId);
             }
-
-            if (!idMapper.Has(clientId))
-            {
-                if (Logger.IsDebug())
-                {
-                    Logger.LogDebug($"{nameof(Send)}: clientId not found. clientId={clientId}");
-                }
-                return;
-            }
-
             var id = idMapper.Get(clientId);
-            dcDict[id].ForEach((dc) =>
-            {
-                if (dc.ReadyState != RTCDataChannelState.Open)
-                {
-                    if (Logger.IsDebug())
-                    {
-                        Logger.LogDebug($"{nameof(Send)}: DataChannel is not open. clientId={clientId}");
-                    }
-                    return;
-                }
-                dc.Send(ToStr(payload));
-            });
+            var dc = dcDict[id];
+            dc.Send(ToStr(payload));
         }
 
         private static string ToStr(ArraySegment<byte> payload)
@@ -214,7 +189,6 @@ namespace Extreal.NGO.WebRTC.Dev
                 Buffer.BlockCopy(payload.Array!, payload.Offset, buf, 0, payload.Count);
                 return BitConverter.ToString(buf);
             }
-
             return BitConverter.ToString(payload.Array);
         }
 

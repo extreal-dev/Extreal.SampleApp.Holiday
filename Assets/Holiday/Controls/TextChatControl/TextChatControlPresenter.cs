@@ -1,8 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Extreal.Chat.Dev;
 using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.Config;
+using Extreal.SampleApp.Holiday.App.P2P;
 using Extreal.SampleApp.Holiday.App.Stages;
 using UniRx;
 
@@ -39,6 +41,7 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
                 })
                 .AddTo(sceneDisposables);
 
+        [SuppressMessage("CodeCracker", "CC0092")]
         protected override void OnStageEntered(
             StageName stageName,
             AppState appState,
@@ -48,7 +51,11 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
                 .Subscribe(textChatControlView.ShowMessage)
                 .AddTo(stageDisposables);
 
-            appState.SetTextChatReady(true);
+            Observable
+                .CombineLatest(appState.SpaceReady, appState.P2PReady)
+                .Where(readies => readies.All(ready => ready))
+                .Subscribe(_ => appState.SetTextChatReady(true))
+                .AddTo(stageDisposables);
         }
 
         protected override void OnStageExiting(

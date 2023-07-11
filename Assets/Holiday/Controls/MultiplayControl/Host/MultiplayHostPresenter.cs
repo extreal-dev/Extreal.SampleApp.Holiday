@@ -60,16 +60,10 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl.Host
 
         protected override void OnStageExiting(StageName stageName, AppState appState)
         {
-            if (appState.Role != Role.Host)
+            if (appState.Role != Role.Host || AppUtils.IsSpace(stageName))
             {
                 return;
             }
-
-            if (AppUtils.IsSpace(stageName))
-            {
-                return;
-            }
-
             multiplayHost.StopHostAsync().Forget();
         }
     }

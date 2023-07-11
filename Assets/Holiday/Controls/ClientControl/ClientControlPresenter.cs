@@ -1,15 +1,13 @@
 ﻿using Cysharp.Threading.Tasks;
 using Extreal.Core.StageNavigation;
-using Extreal.Integration.Chat.Vivox;
 using Extreal.Integration.Multiplay.NGO;
+using Extreal.NGO.Dev;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
-using Extreal.NGO.Dev;
 using Extreal.SampleApp.Holiday.App.P2P;
 using Extreal.SampleApp.Holiday.App.Stages;
 using UniRx;
-using VivoxUnity;
 
 namespace Extreal.SampleApp.Holiday.Controls.ClientControl
 {
@@ -17,7 +15,6 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
     {
         private readonly AssetHelper assetHelper;
         private readonly GroupManager groupManager;
-        private readonly VivoxClient vivoxClient;
         private readonly NgoHost ngoHost;
         private readonly NgoClient ngoClient;
         private readonly IConnectionSetter connectionSetter;
@@ -27,14 +24,12 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
             AppState appState,
             AssetHelper assetHelper,
             GroupManager groupManager,
-            VivoxClient vivoxClient,
             NgoHost ngoHost,
             NgoClient ngoClient,
             IConnectionSetter connectionSetter) : base(stageNavigator, appState)
         {
             this.assetHelper = assetHelper;
             this.groupManager = groupManager;
-            this.vivoxClient = vivoxClient;
             this.ngoHost = ngoHost;
             this.ngoClient = ngoClient;
             this.connectionSetter = connectionSetter;
@@ -48,7 +43,6 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
             InitializeGroupManager(appState, sceneDisposables);
             InitializeNgoHost();
             InitializeNgoClient(stageNavigator, appState, sceneDisposables);
-            InitializeVivoxClient(appState, sceneDisposables);
         }
 
         private void InitializeGroupManager(
@@ -99,31 +93,6 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
                 .Subscribe(_ =>
                     appState.Notify(assetHelper.MessageConfig.MultiplayUnexpectedDisconnectedMessage))
                 .AddTo(sceneDisposables);
-        }
-
-        private void InitializeVivoxClient(AppState appState, CompositeDisposable sceneDisposables)
-        {
-            vivoxClient.OnConnectRetrying
-                .Subscribe(retryCount => AppUtils.NotifyRetrying(
-                    appState,
-                    assetHelper.MessageConfig.ChatConnectRetryMessage,
-                    retryCount))
-                .AddTo(sceneDisposables);
-
-            vivoxClient.OnConnectRetried
-                .Subscribe(result => AppUtils.NotifyRetried(
-                    appState,
-                    result,
-                    assetHelper.MessageConfig.ChatConnectRetrySuccessMessage,
-                    assetHelper.MessageConfig.ChatConnectRetryFailureMessage))
-                .AddTo(sceneDisposables);
-
-            vivoxClient.OnRecoveryStateChanged
-                .Where(recoveryState => recoveryState == ConnectionRecoveryState.FailedToRecover)
-                .Subscribe(_ => appState.Notify(assetHelper.MessageConfig.ChatUnexpectedDisconnectedMessage))
-                .AddTo(sceneDisposables);
-
-            vivoxClient.LoginAsync(new VivoxAuthConfig(nameof(Holiday))).Forget();
         }
     }
 }

@@ -2,7 +2,6 @@
 
 ## How to play
 
-- This application uses Vivox for voice and text chat. Create an account on [Vivox Developer Portal](https://developer.vivox.com/) and create an application to connect to from this application.
 - Clone the repository.
 - Before opening in the Unity Editor, Create the following class in the `Assets/Holiday/App/AssetWorkflow/Custom` directory.
 
@@ -18,8 +17,6 @@
   }
   ```
 
-- Open the cloned directory in the Unity editor.
-    - If "Link your Unity project" appears, close it without setting it.
 - Refer to the following page to import Mixamo model files into your project.
   - [Mixamoの無料3DモデルをUnityにインポートする方法](https://zenn.dev/gaku_moriya/articles/d1b451b288786b)
     - Please implement from "3Dモデルを入手する" to "Materialの最適化".
@@ -37,15 +34,6 @@
   - Remove the scene you just created.
   - Add the `AvatarAmy` asset to the default group of Addressables with the name `AvatarAmy`.
   - Create an avatar prefab about `Michelle` in the same way as above.
-- Create a `ChatConfig` from the Create Assets menu in the `/Assets/Holiday/App/Config` directory and set the Vivox access information in the inspector.
-  - Path in the Create Assets menu: `Holiday > ChatConfig`
-  - Add it to the default group of Addressables with the name `ChatConfig`.
-- Create a `MultiplayConfig` from the Create Assets menu in the `/Assets/Holiday/App/Config` directory. Default values are set so there is no need to set them in the inspector.
-  - Path in the Create Assets menu: `Holiday > MultiplayConfig`
-  - Add it to the default group of Addressables with the name `MultiplayConfig`.
-- Create a `AppUsageConfig` from the Create Assets menu in the `/Assets/Holiday/App/Config` directory. Default values are set so there is no need to set them in the inspector.
-  - Path in the Create Assets menu: `Holiday > AppUsageConfig`
-  - Set `AppUsageConfig` to the Scope object in the App scene from the Inspector.
 - Open multiple Unity editors using [ParrelSync.](https://github.com/VeriorPies/ParrelSync). ParrelSync is already installed in this project.
 - Run a multiplayer server.
   - Run the following scene: `/Assets/Holiday.MultiplayServer/MultilayServer`
