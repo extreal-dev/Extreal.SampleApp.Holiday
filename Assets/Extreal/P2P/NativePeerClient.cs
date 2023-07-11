@@ -4,8 +4,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json.Serialization;
 using Cysharp.Threading.Tasks;
+using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
 using SocketIOClient;
+using UniRx;
 using Unity.WebRTC;
 
 namespace Extreal.P2P.Dev
@@ -19,11 +21,49 @@ namespace Extreal.P2P.Dev
         private readonly List<Action<string, bool, RTCPeerConnection>> pcCreateHooks;
         private readonly List<Action<string>> pcCloseHooks;
 
+        private readonly ClientState clientState;
+
         public NativePeerClient(PeerConfig peerConfig) : base(peerConfig)
         {
             pcDict = new Dictionary<string, RTCPeerConnection>();
             pcCreateHooks = new List<Action<string, bool, RTCPeerConnection>>();
             pcCloseHooks = new List<Action<string>>();
+            clientState = new ClientState();
+            Disposables.Add(clientState);
+
+            clientState.OnStarted.Subscribe(_ => FireOnStarted()).AddTo(Disposables);
+        }
+
+        private class ClientState : DisposableBase
+        {
+            private readonly CompositeDisposable disposables = new CompositeDisposable();
+
+            public IObservable<Unit> OnStarted => onStarted.AddTo(disposables);
+            private readonly Subject<Unit> onStarted = new Subject<Unit>();
+
+            private readonly BoolReactiveProperty iceCandidateGathering = new BoolReactiveProperty(false);
+            private readonly BoolReactiveProperty offerAnswerProcess = new BoolReactiveProperty(false);
+
+            public ClientState()
+            {
+                iceCandidateGathering.AddTo(disposables);
+                offerAnswerProcess.AddTo(disposables);
+                Observable.CombineLatest(iceCandidateGathering, offerAnswerProcess)
+                    .Where(readies => readies.All(ready => ready))
+                    .Subscribe(_ => onStarted.OnNext(Unit.Default))
+                    .AddTo(disposables);
+            }
+
+            public void FinishIceCandidateGathering() => iceCandidateGathering.Value =true;
+            public void FinishOfferAnswerProcess() => offerAnswerProcess.Value = true;
+
+            public void Clear()
+            {
+                iceCandidateGathering.Value = false;
+                offerAnswerProcess.Value = false;
+            }
+
+            protected override void ReleaseManagedResources() => disposables.Dispose();
         }
 
         protected override void DoReleaseManagedResources() => socket?.Dispose();
@@ -41,10 +81,7 @@ namespace Extreal.P2P.Dev
                 return;
             }
 
-            socket = new SocketIO(PeerConfig.Url, new SocketIOOptions
-            {
-                ConnectionTimeout = PeerConfig.Timeout,
-            });
+            socket = new SocketIO(PeerConfig.Url, PeerConfig.SocketIOOptions);
             socket.On("message", ReceiveMessage);
             socket.On("user disconnected", ReceiveUserDisconnected);
 
@@ -52,11 +89,11 @@ namespace Extreal.P2P.Dev
 
             if (Logger.IsDebug())
             {
-                Logger.LogDebug("Socket created");
+                Logger.LogDebug($"Socket created: id={socket.Id}");
             }
         }
 
-        private void ReceiveMessage(SocketIOResponse response)
+        private async void ReceiveMessage(SocketIOResponse response)
         {
             if (Logger.IsDebug())
             {
@@ -74,17 +111,22 @@ namespace Extreal.P2P.Dev
                 }
                 case "call me":
                 {
-                    SendOfferAsync(message.Me).Forget();
+                    await SendOfferAsync(message.Me);
                     break;
                 }
                 case "offer":
                 {
-                    ReceiveOfferAsync(message.From, message.ToSd()).Forget();
+                    await ReceiveOfferAsync(message.From, message.ToSd());
                     break;
                 }
                 case "answer":
                 {
-                    ReceiveAnswerAsync(message.From, message.ToSd()).Forget();
+                    await ReceiveAnswerAsync(message.From, message.ToSd());
+                    break;
+                }
+                case "done":
+                {
+                    ReceiveDone(message.From);
                     break;
                 }
                 case "candidate":
@@ -96,14 +138,14 @@ namespace Extreal.P2P.Dev
                 }
                 case "bye":
                 {
-                    ClosePc(message.From);
+                    ReceiveBye(message.From);
                     break;
                 }
                 default:
                 {
                     if (Logger.IsDebug())
                     {
-                        Logger.LogDebug($"Unexpected Case: {message.Type}");
+                        Logger.LogDebug($"Unknown message received!!! type={message.Type}");
                     }
                     break;
                 }
@@ -165,7 +207,6 @@ namespace Extreal.P2P.Dev
         protected override async UniTask DoStartClientAsync()
         {
             await CreateSocketIfNotAlreadyAsync();
-
             await SendMessageAsync(HostId, new Message { Type = "join" });
         }
 
@@ -183,7 +224,7 @@ namespace Extreal.P2P.Dev
             CreatePc(to, true);
 
             await HandlePcAsync(
-                "SendOffer",
+                nameof(SendOfferAsync),
                 to,
                 async pc =>
                 {
@@ -197,10 +238,7 @@ namespace Extreal.P2P.Dev
 
         protected override async UniTask DoStopAsync()
         {
-            if (socket is null)
-            {
-                return;
-            }
+            clientState.Clear();
 
             foreach (var id in pcDict.Keys.ToList())
             {
@@ -209,7 +247,7 @@ namespace Extreal.P2P.Dev
             }
             pcDict.Clear();
 
-            socket.Dispose();
+            socket?.Dispose();
             socket = null;
         }
 
@@ -239,8 +277,24 @@ namespace Extreal.P2P.Dev
                 }
                 switch (pc.IceConnectionState)
                 {
-                    case RTCIceConnectionState.Closed:
+                    case RTCIceConnectionState.New:
+                    case RTCIceConnectionState.Checking:
+                    case RTCIceConnectionState.Disconnected:
+                    {
+                        // do nothing
+                        break;
+                    }
+                    case RTCIceConnectionState.Connected:
+                    case RTCIceConnectionState.Completed:
+                    {
+                        if (Role == PeerRole.Client)
+                        {
+                            clientState.FinishIceCandidateGathering();
+                        }
+                        break;
+                    }
                     case RTCIceConnectionState.Failed:
+                    case RTCIceConnectionState.Closed:
                     {
                         ClosePc(id);
                         break;
@@ -272,7 +326,7 @@ namespace Extreal.P2P.Dev
 
         private UniTask SendIceAsync(string to, RTCIceCandidate ice)
             => HandlePcAsync(
-                "SendIce",
+                nameof(SendIceAsync),
                 to,
                 _ => SendMessageAsync(to,
                     new Message
@@ -287,7 +341,7 @@ namespace Extreal.P2P.Dev
                     }));
 
         [SuppressMessage("Design", "CC0021")]
-        private async UniTask SendMessageAsync(string to, Message message)
+        public async UniTask SendMessageAsync(string to, Message message)
         {
             message.To = to;
             await socket.EmitAsync("message", message);
@@ -322,11 +376,6 @@ namespace Extreal.P2P.Dev
                     await pc.SetRemoteDescription(ref sd);
                     await SendAnswerAsync(from);
                 });
-
-            if (!IsRunning && Role == PeerRole.Client)
-            {
-                FireOnStarted();
-            }
         }
 
         private UniTask SendAnswerAsync(string from)
@@ -346,13 +395,27 @@ namespace Extreal.P2P.Dev
             => HandlePcAsync(
                 nameof(ReceiveAnswerAsync),
                 from,
-                async pc => await pc.SetRemoteDescription(ref sd));
+                async pc =>
+                {
+                    await pc.SetRemoteDescription(ref sd);
+                    await SendMessageAsync(from, new Message { Type = "done" });
+                });
+
+        private void ReceiveDone(string from)
+        {
+            if (Role == PeerRole.Client)
+            {
+                clientState.FinishOfferAnswerProcess();
+            }
+        }
 
         private void ReceiveCandidate(string from, RTCIceCandidate candidate)
             => HandlePc(
                 nameof(ReceiveCandidate),
                 from,
                 pc => pc.AddIceCandidate(candidate));
+
+        private void ReceiveBye(string from) => ClosePc(from);
 
         private void HandlePc(
             string methodName,

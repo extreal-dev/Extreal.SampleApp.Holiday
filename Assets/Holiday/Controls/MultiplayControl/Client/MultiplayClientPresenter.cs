@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using Cysharp.Threading.Tasks;
 using Extreal.Core.StageNavigation;
 using Extreal.Integration.Multiplay.NGO;
 using Extreal.SampleApp.Holiday.App;
@@ -28,6 +30,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
             this.assetHelper = assetHelper;
         }
 
+        [SuppressMessage("CodeCracker", "CC0092")]
         protected override void Initialize
         (
             StageNavigator<StageName, SceneName> stageNavigator,
@@ -45,6 +48,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
             Observable
                 .CombineLatest(appState.SpaceReady, appState.P2PReady)
                 .Where(readies => readies.All(ready => ready) && appState.Role == Role.Client)
+                .ObserveOnMainThread()
                 .Subscribe(_ => multiplayClient.JoinAsync().Forget())
                 .AddTo(sceneDisposables);
 

@@ -10,5 +10,6 @@ namespace Extreal.NGO.WebRTC.Dev
         public abstract WebRtcEvent PollEvent();
         public abstract void Disconnect();
         public abstract void Clear();
+        public abstract void DisconnectRemoteClient(ulong clientId);
     }
 }

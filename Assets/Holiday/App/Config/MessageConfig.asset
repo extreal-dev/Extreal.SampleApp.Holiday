@@ -25,6 +25,7 @@ MonoBehaviour:
   spaceBackButtonLabel: Back
   groupMatchingUpdateFailureMessage: Failed to update groups. If you wish to update
     it again, press the Update button again.
+  p2PHostNameAlreadyExistsMessage: Host name already exists
   multiplayConnectionApprovalRejectedMessage: Space is full.
   multiplayConnectRetryMessage: 'Reconnect to multiplayer : {0}'
   multiplayConnectRetrySuccessMessage: Successfully reconnected to multiplayer.

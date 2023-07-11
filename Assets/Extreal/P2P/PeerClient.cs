@@ -14,6 +14,9 @@ namespace Extreal.P2P.Dev
         public IObservable<Unit> OnStarted => onStarted.AddTo(Disposables);
         private readonly Subject<Unit> onStarted = new Subject<Unit>();
 
+        public IObservable<Unit> OnHostNameAlreadyExists => onHostNameAlreadyExists.AddTo(Disposables);
+        private readonly Subject<Unit> onHostNameAlreadyExists = new Subject<Unit>();
+
         public bool IsRunning { get; private set; }
         public PeerRole Role { get; private set; } = PeerRole.None;
         public string HostId { get; private set; }
@@ -24,6 +27,7 @@ namespace Extreal.P2P.Dev
         protected PeerClient(PeerConfig peerConfig)
         {
             PeerConfig = peerConfig;
+
             OnStarted.Subscribe(_ =>
             {
                 if (Logger.IsDebug())
@@ -34,7 +38,14 @@ namespace Extreal.P2P.Dev
             }).AddTo(Disposables);
         }
 
-        protected void FireOnStarted() => onStarted.OnNext(Unit.Default);
+        protected void FireOnStarted()
+        {
+            if (IsRunning)
+            {
+                return;
+            }
+            onStarted.OnNext(Unit.Default);
+        }
 
         protected sealed override void ReleaseManagedResources()
         {
@@ -44,14 +55,25 @@ namespace Extreal.P2P.Dev
 
         protected abstract void DoReleaseManagedResources();
 
-        public UniTask StartHostAsync(string name)
+        public async UniTask StartHostAsync(string name)
         {
             if (Logger.IsDebug())
             {
                 Logger.LogDebug($"Start host: name={name}");
             }
             Role = PeerRole.Host;
-            return DoStartHostAsync(name);
+            try
+            {
+                await DoStartHostAsync(name);
+            }
+            catch (HostNameAlreadyExistsException e)
+            {
+                if (Logger.IsDebug())
+                {
+                    Logger.LogDebug(e.Message);
+                }
+                onHostNameAlreadyExists.OnNext(Unit.Default);
+            }
         }
 
         protected abstract UniTask DoStartHostAsync(string name);

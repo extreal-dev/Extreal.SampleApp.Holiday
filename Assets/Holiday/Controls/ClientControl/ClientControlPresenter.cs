@@ -75,7 +75,7 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
                 .Subscribe(_ =>
                 {
                     appState.Notify(assetHelper.MessageConfig.MultiplayConnectionApprovalRejectedMessage);
-                    stageNavigator.ReplaceAsync(StageName.AvatarSelectionStage).Forget();
+                    stageNavigator.ReplaceAsync(StageName.GroupSelectionStage).Forget();
                 })
                 .AddTo(sceneDisposables);
 

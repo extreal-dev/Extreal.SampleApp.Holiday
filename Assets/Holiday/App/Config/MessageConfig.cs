@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Extreal.SampleApp.Holiday.App.Config
 {
@@ -21,6 +22,8 @@ namespace Extreal.SampleApp.Holiday.App.Config
         [SerializeField] private string spaceBackButtonLabel;
 
         [SerializeField] private string groupMatchingUpdateFailureMessage;
+
+        [SerializeField] private string p2PHostNameAlreadyExistsMessage;
 
         [SerializeField] private string multiplayConnectionApprovalRejectedMessage;
         [SerializeField] private string multiplayConnectRetryMessage;
@@ -49,6 +52,8 @@ namespace Extreal.SampleApp.Holiday.App.Config
         public string SpaceBackButtonLabel => spaceBackButtonLabel;
 
         public string GroupMatchingUpdateFailureMessage => groupMatchingUpdateFailureMessage;
+
+        public string P2PHostNameAlreadyExistsMessage => p2PHostNameAlreadyExistsMessage;
 
         public string MultiplayConnectionApprovalRejectedMessage => multiplayConnectionApprovalRejectedMessage;
         public string MultiplayConnectRetryMessage => multiplayConnectRetryMessage;

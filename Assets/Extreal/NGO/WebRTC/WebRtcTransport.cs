@@ -22,6 +22,10 @@ namespace Extreal.NGO.WebRTC.Dev
             clientId = evt.ClientId;
             payload = evt.Payload != null ? new ArraySegment<byte>(evt.Payload) : new ArraySegment<byte>();
             receiveTime = Time.realtimeSinceStartup;
+            if (Logger.IsDebug() && (evt.Type == NetworkEvent.Connect || evt.Type == NetworkEvent.Disconnect))
+            {
+                Logger.LogDebug(evt.ToString());
+            }
             return evt.Type;
         }
 
@@ -41,6 +45,7 @@ namespace Extreal.NGO.WebRTC.Dev
             {
                 Logger.LogDebug($"{nameof(DisconnectRemoteClient)}: clientId={clientId}");
             }
+            webRtcClient.DisconnectRemoteClient(clientId);
         }
 
         public override void DisconnectLocalClient()

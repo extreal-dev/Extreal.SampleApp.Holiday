@@ -19,18 +19,23 @@ namespace Extreal.NGO.WebRTC.Dev
         private readonly IdMapper idMapper;
         private readonly Queue<WebRtcEvent> events;
 
-        private readonly PeerClient peerClient;
-        private string connectedHostId;
-        private PeerRole connectedRole;
+        private readonly NativePeerClient peerClient;
+        private string connectedHostId; // using Disconnect method only
+        private PeerRole connectedRole; // using Disconnect method only
+
+        private readonly HashSet<ulong> disconnectedRemoteClients;
 
         public NativeWebRtcClient(NativePeerClient peerClient)
         {
             dcDict = new Dictionary<string, List<RTCDataChannel>>();
             idMapper = new IdMapper();
             events = new Queue<WebRtcEvent>();
+            disconnectedRemoteClients = new HashSet<ulong>();
+
             this.peerClient = peerClient;
             connectedHostId = null;
             connectedRole = PeerRole.None;
+
             peerClient.AddPcCreateHook(CreatePc);
             peerClient.AddPcCloseHook(ClosePc);
         }
@@ -39,7 +44,7 @@ namespace Extreal.NGO.WebRTC.Dev
         {
             // In NGO, The client connects only to the host.
             // The host connects to all clients.
-            if (connectedRole == PeerRole.Client && id != connectedHostId)
+            if (peerClient.Role == PeerRole.Client && id != peerClient.HostId)
             {
                 return;
             }
@@ -77,7 +82,7 @@ namespace Extreal.NGO.WebRTC.Dev
             var clientId = idMapper.Get(id);
 
             // Host only
-            if (connectedRole == PeerRole.Host)
+            if (peerClient.Role == PeerRole.Host)
             {
                 dc.OnOpen = () =>
                 {
@@ -92,14 +97,6 @@ namespace Extreal.NGO.WebRTC.Dev
             // Both Host and Client
             dc.OnMessage = message =>
             {
-                if (dc.ReadyState != RTCDataChannelState.Open)
-                {
-                    if (Logger.IsDebug())
-                    {
-                        Logger.LogDebug($"{nameof(dc.OnMessage)}: DataChannel is not open. clientId={clientId}");
-                    }
-                    return;
-                }
                 events.Enqueue(new WebRtcEvent(NetworkEvent.Data, clientId, ToByte(message)));
             };
             dc.OnClose = () =>
@@ -107,6 +104,11 @@ namespace Extreal.NGO.WebRTC.Dev
                 if (Logger.IsDebug())
                 {
                     Logger.LogDebug($"{nameof(dc.OnClose)}: clientId={clientId}");
+                }
+
+                if (peerClient.Role == PeerRole.Host && disconnectedRemoteClients.Remove(clientId))
+                {
+                    return;
                 }
                 events.Enqueue(new WebRtcEvent(NetworkEvent.Disconnect, clientId));
             };
@@ -143,20 +145,19 @@ namespace Extreal.NGO.WebRTC.Dev
                 Logger.LogDebug($"{nameof(Connect)}: role={connectedRole}");
             }
 
-            if (connectedRole == PeerRole.Client)
+            if (peerClient.Role == PeerRole.Client)
             {
-                FireNetworkEvent(NetworkEvent.Connect);
+                FireNetworkEvent(peerClient.HostId, NetworkEvent.Connect);
             }
         }
 
-        private void FireNetworkEvent(NetworkEvent networkEvent)
+        private void FireNetworkEvent(string hostIdOrNull, NetworkEvent networkEvent)
         {
-            var hostId = GetHostId();
+            var hostId = GetHostId(hostIdOrNull);
             if (hostId != HostIdNotFound)
             {
                 events.Enqueue(new WebRtcEvent(networkEvent, hostId));
             }
-
             if (Logger.IsDebug())
             {
                 Logger.LogDebug($"{nameof(FireNetworkEvent)}: NetworkEvent={networkEvent} hostId={hostId}");
@@ -165,9 +166,8 @@ namespace Extreal.NGO.WebRTC.Dev
 
         private static readonly ulong HostIdNotFound = 0;
 
-        private ulong GetHostId()
+        private ulong GetHostId(string hostId)
         {
-            var hostId = connectedHostId;
             if (hostId is null)
             {
                 return HostIdNotFound;
@@ -179,7 +179,7 @@ namespace Extreal.NGO.WebRTC.Dev
         {
             if (clientId == NetworkManager.ServerClientId)
             {
-                clientId = idMapper.Get(connectedHostId);
+                clientId = idMapper.Get(peerClient.HostId);
             }
 
             if (!idMapper.Has(clientId))
@@ -218,22 +218,29 @@ namespace Extreal.NGO.WebRTC.Dev
             return BitConverter.ToString(payload.Array);
         }
 
-        public override WebRtcEvent PollEvent() => events.Count > 0 ? events.Dequeue() : WebRtcEvent.Nothing;
+        public override WebRtcEvent PollEvent()
+            => events.Count > 0 ? events.Dequeue() : WebRtcEvent.Nothing;
 
         public override void Disconnect()
         {
             if (connectedRole == PeerRole.Client)
             {
-                FireNetworkEvent(NetworkEvent.Disconnect);
+                FireNetworkEvent(connectedHostId, NetworkEvent.Disconnect);
             }
         }
 
         public override void Clear()
         {
+            disconnectedRemoteClients.Clear();
+            connectedHostId = null;
+            connectedRole = PeerRole.None;
             dcDict.Keys.ToList().ForEach(ClosePc);
             dcDict.Clear();
             idMapper.Clear();
             events.Clear();
         }
+
+        public override void DisconnectRemoteClient(ulong clientId)
+            => disconnectedRemoteClients.Add(clientId);
     }
 }

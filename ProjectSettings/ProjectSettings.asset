@@ -789,7 +789,7 @@ PlayerSettings:
   scriptingDefineSymbols:
     Android: STARTER_ASSETS_PACKAGES_CHECKED
     Server: STARTER_ASSETS_PACKAGES_CHECKED
-    Standalone: STARTER_ASSETS_PACKAGES_CHECKED;ZIP_AVAILABLE
+    Standalone: STARTER_ASSETS_PACKAGES_CHECKED;ZIP_AVAILABLE;NUGET_PACKAGE_READY
     iPhone: STARTER_ASSETS_PACKAGES_CHECKED
   additionalCompilerArguments: {}
   platformArchitecture: {}
