@@ -4,7 +4,6 @@ using Extreal.NGO.Dev;
 using Extreal.NGO.WebRTC.Dev;
 using Extreal.P2P.Dev;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
-using Extreal.SampleApp.Holiday.App.P2P;
 using Unity.Netcode;
 using UnityEngine;
 using VContainer;

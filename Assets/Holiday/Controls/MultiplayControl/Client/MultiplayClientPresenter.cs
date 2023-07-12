@@ -1,12 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Cysharp.Threading.Tasks;
 using Extreal.Core.StageNavigation;
 using Extreal.Integration.Multiplay.NGO;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
-using Extreal.SampleApp.Holiday.App.P2P;
 using Extreal.SampleApp.Holiday.App.Stages;
 using UniRx;
 
@@ -47,7 +45,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
 
             Observable
                 .CombineLatest(appState.SpaceReady, appState.P2PReady)
-                .Where(readies => readies.All(ready => ready) && appState.Role == Role.Client)
+                .Where(readies => readies.All(ready => ready) && appState.IsClient)
                 .ObserveOnMainThread()
                 .Subscribe(_ => multiplayClient.JoinAsync().Forget())
                 .AddTo(sceneDisposables);

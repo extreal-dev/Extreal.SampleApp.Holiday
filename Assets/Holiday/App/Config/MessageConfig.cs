@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Extreal.SampleApp.Holiday.App.Config
 {

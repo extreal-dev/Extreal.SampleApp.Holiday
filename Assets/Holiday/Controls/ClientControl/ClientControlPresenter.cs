@@ -5,7 +5,6 @@ using Extreal.NGO.Dev;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
-using Extreal.SampleApp.Holiday.App.P2P;
 using Extreal.SampleApp.Holiday.App.Stages;
 using UniRx;
 
@@ -65,7 +64,7 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
             // FIXME:
             // Hostの場合、Clientが抜けるとOnConnectionApprovalRejectedが発生します。
             ngoClient.OnConnectionApprovalRejected
-                .Where(_ => appState.Role == Role.Client)
+                .Where(_ => appState.IsClient)
                 .Subscribe(_ =>
                 {
                     appState.Notify(assetHelper.MessageConfig.MultiplayConnectionApprovalRejectedMessage);
@@ -89,7 +88,7 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
                 .AddTo(sceneDisposables);
 
             ngoClient.OnUnexpectedDisconnected
-                .Where(_ => appState.Role == Role.Client)
+                .Where(_ => appState.IsClient)
                 .Subscribe(_ =>
                     appState.Notify(assetHelper.MessageConfig.MultiplayUnexpectedDisconnectedMessage))
                 .AddTo(sceneDisposables);

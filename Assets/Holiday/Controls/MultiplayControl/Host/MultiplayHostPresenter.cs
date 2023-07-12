@@ -2,11 +2,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.StageNavigation;
+using Extreal.NGO.Dev;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
-using Extreal.NGO.Dev;
-using Extreal.SampleApp.Holiday.App.P2P;
 using Extreal.SampleApp.Holiday.App.Stages;
 using UniRx;
 using UnityEngine;
@@ -43,7 +42,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl.Host
             CompositeDisposable sceneDisposables
         )
         {
-            if (appState.Role != Role.Host)
+            if (!appState.IsHost)
             {
                 return;
             }
@@ -60,7 +59,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl.Host
 
         protected override void OnStageExiting(StageName stageName, AppState appState)
         {
-            if (appState.Role != Role.Host || AppUtils.IsSpace(stageName))
+            if (!appState.IsHost || AppUtils.IsSpace(stageName))
             {
                 return;
             }

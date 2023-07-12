@@ -1,5 +1,4 @@
-﻿
-using UnityEngine;
+﻿using UnityEngine;
 #if UNITY_STANDALONE
 using System.Diagnostics.CodeAnalysis;
 #endif

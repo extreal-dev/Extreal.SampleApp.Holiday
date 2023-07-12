@@ -1,10 +1,9 @@
 ﻿using Cysharp.Threading.Tasks;
 using Extreal.Core.StageNavigation;
-using Extreal.SampleApp.Holiday.App;
-using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.P2P.Dev;
+using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
-using Extreal.SampleApp.Holiday.App.P2P;
+using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.App.Stages;
 using UniRx;
 
@@ -51,7 +50,7 @@ namespace Extreal.SampleApp.Holiday.Holiday.Controls.P2PControl
 
         private async UniTask StartPeerClientAsync(AppState appState)
         {
-            if (appState.Role == Role.Host)
+            if (appState.IsHost)
             {
                 await peerClient.StartHostAsync(appState.GroupName);
             }

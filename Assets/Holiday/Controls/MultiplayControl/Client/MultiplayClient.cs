@@ -77,7 +77,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
                 .AddTo(disposables);
 
             this.ngoClient.OnUnexpectedDisconnected
-                .Where(_ => appState.Role == Role.Client)
+                .Where(_ => appState.IsClient)
                 .Subscribe(_ => isConnected = false)
                 .AddTo(disposables);
         }

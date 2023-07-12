@@ -1,11 +1,12 @@
 ﻿using System.Linq;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.StageNavigation;
+using Extreal.P2P.Dev;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
-using Extreal.SampleApp.Holiday.App.P2P;
 using Extreal.SampleApp.Holiday.App.Stages;
+using Extreal.SampleApp.Holiday.Controls.ClientControl;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
@@ -80,7 +81,7 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
         )
         {
             groupSelectionScreenView.Initialize();
-            groupSelectionScreenView.SetInitialValues(appState.Role);
+            groupSelectionScreenView.SetInitialValues(appState.IsHost ? PeerRole.Host : PeerRole.Client);
         }
     }
 }

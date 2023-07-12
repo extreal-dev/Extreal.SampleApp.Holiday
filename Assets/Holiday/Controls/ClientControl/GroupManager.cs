@@ -7,7 +7,7 @@ using Extreal.Core.Common.System;
 using Extreal.P2P.Dev;
 using UniRx;
 
-namespace Extreal.SampleApp.Holiday.App.P2P
+namespace Extreal.SampleApp.Holiday.Controls.ClientControl
 {
     public class GroupManager : DisposableBase
     {
@@ -35,16 +35,5 @@ namespace Extreal.SampleApp.Holiday.App.P2P
         }
 
         public Group FindByName(string name) => groups.Value.First(groups => groups.Name == name);
-
-        public class Group
-        {
-            public string Id { get; private set; }
-            public string Name { get; private set; }
-            public Group(string id, string name)
-            {
-                Id = id;
-                Name = name;
-            }
-        }
     }
 }

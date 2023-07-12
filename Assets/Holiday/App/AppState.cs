@@ -2,11 +2,12 @@
 using System.Diagnostics.CodeAnalysis;
 using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
+using Extreal.P2P.Dev;
 using Extreal.SampleApp.Holiday.App.Config;
-using Extreal.SampleApp.Holiday.App.P2P;
 using Extreal.SampleApp.Holiday.Controls.RetryStatusControl;
 using Extreal.SampleApp.Holiday.Screens.ConfirmationScreen;
 using UniRx;
+using Message = Extreal.SampleApp.Holiday.App.P2P.Message;
 
 namespace Extreal.SampleApp.Holiday.App
 {
@@ -17,8 +18,8 @@ namespace Extreal.SampleApp.Holiday.App
 
         public string PlayerName { get; private set; } = "Guest";
         public AvatarConfig.Avatar Avatar { get; private set; }
-        public Role Role { get; private set; } = Role.Host;
-
+        public bool IsClient => role == PeerRole.Client;
+        public bool IsHost => role == PeerRole.Host;
         public string GroupName { get; private set; } // Host only
         public string GroupId { get; private set; } // Client only
         public string SpaceName { get; private set; }
@@ -54,6 +55,8 @@ namespace Extreal.SampleApp.Holiday.App
         private readonly CompositeDisposable disposables = new CompositeDisposable();
 
         public StageState StageState { get; private set; }
+
+        private PeerRole role = PeerRole.Client;
 
         public AppState()
         {
@@ -115,7 +118,7 @@ namespace Extreal.SampleApp.Holiday.App
 
         public void SetPlayerName(string playerName) => PlayerName = playerName;
         public void SetAvatar(AvatarConfig.Avatar avatar) => Avatar = avatar;
-        public void SetRole(Role role) => Role = role;
+        public void SetRole(PeerRole role) => this.role = role;
         public void SetGroupName(string groupName) => GroupName = groupName;
         public void SetGroupId(string groupId) => GroupId = groupId;
         public void SetSpaceName(string spaceName) => SpaceName = spaceName;
