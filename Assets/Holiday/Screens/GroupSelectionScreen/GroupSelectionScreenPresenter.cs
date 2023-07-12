@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Cysharp.Threading.Tasks;
+using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
 using Extreal.P2P.Dev;
 using Extreal.SampleApp.Holiday.App;
@@ -7,12 +8,15 @@ using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.App.Stages;
 using Extreal.SampleApp.Holiday.Controls.ClientControl;
+using SocketIOClient;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
 {
     public class GroupSelectionScreenPresenter : StagePresenterBase
     {
+        private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(GroupSelectionScreenPresenter));
+
         private readonly GroupManager groupManager;
         private readonly GroupSelectionScreenView groupSelectionScreenView;
         private readonly AssetHelper assetHelper;
@@ -51,7 +55,21 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
                 .AddTo(sceneDisposables);
 
             groupSelectionScreenView.OnUpdateButtonClicked
-                .Subscribe(_ => groupManager.UpdateGroupsAsync().Forget())
+                .Subscribe(async _ =>
+                {
+                    try
+                    {
+                        await groupManager.UpdateGroupsAsync();
+                    }
+                    catch (ConnectionException e)
+                    {
+                        if (Logger.IsDebug())
+                        {
+                            Logger.LogDebug(e.Message);
+                        }
+                        appState.Notify(assetHelper.MessageConfig.P2PStartFailureMessage);
+                    }
+                })
                 .AddTo(sceneDisposables);
 
             groupSelectionScreenView.OnGoButtonClicked

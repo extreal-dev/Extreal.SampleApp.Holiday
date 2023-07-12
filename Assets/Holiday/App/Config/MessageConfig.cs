@@ -22,6 +22,8 @@ namespace Extreal.SampleApp.Holiday.App.Config
 
         [SerializeField] private string groupMatchingUpdateFailureMessage;
 
+        [SerializeField] private string p2PStartFailureMessage;
+        [SerializeField] private string p2PUnexpectedDisconnectedMessage;
         [SerializeField] private string p2PHostNameAlreadyExistsMessage;
 
         [SerializeField] private string multiplayConnectionApprovalRejectedMessage;
@@ -29,11 +31,6 @@ namespace Extreal.SampleApp.Holiday.App.Config
         [SerializeField] private string multiplayConnectRetrySuccessMessage;
         [SerializeField] private string multiplayConnectRetryFailureMessage;
         [SerializeField] private string multiplayUnexpectedDisconnectedMessage;
-
-        [SerializeField] private string chatConnectRetryMessage;
-        [SerializeField] private string chatConnectRetrySuccessMessage;
-        [SerializeField] private string chatConnectRetryFailureMessage;
-        [SerializeField] private string chatUnexpectedDisconnectedMessage;
 
         [SerializeField] private string landscapeErrorMessage;
 
@@ -52,6 +49,8 @@ namespace Extreal.SampleApp.Holiday.App.Config
 
         public string GroupMatchingUpdateFailureMessage => groupMatchingUpdateFailureMessage;
 
+        public string P2PStartFailureMessage => p2PStartFailureMessage;
+        public string P2PUnexpectedDisconnectedMessage => p2PUnexpectedDisconnectedMessage;
         public string P2PHostNameAlreadyExistsMessage => p2PHostNameAlreadyExistsMessage;
 
         public string MultiplayConnectionApprovalRejectedMessage => multiplayConnectionApprovalRejectedMessage;
@@ -59,11 +58,6 @@ namespace Extreal.SampleApp.Holiday.App.Config
         public string MultiplayConnectRetrySuccessMessage => multiplayConnectRetrySuccessMessage;
         public string MultiplayConnectRetryFailureMessage => multiplayConnectRetryFailureMessage;
         public string MultiplayUnexpectedDisconnectedMessage => multiplayUnexpectedDisconnectedMessage;
-
-        public string ChatConnectRetryMessage => chatConnectRetryMessage;
-        public string ChatConnectRetrySuccessMessage => chatConnectRetrySuccessMessage;
-        public string ChatConnectRetryFailureMessage => chatConnectRetryFailureMessage;
-        public string ChatUnexpectedDisconnectedMessage => chatUnexpectedDisconnectedMessage;
 
         public string LandscapeErrorMessage => landscapeErrorMessage;
     }

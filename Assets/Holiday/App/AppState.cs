@@ -16,10 +16,12 @@ namespace Extreal.SampleApp.Holiday.App
     {
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(AppState));
 
+        private PeerRole role = PeerRole.Host;
+
         public string PlayerName { get; private set; } = "Guest";
         public AvatarConfig.Avatar Avatar { get; private set; }
-        public bool IsClient => role == PeerRole.Client;
         public bool IsHost => role == PeerRole.Host;
+        public bool IsClient => role == PeerRole.Client;
         public string GroupName { get; private set; } // Host only
         public string GroupId { get; private set; } // Client only
         public string SpaceName { get; private set; }
@@ -55,8 +57,6 @@ namespace Extreal.SampleApp.Holiday.App
         private readonly CompositeDisposable disposables = new CompositeDisposable();
 
         public StageState StageState { get; private set; }
-
-        private PeerRole role = PeerRole.Client;
 
         public AppState()
         {

@@ -84,6 +84,7 @@ namespace Extreal.P2P.Dev
             socket = new SocketIO(PeerConfig.Url, PeerConfig.SocketIOOptions);
             socket.On("message", ReceiveMessage);
             socket.On("user disconnected", ReceiveUserDisconnected);
+            socket.OnDisconnected += HandleOnDisconnected;
 
             await socket.ConnectAsync();
 
@@ -91,6 +92,15 @@ namespace Extreal.P2P.Dev
             {
                 Logger.LogDebug($"Socket created: id={socket.Id}");
             }
+        }
+
+        private void HandleOnDisconnected(object sender, string message)
+        {
+            if (Logger.IsDebug())
+            {
+                Logger.LogDebug(message);
+            }
+            FireOnDisconnected();
         }
 
         private async void ReceiveMessage(SocketIOResponse response)
@@ -126,7 +136,7 @@ namespace Extreal.P2P.Dev
                 }
                 case "done":
                 {
-                    ReceiveDone(message.From);
+                    ReceiveDone();
                     break;
                 }
                 case "candidate":
@@ -238,16 +248,21 @@ namespace Extreal.P2P.Dev
 
         protected override async UniTask DoStopAsync()
         {
-            clientState.Clear();
-
             foreach (var id in pcDict.Keys.ToList())
             {
                 await SendMessageAsync(id, new Message { Type = "bye" });
                 ClosePc(id);
             }
-            pcDict.Clear();
 
-            socket?.Dispose();
+            pcDict.Clear();
+            clientState.Clear();
+
+            if (socket is null)
+            {
+                return;
+            }
+            socket.OnDisconnected -= HandleOnDisconnected;
+            socket.Dispose();
             socket = null;
         }
 
@@ -341,8 +356,13 @@ namespace Extreal.P2P.Dev
                     }));
 
         [SuppressMessage("Design", "CC0021")]
-        public async UniTask SendMessageAsync(string to, Message message)
+        private async UniTask SendMessageAsync(string to, Message message)
         {
+            if (!socket.Connected)
+            {
+                return;
+            }
+
             message.To = to;
             await socket.EmitAsync("message", message);
             if (Logger.IsDebug())
@@ -401,7 +421,7 @@ namespace Extreal.P2P.Dev
                     await SendMessageAsync(from, new Message { Type = "done" });
                 });
 
-        private void ReceiveDone(string from)
+        private void ReceiveDone()
         {
             if (Role == PeerRole.Client)
             {

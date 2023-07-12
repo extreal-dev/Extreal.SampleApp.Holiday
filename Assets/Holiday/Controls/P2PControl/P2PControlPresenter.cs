@@ -1,16 +1,20 @@
 ﻿using Cysharp.Threading.Tasks;
+using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
 using Extreal.P2P.Dev;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.App.Stages;
+using SocketIOClient;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.Holiday.Controls.P2PControl
 {
     public class P2PControlPresenter : StagePresenterBase
     {
+        private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(P2PControlPresenter));
+
         private readonly AssetHelper assetHelper;
         private readonly PeerClient peerClient;
 
@@ -29,13 +33,23 @@ namespace Extreal.SampleApp.Holiday.Holiday.Controls.P2PControl
             AppState appState,
             CompositeDisposable sceneDisposables)
         {
-            peerClient.OnStarted.Subscribe(_ => appState.SetP2PReady(true)).AddTo(sceneDisposables);
+            peerClient.OnStarted
+                .Subscribe(_ => appState.SetP2PReady(true))
+                .AddTo(sceneDisposables);
 
-            peerClient.OnHostNameAlreadyExists.Subscribe(_ =>
-            {
-                appState.Notify(assetHelper.MessageConfig.P2PHostNameAlreadyExistsMessage);
-                stageNavigator.ReplaceAsync(StageName.GroupSelectionStage);
-            }).AddTo(sceneDisposables);
+            peerClient.OnHostNameAlreadyExists
+                .Subscribe(_ =>
+                {
+                    appState.Notify(assetHelper.MessageConfig.P2PHostNameAlreadyExistsMessage);
+                    stageNavigator.ReplaceAsync(StageName.GroupSelectionStage);
+                }).AddTo(sceneDisposables);
+
+            peerClient.OnDisconnected
+                .ObserveOnMainThread()
+                .Subscribe(_ =>
+                {
+                    appState.Notify(assetHelper.MessageConfig.P2PUnexpectedDisconnectedMessage);
+                }).AddTo(sceneDisposables);
         }
 
         protected override void OnStageEntered(
@@ -50,13 +64,24 @@ namespace Extreal.SampleApp.Holiday.Holiday.Controls.P2PControl
 
         private async UniTask StartPeerClientAsync(AppState appState)
         {
-            if (appState.IsHost)
+            try
             {
-                await peerClient.StartHostAsync(appState.GroupName);
+                if (appState.IsHost)
+                {
+                    await peerClient.StartHostAsync(appState.GroupName);
+                }
+                else
+                {
+                    await peerClient.StartClientAsync(appState.GroupId);
+                }
             }
-            else
+            catch (ConnectionException e)
             {
-                await peerClient.StartClientAsync(appState.GroupId);
+                if (Logger.IsDebug())
+                {
+                    Logger.LogDebug(e.Message);
+                }
+                appState.Notify(assetHelper.MessageConfig.P2PStartFailureMessage);
             }
         }
 

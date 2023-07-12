@@ -14,6 +14,9 @@ namespace Extreal.P2P.Dev
         public IObservable<Unit> OnStarted => onStarted.AddTo(Disposables);
         private readonly Subject<Unit> onStarted = new Subject<Unit>();
 
+        public IObservable<Unit> OnDisconnected => onDisconnected.AddTo(Disposables);
+        private readonly Subject<Unit> onDisconnected = new Subject<Unit>();
+
         public IObservable<Unit> OnHostNameAlreadyExists => onHostNameAlreadyExists.AddTo(Disposables);
         private readonly Subject<Unit> onHostNameAlreadyExists = new Subject<Unit>();
 
@@ -38,14 +41,9 @@ namespace Extreal.P2P.Dev
             }).AddTo(Disposables);
         }
 
-        protected void FireOnStarted()
-        {
-            if (IsRunning)
-            {
-                return;
-            }
-            onStarted.OnNext(Unit.Default);
-        }
+        protected void FireOnStarted() => onStarted.OnNext(Unit.Default);
+
+        protected void FireOnDisconnected() => onDisconnected.OnNext(Unit.Default);
 
         protected sealed override void ReleaseManagedResources()
         {
