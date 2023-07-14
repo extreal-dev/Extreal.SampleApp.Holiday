@@ -43,7 +43,7 @@
 
 ## How to visualize application usage
 
-- See [README](Servers/VisualizationOfAppUsage/README.md) to start Grafana/Loki.
+- See [README](Assets/Servers/AppUsage/README.md) to start Grafana/Loki.
 - Enable application usage visualization.
   - Turn on the Enable field in AppUsageConfig.
   - `/Assets/Holiday/App/Config/AppUsageConfig`
