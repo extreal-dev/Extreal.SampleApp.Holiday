@@ -18,9 +18,14 @@ services:
     restart: always
     depends_on:
       - signaling-redis
+    environment:
+      # If "on" is logging, otherwise is not. In production, set it to "off".
+      SIGNALING_LOGGING: ${SIGNALING_LOGGING:-on}
+      # In production, change it to suit the environment.
+      SIGNALING_CORS_ORIGIN: ${SIGNALING_CORS_ORIGIN:-*}
     ports:
       - 3010:3000
     working_dir: /app
     volumes:
       - .:/app
-    entrypoint: ["deno", "run", "--allow-net", "index.ts"]
+    entrypoint: ["deno", "run", "--allow-env", "--allow-net", "index.ts"]

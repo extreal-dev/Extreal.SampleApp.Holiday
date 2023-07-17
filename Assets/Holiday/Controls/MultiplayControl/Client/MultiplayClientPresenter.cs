@@ -46,7 +46,6 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
             Observable
                 .CombineLatest(appState.SpaceReady, appState.P2PReady)
                 .Where(readies => readies.All(ready => ready) && appState.IsClient)
-                .ObserveOnMainThread()
                 .Subscribe(_ => multiplayClient.JoinAsync().Forget())
                 .AddTo(sceneDisposables);
 

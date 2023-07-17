@@ -23,12 +23,14 @@
         "Extreal.SampleApp.Holiday.Analyzer",
         "Extreal.P2P.Dev",
         "Extreal.NGO.Dev",
-        "Extreal.Chat.Dev"
+        "Extreal.Chat.Dev",
+        "Extreal.WebGL.Dev"
     ],
     "includePlatforms": [
         "Android",
         "Editor",
         "iOS",
+        "WebGL",
         "WindowsStandalone64"
     ],
     "excludePlatforms": [],

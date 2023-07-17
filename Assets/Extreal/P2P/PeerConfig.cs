@@ -1,19 +1,19 @@
-﻿using SocketIOClient;
-using Unity.WebRTC;
+﻿using System.Collections.Generic;
+using SocketIOClient;
 
 namespace Extreal.P2P.Dev
 {
     public class PeerConfig
     {
-        public string Url { get; private set; }
-        public SocketIOOptions SocketIOOptions { get; private set; }
-        public RTCConfiguration PcConfig { get; private set; }
+        public string SignalingUrl { get; private set; }
+        public SocketIOOptions SocketOptions { get; private set; }
+        public List<string> IceServerUrls { get; private set; }
 
-        public PeerConfig(string url, SocketIOOptions socketIOOptions = null, RTCConfiguration pcConfig = new RTCConfiguration())
+        public PeerConfig(string url, SocketIOOptions socketOptions = null, List<string> iceServerUrls = null)
         {
-            Url = url;
-            SocketIOOptions = socketIOOptions ?? new SocketIOOptions();
-            PcConfig = pcConfig;
+            SignalingUrl = url;
+            SocketOptions = socketOptions ?? new SocketIOOptions();
+            IceServerUrls = iceServerUrls ?? new List<string>();
         }
     }
 }

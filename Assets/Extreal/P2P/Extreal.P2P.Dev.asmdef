@@ -7,7 +7,8 @@
         "UniTask",
         "UniRx",
         "Extreal.Core.Logging",
-        "Extreal.Core.Common"
+        "Extreal.Core.Common",
+        "Extreal.WebGL.Dev"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

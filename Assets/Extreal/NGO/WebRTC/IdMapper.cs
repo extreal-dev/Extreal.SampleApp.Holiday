@@ -30,6 +30,8 @@ namespace Extreal.NGO.WebRTC.Dev
 
         public string Get(ulong id) => ulongToStrMapping[id];
 
+        public bool TryGet(ulong id, out string outId) => ulongToStrMapping.TryGetValue(id, out outId);
+
         public void Remove(string id)
         {
             if (!Has(id))

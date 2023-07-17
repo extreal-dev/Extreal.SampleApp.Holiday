@@ -54,7 +54,7 @@ namespace Extreal.NGO.WebRTC.Dev
             {
                 Logger.LogDebug($"{nameof(DisconnectLocalClient)}");
             }
-            webRtcClient.Disconnect();
+            // Do nothing here because the DataChannel's OnClose event handles the closing processing.
         }
 
         public override ulong GetCurrentRtt(ulong clientId) => 100;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
@@ -14,36 +15,51 @@ namespace Extreal.P2P.Dev
         public IObservable<Unit> OnStarted => onStarted.AddTo(Disposables);
         private readonly Subject<Unit> onStarted = new Subject<Unit>();
 
-        public IObservable<Unit> OnDisconnected => onDisconnected.AddTo(Disposables);
-        private readonly Subject<Unit> onDisconnected = new Subject<Unit>();
+        public IObservable<string> OnConnectFailed => onConnectFailed.AddTo(Disposables);
+        private readonly Subject<string> onConnectFailed = new Subject<string>();
 
-        public IObservable<Unit> OnHostNameAlreadyExists => onHostNameAlreadyExists.AddTo(Disposables);
-        private readonly Subject<Unit> onHostNameAlreadyExists = new Subject<Unit>();
+        public IObservable<string> OnDisconnected => onDisconnected.AddTo(Disposables);
+        private readonly Subject<string> onDisconnected = new Subject<string>();
 
         public bool IsRunning { get; private set; }
-        public PeerRole Role { get; private set; } = PeerRole.None;
-        public string HostId { get; private set; }
 
-        protected PeerConfig PeerConfig { get; private set; }
         protected CompositeDisposable Disposables { get; private set; } = new CompositeDisposable();
 
-        protected PeerClient(PeerConfig peerConfig)
+        protected void FireOnStarted()
         {
-            PeerConfig = peerConfig;
-
-            OnStarted.Subscribe(_ =>
+            if (IsRunning)
             {
-                if (Logger.IsDebug())
-                {
-                    Logger.LogDebug("P2P started");
-                }
-                IsRunning = true;
-            }).AddTo(Disposables);
+                return;
+            }
+            if (Logger.IsDebug())
+            {
+                Logger.LogDebug("P2P started");
+            }
+            IsRunning = true;
+            onStarted.OnNext(Unit.Default);
         }
 
-        protected void FireOnStarted() => onStarted.OnNext(Unit.Default);
+        protected void FireOnConnectFailed(string reason)
+        {
+            if (Logger.IsDebug())
+            {
+                Logger.LogDebug($"{nameof(FireOnConnectFailed)}: reason={reason}");
+            }
+            onConnectFailed.OnNext(reason);
+        }
 
-        protected void FireOnDisconnected() => onDisconnected.OnNext(Unit.Default);
+        protected void FireOnDisconnected(string reason)
+        {
+            if (Logger.IsDebug())
+            {
+                Logger.LogDebug($"{nameof(FireOnDisconnected)}: reason={reason}");
+            }
+            if (reason == "io client disconnect")
+            {
+                return;
+            }
+            onDisconnected.OnNext(reason);
+        }
 
         protected sealed override void ReleaseManagedResources()
         {
@@ -59,39 +75,41 @@ namespace Extreal.P2P.Dev
             {
                 Logger.LogDebug($"Start host: name={name}");
             }
-            Role = PeerRole.Host;
-            try
-            {
-                await DoStartHostAsync(name);
-            }
-            catch (HostNameAlreadyExistsException e)
+            var startHostResponse = await DoStartHostAsync(name);
+            if (startHostResponse.Status == 409)
             {
                 if (Logger.IsDebug())
                 {
-                    Logger.LogDebug(e.Message);
+                    Logger.LogDebug(startHostResponse.Message);
                 }
-                onHostNameAlreadyExists.OnNext(Unit.Default);
+                throw new HostNameAlreadyExistsException(startHostResponse.Message);
+            }
+            else
+            {
+                FireOnStarted();
             }
         }
 
-        protected abstract UniTask DoStartHostAsync(string name);
+        protected abstract UniTask<StartHostResponse> DoStartHostAsync(string name);
 
-        public abstract UniTask<List<Host>> ListHostsAsync();
+        public async UniTask<List<Host>> ListHostsAsync()
+        {
+            var listHostsResponse = await DoListHostsAsync();
+            return listHostsResponse.Hosts.Select(host => new Host(host.Id, host.Name)).ToList();
+        }
+
+        protected abstract UniTask<ListHostsResponse> DoListHostsAsync();
 
         public UniTask StartClientAsync(string hostId)
         {
-            Role = PeerRole.Client;
-            HostId = hostId;
-
             if (Logger.IsDebug())
             {
-                Logger.LogDebug($"Start client: hostId={HostId}");
+                Logger.LogDebug($"Start client: hostId={hostId}");
             }
-
-            return DoStartClientAsync();
+            return DoStartClientAsync(hostId);
         }
 
-        protected abstract UniTask DoStartClientAsync();
+        protected abstract UniTask DoStartClientAsync(string hostId);
 
         public void Stop()
         {
@@ -100,8 +118,6 @@ namespace Extreal.P2P.Dev
                 Logger.LogDebug("Stop");
             }
             IsRunning = false;
-            Role = PeerRole.None;
-            HostId = null;
             DoStopAsync().Forget();
         }
 

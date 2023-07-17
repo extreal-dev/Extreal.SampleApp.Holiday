@@ -80,13 +80,17 @@ Assets/Mixamo/*/tex/*
 AvatarAmy.prefab*
 AvatarMichelle.prefab*
 
-# Docker data
-Servers/VisualizationOfAppUsage/.data
-
 # NuGet importer
 /[Aa]ssets/[Pp]ackages.meta
 /[Aa]ssets/[Pp]ackages/
-
 /[Nn]u[Gg]et/
-
 /[Pp]ackages/*/
+
+# Docker data
+Assets/Servers/AppUsage/.data
+
+# WebGL
+Assets/WebGLScripts/node_modules
+Assets/WebGLScripts/node_modules.meta
+WebGLBuild/Holiday
+WebGLBuild/Data

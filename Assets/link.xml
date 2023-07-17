@@ -1,0 +1,5 @@
+﻿<linker>
+  <assembly fullname="UnityEngine">
+    <type fullname="UnityEngine.Joint2D" preserve="all" />
+  </assembly>
+</linker>

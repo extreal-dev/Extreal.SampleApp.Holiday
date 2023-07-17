@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using Cysharp.Threading.Tasks;
+using Extreal.Chat.Dev;
 using Extreal.Core.Common.Retry;
 using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
@@ -26,6 +27,8 @@ namespace Extreal.SampleApp.Holiday.App.AssetWorkflow
         public HostConfig NgoHostConfig { get; private set; }
         public ClientConfig NgoClientConfig { get; private set; }
         public AvatarConfig AvatarConfig { get; private set; }
+
+        public VoiceChatConfig VoiceChatConfig { get; private set; }
 
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(AssetHelper));
 
@@ -56,6 +59,8 @@ namespace Extreal.SampleApp.Holiday.App.AssetWorkflow
                 (NgoHostConfig, NgoClientConfig)
                     = await LoadAndReleaseAsync<MultiplayConfig, (HostConfig, ClientConfig)>(
                         asset => (asset.HostConfig, asset.ClientConfig));
+                VoiceChatConfig = await LoadAndReleaseAsync<ChatConfig, VoiceChatConfig>(
+                    asset => asset.VoiceChatConfig);
                 stageNavigator.ReplaceAsync(nextStage).Forget();
             };
             DownloadAsync(nameof(MessageConfig), nextFunc).Forget();

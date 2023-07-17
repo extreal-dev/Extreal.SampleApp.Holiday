@@ -12,7 +12,7 @@ namespace Extreal.NGO.WebRTC.Dev
             return new NativeWebRtcClient(peerClient as NativePeerClient);
 #endif
 #if UNITY_WEBGL && !UNITY_EDITOR
-            return null;
+            return new WebGLWebRtcClient();
 #endif
         }
     }

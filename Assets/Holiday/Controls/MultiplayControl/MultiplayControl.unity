@@ -132,27 +132,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 210595582}
-  - component: {fileID: 210595581}
+  - component: {fileID: 210595583}
   m_Layer: 0
-  m_Name: MobileView
+  m_Name: TouchDeviceView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &210595581
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 210595580}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3364b744c2d4b25b7c53c12e284fce0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  joysticksCanvas: {fileID: 544300836}
 --- !u!4 &210595582
 Transform:
   m_ObjectHideFlags: 0
@@ -168,6 +155,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &210595583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 210595580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42758933835d44c2b2bd70e0df4f066d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  joysticksCanvas: {fileID: 544300836}
 --- !u!1001 &544300835
 PrefabInstance:
   m_ObjectHideFlags: 0

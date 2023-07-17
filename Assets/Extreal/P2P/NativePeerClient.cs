@@ -1,10 +1,11 @@
-﻿using System;
+﻿#if !UNITY_WEBGL || UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json.Serialization;
+using System.Threading;
 using Cysharp.Threading.Tasks;
-using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
 using SocketIOClient;
 using UniRx;
@@ -16,57 +17,53 @@ namespace Extreal.P2P.Dev
     {
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(NativePeerClient));
 
+        private readonly PeerConfig peerConfig;
+        private RTCConfiguration pcConfig;
         private SocketIO socket;
         private readonly Dictionary<string, RTCPeerConnection> pcDict;
         private readonly List<Action<string, bool, RTCPeerConnection>> pcCreateHooks;
         private readonly List<Action<string>> pcCloseHooks;
+        private readonly NativeClientState clientState;
+        private CancellationTokenSource cancellation;
 
-        private readonly ClientState clientState;
+        public PeerRole Role { get; private set; }
+        public string HostId { get; private set; }
 
-        public NativePeerClient(PeerConfig peerConfig) : base(peerConfig)
+        public NativePeerClient(PeerConfig peerConfig)
         {
+            this.peerConfig = peerConfig;
+            pcConfig = ToPcConfig(peerConfig);
             pcDict = new Dictionary<string, RTCPeerConnection>();
             pcCreateHooks = new List<Action<string, bool, RTCPeerConnection>>();
             pcCloseHooks = new List<Action<string>>();
-            clientState = new ClientState();
+            clientState = new NativeClientState();
             Disposables.Add(clientState);
+            cancellation = new CancellationTokenSource();
 
             clientState.OnStarted.Subscribe(_ => FireOnStarted()).AddTo(Disposables);
+
+            Role = PeerRole.None;
         }
 
-        private class ClientState : DisposableBase
+        private RTCConfiguration ToPcConfig(PeerConfig peerConfig)
+            => peerConfig.IceServerUrls.Count > 0
+                ? new RTCConfiguration()
+                {
+                    iceServers = new RTCIceServer[]
+                    {
+                        new RTCIceServer()
+                        {
+                            urls = peerConfig.IceServerUrls.ToArray()
+                        }
+                    }
+                }
+                : new RTCConfiguration();
+
+        protected override void DoReleaseManagedResources()
         {
-            private readonly CompositeDisposable disposables = new CompositeDisposable();
-
-            public IObservable<Unit> OnStarted => onStarted.AddTo(disposables);
-            private readonly Subject<Unit> onStarted = new Subject<Unit>();
-
-            private readonly BoolReactiveProperty iceCandidateGathering = new BoolReactiveProperty(false);
-            private readonly BoolReactiveProperty offerAnswerProcess = new BoolReactiveProperty(false);
-
-            public ClientState()
-            {
-                iceCandidateGathering.AddTo(disposables);
-                offerAnswerProcess.AddTo(disposables);
-                Observable.CombineLatest(iceCandidateGathering, offerAnswerProcess)
-                    .Where(readies => readies.All(ready => ready))
-                    .Subscribe(_ => onStarted.OnNext(Unit.Default))
-                    .AddTo(disposables);
-            }
-
-            public void FinishIceCandidateGathering() => iceCandidateGathering.Value =true;
-            public void FinishOfferAnswerProcess() => offerAnswerProcess.Value = true;
-
-            public void Clear()
-            {
-                iceCandidateGathering.Value = false;
-                offerAnswerProcess.Value = false;
-            }
-
-            protected override void ReleaseManagedResources() => disposables.Dispose();
+            cancellation?.Dispose();
+            socket?.Dispose();
         }
-
-        protected override void DoReleaseManagedResources() => socket?.Dispose();
 
         public void AddPcCreateHook(Action<string, bool, RTCPeerConnection> hook)
             => pcCreateHooks.Add(hook);
@@ -74,49 +71,55 @@ namespace Extreal.P2P.Dev
         public void AddPcCloseHook(Action<string> hook)
             => pcCloseHooks.Add(hook);
 
-        private async UniTask CreateSocketIfNotAlreadyAsync()
+        private async UniTask<SocketIO> GetSocketAsync()
         {
             if (socket is not null)
             {
-                return;
+                if (socket.Connected)
+                {
+                    return socket;
+                }
+                StopSocket();
             }
 
-            socket = new SocketIO(PeerConfig.Url, PeerConfig.SocketIOOptions);
+            socket = new SocketIO(peerConfig.SignalingUrl, peerConfig.SocketOptions);
             socket.On("message", ReceiveMessage);
             socket.On("user disconnected", ReceiveUserDisconnected);
-            socket.OnDisconnected += HandleOnDisconnected;
+            socket.OnDisconnected += ReceiveDisconnected;
 
-            await socket.ConnectAsync();
+            try
+            {
+                await socket.ConnectAsync();
+            }
+            catch (ConnectionException e)
+            {
+                FireOnDisconnected(e.Message);
+                throw;
+            }
 
             if (Logger.IsDebug())
             {
                 Logger.LogDebug($"Socket created: id={socket.Id}");
             }
-        }
 
-        private void HandleOnDisconnected(object sender, string message)
-        {
-            if (Logger.IsDebug())
-            {
-                Logger.LogDebug(message);
-            }
-            FireOnDisconnected();
+            return socket;
         }
 
         private async void ReceiveMessage(SocketIOResponse response)
         {
+            await UniTask.SwitchToMainThread();
+
             if (Logger.IsDebug())
             {
                 Logger.LogDebug($"Receive message: {response}");
             }
 
             var message = response.GetValue<Message>();
-
             switch (message.Type)
             {
                 case "join":
                 {
-                    ReceiveJoin(message.From);
+                    await ReceiveJoinAsync(message.From);
                     break;
                 }
                 case "call me":
@@ -136,7 +139,7 @@ namespace Extreal.P2P.Dev
                 }
                 case "done":
                 {
-                    ReceiveDone();
+                    ReceiveDone(message.From);
                     break;
                 }
                 case "candidate":
@@ -162,8 +165,10 @@ namespace Extreal.P2P.Dev
             }
         }
 
-        private void ReceiveUserDisconnected(SocketIOResponse response)
+        private async void ReceiveUserDisconnected(SocketIOResponse response)
         {
+            await UniTask.SwitchToMainThread();
+
             if (Logger.IsDebug())
             {
                 Logger.LogDebug($"Receive user disconnected: {response}");
@@ -173,12 +178,22 @@ namespace Extreal.P2P.Dev
             ClosePc(userDisconnected.Id);
         }
 
-        protected override async UniTask DoStartHostAsync(string name)
+        private async void ReceiveDisconnected(object sender, string reason)
         {
-            await CreateSocketIfNotAlreadyAsync();
+            if (Logger.IsDebug())
+            {
+                Logger.LogDebug($"{nameof(ReceiveDisconnected)}: {reason}");
+            }
+            await UniTask.SwitchToMainThread();
+            FireOnDisconnected(reason);
+        }
+
+        protected override async UniTask<StartHostResponse> DoStartHostAsync(string name)
+        {
+            Role = PeerRole.Host;
 
             StartHostResponse startHostResponse = null;
-            await socket.EmitAsync("create host", response =>
+            await (await GetSocketAsync()).EmitAsync("create host", response =>
             {
                 if (Logger.IsDebug())
                 {
@@ -186,22 +201,15 @@ namespace Extreal.P2P.Dev
                 }
                 startHostResponse = response.GetValue<StartHostResponse>();
             }, name);
-            await UniTask.WaitUntil(() => startHostResponse != null);
 
-            if (startHostResponse.Status == 409)
-            {
-                throw new HostNameAlreadyExistsException(startHostResponse.Message);
-            }
-
-            FireOnStarted();
+            await UniTask.WaitUntil(() => startHostResponse != null, cancellationToken: cancellation.Token);
+            return startHostResponse;
         }
 
-        public override async UniTask<List<Host>> ListHostsAsync()
+        protected override async UniTask<ListHostsResponse> DoListHostsAsync()
         {
-            await CreateSocketIfNotAlreadyAsync();
-
             ListHostsResponse listHostsResponse = null;
-            await socket.EmitAsync("list hosts", response =>
+            await (await GetSocketAsync()).EmitAsync("list hosts", response =>
             {
                 if (Logger.IsDebug())
                 {
@@ -209,14 +217,15 @@ namespace Extreal.P2P.Dev
                 }
                 listHostsResponse = response.GetValue<ListHostsResponse>();
             });
-            await UniTask.WaitUntil(() => listHostsResponse != null);
 
-            return listHostsResponse.Hosts.Select(host => new Host(host.Id, host.Name)).ToList();
+            await UniTask.WaitUntil(() => listHostsResponse != null, cancellationToken: cancellation.Token);
+            return listHostsResponse;
         }
 
-        protected override async UniTask DoStartClientAsync()
+        protected override async UniTask DoStartClientAsync(string hostId)
         {
-            await CreateSocketIfNotAlreadyAsync();
+            Role = PeerRole.Client;
+            HostId = hostId;
             await SendMessageAsync(HostId, new Message { Type = "join" });
         }
 
@@ -236,7 +245,7 @@ namespace Extreal.P2P.Dev
             await HandlePcAsync(
                 nameof(SendOfferAsync),
                 to,
-                async pc =>
+                async (pc) =>
                 {
                     var offerAsyncOp = pc.CreateOffer();
                     await offerAsyncOp;
@@ -244,10 +253,32 @@ namespace Extreal.P2P.Dev
                     await pc.SetLocalDescription(ref sd);
                     await SendSdpAsync(to, pc.LocalDescription);
                 });
+            /*HandlePc(
+                nameof(SendOffer),
+                to,
+                pc => pc.OnNegotiationNeeded += async () =>
+                {
+                    if (Logger.IsDebug())
+                    {
+                        Logger.LogDebug($"OnNegotiationNeeded. from={to}");
+                    }
+                    var offerAsyncOp = pc.CreateOffer();
+                    await offerAsyncOp;
+                    var sd = offerAsyncOp.Desc;
+                    await pc.SetLocalDescription(ref sd);
+                    await SendSdpAsync(to, pc.LocalDescription);
+                });*/
         }
 
         protected override async UniTask DoStopAsync()
         {
+            cancellation.Cancel();
+            cancellation.Dispose();
+            cancellation = new CancellationTokenSource();
+
+            Role = PeerRole.None;
+            HostId = null;
+
             foreach (var id in pcDict.Keys.ToList())
             {
                 await SendMessageAsync(id, new Message { Type = "bye" });
@@ -256,22 +287,30 @@ namespace Extreal.P2P.Dev
 
             pcDict.Clear();
             clientState.Clear();
+            StopSocket();
+        }
 
+        private void StopSocket()
+        {
             if (socket is null)
             {
                 return;
             }
-            socket.OnDisconnected -= HandleOnDisconnected;
+            socket.OnDisconnected -= ReceiveDisconnected;
             socket.Dispose();
             socket = null;
         }
 
         private void CreatePc(string id, bool isOffer)
         {
-            var pcConfig = PeerConfig.PcConfig;
+            if (pcDict.ContainsKey(id))
+            {
+                return;
+            }
+
             var pc = new RTCPeerConnection(ref pcConfig);
 
-            pc.OnIceCandidate = async e =>
+            pc.OnIceCandidate += async e =>
             {
                 if (string.IsNullOrEmpty(e.Candidate))
                 {
@@ -284,7 +323,7 @@ namespace Extreal.P2P.Dev
                 await SendIceAsync(id, e);
             };
 
-            pc.OnIceConnectionChange = _ =>
+            pc.OnIceConnectionChange += _ =>
             {
                 if (Logger.IsDebug())
                 {
@@ -358,22 +397,17 @@ namespace Extreal.P2P.Dev
         [SuppressMessage("Design", "CC0021")]
         private async UniTask SendMessageAsync(string to, Message message)
         {
-            if (!socket.Connected)
-            {
-                return;
-            }
-
             message.To = to;
-            await socket.EmitAsync("message", message);
             if (Logger.IsDebug())
             {
                 Logger.LogDebug($"Send message: {message}");
             }
+            await (await GetSocketAsync()).EmitAsync("message", message);
         }
 
-        private void ReceiveJoin(string from)
+        private async UniTask ReceiveJoinAsync(string from)
         {
-            SendOfferAsync(from).Forget();
+            await SendOfferAsync(from);
             foreach (var to in pcDict.Keys)
             {
                 if (from == to)
@@ -421,9 +455,9 @@ namespace Extreal.P2P.Dev
                     await SendMessageAsync(from, new Message { Type = "done" });
                 });
 
-        private void ReceiveDone()
+        private void ReceiveDone(string from)
         {
-            if (Role == PeerRole.Client)
+            if (Role == PeerRole.Client && from == HostId)
             {
                 clientState.FinishOfferAnswerProcess();
             }
@@ -442,12 +476,10 @@ namespace Extreal.P2P.Dev
             string id,
             Action<RTCPeerConnection> handle)
         {
-            if (!pcDict.ContainsKey(id))
+            if (!pcDict.TryGetValue(id, out var pc))
             {
                 return;
             }
-
-            var pc = pcDict[id];
             try
             {
                 handle.Invoke(pc);
@@ -466,12 +498,10 @@ namespace Extreal.P2P.Dev
             string id,
             Func<RTCPeerConnection, UniTask> handle)
         {
-            if (!pcDict.ContainsKey(id))
+            if (!pcDict.TryGetValue(id, out var pc))
             {
                 return;
             }
-
-            var pc = pcDict[id];
             try
             {
                 await handle.Invoke(pc);
@@ -560,34 +590,5 @@ namespace Extreal.P2P.Dev
         [JsonPropertyName("id")]
         public string Id { get; set; }
     }
-
-    [SuppressMessage("Usage", "CC0047")]
-    public class StartHostResponse
-    {
-        [JsonPropertyName("status")]
-        public ushort Status { get; set; }
-
-        [JsonPropertyName("message")]
-        public string Message { get; set; }
-    }
-
-    [SuppressMessage("Usage", "CC0047")]
-    public class ListHostsResponse
-    {
-        [JsonPropertyName("status")]
-        public ushort Status { get; set; }
-
-        [JsonPropertyName("hosts")]
-        public List<HostResponse> Hosts { get; set; }
-    }
-
-    [SuppressMessage("Usage", "CC0047")]
-    public class HostResponse
-    {
-        [JsonPropertyName("id")]
-        public string Id { get; set; }
-
-        [JsonPropertyName("name")]
-        public string Name { get; set; }
-    }
 }
+#endif

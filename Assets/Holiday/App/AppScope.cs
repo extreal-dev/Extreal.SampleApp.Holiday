@@ -8,6 +8,7 @@ using Extreal.SampleApp.Holiday.App.AppUsage;
 using Extreal.SampleApp.Holiday.App.AppUsage.Collectors;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
+using Extreal.WebGL;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using VContainer;
@@ -36,6 +37,7 @@ namespace Extreal.SampleApp.Holiday.App
 
             var logLevel = InitializeLogging();
             InitializeMicrophone();
+            InitializeWebGL();
 
             var logger = LoggingManager.GetLogger(nameof(AppScope));
             if (logger.IsDebug())
@@ -58,6 +60,13 @@ namespace Extreal.SampleApp.Holiday.App
             LoggingManager.Initialize(logLevel, checker, writer);
 #endif
             return logLevel;
+        }
+
+        private static void InitializeWebGL()
+        {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            WebGLHelper.Initialize();
+#endif
         }
 
         private readonly AppStateProvider appStateProvider = new AppStateProvider();
@@ -94,8 +103,10 @@ namespace Extreal.SampleApp.Holiday.App
         [SuppressMessage("Design", "IDE0022"), SuppressMessage("Design", "CC0091")]
         private void ClearCacheOnDev()
         {
-#if !HOLIDAY_PROD
+#if !HOLIDAY_PROD && ENABLE_CACHING
             Caching.ClearCache();
+#endif
+#if !HOLIDAY_PROD
             PlayerPrefs.DeleteKey(appUsageConfig.ClientIdKey);
 #endif
         }

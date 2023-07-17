@@ -12,7 +12,7 @@ namespace Extreal.Chat.Dev
             return new NativeTextChatClient(peerClient as NativePeerClient);
 #endif
 #if UNITY_WEBGL && !UNITY_EDITOR
-            return null;
+            return new WebGLTextChatClient();
 #endif
         }
     }

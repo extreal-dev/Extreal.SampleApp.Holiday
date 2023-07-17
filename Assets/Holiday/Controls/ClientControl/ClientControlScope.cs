@@ -14,8 +14,6 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
     public class ClientControlScope : LifetimeScope
     {
         [SerializeField] private NetworkManager networkManager;
-        [SerializeField] private AudioSource inAudio;
-        [SerializeField] private AudioSource outAudio;
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -35,7 +33,7 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
 
             var textChatClient = TextChatClientProvider.Provide(peerClient);
             builder.RegisterComponent(textChatClient);
-            var voiceChatClient = VoiceChatClientProvider.Provide(peerClient, inAudio, outAudio);
+            var voiceChatClient = VoiceChatClientProvider.Provide(peerClient, assetHelper.VoiceChatConfig);
             builder.RegisterComponent(voiceChatClient);
 
             builder.RegisterEntryPoint<ClientControlPresenter>();

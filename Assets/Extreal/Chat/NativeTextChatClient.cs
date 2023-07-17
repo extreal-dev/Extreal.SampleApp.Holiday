@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if !UNITY_WEBGL || UNITY_EDITOR
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Extreal.Core.Logging;
@@ -24,6 +25,11 @@ namespace Extreal.Chat.Dev
 
         private void CreatePc(string id, bool isOffer, RTCPeerConnection pc)
         {
+            if (dcDict.ContainsKey(id))
+            {
+                return;
+            }
+
             if (isOffer)
             {
                 var dc = pc.CreateDataChannel(Label);
@@ -53,21 +59,16 @@ namespace Extreal.Chat.Dev
 
         private void ClosePc(string id)
         {
-            if (!dcDict.ContainsKey(id))
+            if (!dcDict.TryGetValue(id, out var dc))
             {
                 return;
             }
-            dcDict[id].Close();
+            dc.Close();
             dcDict.Remove(id);
         }
 
         protected override void DoSend(string message)
-        {
-            foreach (var dc in dcDict.Values)
-            {
-                dc.Send(message);
-            }
-        }
+            => dcDict.Values.ToList().ForEach(dc => dc.Send(message));
 
         public override void Clear()
         {
@@ -76,3 +77,4 @@ namespace Extreal.Chat.Dev
         }
     }
 }
+#endif

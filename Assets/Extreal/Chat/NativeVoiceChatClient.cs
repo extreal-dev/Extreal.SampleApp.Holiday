@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿#if !UNITY_WEBGL || UNITY_EDITOR
+using System.Collections.Generic;
 using System.Linq;
-using Extreal.Core.Common.System;
+using Extreal.Core.Logging;
 using Extreal.P2P.Dev;
-using UniRx;
 using Unity.WebRTC;
 using UnityEngine;
 
@@ -10,102 +10,149 @@ namespace Extreal.Chat.Dev
 {
     public class NativeVoiceChatClient : VoiceChatClient
     {
-        private readonly Dictionary<string, AudioChannel> acDict;
-        private readonly AudioSource inAudio;
-        private readonly AudioSource outAudio;
+        private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(NativeVoiceChatClient));
 
-        public NativeVoiceChatClient(NativePeerClient peerClient, AudioSource inAudio, AudioSource outAudio)
+        private readonly Dictionary<string, (
+            NativeInOutAudio inOutAudio, MediaStream inStream,
+            AudioStreamTrack inTrack, MediaStream outStream)> resources;
+
+        private readonly VoiceChatConfig voiceChatConfig;
+
+        private readonly Transform voiceChatContainer;
+
+        private readonly AudioClip mic;
+
+        public NativeVoiceChatClient(
+            NativePeerClient peerClient, VoiceChatConfig voiceChatConfig)
         {
-            acDict = new Dictionary<string, AudioChannel>();
-            this.inAudio = inAudio;
-            this.outAudio = outAudio;
+            voiceChatContainer = new GameObject("VoiceChatContainer").transform;
+            Object.DontDestroyOnLoad(voiceChatContainer);
+
+            resources = new Dictionary<string, (
+                NativeInOutAudio inOutAudio, MediaStream inStream,
+                AudioStreamTrack inTrack, MediaStream outStream)>();
+            this.voiceChatConfig = voiceChatConfig;
             peerClient.AddPcCreateHook(CreatePc);
             peerClient.AddPcCloseHook(ClosePc);
+
+            mic = Microphone.Start(null, true, 1, 48000);
+            while (!(Microphone.GetPosition(null) > 0))
+            {
+                // do nothing
+            }
         }
 
         private void CreatePc(string id, bool isOffer, RTCPeerConnection pc)
-            => Observable.Start(() => Unit.Default) // To run on the main thread
-                .ObserveOnMainThread()
-                .Subscribe(_ =>
-                {
-                    var ac = new AudioChannel();
-                    ac.SendAudio(pc, inAudio);
-                    ac.ReceiveAudio(pc, outAudio);
-                    acDict.Add(id, ac);
-                });
-
-        private void ClosePc(string id)
         {
-            if (!acDict.ContainsKey(id))
+            if (resources.ContainsKey(id))
             {
                 return;
             }
-            acDict[id].Dispose();
-            acDict.Remove(id);
+
+            var inOutAudio = GetInOutAudio();
+
+            var inTrack = new AudioStreamTrack(inOutAudio.InAudio);
+            inTrack.Loopback = false;
+            var inStream = new MediaStream();
+            pc.AddTrack(inTrack, inStream);
+            if (Logger.IsDebug())
+            {
+                Logger.LogDebug($"AddTrack(IN): id={id}");
+            }
+
+            var outStream = new MediaStream();
+            outStream.OnAddTrack += evt =>
+            {
+                if (Logger.IsDebug())
+                {
+                    Logger.LogDebug($"OnAddTrack(OUT): kind={evt.Track.Kind} id={id}");
+                }
+                if (evt.Track is AudioStreamTrack outTrack)
+                {
+                    inOutAudio.OutAudio.SetTrack(outTrack);
+                }
+            };
+            pc.OnTrack += evt =>
+            {
+                if (Logger.IsDebug())
+                {
+                    Logger.LogDebug($"OnTrack(OUT): kind={evt.Track.Kind} id={id}");
+                }
+                if (evt.Track.Kind == TrackKind.Audio)
+                {
+                    outStream.AddTrack(evt.Track);
+                }
+            };
+
+            resources.Add(id, (inOutAudio, inStream, inTrack, outStream));
+        }
+
+        private NativeInOutAudio GetInOutAudio()
+        {
+            var inOutAudioGo = new GameObject("InOutAudio");
+            inOutAudioGo.transform.SetParent(voiceChatContainer);
+            var inOutAudio = inOutAudioGo.AddComponent<NativeInOutAudio>();
+
+            var inAudioGo = new GameObject("InAudio");
+            var inAudio = inAudioGo.AddComponent<AudioSource>();
+            inAudioGo.transform.SetParent(inOutAudioGo.transform);
+
+            var outAudioGo = new GameObject("OutAudio", typeof(AudioSourceLogger));
+            var outAudio = outAudioGo.AddComponent<AudioSource>();
+            outAudioGo.transform.SetParent(inOutAudioGo.transform);
+
+            inOutAudio.Initialize(inAudio, outAudio);
+
+            inAudio.loop = true;
+            inAudio.clip = mic;
+            inAudio.Play();
+            inAudio.mute = voiceChatConfig.InitialMute;
+
+            outAudio.loop = true;
+            outAudio.Play();
+
+            return inOutAudio;
+        }
+
+        private void ClosePc(string id)
+        {
+            if (!resources.TryGetValue(id, out var resource))
+            {
+                return;
+            }
+            resource.inOutAudio.InAudio.Stop();
+            resource.inOutAudio.OutAudio.Stop();
+            resource.inStream.GetTracks().ToList().ForEach((track) => track.Stop());
+            resource.inStream.Dispose();
+            resource.inTrack.Dispose();
+            resource.outStream.GetTracks().ToList().ForEach((track) => track.Stop());
+            resource.outStream.Dispose();
+            Object.Destroy(resource.inOutAudio.gameObject);
+            resources.Remove(id);
         }
 
         public override void ToggleMute()
         {
-            inAudio.mute = !inAudio.mute;
-            FireOnMuted(inAudio.mute);
+            resources.Values.ToList().ForEach(resource =>
+            {
+                var inAudio = resource.inOutAudio.InAudio;
+                inAudio.mute = !inAudio.mute;
+            });
+            FireOnMuted(resources.First().Value.inOutAudio.InAudio.mute);
         }
 
         public override void Clear()
         {
-            Microphone.End(null);
-            acDict.Values.ToList().ForEach(ac => ac.Dispose());
-            acDict.Clear();
-            inAudio.Stop();
-            outAudio.Stop();
+            resources.Keys.ToList().ForEach(ClosePc);
+            resources.Clear();
         }
 
-        private class AudioChannel : DisposableBase
+        protected override void ReleaseManagedResources()
         {
-            private MediaStream inStream;
-            private AudioStreamTrack inTrack;
-
-            private MediaStream outStream;
-
-            protected override void ReleaseManagedResources()
-            {
-                inTrack.Dispose();
-                inStream.Dispose();
-                outStream.Dispose();
-            }
-
-            public void SendAudio(RTCPeerConnection pc, AudioSource inAudio)
-            {
-                if (!inAudio.isPlaying)
-                {
-                    inAudio.loop = true;
-                    inAudio.clip =  Microphone.Start(null, true, 10, 44100);
-                    while (!(Microphone.GetPosition(null) > 0))
-                    {
-                        // do nothing
-                    }
-                    inAudio.Play();
-                }
-                inStream = new MediaStream();
-                inTrack = new AudioStreamTrack(inAudio);
-                inTrack.Loopback = true;
-                pc.AddTrack(inTrack, inStream);
-            }
-
-            public void ReceiveAudio(RTCPeerConnection pc, AudioSource outAudio)
-            {
-                outStream = new MediaStream();
-                outStream.OnAddTrack += evt =>
-                {
-                    var outTrack = evt.Track as AudioStreamTrack;
-                    outAudio.SetTrack(outTrack);
-                    if (!outAudio.isPlaying)
-                    {
-                        outAudio.loop = true;
-                        outAudio.Play();
-                    }
-                };
-                pc.OnTrack += evt => outStream.AddTrack(evt.Track);
-            }
+            Microphone.End(null);
+            Object.Destroy(voiceChatContainer);
+            base.ReleaseManagedResources();
         }
     }
 }
+#endif

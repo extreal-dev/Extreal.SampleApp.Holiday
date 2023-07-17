@@ -1,4 +1,4 @@
-# Visualization fo App Usage
+# App usage visualization
 
 Prepare a Grafana dashboard.
 Start Grafana using Docker Compose and use the dashboard with Grafana access in your browser.

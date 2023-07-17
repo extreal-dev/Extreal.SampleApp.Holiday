@@ -6,13 +6,13 @@ namespace Extreal.SampleApp.Holiday.App
 {
     public static class AppUtils
     {
+        public static bool IsTouchDevice()
 #if UNITY_IOS || UNITY_ANDROID
-        public static bool IsTouchDevice() => true;
+            => true;
 #elif UNITY_WEBGL && !UNITY_EDITOR
-        [System.Runtime.InteropServices.DllImport("__Internal")]
-        public static extern bool IsTouchDevice();
+            => bool.Parse(Extreal.WebGL.WebGLHelper.CallFunction(nameof(IsTouchDevice)));
 #else
-        public static bool IsTouchDevice() => false;
+            => false;
 #endif
 
         private static readonly HashSet<StageName> SpaceStages = new HashSet<StageName> { StageName.VirtualStage };

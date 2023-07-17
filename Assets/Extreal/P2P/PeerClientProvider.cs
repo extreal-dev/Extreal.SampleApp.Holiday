@@ -11,7 +11,7 @@ namespace Extreal.P2P.Dev
             return new NativePeerClient(peerConfig);
 #endif
 #if UNITY_WEBGL && !UNITY_EDITOR
-            return null;
+            return new WebGLPeerClient(new WebGLPeerConfig(peerConfig));
 #endif
         }
     }

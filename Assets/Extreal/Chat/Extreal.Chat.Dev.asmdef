@@ -7,7 +7,8 @@
         "UniRx",
         "Extreal.Core.Logging",
         "Extreal.Core.Common",
-        "Extreal.P2P.Dev"
+        "Extreal.P2P.Dev",
+        "Extreal.WebGL.Dev"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

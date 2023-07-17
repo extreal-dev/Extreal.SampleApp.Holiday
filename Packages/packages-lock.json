@@ -316,7 +316,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.webrtc": {
-      "version": "3.0.0-pre.5",
+      "version": "3.0.0-pre.6",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -364,7 +364,7 @@
       "hash": "3f819c0fbe2611cb0468069e25d1dfdeb05f1a33"
     },
     "jp.co.tis.extreal.integration.assetworkflow.addressables": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.AssetWorkflow.Addressables.git#1.1.0-next.3",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.AssetWorkflow.Addressables.git#1.1.0-next.5",
       "depth": 0,
       "source": "git",
       "dependencies": {
@@ -374,7 +374,7 @@
         "com.cysharp.unitask": "2.3.3",
         "com.neuecc.unirx": "7.1.0"
       },
-      "hash": "84aefb1a19cf5784f1c3f63bac14cf878135458e"
+      "hash": "3de1f06c14529f329f4a92a7439e25fd7376afad"
     },
     "jp.co.tis.extreal.integration.multiplay.ngo": {
       "version": "https://github.com/extreal-dev/Extreal.Integration.Multiplay.NGO.git#1.2.0-next.3",

@@ -1,4 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System;
+using Cysharp.Threading.Tasks;
 using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
 using Extreal.P2P.Dev;
@@ -6,7 +7,6 @@ using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.App.Stages;
-using SocketIOClient;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.Holiday.Controls.P2PControl
@@ -17,6 +17,8 @@ namespace Extreal.SampleApp.Holiday.Holiday.Controls.P2PControl
 
         private readonly AssetHelper assetHelper;
         private readonly PeerClient peerClient;
+
+        private Action handleOnHostNameAlreadyExists;
 
         public P2PControlPresenter(
             StageNavigator<StageName, SceneName> stageNavigator,
@@ -37,19 +39,19 @@ namespace Extreal.SampleApp.Holiday.Holiday.Controls.P2PControl
                 .Subscribe(_ => appState.SetP2PReady(true))
                 .AddTo(sceneDisposables);
 
-            peerClient.OnHostNameAlreadyExists
-                .Subscribe(_ =>
-                {
-                    appState.Notify(assetHelper.MessageConfig.P2PHostNameAlreadyExistsMessage);
-                    stageNavigator.ReplaceAsync(StageName.GroupSelectionStage);
-                }).AddTo(sceneDisposables);
+            peerClient.OnConnectFailed
+                .Subscribe(_ => appState.Notify(assetHelper.MessageConfig.P2PStartFailureMessage))
+                .AddTo(sceneDisposables);
 
             peerClient.OnDisconnected
-                .ObserveOnMainThread()
-                .Subscribe(_ =>
-                {
-                    appState.Notify(assetHelper.MessageConfig.P2PUnexpectedDisconnectedMessage);
-                }).AddTo(sceneDisposables);
+                .Subscribe(_ => appState.Notify(assetHelper.MessageConfig.P2PUnexpectedDisconnectedMessage))
+                .AddTo(sceneDisposables);
+
+            handleOnHostNameAlreadyExists = () =>
+            {
+                appState.Notify(assetHelper.MessageConfig.P2PHostNameAlreadyExistsMessage);
+                stageNavigator.ReplaceAsync(StageName.GroupSelectionStage);
+            };
         }
 
         protected override void OnStageEntered(
@@ -75,13 +77,13 @@ namespace Extreal.SampleApp.Holiday.Holiday.Controls.P2PControl
                     await peerClient.StartClientAsync(appState.GroupId);
                 }
             }
-            catch (ConnectionException e)
+            catch (HostNameAlreadyExistsException e)
             {
                 if (Logger.IsDebug())
                 {
                     Logger.LogDebug(e.Message);
                 }
-                appState.Notify(assetHelper.MessageConfig.P2PStartFailureMessage);
+                handleOnHostNameAlreadyExists.Invoke();
             }
         }
 
