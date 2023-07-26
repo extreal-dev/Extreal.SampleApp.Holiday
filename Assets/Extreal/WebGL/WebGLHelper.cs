@@ -8,11 +8,8 @@ namespace Extreal.WebGL
 {
     public static class WebGLHelper
     {
-        public static void Initialize(bool isDebug = false)
-        {
-            var webGLHelperConfig = new WebGLHelperConfig() { IsDebug = isDebug };
-            Nop(JsonSerializer.Serialize(webGLHelperConfig));
-        }
+        public static void Initialize(WebGLHelperConfig webGLHelperConfig = null)
+            => Nop(JsonSerializer.Serialize(webGLHelperConfig ?? new WebGLHelperConfig() { IsDebug = false }));
 
         [DllImport("__Internal")]
         private static extern void Nop(string str);
