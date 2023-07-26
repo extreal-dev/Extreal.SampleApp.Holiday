@@ -87,7 +87,7 @@ AvatarMichelle.prefab*
 /[Pp]ackages/*/
 
 # Docker data
-Assets/Servers/AppUsage/.data
+Servers/AppUsage/.data
 
 # WebGL
 Assets/WebGLScripts/node_modules

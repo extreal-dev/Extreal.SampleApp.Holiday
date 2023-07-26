@@ -20,7 +20,7 @@
   - Remove the scene you just created.
   - Add the `AvatarAmy` asset to the default group of Addressables with the name `AvatarAmy`.
   - Create an avatar prefab about `Michelle` in the same way as above.
-- See [README](Assets/Servers/P2P/README.md) to start a signaling server for P2P.
+- See [README](Servers/P2P/README.md) to start a signaling server for P2P.
 - Open multiple Unity editors using [ParrelSync.](https://github.com/VeriorPies/ParrelSync). ParrelSync is already installed in this project.
 - Run the application.
   - Run the following scene: `/Assets/Holiday/App/App`
@@ -28,7 +28,7 @@
 
 ## How to visualize application usage
 
-- See [README](Assets/Servers/AppUsage/README.md) to start Grafana/Loki.
+- See [README](Servers/AppUsage/README.md) to start Grafana/Loki.
 - Enable application usage visualization.
   - Turn on the Enable field in AppUsageConfig.
   - `/Assets/Holiday/App/Config/AppUsageConfig`
