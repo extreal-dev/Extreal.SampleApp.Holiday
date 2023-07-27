@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "socket.io-client": "^4.7.1"
+    "@extreal-dev/extreal.integration.p2p.webrtc": "^0.0.4"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.1.0",

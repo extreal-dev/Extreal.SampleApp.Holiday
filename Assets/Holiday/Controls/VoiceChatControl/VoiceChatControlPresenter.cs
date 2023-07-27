@@ -6,7 +6,6 @@ using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.App.Stages;
 using UniRx;
-using UnityEngine;
 
 namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
 {

@@ -1,4 +1,4 @@
-import { PeerClientProvider } from "../P2P";
+import { PeerClientProvider } from "@extreal-dev/extreal.integration.p2p.webrtc";
 
 type TextChatConfig = {
     isDebug: boolean;

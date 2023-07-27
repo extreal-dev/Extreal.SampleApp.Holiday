@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.Common.System;
-using Extreal.P2P.Dev;
+using Extreal.Integration.P2P.WebRTC;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.Controls.ClientControl

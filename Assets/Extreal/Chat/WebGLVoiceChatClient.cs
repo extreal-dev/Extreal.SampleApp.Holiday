@@ -2,8 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Extreal.Core.Logging;
-using Extreal.WebGL;
-using UnityEngine;
+using Extreal.Integration.Web.Common;
 
 namespace Extreal.Chat.Dev
 {

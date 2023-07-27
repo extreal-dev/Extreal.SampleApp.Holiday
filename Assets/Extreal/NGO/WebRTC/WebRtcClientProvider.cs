@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Extreal.P2P.Dev;
+using Extreal.Integration.P2P.WebRTC;
 
 namespace Extreal.NGO.WebRTC.Dev
 {

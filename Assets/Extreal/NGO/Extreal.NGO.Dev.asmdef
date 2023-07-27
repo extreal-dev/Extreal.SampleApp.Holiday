@@ -10,8 +10,8 @@
         "Extreal.Core.Logging",
         "Extreal.Core.Common",
         "Extreal.Integration.Multiplay.NGO",
-        "Extreal.P2P.Dev",
-        "Extreal.WebGL.Dev"
+        "Extreal.Integration.Web.Common",
+        "Extreal.Integration.P2P.WebRTC"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -20,11 +20,11 @@
         "Extreal.Core.Common",
         "Extreal.Integration.Multiplay.NGO",
         "Extreal.Integration.AssetWorkflow.Addressables",
+        "Extreal.Integration.Web.Common",
+        "Extreal.Integration.P2P.WebRTC",
         "Extreal.SampleApp.Holiday.Analyzer",
-        "Extreal.P2P.Dev",
         "Extreal.NGO.Dev",
-        "Extreal.Chat.Dev",
-        "Extreal.WebGL.Dev"
+        "Extreal.Chat.Dev"
     ],
     "includePlatforms": [
         "Android",

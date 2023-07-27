@@ -8,7 +8,6 @@ using Extreal.SampleApp.Holiday.App.AppUsage;
 using Extreal.SampleApp.Holiday.App.AppUsage.Collectors;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
-using Extreal.WebGL;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using VContainer;
@@ -65,7 +64,7 @@ namespace Extreal.SampleApp.Holiday.App
         private static void InitializeWebGL()
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
-            WebGLHelper.Initialize();
+            Extreal.Integration.Web.Common.WebGLHelper.Initialize();
 #endif
         }
 

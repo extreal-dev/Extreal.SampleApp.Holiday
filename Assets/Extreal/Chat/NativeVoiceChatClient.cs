@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Extreal.Core.Logging;
-using Extreal.P2P.Dev;
+using Extreal.Integration.P2P.WebRTC;
 using Unity.WebRTC;
 using UnityEngine;
 

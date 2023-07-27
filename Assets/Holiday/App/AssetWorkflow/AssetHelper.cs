@@ -7,7 +7,7 @@ using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
 using Extreal.Integration.AssetWorkflow.Addressables;
-using Extreal.P2P.Dev;
+using Extreal.Integration.P2P.WebRTC;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.Screens.ConfirmationScreen;
 using UniRx;

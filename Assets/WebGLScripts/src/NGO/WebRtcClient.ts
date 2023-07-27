@@ -1,5 +1,5 @@
-import { PeerClientProvider, PeerRole } from "../P2P";
-import { waitUntil } from "../WebGL";
+import { PeerClientProvider, PeerRole } from "@extreal-dev/extreal.integration.p2p.webrtc";
+import { waitUntil } from "@extreal-dev/extreal.integration.web.common";
 import { IdMapper } from "./IdMapper";
 
 type WebRtcConfig = {

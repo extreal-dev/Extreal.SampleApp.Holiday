@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 using AOT;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.Logging;
-using Extreal.WebGL;
+using Extreal.Integration.Web.Common;
 using Unity.Netcode;
 
 namespace Extreal.NGO.WebRTC.Dev

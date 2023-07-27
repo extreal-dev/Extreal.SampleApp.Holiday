@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Extreal.P2P.Dev;
+using Extreal.Integration.P2P.WebRTC;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using TMPro;
 using UniRx;

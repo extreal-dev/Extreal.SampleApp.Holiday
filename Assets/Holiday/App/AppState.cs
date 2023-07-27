@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
-using Extreal.P2P.Dev;
+using Extreal.Integration.P2P.WebRTC;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.Controls.RetryStatusControl;
 using Extreal.SampleApp.Holiday.Screens.ConfirmationScreen;

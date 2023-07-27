@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using AOT;
 using Extreal.Core.Logging;
-using Extreal.WebGL;
+using Extreal.Integration.Web.Common;
 
 namespace Extreal.Chat.Dev
 {

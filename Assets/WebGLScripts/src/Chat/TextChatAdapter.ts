@@ -1,5 +1,5 @@
-import { PeerClientProvider } from "../P2P";
-import { addAction, callback } from "../WebGL";
+import { PeerClientProvider } from "@extreal-dev/extreal.integration.p2p.webrtc";
+import { addAction, callback } from "@extreal-dev/extreal.integration.web.common";
 import { TextChatClient } from "./TextChatClient";
 
 class TextChatAdapter {
