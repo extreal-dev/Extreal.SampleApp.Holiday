@@ -24,7 +24,11 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
 
         private readonly PeerClient peerClient;
 
-        public GroupManager(PeerClient peerClient) => this.peerClient = peerClient;
+        public GroupManager(PeerClient peerClient)
+        {
+            this.peerClient = peerClient;
+            peerClient.OnConnectFailed.Subscribe(_ => onGroupsUpdateFailed.OnNext(Unit.Default)).AddTo(disposables);
+        }
 
         protected override void ReleaseManagedResources() => disposables.Dispose();
 
