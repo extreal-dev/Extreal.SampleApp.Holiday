@@ -1,7 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using Extreal.Core.StageNavigation;
 using Extreal.Integration.Multiplay.NGO;
-using Extreal.NGO.Dev;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
@@ -14,24 +13,18 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
     {
         private readonly AssetHelper assetHelper;
         private readonly GroupManager groupManager;
-        private readonly NgoHost ngoHost;
         private readonly NgoClient ngoClient;
-        private readonly IConnectionSetter connectionSetter;
 
         public ClientControlPresenter(
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState,
             AssetHelper assetHelper,
             GroupManager groupManager,
-            NgoHost ngoHost,
-            NgoClient ngoClient,
-            IConnectionSetter connectionSetter) : base(stageNavigator, appState)
+            NgoClient ngoClient) : base(stageNavigator, appState)
         {
             this.assetHelper = assetHelper;
             this.groupManager = groupManager;
-            this.ngoHost = ngoHost;
             this.ngoClient = ngoClient;
-            this.connectionSetter = connectionSetter;
         }
 
         protected override void Initialize(
@@ -40,7 +33,6 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
             CompositeDisposable sceneDisposables)
         {
             InitializeGroupManager(appState, sceneDisposables);
-            InitializeNgoHost();
             InitializeNgoClient(stageNavigator, appState, sceneDisposables);
         }
 
@@ -51,16 +43,11 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
                 .Subscribe(_ => appState.Notify(assetHelper.MessageConfig.GroupMatchingUpdateFailureMessage))
                 .AddTo(sceneDisposables);
 
-        private void InitializeNgoHost()
-            => ngoHost.AddConnectionSetter(connectionSetter);
-
         private void InitializeNgoClient(
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState,
             CompositeDisposable sceneDisposables)
         {
-            ngoClient.AddConnectionSetter(connectionSetter);
-
             // FIXME:
             // Hostの場合、Clientが抜けるとOnConnectionApprovalRejectedが発生します。
             ngoClient.OnConnectionApprovalRejected

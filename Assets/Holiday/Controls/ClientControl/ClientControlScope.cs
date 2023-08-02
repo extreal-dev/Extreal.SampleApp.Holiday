@@ -25,11 +25,17 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
             builder.Register<GroupManager>(Lifetime.Singleton);
 
             builder.RegisterComponent(networkManager);
+
             var webRtcClient = WebRtcClientProvider.Provide(peerClient);
-            builder.RegisterComponent(webRtcClient);
-            builder.Register<WebRtcTransportConnectionSetter>(Lifetime.Singleton).AsImplementedInterfaces();
-            builder.Register<NgoHost>(Lifetime.Singleton);
-            builder.Register<NgoClient>(Lifetime.Singleton).WithParameter(assetHelper.NgoClientConfig.RetryStrategy);
+            var webRtcTransportConnectionSetter = new WebRtcTransportConnectionSetter(webRtcClient);
+
+            var ngoHost = new NgoHost(networkManager);
+            ngoHost.AddConnectionSetter(webRtcTransportConnectionSetter);
+            builder.RegisterComponent(ngoHost);
+
+            var ngoClient = new NgoClient(networkManager, assetHelper.NgoClientConfig.RetryStrategy);
+            ngoClient.AddConnectionSetter(webRtcTransportConnectionSetter);
+            builder.RegisterComponent(ngoClient);
 
             var textChatClient = TextChatClientProvider.Provide(peerClient);
             builder.RegisterComponent(textChatClient);
