@@ -376,8 +376,23 @@
       },
       "hash": "3de1f06c14529f329f4a92a7439e25fd7376afad"
     },
+    "jp.co.tis.extreal.integration.chat.webrtc": {
+      "version": "https://github.com/extreal-dev/Extreal.Integration.Chat.WebRTC.git#1.0.0-next.1",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.webrtc": "3.0.0-pre.6",
+        "com.cysharp.unitask": "2.3.3",
+        "com.neuecc.unirx": "7.1.0",
+        "jp.co.tis.extreal.core.logging": "1.2.0-next.1",
+        "jp.co.tis.extreal.core.common": "1.1.0-next.4",
+        "jp.co.tis.extreal.integration.web.common": "1.0.0-next.1",
+        "jp.co.tis.extreal.integration.p2p.webrtc": "1.0.0-next.3"
+      },
+      "hash": "8a29b3b7a3dd1195f68d3c2538b4d59164eb6add"
+    },
     "jp.co.tis.extreal.integration.multiplay.ngo": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.Multiplay.NGO.git#1.2.0-next.3",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.Multiplay.NGO.git#1.2.0-next.4",
       "depth": 0,
       "source": "git",
       "dependencies": {
@@ -387,10 +402,10 @@
         "com.cysharp.unitask": "2.3.3",
         "com.neuecc.unirx": "7.1.0"
       },
-      "hash": "378528bdd9a3d3809e74e8072c058b304d557892"
+      "hash": "063bd3c7b3e43288620dba0de8c116efa286cc28"
     },
     "jp.co.tis.extreal.integration.p2p.webrtc": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.P2P.WebRTC.git#1.0.0-next.3",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.P2P.WebRTC.git#1.0.0-next.4",
       "depth": 0,
       "source": "git",
       "dependencies": {
@@ -402,16 +417,14 @@
         "jp.co.tis.extreal.core.common": "1.1.0-next.4",
         "jp.co.tis.extreal.integration.web.common": "1.0.0-next.1"
       },
-      "hash": "97a2d8e5d316f8f17a08d94a323c2b3c653947cb"
+      "hash": "7b15e7d7a647de57319aa6434c2195807fe2d4a2"
     },
     "jp.co.tis.extreal.integration.web.common": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.Web.Common.git#1.0.0-next.1",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.Web.Common.git#1.0.0-next.2",
       "depth": 0,
       "source": "git",
-      "dependencies": {
-        "jp.co.tis.extreal.core.logging": "1.2.0-next.1"
-      },
-      "hash": "c7bd96acc0111af09c6d290121ac4f7885bccf88"
+      "dependencies": {},
+      "hash": "82ca98b17e65924eeaf3c628fdf919e09e3af48b"
     },
     "jp.hadashikick.vcontainer": {
       "version": "1.13.2",

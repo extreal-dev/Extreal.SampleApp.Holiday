@@ -202,16 +202,128 @@
         }
         return packets;
     };
+    function createPacketEncoderStream() {
+        return new TransformStream({
+            transform(packet, controller) {
+                encodePacketToBinary(packet, encodedPacket => {
+                    const payloadLength = encodedPacket.length;
+                    let header;
+                    // inspired by the WebSocket format: https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_servers#decoding_payload_length
+                    if (payloadLength < 126) {
+                        header = new Uint8Array(1);
+                        new DataView(header.buffer).setUint8(0, payloadLength);
+                    }
+                    else if (payloadLength < 65536) {
+                        header = new Uint8Array(3);
+                        const view = new DataView(header.buffer);
+                        view.setUint8(0, 126);
+                        view.setUint16(1, payloadLength);
+                    }
+                    else {
+                        header = new Uint8Array(9);
+                        const view = new DataView(header.buffer);
+                        view.setUint8(0, 127);
+                        view.setBigUint64(1, BigInt(payloadLength));
+                    }
+                    // first bit indicates whether the payload is plain text (0) or binary (1)
+                    if (packet.data && typeof packet.data !== "string") {
+                        header[0] |= 0x80;
+                    }
+                    controller.enqueue(header);
+                    controller.enqueue(encodedPacket);
+                });
+            }
+        });
+    }
     let TEXT_DECODER;
-    function decodePacketFromBinary(data, isBinary, binaryType) {
+    function totalLength(chunks) {
+        return chunks.reduce((acc, chunk) => acc + chunk.length, 0);
+    }
+    function concatChunks(chunks, size) {
+        if (chunks[0].length === size) {
+            return chunks.shift();
+        }
+        const buffer = new Uint8Array(size);
+        let j = 0;
+        for (let i = 0; i < size; i++) {
+            buffer[i] = chunks[0][j++];
+            if (j === chunks[0].length) {
+                chunks.shift();
+                j = 0;
+            }
+        }
+        if (chunks.length && j < chunks[0].length) {
+            chunks[0] = chunks[0].slice(j);
+        }
+        return buffer;
+    }
+    function createPacketDecoderStream(maxPayload, binaryType) {
         if (!TEXT_DECODER) {
-            // lazily created for compatibility with old browser platforms
             TEXT_DECODER = new TextDecoder();
         }
-        // 48 === "0".charCodeAt(0) (OPEN packet type)
-        // 54 === "6".charCodeAt(0) (NOOP packet type)
-        const isPlainBinary = isBinary || data[0] < 48 || data[0] > 54;
-        return decodePacket(isPlainBinary ? data : TEXT_DECODER.decode(data), binaryType);
+        const chunks = [];
+        let state = 0 /* READ_HEADER */;
+        let expectedLength = -1;
+        let isBinary = false;
+        return new TransformStream({
+            transform(chunk, controller) {
+                chunks.push(chunk);
+                while (true) {
+                    if (state === 0 /* READ_HEADER */) {
+                        if (totalLength(chunks) < 1) {
+                            break;
+                        }
+                        const header = concatChunks(chunks, 1);
+                        isBinary = (header[0] & 0x80) === 0x80;
+                        expectedLength = header[0] & 0x7f;
+                        if (expectedLength < 126) {
+                            state = 3 /* READ_PAYLOAD */;
+                        }
+                        else if (expectedLength === 126) {
+                            state = 1 /* READ_EXTENDED_LENGTH_16 */;
+                        }
+                        else {
+                            state = 2 /* READ_EXTENDED_LENGTH_64 */;
+                        }
+                    }
+                    else if (state === 1 /* READ_EXTENDED_LENGTH_16 */) {
+                        if (totalLength(chunks) < 2) {
+                            break;
+                        }
+                        const headerArray = concatChunks(chunks, 2);
+                        expectedLength = new DataView(headerArray.buffer, headerArray.byteOffset, headerArray.length).getUint16(0);
+                        state = 3 /* READ_PAYLOAD */;
+                    }
+                    else if (state === 2 /* READ_EXTENDED_LENGTH_64 */) {
+                        if (totalLength(chunks) < 8) {
+                            break;
+                        }
+                        const headerArray = concatChunks(chunks, 8);
+                        const view = new DataView(headerArray.buffer, headerArray.byteOffset, headerArray.length);
+                        const n = view.getUint32(0);
+                        if (n > Math.pow(2, 53 - 32) - 1) {
+                            // the maximum safe integer in JavaScript is 2^53 - 1
+                            controller.enqueue(ERROR_PACKET);
+                            break;
+                        }
+                        expectedLength = n * Math.pow(2, 32) + view.getUint32(4);
+                        state = 3 /* READ_PAYLOAD */;
+                    }
+                    else {
+                        if (totalLength(chunks) < expectedLength) {
+                            break;
+                        }
+                        const data = concatChunks(chunks, expectedLength);
+                        controller.enqueue(decodePacket(isBinary ? data : TEXT_DECODER.decode(data), binaryType));
+                        state = 0 /* READ_HEADER */;
+                    }
+                    if (expectedLength === 0 || expectedLength > maxPayload) {
+                        controller.enqueue(ERROR_PACKET);
+                        break;
+                    }
+                }
+            }
+        });
     }
     const protocol$1 = 4;
 
@@ -1124,7 +1236,7 @@
             catch (err) {
                 return this.emitReserved("error", err);
             }
-            this.ws.binaryType = this.socket.binaryType || defaultBinaryType;
+            this.ws.binaryType = this.socket.binaryType;
             this.addEventListeners();
         }
         /**
@@ -1213,14 +1325,6 @@
         }
     }
 
-    function shouldIncludeBinaryHeader(packet, encoded) {
-        // 48 === "0".charCodeAt(0) (OPEN packet type)
-        // 54 === "6".charCodeAt(0) (NOOP packet type)
-        return (packet.type === "message" &&
-            typeof packet.data !== "string" &&
-            encoded[0] >= 48 &&
-            encoded[0] <= 54);
-    }
     class WT extends Transport {
         get name() {
             return "webtransport";
@@ -1242,9 +1346,11 @@
             // note: we could have used async/await, but that would require some additional polyfills
             this.transport.ready.then(() => {
                 this.transport.createBidirectionalStream().then((stream) => {
-                    const reader = stream.readable.getReader();
-                    this.writer = stream.writable.getWriter();
-                    let binaryFlag;
+                    const decoderStream = createPacketDecoderStream(Number.MAX_SAFE_INTEGER, this.socket.binaryType);
+                    const reader = stream.readable.pipeThrough(decoderStream).getReader();
+                    const encoderStream = createPacketEncoderStream();
+                    encoderStream.readable.pipeTo(stream.writable);
+                    this.writer = encoderStream.writable.getWriter();
                     const read = () => {
                         reader
                             .read()
@@ -1252,24 +1358,18 @@
                             if (done) {
                                 return;
                             }
-                            if (!binaryFlag && value.byteLength === 1 && value[0] === 54) {
-                                binaryFlag = true;
-                            }
-                            else {
-                                // TODO expose binarytype
-                                this.onPacket(decodePacketFromBinary(value, binaryFlag, "arraybuffer"));
-                                binaryFlag = false;
-                            }
+                            this.onPacket(value);
                             read();
                         })
                             .catch((err) => {
                         });
                     };
                     read();
-                    const handshake = this.query.sid ? `0{"sid":"${this.query.sid}"}` : "0";
-                    this.writer
-                        .write(new TextEncoder().encode(handshake))
-                        .then(() => this.onOpen());
+                    const packet = { type: "open" };
+                    if (this.query.sid) {
+                        packet.data = `{"sid":"${this.query.sid}"}`;
+                    }
+                    this.writer.write(packet).then(() => this.onOpen());
                 });
             });
         }
@@ -1278,18 +1378,13 @@
             for (let i = 0; i < packets.length; i++) {
                 const packet = packets[i];
                 const lastPacket = i === packets.length - 1;
-                encodePacketToBinary(packet, (data) => {
-                    if (shouldIncludeBinaryHeader(packet, data)) {
-                        this.writer.write(Uint8Array.of(54));
+                this.writer.write(packet).then(() => {
+                    if (lastPacket) {
+                        nextTick(() => {
+                            this.writable = true;
+                            this.emitReserved("drain");
+                        }, this.setTimeoutFn);
                     }
-                    this.writer.write(data).then(() => {
-                        if (lastPacket) {
-                            nextTick(() => {
-                                this.writable = true;
-                                this.emitReserved("drain");
-                            }, this.setTimeoutFn);
-                        }
-                    });
                 });
             }
         }
@@ -1376,6 +1471,7 @@
          */
         constructor(uri, opts = {}) {
             super();
+            this.binaryType = defaultBinaryType;
             this.writeBuffer = [];
             if (uri && "object" === typeof uri) {
                 opts = uri;
@@ -1682,12 +1778,12 @@
                 this.emitReserved("packet", packet);
                 // Socket is live - any packet counts
                 this.emitReserved("heartbeat");
+                this.resetPingTimeout();
                 switch (packet.type) {
                     case "open":
                         this.onHandshake(JSON.parse(packet.data));
                         break;
                     case "ping":
-                        this.resetPingTimeout();
                         this.sendPacket("pong");
                         this.emitReserved("ping");
                         this.emitReserved("pong");
@@ -3765,367 +3861,13 @@
         connect: lookup,
     });
 
-    let o$1,t;const n$1=new Map;globalThis.__getNop=n=>(t=n,t=>{o$1=JSON.parse(l(t)).isDebug,console.log(`helper: isDebug=${o$1}`);}),globalThis.__getMethod=o=>{const t=n$1.get(o);if(!t)throw new Error(`bound method not found. name=${o}`);return t};const e=(o,t)=>{n$1.set(o,t);},l=o=>t.UTF8ToString(o),a$1=o=>{const n=t.lengthBytesUTF8(o)+1,e=t.Module._malloc(n);return t.stringToUTF8(o,e,n),e},c$1=new Map,r=new Map,s=new Map,i="";e("CallAction",((t,n,e)=>{const a=l(t),r=c$1.get(a);if(!r)throw new Error(`A action to call not found. name=${a}`);const s=n?l(n):i,u=e?l(e):i;o$1&&console.log(`call action: name=${a} strParam1=${s} strParam2=${u}`),r(s,u);})),e("CallFunction",((t,n,e)=>{const c=l(t),s=r.get(c);if(!s)throw new Error(`A function to call not found. name=${c}`);const u=n?l(n):i,g=e?l(e):i;return o$1&&console.log(`call function: name=${c} strParam1=${u} strParam2=${g}`),a$1(s(u,g))})),e("AddCallback",((n,e)=>{const c=l(n);o$1&&console.log(`add callback: name=${c}`),s.set(c,((o,n)=>{((o,n,e)=>{const l=a$1(n),c=a$1(e);t.Module.dynCall_vii(o,l,c),t.Module._free(l),t.Module._free(c);})(e,o,n);}));}));const u=(o,t)=>c$1.set(o,t),g=(o,t)=>r.set(o,t),m=(t,n,e)=>{const l=s.get(t);if(!l)throw new Error(`A callback to call not found. name=${t}`);o$1&&console.log(`call callback: name=${t} strParam1=${n} strParam2=${e}`),l(n??i,e??i);},d=(o,t,n=100)=>new Promise(((e,l)=>{const a=()=>{o()||t()?e():setTimeout(a,n);};a();})),$=o=>"function"==typeof o&&"[object AsyncFunction]"===Object.prototype.toString.call(o);
+    let o$2,t;const n$2=new Map;globalThis.__getNop=n=>(t=n,t=>{o$2=JSON.parse(l(t)).isDebug,console.log(`helper: isDebug=${o$2}`);}),globalThis.__getMethod=o=>{const t=n$2.get(o);if(!t)throw new Error(`bound method not found. name=${o}`);return t};const e=(o,t)=>{n$2.set(o,t);},l=o=>t.UTF8ToString(o),a$2=o=>{const n=t.lengthBytesUTF8(o)+1,e=t.Module._malloc(n);return t.stringToUTF8(o,e,n),e},c$2=new Map,r=new Map,s$1=new Map,i="";e("CallAction",((t,n,e)=>{const a=l(t),r=c$2.get(a);if(!r)throw new Error(`A action to call not found. name=${a}`);const s=n?l(n):i,u=e?l(e):i;o$2&&console.log(`call action: name=${a} strParam1=${s} strParam2=${u}`),r(s,u);})),e("CallFunction",((t,n,e)=>{const c=l(t),s=r.get(c);if(!s)throw new Error(`A function to call not found. name=${c}`);const u=n?l(n):i,g=e?l(e):i;return o$2&&console.log(`call function: name=${c} strParam1=${u} strParam2=${g}`),a$2(s(u,g))})),e("AddCallback",((n,e)=>{const c=l(n);o$2&&console.log(`add callback: name=${c}`),s$1.set(c,((o,n)=>{((o,n,e)=>{const l=a$2(n),c=a$2(e);t.Module.dynCall_vii(o,l,c),t.Module._free(l),t.Module._free(c);})(e,o,n);}));}));const u=(o,t)=>{c$2.set(o,t);},g=(o,t)=>{r.set(o,t);},m=(t,n,e)=>{const l=s$1.get(t);if(!l)throw new Error(`A callback to call not found. name=${t}`);o$2&&console.log(`call callback: name=${t} strParam1=${n} strParam2=${e}`),l(n??i,e??i);},d=(o,t,n=100)=>new Promise(((e,l)=>{const a=()=>{o()||t()?e():setTimeout(a,n);};a();})),$=o=>"function"==typeof o&&"[object AsyncFunction]"===Object.prototype.toString.call(o);
 
-    class c{constructor(e){this.finishIceCandidateGathering=()=>{this.isIceCandidateGatheringFinished=!0,this.fireOnStarted();},this.finishOfferAnswerProcess=()=>{this.isOfferAnswerProcessFinished=!0,this.fireOnStarted();},this.fireOnStarted=()=>{this.isIceCandidateGatheringFinished&&this.isOfferAnswerProcessFinished&&this.onStarted();},this.clear=()=>{this.isIceCandidateGatheringFinished=!1,this.isOfferAnswerProcessFinished=!1;},this.onStarted=e,this.isIceCandidateGatheringFinished=!1,this.isOfferAnswerProcessFinished=!1;}}const n={None:0,Host:1,Client:2};class o{constructor(t,i){this.addPcCreateHook=e=>{this.pcCreateHooks.push(e);},this.addPcCloseHook=e=>{this.pcCloseHooks.push(e);},this.getSocket=()=>{if(null!==this.socket){if(this.socket.connected)return this.socket;this.stopSocket();}const s=lookup(this.peerConfig.url,this.peerConfig.socketOptions);return this.socket=s,this.socket.on("connect",(()=>{this.isDebug&&console.log(`Socket connected: id=${s.id}`);})),this.socket.on("message",this.receiveMessageAsync),this.socket.on("user disconnected",this.receiveUserDisconnected),this.socket.on("connect_error",this.receiveConnectError),this.socket.on("disconnect",this.receiveDisconnect),this.socket.connect(),this.socket},this.receiveMessageAsync=async e=>{this.isDebug&&console.log(`Receive message: ${JSON.stringify(e)}`);const s=this.getFrom(e);switch(e.type){case"join":await this.receiveJoinAsync(s);break;case"call me":await this.sendOfferAsync(this.getMe(e));break;case"offer":await this.receiveOfferAsync(s,e);break;case"answer":await this.receiveAnswerAsync(s,e);break;case"done":this.receiveDone(s);break;case"candidate":this.receiveCandidate(s,new RTCIceCandidate(e.ice));break;case"bye":this.receiveBye(s);break;default:this.isDebug&&console.log(`Unknown message received!!! type=${e.type}`);}},this.getFrom=e=>{if(!e.from)throw new Error("Not occurring because from is set on the server side.");return e.from},this.getMe=e=>{if(!e.me)throw new Error("Not occurring because me is set on the caller.");return e.me},this.receiveUserDisconnected=e=>{this.isDebug&&console.log(`Receive user disconnected: ${e}`),this.closePc(e.id);},this.receiveConnectError=e=>{this.isDebug&&console.log(e.message),this.callbacks.onConnectFailed(e.message);},this.receiveDisconnect=e=>{this.isDebug&&console.log(e),this.callbacks.onDissconnected(e);},this.startHost=(e,s)=>{this.role=n.Host,this.getSocket().emit("create host",e,(e=>{this.isDebug&&console.log(e),s(e);}));},this.listHosts=e=>{this.getSocket().emit("list hosts",(s=>{this.isDebug&&console.log(s),e(s);}));},this.startClientAsync=async e=>{this.role=n.Client,this.hostId=e,this.sendMessage(e,{type:"join"});},this.sendOfferAsync=async e=>{this.pcMap.has(e)?this.isDebug&&console.log(`Send offer: Not sent as it already exists. to=${e}`):(await this.createPcAsync(e,!0),await this.handlePcAsync("sendOffer",e,(async s=>{const t=await s.createOffer();await s.setLocalDescription(t),this.sendSdp(e,s.localDescription);})));},this.stop=()=>{this.role=n.None,this.hostId=null;for(const e of this.pcMap.keys())this.sendMessage(e,{type:"bye"}),this.closePc(e);this.pcMap.clear(),this.clientState.clear(),this.stopSocket();},this.stopSocket=()=>{null!==this.socket&&(this.socket.close(),this.socket=null);},this.createPcAsync=async(e,t)=>{if(this.pcMap.has(e))return;const i=new RTCPeerConnection(this.peerConfig.pcConfig);i.onicecandidate=s=>{s.candidate&&(this.isDebug&&console.log(`Receive ice candidate: state=${s.candidate} id=${e}`),this.sendIce(e,s.candidate));},i.oniceconnectionstatechange=()=>{switch(this.isDebug&&console.log(`Receive ice connection change: state=${i.iceConnectionState} id=${e}`),i.iceConnectionState){case"new":case"checking":case"disconnected":break;case"connected":case"completed":this.role===n.Client&&this.clientState.finishIceCandidateGathering();break;case"failed":case"closed":this.closePc(e);}};for(const c of this.pcCreateHooks)$(c)?await c(e,t,i):c(e,t,i);this.pcMap.set(e,i);},this.closePc=e=>{this.handlePc("closePc",e,(s=>{this.pcCloseHooks.forEach((s=>s(e))),s.close(),this.pcMap.delete(e);}));},this.sendSdp=(e,s)=>{this.sendMessage(e,{type:s.type,sdp:s.sdp});},this.sendIce=(e,s)=>{this.handlePc("sendIce",e,(()=>this.sendMessage(e,{type:"candidate",ice:s})));},this.sendMessage=(e,s)=>{s.to=e,this.isDebug&&console.log(`Send message: ${JSON.stringify(s)}`),this.getSocket().emit("message",s);},this.receiveJoinAsync=async e=>{await this.sendOfferAsync(e);for(const s of this.pcMap.keys())e!==s&&this.sendMessage(s,{type:"call me",me:e});},this.receiveOfferAsync=async(e,s)=>{await this.createPcAsync(e,!1),await this.handlePcAsync("receiveOfferAsync",e,(async t=>{await t.setRemoteDescription(s),await this.sendAnswerAsync(e);}));},this.sendAnswerAsync=async e=>{await this.handlePcAsync("sendAnswerAsync",e,(async s=>{const t=await s.createAnswer();await s.setLocalDescription(t),this.sendSdp(e,s.localDescription);}));},this.receiveAnswerAsync=async(e,s)=>{await this.handlePcAsync("receiveAnswerAsync",e,(async t=>{await t.setRemoteDescription(s),this.sendMessage(e,{type:"done"});}));},this.receiveDone=e=>{this.role===n.Client&&e===this.hostId&&this.clientState.finishOfferAnswerProcess();},this.receiveCandidate=(e,s)=>{this.handlePc("receiveCandidate",e,(e=>e.addIceCandidate(s)));},this.receiveBye=e=>this.closePc(e),this.handlePc=(e,s,t)=>{const i=this.pcMap.get(s);if(i)try{t(i);}catch(s){this.logError(e,s);}},this.handlePcAsync=async(e,s,t)=>{const i=this.pcMap.get(s);if(i)try{await t(i);}catch(s){this.logError(e,s);}},this.logError=(e,s)=>{this.isDebug&&console.error(`Error has occurred at ${e}`,s);},this.socket=null,this.peerConfig=t,this.isDebug=t.isDebug,this.pcMap=new Map,this.pcCreateHooks=[],this.pcCloseHooks=[],this.clientState=new c(i.onStarted),this.callbacks=i,this.role=n.None,this.hostId=null;}}class a{constructor(){this.adapt=()=>{u(this.withPrefix("WebGLPeerClient"),(e=>{this.peerClient=new o(JSON.parse(e),{onStarted:()=>m(this.withPrefix("HandleOnStarted")),onConnectFailed:e=>m(this.withPrefix("HandleOnConnectFailed"),e),onDissconnected:e=>m(this.withPrefix("HandleOnDisconnected"),e)});})),u(this.withPrefix("DoStartHostAsync"),(e=>{this.getPeerClient().startHost(e,(e=>m(this.withPrefix("ReceiveStartHostResponse"),JSON.stringify(e))));})),u(this.withPrefix("DoListHostsAsync"),(()=>{this.getPeerClient().listHosts((e=>m(this.withPrefix("ReceiveListHostsResponse"),JSON.stringify(e))));})),u(this.withPrefix("DoStartClientAsync"),(async e=>await this.getPeerClient().startClientAsync(e))),u(this.withPrefix("DoStopAsync"),(()=>this.getPeerClient().stop()));},this.withPrefix=e=>`WebGLPeerClient#${e}`,this.getPeerClient=()=>{if(!this.peerClient)throw new Error("Call the WebGLPeerClient constructor first in Unity.");return this.peerClient};}}
+    let c$1 = class c{constructor(e){this.finishIceCandidateGathering=()=>{this.isIceCandidateGatheringFinished=!0,this.fireOnStarted();},this.finishOfferAnswerProcess=()=>{this.isOfferAnswerProcessFinished=!0,this.fireOnStarted();},this.fireOnStarted=()=>{this.isIceCandidateGatheringFinished&&this.isOfferAnswerProcessFinished&&this.onStarted();},this.clear=()=>{this.isIceCandidateGatheringFinished=!1,this.isOfferAnswerProcessFinished=!1;},this.onStarted=e,this.isIceCandidateGatheringFinished=!1,this.isOfferAnswerProcessFinished=!1;}};const n$1={None:0,Host:1,Client:2};let o$1 = class o{constructor(t,i){this.addPcCreateHook=e=>{this.pcCreateHooks.push(e);},this.addPcCloseHook=e=>{this.pcCloseHooks.push(e);},this.getSocket=()=>{if(null!==this.socket){if(this.socket.connected)return this.socket;this.stopSocket();}const s=lookup(this.peerConfig.url,this.peerConfig.socketOptions);return this.socket=s,this.socket.on("connect",(()=>{this.isDebug&&console.log(`Socket connected: id=${s.id}`);})),this.socket.on("message",this.receiveMessageAsync),this.socket.on("user disconnected",this.receiveUserDisconnected),this.socket.on("connect_error",this.receiveConnectError),this.socket.on("disconnect",this.receiveDisconnect),this.socket.connect(),this.socket},this.receiveMessageAsync=async e=>{this.isDebug&&console.log(`Receive message: ${JSON.stringify(e)}`);const s=this.getFrom(e);switch(e.type){case"join":await this.receiveJoinAsync(s);break;case"call me":await this.sendOfferAsync(this.getMe(e));break;case"offer":await this.receiveOfferAsync(s,e);break;case"answer":await this.receiveAnswerAsync(s,e);break;case"done":this.receiveDone(s);break;case"candidate":this.receiveCandidate(s,new RTCIceCandidate(e.ice));break;case"bye":this.receiveBye(s);break;default:this.isDebug&&console.log(`Unknown message received!!! type=${e.type}`);}},this.getFrom=e=>{if(!e.from)throw new Error("Not occurring because from is set on the server side.");return e.from},this.getMe=e=>{if(!e.me)throw new Error("Not occurring because me is set on the caller.");return e.me},this.receiveUserDisconnected=e=>{this.isDebug&&console.log(`Receive user disconnected: ${e}`),this.closePc(e.id);},this.receiveConnectError=e=>{this.isDebug&&console.log(e.message),this.callbacks.onConnectFailed(e.message);},this.receiveDisconnect=e=>{this.isDebug&&console.log(e),this.callbacks.onDisconnected(e);},this.startHost=(e,s)=>{this.role=n$1.Host,this.getSocket().emit("create host",e,(e=>{this.isDebug&&console.log(e),s(e);}));},this.listHosts=e=>{this.getSocket().emit("list hosts",(s=>{this.isDebug&&console.log(s),e(s);}));},this.startClientAsync=async e=>{this.role=n$1.Client,this.hostId=e,this.sendMessage(e,{type:"join"});},this.sendOfferAsync=async e=>{this.pcMap.has(e)?this.isDebug&&console.log(`Send offer: Not sent as it already exists. to=${e}`):(await this.createPcAsync(e,!0),await this.handlePcAsync("sendOffer",e,(async s=>{const t=await s.createOffer();await s.setLocalDescription(t),this.sendSdp(e,s.localDescription);})));},this.stop=()=>{this.role=n$1.None,this.hostId=null;for(const e of this.pcMap.keys())this.sendMessage(e,{type:"bye"}),this.closePc(e);this.pcMap.clear(),this.clientState.clear(),this.stopSocket();},this.stopSocket=()=>{null!==this.socket&&(this.socket.close(),this.socket=null);},this.createPcAsync=async(e,t)=>{if(this.pcMap.has(e))return;const i=new RTCPeerConnection(this.peerConfig.pcConfig);i.onicecandidate=s=>{s.candidate&&(this.isDebug&&console.log(`Receive ice candidate: state=${s.candidate} id=${e}`),this.sendIce(e,s.candidate));},i.oniceconnectionstatechange=()=>{switch(this.isDebug&&console.log(`Receive ice connection change: state=${i.iceConnectionState} id=${e}`),i.iceConnectionState){case"new":case"checking":case"disconnected":break;case"connected":case"completed":this.role===n$1.Client&&this.clientState.finishIceCandidateGathering();break;case"failed":case"closed":this.closePc(e);}};for(const c of this.pcCreateHooks)$(c)?await c(e,t,i):c(e,t,i);this.pcMap.set(e,i);},this.closePc=e=>{this.handlePc("closePc",e,(s=>{this.pcCloseHooks.forEach((s=>s(e))),s.close(),this.pcMap.delete(e);}));},this.sendSdp=(e,s)=>{this.sendMessage(e,{type:s.type,sdp:s.sdp});},this.sendIce=(e,s)=>{this.handlePc("sendIce",e,(()=>this.sendMessage(e,{type:"candidate",ice:s})));},this.sendMessage=(e,s)=>{s.to=e,this.isDebug&&console.log(`Send message: ${JSON.stringify(s)}`),this.getSocket().emit("message",s);},this.receiveJoinAsync=async e=>{await this.sendOfferAsync(e);for(const s of this.pcMap.keys())e!==s&&this.sendMessage(s,{type:"call me",me:e});},this.receiveOfferAsync=async(e,s)=>{await this.createPcAsync(e,!1),await this.handlePcAsync("receiveOfferAsync",e,(async t=>{await t.setRemoteDescription(s),await this.sendAnswerAsync(e);}));},this.sendAnswerAsync=async e=>{await this.handlePcAsync("sendAnswerAsync",e,(async s=>{const t=await s.createAnswer();await s.setLocalDescription(t),this.sendSdp(e,s.localDescription);}));},this.receiveAnswerAsync=async(e,s)=>{await this.handlePcAsync("receiveAnswerAsync",e,(async t=>{await t.setRemoteDescription(s),this.sendMessage(e,{type:"done"});}));},this.receiveDone=e=>{this.role===n$1.Client&&e===this.hostId&&this.clientState.finishOfferAnswerProcess();},this.receiveCandidate=(e,s)=>{this.handlePc("receiveCandidate",e,(e=>e.addIceCandidate(s)));},this.receiveBye=e=>this.closePc(e),this.handlePc=(e,s,t)=>{const i=this.pcMap.get(s);if(i)try{t(i);}catch(s){this.logError(e,s);}},this.handlePcAsync=async(e,s,t)=>{const i=this.pcMap.get(s);if(i)try{await t(i);}catch(s){this.logError(e,s);}},this.logError=(e,s)=>{this.isDebug&&console.error(`Error has occurred at ${e}`,s);},this.socket=null,this.peerConfig=t,this.isDebug=t.isDebug,this.pcMap=new Map,this.pcCreateHooks=[],this.pcCloseHooks=[],this.clientState=new c$1(i.onStarted),this.callbacks=i,this.role=n$1.None,this.hostId=null;}};let a$1 = class a{constructor(){this.adapt=()=>{u(this.withPrefix("WebGLPeerClient"),(e=>{const s=JSON.parse(e);s.isDebug&&console.log(s),this.peerClient=new o$1(s,{onStarted:()=>m(this.withPrefix("HandleOnStarted")),onConnectFailed:e=>m(this.withPrefix("HandleOnConnectFailed"),e),onDisconnected:e=>m(this.withPrefix("HandleOnDisconnected"),e)});})),u(this.withPrefix("DoStartHostAsync"),(e=>{this.getPeerClient().startHost(e,(e=>m(this.withPrefix("ReceiveStartHostResponse"),JSON.stringify(e))));})),u(this.withPrefix("DoListHostsAsync"),(()=>{this.getPeerClient().listHosts((e=>m(this.withPrefix("ReceiveListHostsResponse"),JSON.stringify(e))));})),u(this.withPrefix("DoStartClientAsync"),(async e=>await this.getPeerClient().startClientAsync(e))),u(this.withPrefix("DoStopAsync"),(()=>this.getPeerClient().stop()));},this.withPrefix=e=>`WebGLPeerClient#${e}`,this.getPeerClient=()=>{if(!this.peerClient)throw new Error("Call the WebGLPeerClient constructor first in Unity.");return this.peerClient};}};
 
-    class IdMapper {
-        strToNumMapping = new Map();
-        numToStrMapping = new Map();
-        add = (id) => {
-            const numId = this.generate();
-            this.strToNumMapping.set(id, numId);
-            this.numToStrMapping.set(numId, id);
-        };
-        generate = () => {
-            const now = new Date();
-            return now.getTime() + this.strToNumMapping.size;
-        };
-        has = (id) => {
-            return Number.isFinite(id) ? this.numToStrMapping.has(id) : this.strToNumMapping.has(id);
-        };
-        get = (id) => {
-            return Number.isFinite(id) ? this.numToStrMapping.get(id) : this.strToNumMapping.get(id);
-        };
-        remove = (id) => {
-            if (!this.has(id)) {
-                return;
-            }
-            const numId = this.strToNumMapping.get(id);
-            this.strToNumMapping.delete(id);
-            this.numToStrMapping.delete(numId);
-        };
-        clear = () => {
-            this.strToNumMapping.clear();
-            this.numToStrMapping.clear();
-        };
-    }
+    class n{constructor(){this.strToNumMapping=new Map,this.numToStrMapping=new Map,this.add=t=>{const e=this.generate();this.strToNumMapping.set(t,e),this.numToStrMapping.set(e,t);},this.generate=()=>(new Date).getTime()+this.strToNumMapping.size,this.has=t=>Number.isFinite(t)?this.numToStrMapping.has(t):this.strToNumMapping.has(t),this.get=t=>Number.isFinite(t)?this.numToStrMapping.get(t):this.strToNumMapping.get(t),this.remove=t=>{if(!this.has(t))return;const e=this.strToNumMapping.get(t);this.strToNumMapping.delete(t),this.numToStrMapping.delete(e);},this.clear=()=>{this.strToNumMapping.clear(),this.numToStrMapping.clear();};}}class o{constructor(e,i,o){this.label="multiplay",this.createPc=(t,e,i)=>{if(!this.dcMap.has(t)&&(this.getPeerClient().role!==n$1.Client||t===this.getPeerClient().hostId))if(e){const e=i.createDataChannel(this.label);this.handleDc(t,e);}else i.addEventListener("datachannel",(e=>this.handleDc(t,e.channel)));},this.handleDc=(t,e)=>{if(e.label!==this.label)return;this.isDebug&&console.log(`New DataChannel: id=${t} label=${e.label}`),this.dcMap.set(t,e),this.idMapper.add(t);const i=this.idMapper.get(t);this.getPeerClient().role===n$1.Host&&e.addEventListener("open",(()=>{this.isDebug&&console.log(`OnOpen: clientId=${i}`),this.callbacks.onConnected(i);})),e.addEventListener("message",(t=>{this.callbacks.onDataReceived(i,t.data);})),e.addEventListener("close",(()=>{this.isDebug&&console.log(`OnClose: clientId=${i}`),this.getPeerClient().role===n$1.Host&&this.disconnectedRemoteClients.delete(i)||this.callbacks.onDisconnected(i);}));},this.closePc=t=>{const e=this.dcMap.get(t);e&&(e.close(),this.dcMap.delete(t),this.idMapper.remove(t));},this.connect=async()=>{if(this.isDebug&&console.log(`Connect: role=${this.getPeerClient().role}`),this.getPeerClient().role===n$1.Client){const e=this.getPeerClient().hostId;if(null===e)return;this.cancel=!1,await d((()=>this.idMapper.has(e)),(()=>this.cancel));const i=this.getHostId("connect",e);this.isHostIdNotFound(i)||this.callbacks.onConnected(i);}},this.hostIdNotFound=0,this.isHostIdNotFound=t=>t===this.hostIdNotFound,this.getHostId=(t,e)=>{let i;return i=null!==e&&this.idMapper.has(e)?this.idMapper.get(e):this.hostIdNotFound,this.isDebug&&console.log(`getHostId: caller=${t} hostId=${e}`),i},this.send=(t,e)=>{const i=t!==this.webRtcConfig.ngoServerClientId?t:this.getHostId("send",this.getPeerClient().hostId),s=this.idMapper.get(i);s?this.dcMap.get(s)?.send(e):this.isDebug&&console.log(`DoSend: id not found. clientId=${t}`);},this.clear=()=>{this.disconnectedRemoteClients.clear(),[...this.dcMap.keys()].forEach((t=>this.closePc(t))),this.dcMap.clear(),this.idMapper.clear(),this.cancel=!0;},this.disconnectRemoteClient=t=>this.disconnectedRemoteClients.add(t),this.webRtcConfig=e,this.isDebug=e.isDebug,this.dcMap=new Map,this.idMapper=new n,this.disconnectedRemoteClients=new Set,this.getPeerClient=i,this.callbacks=o,this.cancel=!1,this.getPeerClient().addPcCreateHook(this.createPc),this.getPeerClient().addPcCloseHook(this.closePc);}}let h$1 = class h{constructor(){this.adapt=t=>{u(this.withPrefix("WebGLWebRtcClient"),(e=>{this.webRtcClient=new o(JSON.parse(e),t,{onConnected:t=>m(this.withPrefix("HandleOnConnected"),t.toString()),onDataReceived:(t,e)=>m(this.withPrefix("HandleOnDataReceived"),t.toString(),e),onDisconnected:t=>m(this.withPrefix("HandleOnDisconnected"),t.toString())});})),u(this.withPrefix("DoConnectAsync"),(()=>this.getWebRtcClient().connect())),u(this.withPrefix("DoSend"),((t,e)=>this.getWebRtcClient().send(Number(t),e))),u(this.withPrefix("DoClear"),(()=>this.getWebRtcClient().clear())),u(this.withPrefix("DisconnectRemoteClient"),(t=>this.getWebRtcClient().disconnectRemoteClient(Number(t))));},this.withPrefix=t=>`WebGLWebRtcClient#${t}`,this.getWebRtcClient=()=>{if(!this.webRtcClient)throw new Error("Call the WebGLWebRtcClient constructor first in Unity.");return this.webRtcClient};}};
 
-    class WebRtcClient {
-        label = "multiplay";
-        isDebug;
-        webRtcConfig;
-        dcMap;
-        idMapper;
-        disconnectedRemoteClients;
-        getPeerClient;
-        callbacks;
-        cancel;
-        constructor(webRtcConfig, getPeerClient, callbacks) {
-            this.webRtcConfig = webRtcConfig;
-            this.isDebug = webRtcConfig.isDebug;
-            this.dcMap = new Map();
-            this.idMapper = new IdMapper();
-            this.disconnectedRemoteClients = new Set();
-            this.getPeerClient = getPeerClient;
-            this.callbacks = callbacks;
-            this.cancel = false;
-            this.getPeerClient().addPcCreateHook(this.createPc);
-            this.getPeerClient().addPcCloseHook(this.closePc);
-        }
-        createPc = (id, isOffer, pc) => {
-            if (this.dcMap.has(id)) {
-                return;
-            }
-            // In NGO, The client connects only to the host.
-            // The host connects to all clients.
-            if (this.getPeerClient().role === n.Client && id !== this.getPeerClient().hostId) {
-                return;
-            }
-            if (isOffer) {
-                const dc = pc.createDataChannel(this.label);
-                this.handleDc(id, dc);
-            }
-            else {
-                pc.addEventListener("datachannel", (event) => this.handleDc(id, event.channel));
-            }
-        };
-        handleDc = (id, dc) => {
-            if (dc.label !== this.label) {
-                return;
-            }
-            if (this.isDebug) {
-                console.log(`New DataChannel: id=${id} label=${dc.label}`);
-            }
-            this.dcMap.set(id, dc);
-            this.idMapper.add(id);
-            const clientId = this.idMapper.get(id);
-            // Host only
-            if (this.getPeerClient().role === n.Host) {
-                dc.addEventListener("open", () => {
-                    if (this.isDebug) {
-                        console.log(`OnOpen: clientId=${clientId}`);
-                    }
-                    this.callbacks.onConnected(clientId);
-                });
-            }
-            // Both Host and Client
-            dc.addEventListener("message", (event) => {
-                this.callbacks.onDataReceived(clientId, event.data);
-            });
-            dc.addEventListener("close", () => {
-                if (this.isDebug) {
-                    console.log(`OnClose: clientId=${clientId}`);
-                }
-                if (this.getPeerClient().role === n.Host && this.disconnectedRemoteClients.delete(clientId)) {
-                    return;
-                }
-                this.callbacks.onDisconnected(clientId);
-            });
-        };
-        closePc = (id) => {
-            const dc = this.dcMap.get(id);
-            if (!dc) {
-                return;
-            }
-            dc.close();
-            this.dcMap.delete(id);
-            this.idMapper.remove(id);
-        };
-        connect = async () => {
-            if (this.isDebug) {
-                console.log(`Connect: role=${this.getPeerClient().role}`);
-            }
-            if (this.getPeerClient().role === n.Client) {
-                const hostId = this.getPeerClient().hostId;
-                if (hostId === null) {
-                    return;
-                }
-                this.cancel = false;
-                await d(() => this.idMapper.has(hostId), () => this.cancel);
-                const clientId = this.getHostId("connect", hostId);
-                if (!this.isHostIdNotFound(clientId)) {
-                    this.callbacks.onConnected(clientId);
-                }
-            }
-        };
-        hostIdNotFound = 0;
-        isHostIdNotFound = (hostId) => hostId === this.hostIdNotFound;
-        getHostId = (caller, hostId) => {
-            let result;
-            if (hostId !== null) {
-                result = this.idMapper.has(hostId) ? this.idMapper.get(hostId) : this.hostIdNotFound;
-            }
-            else {
-                result = this.hostIdNotFound;
-            }
-            if (this.isDebug) {
-                console.log(`getHostId: caller=${caller} hostId=${hostId}`);
-            }
-            return result;
-        };
-        send = (clientId, payload) => {
-            const fixedClientId = clientId !== this.webRtcConfig.ngoServerClientId
-                ? clientId
-                : this.getHostId("send", this.getPeerClient().hostId);
-            const id = this.idMapper.get(fixedClientId);
-            if (!id) {
-                if (this.isDebug) {
-                    console.log(`DoSend: id not found. clientId=${clientId}`);
-                }
-                return;
-            }
-            this.dcMap.get(id)?.send(payload);
-        };
-        clear = () => {
-            this.disconnectedRemoteClients.clear();
-            [...this.dcMap.keys()].forEach((id) => this.closePc(id));
-            this.dcMap.clear();
-            this.idMapper.clear();
-            this.cancel = true;
-        };
-        disconnectRemoteClient = (clientId) => this.disconnectedRemoteClients.add(clientId);
-    }
-
-    class WebRtcAdapter {
-        webRtcClient;
-        adapt = (getPeerClient) => {
-            u(this.withPrefix("WebGLWebRtcClient"), (jsonConfig) => {
-                this.webRtcClient = new WebRtcClient(JSON.parse(jsonConfig), getPeerClient, {
-                    onConnected: (clientId) => m(this.withPrefix("HandleOnConnected"), clientId.toString()),
-                    onDataReceived: (clientId, payload) => m(this.withPrefix("HandleOnDataReceived"), clientId.toString(), payload),
-                    onDisconnected: (clientId) => m(this.withPrefix("HandleOnDisconnected"), clientId.toString()),
-                });
-            });
-            u(this.withPrefix("DoConnectAsync"), () => this.getWebRtcClient().connect());
-            u(this.withPrefix("DoSend"), (clientId, payload) => this.getWebRtcClient().send(Number(clientId), payload));
-            u(this.withPrefix("DoClear"), () => this.getWebRtcClient().clear());
-            u(this.withPrefix("DisconnectRemoteClient"), (clientId) => this.getWebRtcClient().disconnectRemoteClient(Number(clientId)));
-        };
-        withPrefix = (name) => `WebGLWebRtcClient#${name}`;
-        getWebRtcClient = () => {
-            if (!this.webRtcClient) {
-                throw new Error("Call the WebGLWebRtcClient constructor first in Unity.");
-            }
-            return this.webRtcClient;
-        };
-    }
-
-    class TextChatClient {
-        label = "textchat";
-        isDebug;
-        dcMap;
-        getPeerClient;
-        callbacks;
-        constructor(textChatConfig, getPeerClient, callbacks) {
-            this.isDebug = textChatConfig.isDebug;
-            this.dcMap = new Map();
-            this.getPeerClient = getPeerClient;
-            this.callbacks = callbacks;
-            this.getPeerClient().addPcCreateHook(this.createPc);
-            this.getPeerClient().addPcCloseHook(this.closePc);
-        }
-        createPc = (id, isOffer, pc) => {
-            if (this.dcMap.has(id)) {
-                return;
-            }
-            if (isOffer) {
-                const dc = pc.createDataChannel(this.label);
-                this.handleDc(id, dc);
-            }
-            else {
-                pc.addEventListener("datachannel", (event) => this.handleDc(id, event.channel));
-            }
-        };
-        handleDc = (id, dc) => {
-            if (dc.label !== this.label) {
-                return;
-            }
-            if (this.isDebug) {
-                console.log(`New DataChannel: id=${id} label=${dc.label}`);
-            }
-            this.dcMap.set(id, dc);
-            dc.addEventListener("message", (event) => {
-                this.callbacks.onDataReceived(event.data);
-            });
-        };
-        closePc = (id) => {
-            const dc = this.dcMap.get(id);
-            if (!dc) {
-                return;
-            }
-            dc.close();
-            this.dcMap.delete(id);
-        };
-        send = (message) => [...this.dcMap.values()].forEach((dc) => dc.send(message));
-        clear = () => {
-            [...this.dcMap.keys()].forEach(this.closePc);
-            this.dcMap.clear();
-        };
-    }
-
-    class TextChatAdapter {
-        textChatClient;
-        adapt = (getPeerClient) => {
-            u(this.withPrefix("WebGLTextChatClient"), (jsonConfig) => {
-                this.textChatClient = new TextChatClient(JSON.parse(jsonConfig), getPeerClient, {
-                    onDataReceived: (message) => m(this.withPrefix("HandleOnDataReceived"), message),
-                });
-            });
-            u(this.withPrefix("DoSend"), (message) => this.getTextChatClient().send(message));
-            u(this.withPrefix("Clear"), () => this.getTextChatClient().clear());
-        };
-        withPrefix = (name) => `WebGLTextChatClient#${name}`;
-        getTextChatClient = () => {
-            if (!this.textChatClient) {
-                throw new Error("Call the WebGLTextChatClient constructor first in Unity.");
-            }
-            return this.textChatClient;
-        };
-    }
-
-    class VoiceChatClient {
-        isDebug;
-        initialMute;
-        getPeerClient;
-        inStream;
-        inTrack;
-        outAudios;
-        outStreams;
-        constructor(voiceChatConfig, getPeerClient) {
-            this.isDebug = voiceChatConfig.isDebug;
-            this.initialMute = voiceChatConfig.initialMute;
-            this.getPeerClient = getPeerClient;
-            this.inStream = null;
-            this.inTrack = null;
-            this.outAudios = new Map();
-            this.outStreams = new Map();
-            this.getPeerClient().addPcCreateHook(this.createPc);
-            this.getPeerClient().addPcCloseHook(this.closePc);
-        }
-        createPc = async (id, isOffer, pc) => {
-            if (this.outAudios.has(id)) {
-                return;
-            }
-            if (this.isDebug) {
-                console.log(`New MediaStream: id=${id}`);
-            }
-            const client = this;
-            const inStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            client.inStream = inStream;
-            const inTrack = inStream.getAudioTracks()[0];
-            client.inTrack = inTrack;
-            pc.addTrack(inTrack, inStream);
-            inTrack.enabled = !this.initialMute;
-            const outAudio = new Audio();
-            client.outAudios.set(id, outAudio);
-            pc.addEventListener("track", async (event) => {
-                const outStream = event.streams[0];
-                outAudio.srcObject = outStream;
-                outAudio.loop = true;
-                await outAudio.play();
-                client.outStreams.set(id, outStream);
-            });
-        };
-        closePc = (id) => {
-            const outAudio = this.outAudios.get(id);
-            if (outAudio) {
-                outAudio.pause();
-                this.outAudios.delete(id);
-            }
-            const outStream = this.outStreams.get(id);
-            if (outStream) {
-                outStream.getTracks().forEach((track) => track.stop());
-                this.outStreams.delete(id);
-            }
-        };
-        clear = () => {
-            if (this.inStream !== null) {
-                this.inStream.getTracks().forEach((track) => track.stop());
-                this.inStream = null;
-            }
-            this.inTrack = null;
-            [...this.outAudios.keys()].forEach(this.closePc);
-            this.outAudios.clear();
-            this.outStreams.clear();
-        };
-        toggleMute = () => {
-            const track = this.inTrack;
-            if (!track) {
-                return true;
-            }
-            track.enabled = !track.enabled;
-            return !track.enabled;
-        };
-    }
-
-    class VoiceChatAdapter {
-        voiceChatClient;
-        adapt = (getPeerClient) => {
-            u(this.withPrefix("WebGLVoiceChatClient"), (jsonConfig) => {
-                this.voiceChatClient = new VoiceChatClient(JSON.parse(jsonConfig), getPeerClient);
-            });
-            g(this.withPrefix("ToggleMute"), () => this.getVoiceChatClient().toggleMute().toString());
-            u(this.withPrefix("Clear"), () => this.getVoiceChatClient().clear());
-        };
-        withPrefix = (name) => `WebGLVoiceChatClient#${name}`;
-        getVoiceChatClient = () => {
-            if (!this.voiceChatClient) {
-                throw new Error("Call the WebGLVoiceChatClient constructor first in Unity.");
-            }
-            return this.voiceChatClient;
-        };
-    }
+    class s{constructor(t,e,i){this.label="textchat",this.createPc=(t,e,i)=>{if(!this.dcMap.has(t))if(e){const e=i.createDataChannel(this.label);this.handleDc(t,e);}else i.addEventListener("datachannel",(e=>this.handleDc(t,e.channel)));},this.handleDc=(t,e)=>{e.label===this.label&&(this.isDebug&&console.log(`New DataChannel: id=${t} label=${e.label}`),this.dcMap.set(t,e),e.addEventListener("message",(t=>{this.callbacks.onDataReceived(t.data);})));},this.closePc=t=>{const e=this.dcMap.get(t);e&&(e.close(),this.dcMap.delete(t));},this.send=t=>[...this.dcMap.values()].forEach((e=>e.send(t))),this.clear=()=>{[...this.dcMap.keys()].forEach(this.closePc),this.dcMap.clear();},this.isDebug=t.isDebug,this.dcMap=new Map,this.getPeerClient=e,this.callbacks=i,this.getPeerClient().addPcCreateHook(this.createPc),this.getPeerClient().addPcCloseHook(this.closePc);}}class a{constructor(){this.adapt=i=>{u(this.withPrefix("WebGLTextChatClient"),(t=>{this.textChatClient=new s(JSON.parse(t),i,{onDataReceived:t=>m(this.withPrefix("HandleOnDataReceived"),t)});})),u(this.withPrefix("DoSend"),(t=>this.getTextChatClient().send(t))),u(this.withPrefix("Clear"),(()=>this.getTextChatClient().clear()));},this.withPrefix=t=>`WebGLTextChatClient#${t}`,this.getTextChatClient=()=>{if(!this.textChatClient)throw new Error("Call the WebGLTextChatClient constructor first in Unity.");return this.textChatClient};}}class h{constructor(t,e){this.createPc=async(t,e,i)=>{if(this.outAudios.has(t))return;this.isDebug&&console.log(`New MediaStream: id=${t}`);const s=this,a=await navigator.mediaDevices.getUserMedia({audio:!0});s.inStream=a;const h=a.getAudioTracks()[0];s.inTrack=h,i.addTrack(h,a),h.enabled=!this.initialMute;const c=new Audio;s.outAudios.set(t,c),i.addEventListener("track",(async e=>{const i=e.streams[0];c.srcObject=i,c.loop=!0,await c.play(),s.outStreams.set(t,i);}));},this.closePc=t=>{const e=this.outAudios.get(t);e&&(e.pause(),this.outAudios.delete(t));const i=this.outStreams.get(t);i&&(i.getTracks().forEach((t=>t.stop())),this.outStreams.delete(t));},this.clear=()=>{null!==this.inStream&&(this.inStream.getTracks().forEach((t=>t.stop())),this.inStream=null),this.inTrack=null,[...this.outAudios.keys()].forEach(this.closePc),this.outAudios.clear(),this.outStreams.clear();},this.toggleMute=()=>{const t=this.inTrack;return !t||(t.enabled=!t.enabled,!t.enabled)},this.isDebug=t.isDebug,this.initialMute=t.initialMute,this.getPeerClient=e,this.inStream=null,this.inTrack=null,this.outAudios=new Map,this.outStreams=new Map,this.getPeerClient().addPcCreateHook(this.createPc),this.getPeerClient().addPcCloseHook(this.closePc);}}class c{constructor(){this.adapt=e=>{u(this.withPrefix("WebGLVoiceChatClient"),(t=>{this.voiceChatClient=new h(JSON.parse(t),e);})),g(this.withPrefix("ToggleMute"),(()=>this.getVoiceChatClient().toggleMute().toString())),u(this.withPrefix("Clear"),(()=>this.getVoiceChatClient().clear()));},this.withPrefix=t=>`WebGLVoiceChatClient#${t}`,this.getVoiceChatClient=()=>{if(!this.voiceChatClient)throw new Error("Call the WebGLVoiceChatClient constructor first in Unity.");return this.voiceChatClient};}}
 
     let result = true;
     (() => {
@@ -4151,17 +3893,17 @@
     })();
     const isTouchDevice = () => result;
 
-    const peerAdapter = new a();
+    const peerAdapter = new a$1();
     peerAdapter.adapt();
-    const webRtcAdapter = new WebRtcAdapter();
+    const webRtcAdapter = new h$1();
     webRtcAdapter.adapt(peerAdapter.getPeerClient);
-    const textChatAdapter = new TextChatAdapter();
+    const textChatAdapter = new a();
     textChatAdapter.adapt(peerAdapter.getPeerClient);
-    const voiceChatAdapter = new VoiceChatAdapter();
+    const voiceChatAdapter = new c();
     voiceChatAdapter.adapt(peerAdapter.getPeerClient);
     g("IsTouchDevice", () => {
         const result = isTouchDevice();
-        if (o$1) {
+        if (o$2) {
             console.log(`call isTouchDevice: ${result}`);
         }
         return result.toString();

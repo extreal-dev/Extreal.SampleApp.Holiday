@@ -2,18 +2,34 @@
 # yarn lockfile v1
 
 
-"@extreal-dev/extreal.integration.p2p.webrtc@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.p2p.webrtc/-/extreal.integration.p2p.webrtc-0.0.4.tgz#93aae0a18c9b44d8e85a153f4c4764593b0ea6f3"
-  integrity sha512-DYdRYwQdkIEZjRMcrZ/cRJVLfIbG8vu+Ur1yjdsshkmlFUhLhFhbodtcJc1WRof8iM38JthkGQukww3USQg4mA==
+"@extreal-dev/extreal.integration.chat.webrtc@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.chat.webrtc/-/extreal.integration.chat.webrtc-0.0.1.tgz#ab321370be061f86d54fa84efd01aa0d3a7fae0a"
+  integrity sha512-e6OgistUnxkziTck1oxTtXnYrsjLMGEU2n0a/Zs31E4hGybrowlxd9zkf3WEQsr+3a+e6jUogFqVdPbtmwcuvA==
   dependencies:
-    "@extreal-dev/extreal.integration.web.common" "^0.0.3"
+    "@extreal-dev/extreal.integration.p2p.webrtc" "^0.0.5"
+    "@extreal-dev/extreal.integration.web.common" "^0.0.6"
+
+"@extreal-dev/extreal.integration.multiplay.ngo.webrtc@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.multiplay.ngo.webrtc/-/extreal.integration.multiplay.ngo.webrtc-0.0.1.tgz#1a18e234ce76bb3e63029f9309359410a95008d3"
+  integrity sha512-Tu9ATIbYC8nryHTS8ZYI0ZUipn4qnBWsp6ei48gwcJsLfW9fBplE1FytxCJlMS07ySXt3wCXYqmrpPjngDEkcA==
+  dependencies:
+    "@extreal-dev/extreal.integration.p2p.webrtc" "^0.0.5"
+    "@extreal-dev/extreal.integration.web.common" "^0.0.6"
+
+"@extreal-dev/extreal.integration.p2p.webrtc@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.p2p.webrtc/-/extreal.integration.p2p.webrtc-0.0.5.tgz#1a2148ec340ca3ea5ae84b2a5a8f70b45ae1a59b"
+  integrity sha512-jxc2bPF6qc8zPp8N0qoUM0LhVsoMvpiGT7RufOZbbciOIkgYh03pFvvsgiCSD32OEhIgDocqOe67rJ2xLHdFBQ==
+  dependencies:
+    "@extreal-dev/extreal.integration.web.common" "^0.0.6"
     socket.io-client "^4.7.1"
 
-"@extreal-dev/extreal.integration.web.common@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.web.common/-/extreal.integration.web.common-0.0.3.tgz#f131c901642b31c11779e34acd9a63649cfde00f"
-  integrity sha512-rvTiC4TB65OWGYcTw5Dvow4ak7FNwmXDnVlZ5TSmUOCEshRfADzqmCxR9P/asY0RWPHcjRo1moBKQBltOxJASQ==
+"@extreal-dev/extreal.integration.web.common@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.web.common/-/extreal.integration.web.common-0.0.6.tgz#5922a832fbca398f389cda076ded0c6ac8f2b58e"
+  integrity sha512-otazLuPKlNUDcjfYhMSAjE3cLgMvfD+zxrCpm5wSPaMHzjtCxC4p1TUNud4qP1oY+uMhopoEBQqFJtk0TdGVCw==
 
 "@jridgewell/gen-mapping@^0.3.0":
   version "0.3.3"
@@ -139,9 +155,9 @@
   integrity sha512-LG4opVs2ANWZ1TJoKc937iMmNstM/d0ae1vNbnBvBhqCSezgVUOzcLCqbI5elV8Vy6WKwKjaqR+zO9VKirBBCA==
 
 "@types/node@^20.4.2":
-  version "20.4.5"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.4.5.tgz#9dc0a5cb1ccce4f7a731660935ab70b9c00a5d69"
-  integrity sha512-rt40Nk13II9JwQBdeYqmbn2Q6IVTA5uPhvSO+JVqdXw/6/4glI6oR9ezty/A9Hg5u7JH4OmYmuQ+XvjKm0Datg==
+  version "20.4.6"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.4.6.tgz#b66b66c9bb5d49b199f03399e341c9d6036e9e88"
+  integrity sha512-q0RkvNgMweWWIvSMDiXhflGUKMdIxBo2M2tYM/0kEGDueQByFzK4KZAgu5YHGFNxziTlppNpTIBcqHQAxlfHdA==
 
 "@types/resolve@1.20.2":
   version "1.20.2"
@@ -180,21 +196,21 @@ deepmerge@^4.2.2:
   resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-4.3.1.tgz#44b5f2147cd3b00d4b56137685966f26fd25dd4a"
   integrity sha512-3sUqbMEc77XqpdNO7FRyRog+eW3ph+GYCbj+rK+uYyRMuwsVy0rMiVtPn+QJlKFvWP/1PYpapqYn0Me2knFn+A==
 
-engine.io-client@~6.5.1:
-  version "6.5.1"
-  resolved "https://registry.yarnpkg.com/engine.io-client/-/engine.io-client-6.5.1.tgz#1735fb8ae3bae5ae13115e18d2f484daf005dd9c"
-  integrity sha512-hE5wKXH8Ru4L19MbM1GgYV/2Qo54JSMh1rlJbfpa40bEWkCKNo3ol2eOtGmowcr+ysgbI7+SGL+by42Q3pt/Ng==
+engine.io-client@~6.5.2:
+  version "6.5.2"
+  resolved "https://registry.yarnpkg.com/engine.io-client/-/engine.io-client-6.5.2.tgz#8709e22c291d4297ae80318d3c8baeae71f0e002"
+  integrity sha512-CQZqbrpEYnrpGqC07a9dJDz4gePZUgTPMU3NKJPSeQOyw27Tst4Pl3FemKoFGAlHzgZmKjoRmiJvbWfhCXUlIg==
   dependencies:
     "@socket.io/component-emitter" "~3.1.0"
     debug "~4.3.1"
-    engine.io-parser "~5.1.0"
+    engine.io-parser "~5.2.1"
     ws "~8.11.0"
     xmlhttprequest-ssl "~2.0.0"
 
-engine.io-parser@~5.1.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/engine.io-parser/-/engine.io-parser-5.1.0.tgz#d593d6372d7f79212df48f807b8cace1ea1cb1b8"
-  integrity sha512-enySgNiK5tyZFynt3z7iqBR+Bto9EVVVvDFuTT0ioHCGbzirZVGDGiQjZzEp8hWl6hd5FSVytJGuScX1C1C35w==
+engine.io-parser@~5.2.1:
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/engine.io-parser/-/engine.io-parser-5.2.1.tgz#9f213c77512ff1a6cc0c7a86108a7ffceb16fcfb"
+  integrity sha512-9JktcM3u18nU9N2Lz3bWeBgxVgOKpw7yhRaoxQA3FUDZzzw+9WlA6p4G4u0RixNkg14fH7EfEc/RhpurtiROTQ==
 
 estree-walker@^2.0.2:
   version "2.0.2"
@@ -269,9 +285,9 @@ resolve@^1.22.1:
     supports-preserve-symlinks-flag "^1.0.0"
 
 rollup@^3.26.2:
-  version "3.26.3"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-3.26.3.tgz#bbc8818cadd0aebca348dbb3d68d296d220967b8"
-  integrity sha512-7Tin0C8l86TkpcMtXvQu6saWH93nhG3dGQ1/+l5V2TDMceTxO7kDiK6GzbfLWNNxqJXm591PcEZUozZm51ogwQ==
+  version "3.27.0"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-3.27.0.tgz#15bd07e2e1cbfa9255bf6a3f04a432621c2f3550"
+  integrity sha512-aOltLCrYZ0FhJDm7fCqwTjIUEVjWjcydKBV/Zeid6Mn8BWgDCUBBWT5beM5ieForYNo/1ZHuGJdka26kvQ3Gzg==
   optionalDependencies:
     fsevents "~2.3.2"
 
@@ -305,13 +321,13 @@ smob@^1.0.0:
   integrity sha512-MqR3fVulhjWuRNSMydnTlweu38UhQ0HXM4buStD/S3mc/BzX3CuM9OmhyQpmtYCvoYdl5ris6TI0ZqH355Ymqg==
 
 socket.io-client@^4.7.1:
-  version "4.7.1"
-  resolved "https://registry.yarnpkg.com/socket.io-client/-/socket.io-client-4.7.1.tgz#48e5f703abe4fb0402182bcf9c06b7820fb3453b"
-  integrity sha512-Qk3Xj8ekbnzKu3faejo4wk2MzXA029XppiXtTF/PkbTg+fcwaTw1PlDrTrrrU4mKoYC4dvlApOnSeyLCKwek2w==
+  version "4.7.2"
+  resolved "https://registry.yarnpkg.com/socket.io-client/-/socket.io-client-4.7.2.tgz#f2f13f68058bd4e40f94f2a1541f275157ff2c08"
+  integrity sha512-vtA0uD4ibrYD793SOIAwlo8cj6haOeMHrGvwPxJsxH7CeIksqJ+3Zc06RvWTIFgiSqx4A3sOnTXpfAEE2Zyz6w==
   dependencies:
     "@socket.io/component-emitter" "~3.1.0"
     debug "~4.3.2"
-    engine.io-client "~6.5.1"
+    engine.io-client "~6.5.2"
     socket.io-parser "~4.2.4"
 
 socket.io-parser@~4.2.4:

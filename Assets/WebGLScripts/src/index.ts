@@ -1,6 +1,6 @@
 import { PeerAdapter } from "@extreal-dev/extreal.integration.p2p.webrtc";
-import { WebRtcAdapter } from "./NGO";
-import { TextChatAdapter, VoiceChatAdapter } from "./Chat";
+import { WebRtcAdapter } from "@extreal-dev/extreal.integration.multiplay.ngo.webrtc";
+import { TextChatAdapter, VoiceChatAdapter } from "@extreal-dev/extreal.integration.chat.webrtc";
 import { addFunction, isDebug } from "@extreal-dev/extreal.integration.web.common";
 import { isTouchDevice } from "./isTouchDevice";
 
