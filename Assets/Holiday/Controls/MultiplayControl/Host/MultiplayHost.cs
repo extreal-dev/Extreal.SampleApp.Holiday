@@ -5,7 +5,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
-using Extreal.NGO.Dev;
+using Extreal.Integration.Multiplay.NGO;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.P2P;
 using Extreal.SampleApp.Holiday.Controls.Common.Multiplay;
@@ -18,7 +18,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl.Host
 {
     public class MultiplayHost : DisposableBase
     {
-        private readonly NgoHost ngoHost;
+        private readonly NgoServer ngoHost;
         private readonly GameObject playerPrefab;
         private readonly AssetHelper assetHelper;
 
@@ -33,7 +33,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl.Host
 
         public MultiplayHost
         (
-            NgoHost ngoHost,
+            NgoServer ngoHost,
             GameObject playerPrefab,
             AssetHelper assetHelper
         )

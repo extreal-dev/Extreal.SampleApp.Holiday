@@ -22,9 +22,9 @@
         "Extreal.Integration.AssetWorkflow.Addressables",
         "Extreal.Integration.Web.Common",
         "Extreal.Integration.P2P.WebRTC",
-        "Extreal.SampleApp.Holiday.Analyzer",
-        "Extreal.NGO.Dev",
-        "Extreal.Chat.Dev"
+        "Extreal.Integration.Multiplay.NGO.WebRTC",
+        "Extreal.Integration.Chat.WebRTC",
+        "Extreal.SampleApp.Holiday.Analyzer"
     ],
     "includePlatforms": [
         "Android",

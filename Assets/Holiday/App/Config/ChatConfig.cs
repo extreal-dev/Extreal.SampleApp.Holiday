@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Extreal.Chat.Dev;
+using Extreal.Integration.Chat.WebRTC;
 using UnityEngine;
 
 namespace Extreal.SampleApp.Holiday.App.Config

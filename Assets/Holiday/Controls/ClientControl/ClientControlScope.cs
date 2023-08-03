@@ -1,8 +1,7 @@
-﻿using Extreal.Chat.Dev;
+﻿using Extreal.Integration.Chat.WebRTC;
 using Extreal.Integration.Multiplay.NGO;
+using Extreal.Integration.Multiplay.NGO.WebRTC;
 using Extreal.Integration.P2P.WebRTC;
-using Extreal.NGO.Dev;
-using Extreal.NGO.WebRTC.Dev;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Unity.Netcode;
 using UnityEngine;
@@ -29,7 +28,7 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
             var webRtcClient = WebRtcClientProvider.Provide(peerClient);
             var webRtcTransportConnectionSetter = new WebRtcTransportConnectionSetter(webRtcClient);
 
-            var ngoHost = new NgoHost(networkManager);
+            var ngoHost = new NgoServer(networkManager);
             ngoHost.AddConnectionSetter(webRtcTransportConnectionSetter);
             builder.RegisterComponent(ngoHost);
 

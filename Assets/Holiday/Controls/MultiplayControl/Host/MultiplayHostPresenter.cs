@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.StageNavigation;
-using Extreal.NGO.Dev;
+using Extreal.Integration.Multiplay.NGO;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
@@ -15,7 +15,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl.Host
     public class MultiplayHostPresenter : StagePresenterBase
     {
         private readonly AssetHelper assetHelper;
-        private readonly NgoHost ngoHost;
+        private readonly NgoServer ngoHost;
         private readonly GameObject playerPrefab;
 
         private MultiplayHost multiplayHost;
@@ -25,7 +25,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl.Host
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState,
             AssetHelper assetHelper,
-            NgoHost ngoHost,
+            NgoServer ngoHost,
             GameObject playerPrefab
         ) : base(stageNavigator, appState)
         {
