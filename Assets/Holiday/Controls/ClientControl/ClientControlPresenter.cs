@@ -12,18 +12,15 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
     public class ClientControlPresenter : StagePresenterBase
     {
         private readonly AssetHelper assetHelper;
-        private readonly GroupManager groupManager;
         private readonly NgoClient ngoClient;
 
         public ClientControlPresenter(
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState,
             AssetHelper assetHelper,
-            GroupManager groupManager,
             NgoClient ngoClient) : base(stageNavigator, appState)
         {
             this.assetHelper = assetHelper;
-            this.groupManager = groupManager;
             this.ngoClient = ngoClient;
         }
 
@@ -31,27 +28,14 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState,
             CompositeDisposable sceneDisposables)
-        {
-            InitializeGroupManager(appState, sceneDisposables);
-            InitializeNgoClient(stageNavigator, appState, sceneDisposables);
-        }
-
-        private void InitializeGroupManager(
-            AppState appState,
-            CompositeDisposable sceneDisposables)
-            => groupManager.OnGroupsUpdateFailed
-                .Subscribe(_ => appState.Notify(assetHelper.MessageConfig.GroupMatchingUpdateFailureMessage))
-                .AddTo(sceneDisposables);
+            => InitializeNgoClient(stageNavigator, appState, sceneDisposables);
 
         private void InitializeNgoClient(
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState,
             CompositeDisposable sceneDisposables)
         {
-            // FIXME:
-            // Hostの場合、Clientが抜けるとOnConnectionApprovalRejectedが発生します。
             ngoClient.OnConnectionApprovalRejected
-                .Where(_ => appState.IsClient)
                 .Subscribe(_ =>
                 {
                     appState.Notify(assetHelper.MessageConfig.MultiplayConnectionApprovalRejectedMessage);

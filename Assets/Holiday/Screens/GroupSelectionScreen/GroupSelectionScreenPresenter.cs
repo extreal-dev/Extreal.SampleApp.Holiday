@@ -13,6 +13,7 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
 {
     public class GroupSelectionScreenPresenter : StagePresenterBase
     {
+        private readonly PeerClient peerClient;
         private readonly GroupManager groupManager;
         private readonly GroupSelectionScreenView groupSelectionScreenView;
         private readonly AssetHelper assetHelper;
@@ -22,10 +23,12 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState,
             AssetHelper assetHelper,
+            PeerClient peerClient,
             GroupManager groupManager,
             GroupSelectionScreenView groupSelectionScreenView
         ) : base(stageNavigator, appState)
         {
+            this.peerClient = peerClient;
             this.groupManager = groupManager;
             this.groupSelectionScreenView = groupSelectionScreenView;
             this.assetHelper = assetHelper;
@@ -70,6 +73,10 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
                     appState.SetGroupId(
                         groups.Count > 0 ? groupManager.FindByName(groupNames.FirstOrDefault()).Id : null);
                 })
+                .AddTo(sceneDisposables);
+
+            peerClient.OnConnectFailed
+                .Subscribe(_ => appState.Notify(assetHelper.MessageConfig.GroupMatchingUpdateFailureMessage))
                 .AddTo(sceneDisposables);
         }
 

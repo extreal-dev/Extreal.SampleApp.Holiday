@@ -44,7 +44,6 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
             => NetworkManager.Singleton.SpawnManager.SpawnedObjects;
 
         private NetworkThirdPersonController myAvatar;
-        private bool isConnected;
 
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(MultiplayClient));
 
@@ -54,14 +53,9 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
             this.assetHelper = assetHelper;
             this.appState = appState;
 
-            // FIXME:
-            // ホストの場合はクライアントが接続してくる度に OnConnected の通知が送られてきます。
-            // そのため自分自身がサーバーと接続したときだけ処理が走るように isConnected で制御しています。
             this.ngoClient.OnConnected
-                .Where(_ => !isConnected)
                 .Subscribe(_ =>
                 {
-                    isConnected = true;
                     ngoClient.RegisterMessageHandler(MessageName.PlayerSpawned.ToString(), PlayerSpawnedMessageHandler);
                     ngoClient.RegisterMessageHandler(MessageName.ReceivedFromEveryone.ToString(), ReceivedFromEveryoneMessageHandler);
                     SendPlayerSpawn(appState.Avatar.AssetName);
@@ -74,11 +68,6 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
                     isPlayerSpawned.Value = false;
                     ngoClient.UnregisterMessageHandler(MessageName.PlayerSpawned.ToString());
                 })
-                .AddTo(disposables);
-
-            this.ngoClient.OnUnexpectedDisconnected
-                .Where(_ => appState.IsClient)
-                .Subscribe(_ => isConnected = false)
                 .AddTo(disposables);
         }
 

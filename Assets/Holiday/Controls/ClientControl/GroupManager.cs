@@ -15,20 +15,12 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
         [SuppressMessage("Usage", "CC0033")]
         private readonly ReactiveProperty<List<Group>> groups = new ReactiveProperty<List<Group>>(new List<Group>());
 
-        public IObservable<Unit> OnGroupsUpdateFailed => onGroupsUpdateFailed.AddTo(disposables);
-        [SuppressMessage("Usage", "CC0033")]
-        private readonly Subject<Unit> onGroupsUpdateFailed = new Subject<Unit>();
-
         [SuppressMessage("Usage", "CC0033")]
         private readonly CompositeDisposable disposables = new CompositeDisposable();
 
         private readonly PeerClient peerClient;
 
-        public GroupManager(PeerClient peerClient)
-        {
-            this.peerClient = peerClient;
-            peerClient.OnConnectFailed.Subscribe(_ => onGroupsUpdateFailed.OnNext(Unit.Default)).AddTo(disposables);
-        }
+        public GroupManager(PeerClient peerClient) => this.peerClient = peerClient;
 
         protected override void ReleaseManagedResources() => disposables.Dispose();
 
