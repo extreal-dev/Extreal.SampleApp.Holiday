@@ -1,6 +1,6 @@
 # Extreal.SampleApp.Holiday
 
-## How to play
+## How to play with Unity Editor
 
 - Clone the repository.
 - Refer to the following page to import Mixamo model files into your project.
@@ -25,6 +25,19 @@
 - Run the application.
   - Run the following scene: `/Assets/Holiday/App/App`
 - Enjoy playing!
+
+## How to play with WebGL
+
+- First, you need to make it playable on the Unity Editor.
+- Enter the following command in the `Assets/WebScripts` directory.
+   ```bash
+   $ yarn
+   $ yarn dev
+   ```
+- Open `Build Settings` and change the platform to `WebGL`.
+- Select `Holiday` from `Player Settings > Resolution and Presentation > WebGL Template`.
+- See [README](Servers/P2P/README.md) to start a signaling server.
+- Play from `Build And Run`.
 
 ## How to visualize application usage
 
