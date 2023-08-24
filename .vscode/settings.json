@@ -59,7 +59,7 @@
   "omnisharp.enableRoslynAnalyzers": true,
   "deno.enable": true,
   "deno.enablePaths": [
-    "./Assets/Servers/P2P",
+    "./Servers/P2P",
     "./WebGLBuild"
   ],
   "editor.formatOnSave": true,
