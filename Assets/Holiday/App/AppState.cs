@@ -110,7 +110,7 @@ namespace Extreal.SampleApp.Holiday.App
         {
             if (Logger.IsDebug())
             {
-                Logger.LogDebug($"Space, P2P, Multiplay, TextChat, VoiceChat, Space Ready: "
+                Logger.LogDebug($"Space, P2P, Multiplay, TextChat, VoiceChat: "
                                 + $"{spaceReady.Value}, {p2PReady.Value}, {multiplayReady.Value}, "
                                 + $"{textChatReady.Value}, {voiceChatReady.Value}");
             }
