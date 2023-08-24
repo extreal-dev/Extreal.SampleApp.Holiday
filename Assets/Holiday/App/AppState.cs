@@ -38,9 +38,6 @@ namespace Extreal.SampleApp.Holiday.App
         public IObservable<Message> OnMessageSent => onMessageSent.AddTo(disposables);
         private readonly Subject<Message> onMessageSent = new Subject<Message>();
 
-        public IObservable<Message> OnMessageReceived => onMessageReceived.AddTo(disposables);
-        private readonly Subject<Message> onMessageReceived = new Subject<Message>();
-
         public IObservable<string> OnNotificationReceived => onNotificationReceived.AddTo(disposables);
         private readonly Subject<string> onNotificationReceived = new Subject<string>();
 
