@@ -151,7 +151,7 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
 
         private void RegisterCurrentDeviceIsTouchDevice()
         {
-            this.isTouchDevice = true;
+            isTouchDevice = true;
             var uiCanvasControllerInput = FindObjectOfType<UICanvasControllerInput>();
             uiCanvasControllerInput.starterAssetsInputs = Input;
             PlayerInput.neverAutoSwitchControlSchemes = true;
