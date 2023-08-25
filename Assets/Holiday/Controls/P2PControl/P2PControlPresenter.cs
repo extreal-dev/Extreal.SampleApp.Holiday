@@ -50,7 +50,7 @@ namespace Extreal.SampleApp.Holiday.Controls.P2PControl
             handleOnHostNameAlreadyExists = () =>
             {
                 appState.Notify(assetHelper.MessageConfig.P2PHostNameAlreadyExistsMessage);
-                stageNavigator.ReplaceAsync(StageName.GroupSelectionStage);
+                stageNavigator.ReplaceAsync(StageName.GroupSelectionStage).Forget();
             };
         }
 
