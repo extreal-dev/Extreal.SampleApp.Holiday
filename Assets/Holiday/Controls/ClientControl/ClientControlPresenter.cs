@@ -59,7 +59,6 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
                 .AddTo(sceneDisposables);
 
             ngoClient.OnUnexpectedDisconnected
-                .Where(_ => appState.IsClient)
                 .Subscribe(_ =>
                     appState.Notify(assetHelper.MessageConfig.MultiplayUnexpectedDisconnectedMessage))
                 .AddTo(sceneDisposables);
