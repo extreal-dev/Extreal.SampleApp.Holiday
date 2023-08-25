@@ -1,7 +1,7 @@
 ﻿using VContainer;
 using VContainer.Unity;
 
-namespace Extreal.SampleApp.Holiday.Holiday.Controls.P2PControl
+namespace Extreal.SampleApp.Holiday.Controls.P2PControl
 {
     public class P2PControlScope : LifetimeScope
     {

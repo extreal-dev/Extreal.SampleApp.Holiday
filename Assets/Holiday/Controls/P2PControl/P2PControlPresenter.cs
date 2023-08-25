@@ -9,7 +9,7 @@ using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.App.Stages;
 using UniRx;
 
-namespace Extreal.SampleApp.Holiday.Holiday.Controls.P2PControl
+namespace Extreal.SampleApp.Holiday.Controls.P2PControl
 {
     public class P2PControlPresenter : StagePresenterBase
     {
