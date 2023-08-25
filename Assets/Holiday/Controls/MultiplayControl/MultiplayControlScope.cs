@@ -4,7 +4,7 @@ using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
-namespace Extreal.SampleApp.Holiday.Controls.MultiplyClientControl
+namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl
 {
     public class MultiplayControlScope : LifetimeScope
     {
