@@ -71,7 +71,7 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
                     var groupNames = groups.Select(group => group.Name).ToArray();
                     groupSelectionScreenView.UpdateGroupNames(groupNames);
                     appState.SetGroupId(
-                        groups.Count > 0 ? groupManager.FindByName(groupNames.FirstOrDefault()).Id : null);
+                        groups.Count > 0 ? groups.First().Id : null);
                 })
                 .AddTo(sceneDisposables);
 
