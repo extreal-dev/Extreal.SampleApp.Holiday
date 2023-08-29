@@ -49,20 +49,6 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
             textChatClient.OnMessageReceived
                 .Subscribe(textChatControlView.ShowMessage)
                 .AddTo(stageDisposables);
-
-            Observable
-                .CombineLatest(appState.SpaceReady, appState.P2PReady)
-                .Where(readies => readies.All(ready => ready))
-                .Subscribe(_ => appState.SetTextChatReady(true))
-                .AddTo(stageDisposables);
-        }
-
-        protected override void OnStageExiting(
-            StageName stageName,
-            AppState appState)
-        {
-            appState.SetTextChatReady(false);
-            textChatClient.Clear();
         }
     }
 }

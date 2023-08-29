@@ -40,23 +40,9 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
             AppState appState,
             CompositeDisposable stageDisposables)
         {
-            Observable
-                .CombineLatest(appState.SpaceReady, appState.P2PReady)
-                .Where(readies => readies.All(ready => ready))
-                .Subscribe(_ => appState.SetVoiceChatReady(true))
-                .AddTo(stageDisposables);
-
             voiceChatClient.OnMuted
                 .Subscribe(voiceChatScreenView.ToggleMute)
                 .AddTo(stageDisposables);
-        }
-
-        protected override void OnStageExiting(
-            StageName stageName,
-            AppState appState)
-        {
-            appState.SetVoiceChatReady(false);
-            voiceChatClient.Clear();
         }
     }
 }
