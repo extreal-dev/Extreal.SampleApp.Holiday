@@ -38,6 +38,7 @@
 - Select `Holiday` from `Player Settings > Resolution and Presentation > WebGL Template`.
 - See [README](Servers/P2P/README.md) to start a signaling server.
 - Play from `Build And Run`.
+- See [README](WebGLBuild/README.md) to check in the local environment.
 
 ## How to visualize application usage
 
