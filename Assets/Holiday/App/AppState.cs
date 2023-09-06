@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
 using Extreal.Integration.P2P.WebRTC;
@@ -65,14 +66,9 @@ namespace Extreal.SampleApp.Holiday.App
         }
 
         private void MonitorPlayingReadyStatus() =>
-            multiplayReady.Merge(spaceReady, p2PReady)
-                .Where(_ =>
-                {
-                    LogWaitingStatus();
-                    return multiplayReady.Value
-                           && spaceReady.Value
-                           && p2PReady.Value;
-                })
+            Observable.
+                CombineLatest(multiplayReady, spaceReady, p2PReady)
+                .Where(readies => readies.All(ready => ready))
                 .Subscribe(_ =>
                 {
                     if (Logger.IsDebug())
@@ -84,10 +80,9 @@ namespace Extreal.SampleApp.Holiday.App
                 .AddTo(disposables);
 
         private void RestorePlayingReadyStatus() =>
-            multiplayReady.Merge(spaceReady, p2PReady)
-                .Where(_ => !multiplayReady.Value
-                            && !spaceReady.Value
-                            && !p2PReady.Value)
+            Observable
+                .CombineLatest(multiplayReady, spaceReady, p2PReady)
+                .Where(readies => readies.All(ready => !ready))
                 .Subscribe(_ =>
                 {
                     if (Logger.IsDebug())
