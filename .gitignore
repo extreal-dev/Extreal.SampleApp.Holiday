@@ -90,8 +90,8 @@ AvatarMichelle.prefab*
 Servers/AppUsage/.data
 
 # WebGL
-Assets/WebGLScripts/node_modules
-Assets/WebGLScripts/node_modules.meta
+Assets/WebGLScripts~/node_modules
+Assets/WebGLScripts~/node_modules.meta
 WebGLBuild/Holiday/*
 WebGLBuild/Data/*
 Assets/WebGLTemplates/Holiday/index.js
