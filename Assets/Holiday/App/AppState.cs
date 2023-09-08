@@ -36,12 +36,6 @@ namespace Extreal.SampleApp.Holiday.App
         public IReadOnlyReactiveProperty<bool> P2PReady => p2PReady.AddTo(disposables);
         private readonly ReactiveProperty<bool> p2PReady = new ReactiveProperty<bool>(false);
 
-        public IObservable<Message> OnMessageSent => onMessageSent.AddTo(disposables);
-        private readonly Subject<Message> onMessageSent = new Subject<Message>();
-
-        public IObservable<Message> OnMessageReceived => onMessageReceived.AddTo(disposables);
-        private readonly Subject<Message> onMessageReceived = new Subject<Message>();
-
         public IObservable<string> OnNotificationReceived => onNotificationReceived.AddTo(disposables);
         private readonly Subject<string> onNotificationReceived = new Subject<string>();
 
@@ -112,9 +106,6 @@ namespace Extreal.SampleApp.Holiday.App
         public void SetMultiplayReady(bool ready) => multiplayReady.Value = ready;
         public void SetSpaceReady(bool ready) => spaceReady.Value = ready;
         public void SetStage(StageName stageName) => StageState = new StageState(stageName);
-        public void SendMessage(Message message) => onMessageSent.OnNext(message);
-
-        public void ReceivedMessage(Message message) => onMessageReceived.OnNext(message);
 
         public void Notify(string message)
         {

@@ -139,8 +139,6 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
                     + $" message ID: {message.MessageId}" + Environment.NewLine
                     + $" parameter: {message.Content}");
             }
-
-            appState.ReceivedMessage(message);
         }
 
         private async UniTaskVoid HandleOwnerAsync(SpawnedMessage spawnedMessage, NetworkObject spawnedObject)
