@@ -54,7 +54,7 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
                 .AddTo(sceneDisposables);
 
             groupSelectionScreenView.OnUpdateButtonClicked
-                .Subscribe(async _ => await groupManager.UpdateGroupsAsync())
+                .Subscribe(async _ => groupManager.UpdateGroupsAsync().Forget())
                 .AddTo(sceneDisposables);
 
             groupSelectionScreenView.OnGoButtonClicked
