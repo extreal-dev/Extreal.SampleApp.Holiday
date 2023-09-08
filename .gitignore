@@ -63,9 +63,6 @@ crashlytics-build.properties
 # Idea
 .idea
 
-# Addressables connection server config
-SecretVariables.cs*
-
 # CodeCoverage
 CodeCoverage/
 
