@@ -50,5 +50,8 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
                 .Subscribe(textChatControlView.ShowMessage)
                 .AddTo(stageDisposables);
         }
+
+        protected override void OnStageExiting(StageName stageName, AppState appState)
+            => textChatClient.Clear();
     }
 }

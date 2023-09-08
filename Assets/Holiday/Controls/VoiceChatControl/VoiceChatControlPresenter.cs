@@ -44,5 +44,8 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
                 .Subscribe(voiceChatScreenView.ToggleMute)
                 .AddTo(stageDisposables);
         }
+
+        protected override void OnStageExiting(StageName stageName, AppState appState)
+            => voiceChatClient.Clear();
     }
 }
