@@ -21,6 +21,7 @@ namespace Extreal.SampleApp.Holiday.App
 
         public string PlayerName { get; private set; } = "Guest";
         public AvatarConfig.Avatar Avatar { get; private set; }
+        public SpaceConfig.Space Space { get; private set; }
         public bool IsHost => role == PeerRole.Host;
         public bool IsClient => role == PeerRole.Client;
         public string GroupName { get; private set; } // Host only
@@ -46,6 +47,7 @@ namespace Extreal.SampleApp.Holiday.App
         private readonly Subject<RetryStatus> onRetryStatusReceived = new Subject<RetryStatus>();
 
         private readonly BoolReactiveProperty multiplayReady = new BoolReactiveProperty(false);
+        private readonly BoolReactiveProperty landscapeInitialized = new BoolReactiveProperty(false);
 
         private readonly CompositeDisposable disposables = new CompositeDisposable();
 
@@ -105,6 +107,7 @@ namespace Extreal.SampleApp.Holiday.App
         public void SetP2PReady(bool ready) => p2PReady.Value = ready;
         public void SetMultiplayReady(bool ready) => multiplayReady.Value = ready;
         public void SetSpaceReady(bool ready) => spaceReady.Value = ready;
+        public void SetLandscapeInitialized(bool initialized) => landscapeInitialized.Value = initialized;
         public void SetStage(StageName stageName) => StageState = new StageState(stageName);
 
         public void Notify(string message)
