@@ -47,13 +47,6 @@ namespace Extreal.SampleApp.Holiday.App
             }
         }
 
-        public static string ConcatUrl(string baseUrl, string relativePath)
-        {
-            baseUrl = baseUrl.TrimEnd('/');
-            relativePath = relativePath.TrimStart('/');
-            return $"{baseUrl}/{relativePath}";
-        }
-
         public static long ToMb(long bytes) => bytes >> 20;
     }
 }
