@@ -30,6 +30,9 @@ namespace Extreal.SampleApp.Holiday.App.AssetWorkflow
 
         public VoiceChatConfig VoiceChatConfig { get; private set; }
 
+        public SpaceConfig SpaceConfig { get; private set; }
+        public LandscapeConfig LandscapeConfig { get; private set; }
+
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(AssetHelper));
 
         private readonly StageNavigator<StageName, SceneName> stageNavigator;

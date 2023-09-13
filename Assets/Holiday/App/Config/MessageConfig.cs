@@ -32,6 +32,8 @@ namespace Extreal.SampleApp.Holiday.App.Config
         [SerializeField] private string multiplayConnectRetryFailureMessage;
         [SerializeField] private string multiplayUnexpectedDisconnectedMessage;
 
+        [SerializeField] private string landscapeErrorMessage;
+
         public string AvatarSelectionTitle => avatarSelectionTitle;
         public string GroupSelectionTitle => groupSelectionTitle;
 
@@ -56,5 +58,7 @@ namespace Extreal.SampleApp.Holiday.App.Config
         public string MultiplayConnectRetrySuccessMessage => multiplayConnectRetrySuccessMessage;
         public string MultiplayConnectRetryFailureMessage => multiplayConnectRetryFailureMessage;
         public string MultiplayUnexpectedDisconnectedMessage => multiplayUnexpectedDisconnectedMessage;
+
+        public string LandscapeErrorMessage => landscapeErrorMessage;
     }
 }

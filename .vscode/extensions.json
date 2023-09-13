@@ -1,6 +1,7 @@
 {
-  "recommendations": [
-    "denoland.vscode-deno",
-    "rome.rome"
-  ]
+    "recommendations": [
+        "denoland.vscode-deno",
+        "rome.rome",
+        "visualstudiotoolsforunity.vstuc"
+    ]
 }
