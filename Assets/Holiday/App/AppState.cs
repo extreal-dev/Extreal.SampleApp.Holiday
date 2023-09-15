@@ -8,7 +8,6 @@ using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.Controls.RetryStatusControl;
 using Extreal.SampleApp.Holiday.Screens.ConfirmationScreen;
 using UniRx;
-using Message = Extreal.SampleApp.Holiday.App.P2P.Message;
 
 namespace Extreal.SampleApp.Holiday.App
 {
@@ -59,6 +58,7 @@ namespace Extreal.SampleApp.Holiday.App
             RestorePlayingReadyStatus();
         }
 
+        [SuppressMessage("Usage", "CC0033")]
         private void MonitorPlayingReadyStatus() =>
             Observable.
                 CombineLatest(multiplayReady, spaceReady, p2PReady)
@@ -73,28 +73,20 @@ namespace Extreal.SampleApp.Holiday.App
                 })
                 .AddTo(disposables);
 
+        [SuppressMessage("Usage", "CC0033")]
         private void RestorePlayingReadyStatus() =>
-            Observable
-                .CombineLatest(multiplayReady, spaceReady, p2PReady)
-                .Where(readies => readies.All(ready => !ready))
-                .Subscribe(_ =>
-                {
-                    if (Logger.IsDebug())
-                    {
-                        Logger.LogDebug("Stop playing");
-                    }
-                    playingReady.Value = false;
-                })
-                .AddTo(disposables);
-
-        private void LogWaitingStatus()
-        {
-            if (Logger.IsDebug())
-            {
-                Logger.LogDebug($"Space, P2P, Multiplay Ready: "
-                                + $"{spaceReady.Value}, {p2PReady.Value}, {multiplayReady.Value}");
-            }
-        }
+                    Observable
+                        .CombineLatest(multiplayReady, spaceReady, p2PReady)
+                        .Where(readies => readies.All(ready => !ready))
+                        .Subscribe(_ =>
+                        {
+                            if (Logger.IsDebug())
+                            {
+                                Logger.LogDebug("Stop playing");
+                            }
+                            playingReady.Value = false;
+                        })
+                        .AddTo(disposables);
 
         public void SetPlayerName(string playerName) => PlayerName = playerName;
         public void SetAvatar(AvatarConfig.Avatar avatar) => Avatar = avatar;

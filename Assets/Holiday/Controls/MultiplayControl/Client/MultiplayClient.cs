@@ -11,7 +11,6 @@ using Extreal.Integration.Multiplay.NGO;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Avatars;
-using Extreal.SampleApp.Holiday.App.P2P;
 using Extreal.SampleApp.Holiday.Controls.Common.Multiplay;
 using UniRx;
 using Unity.Collections;
@@ -57,7 +56,6 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
                 .Subscribe(_ =>
                 {
                     ngoClient.RegisterMessageHandler(MessageName.PlayerSpawned.ToString(), PlayerSpawnedMessageHandler);
-                    ngoClient.RegisterMessageHandler(MessageName.ReceivedFromEveryone.ToString(), ReceivedFromEveryoneMessageHandler);
                     SendPlayerSpawn(appState.Avatar.AssetName);
                 })
                 .AddTo(disposables);
@@ -99,21 +97,6 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
             ngoClient.SendMessage(MessageName.PlayerSpawn.ToString(), messageStream);
         }
 
-        public void SendToEveryone(Message message)
-        {
-            if (Logger.IsDebug())
-            {
-                Logger.LogDebug(
-                    "Send message spread to server" + Environment.NewLine
-                    + $" message ID: {message.MessageId}" + Environment.NewLine
-                    + $" content: {message.Content}");
-            }
-
-            var messageStream = new FastBufferWriter(FixedString512Bytes.UTF8MaxLengthInBytes, Allocator.Temp);
-            messageStream.WriteValueSafe(message);
-            ngoClient.SendMessage(MessageName.SendToEveryone.ToString(), messageStream);
-        }
-
         private void PlayerSpawnedMessageHandler(ulong senderClientId, FastBufferReader messagePayload)
         {
             messagePayload.ReadValueSafe(out SpawnedMessage spawnedMessage);
@@ -125,19 +108,6 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
             else
             {
                 SetAvatarAsync(spawnedObject, spawnedMessage.AvatarAssetName).Forget();
-            }
-        }
-
-        private void ReceivedFromEveryoneMessageHandler(ulong senderClientId, FastBufferReader messagePayload)
-        {
-            messagePayload.ReadValueSafe(out Message message);
-
-            if (Logger.IsDebug())
-            {
-                Logger.LogDebug(
-                    "Received message spread from server" + Environment.NewLine
-                    + $" message ID: {message.MessageId}" + Environment.NewLine
-                    + $" parameter: {message.Content}");
             }
         }
 

@@ -1,13 +1,10 @@
-using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
 using Extreal.Integration.Multiplay.NGO;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
-using Extreal.SampleApp.Holiday.App.P2P;
 using Extreal.SampleApp.Holiday.Controls.Common.Multiplay;
 using UniRx;
 using Unity.Collections;
@@ -51,11 +48,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl.Host
                 response.Approved = ngoHost.ConnectedClients.Count < assetHelper.NgoHostConfig.MaxCapacity);
 
             ngoHost.OnServerStarted
-                .Subscribe(_ =>
-                {
-                    ngoHost.RegisterMessageHandler(MessageName.PlayerSpawn.ToString(), PlayerSpawnMessageHandler);
-                    ngoHost.RegisterMessageHandler(MessageName.SendToEveryone.ToString(), SendToEveryoneMessageHandler);
-                })
+                .Subscribe(_ => ngoHost.RegisterMessageHandler(MessageName.PlayerSpawn.ToString(), PlayerSpawnMessageHandler))
                 .AddTo(disposables);
 
             ngoHost.OnServerStopping
@@ -96,32 +89,6 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl.Host
             var messageStream = new FastBufferWriter(FixedString64Bytes.UTF8MaxLengthInBytes, Allocator.Temp);
             messageStream.WriteValueSafe(new SpawnedMessage(objectId, avatarAssetName));
             ngoHost.SendMessageToAllClients(MessageName.PlayerSpawned.ToString(), messageStream);
-        }
-
-        private void SendToEveryoneMessageHandler(ulong clientId, FastBufferReader messageStream)
-        {
-            messageStream.ReadValueSafe(out Message message);
-
-            if (Logger.IsDebug())
-            {
-                Logger.LogDebug(
-                    "Received message spread from client" + Environment.NewLine
-                    + $" message ID: {message.MessageId}" + Environment.NewLine
-                    + $" content: {message.Content}");
-            }
-
-            SendEveryonePublicationToAllClientsIgnore(clientId, message);
-        }
-
-        private void SendEveryonePublicationToAllClientsIgnore(ulong ignoreClientId, Message message)
-        {
-            var messageStream = new FastBufferWriter(FixedString512Bytes.UTF8MaxLengthInBytes, Allocator.Temp);
-            messageStream.WriteValueSafe(message);
-            var clientIds = ngoHost.ConnectedClients
-                .Where(clients => clients.Key != ignoreClientId)
-                .Select(clients => clients.Key)
-                .ToList();
-            ngoHost.SendMessageToClients(clientIds, MessageName.ReceivedFromEveryone.ToString(), messageStream);
         }
     }
 }
