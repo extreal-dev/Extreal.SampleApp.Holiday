@@ -155,6 +155,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
                 }
                 else
                 {
+                    // Not covered by testing due to defensive implementation
                     assetDisposable.Dispose();
                     assetDisposable = loadedAvatars[avatarAssetName];
                 }
