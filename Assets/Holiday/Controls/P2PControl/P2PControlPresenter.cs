@@ -89,10 +89,6 @@ namespace Extreal.SampleApp.Holiday.Controls.P2PControl
 
         protected override void OnStageExiting(StageName stageName, AppState appState)
         {
-            if (AppUtils.IsSpace(stageName))
-            {
-                return;
-            }
             peerClient.Stop();
             appState.SetP2PReady(false);
         }
