@@ -1,7 +1,8 @@
 ﻿using Extreal.Core.StageNavigation;
+using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
-using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.App.Config;
+using Extreal.SampleApp.Holiday.App.Stages;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.Screens.TitleScreen
@@ -14,26 +15,21 @@ namespace Extreal.SampleApp.Holiday.Screens.TitleScreen
         public TitleScreenPresenter
         (
             StageNavigator<StageName, SceneName> stageNavigator,
+            AppState appState,
             TitleScreenView titleScreenView,
             AssetHelper assetHelper
-        ) : base(stageNavigator)
+        ) : base(stageNavigator, appState)
         {
             this.titleScreenView = titleScreenView;
             this.assetHelper = assetHelper;
         }
 
         protected override void Initialize(
-            StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables) =>
-            titleScreenView.OnGoButtonClicked
+            StageNavigator<StageName, SceneName> stageNavigator,
+            AppState appState,
+            CompositeDisposable sceneDisposables)
+            => titleScreenView.OnGoButtonClicked
                 .Subscribe(_ => assetHelper.DownloadCommonAssetAsync(StageName.AvatarSelectionStage))
                 .AddTo(sceneDisposables);
-
-        protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
-        {
-        }
-
-        protected override void OnStageExiting(StageName stageName)
-        {
-        }
     }
 }

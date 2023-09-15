@@ -4,6 +4,7 @@
     {
         TitleStage = 100,
         AvatarSelectionStage = 101,
+        GroupSelectionStage = 102,
         VirtualStage = 200,
     }
 }

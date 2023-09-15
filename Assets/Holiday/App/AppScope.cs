@@ -1,21 +1,14 @@
-﻿#if UNITY_IOS
-using Cysharp.Threading.Tasks;
-#endif
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App.AppUsage;
 using Extreal.SampleApp.Holiday.App.AppUsage.Collectors;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
-using Extreal.SampleApp.Holiday.Common.Config;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using VContainer;
 using VContainer.Unity;
-#if UNITY_ANDROID
-using UnityEngine.Android;
-#endif
 
 namespace Extreal.SampleApp.Holiday.App
 {
@@ -36,7 +29,7 @@ namespace Extreal.SampleApp.Holiday.App
             ClearCacheOnDev();
 
             var logLevel = InitializeLogging();
-            InitializeMicrophone();
+            InitializeWebGL();
 
             var logger = LoggingManager.GetLogger(nameof(AppScope));
             if (logger.IsDebug())
@@ -61,6 +54,13 @@ namespace Extreal.SampleApp.Holiday.App
             return logLevel;
         }
 
+        private static void InitializeWebGL()
+        {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            Extreal.Integration.Web.Common.WebGLHelper.Initialize();
+#endif
+        }
+
         private readonly AppStateProvider appStateProvider = new AppStateProvider();
 
         // The provider is added to pass AppState to LogWriter. AppState gets the logger to output logs.
@@ -75,28 +75,13 @@ namespace Extreal.SampleApp.Holiday.App
             internal void Init() => AppState = new AppState();
         }
 
-        private static void InitializeMicrophone()
-        {
-#if UNITY_IOS
-            if (!Application.HasUserAuthorization(UserAuthorization.Microphone))
-            {
-                Application.RequestUserAuthorization(UserAuthorization.Microphone).ToUniTask().Forget();
-            }
-#endif
-
-#if UNITY_ANDROID
-            if (!Permission.HasUserAuthorizedPermission(Permission.Microphone))
-            {
-                Permission.RequestUserPermission(Permission.Microphone);
-            }
-#endif
-        }
-
         [SuppressMessage("Design", "IDE0022"), SuppressMessage("Design", "CC0091")]
         private void ClearCacheOnDev()
         {
-#if !HOLIDAY_PROD
+#if !HOLIDAY_PROD && ENABLE_CACHING
             Caching.ClearCache();
+#endif
+#if !HOLIDAY_PROD
             PlayerPrefs.DeleteKey(appUsageConfig.ClientIdKey);
 #endif
         }

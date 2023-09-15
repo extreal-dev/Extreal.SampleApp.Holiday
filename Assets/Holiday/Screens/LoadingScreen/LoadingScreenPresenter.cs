@@ -1,8 +1,8 @@
 ﻿using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
-using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.App.Config;
+using Extreal.SampleApp.Holiday.App.Stages;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
@@ -11,23 +11,23 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
     {
         private readonly LoadingScreenView loadingScreenView;
         private readonly AssetHelper assetHelper;
-        private readonly AppState appState;
 
         public LoadingScreenPresenter
         (
             StageNavigator<StageName, SceneName> stageNavigator,
+            AppState appState,
             LoadingScreenView loadingScreenView,
-            AssetHelper assetHelper,
-            AppState appState
-        ) : base(stageNavigator)
+            AssetHelper assetHelper
+        ) : base(stageNavigator, appState)
         {
             this.loadingScreenView = loadingScreenView;
             this.assetHelper = assetHelper;
-            this.appState = appState;
         }
 
         protected override void Initialize(
-            StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables)
+            StageNavigator<StageName, SceneName> stageNavigator,
+            AppState appState,
+            CompositeDisposable sceneDisposables)
         {
             appState.PlayingReady
                 .Subscribe(ready => loadingScreenView.SwitchVisibility(!ready))
@@ -46,7 +46,10 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
                 .AddTo(sceneDisposables);
         }
 
-        protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
+        protected override void OnStageEntered(
+            StageName stageName,
+            AppState appState,
+            CompositeDisposable stageDisposables)
         {
             if (!AppUtils.IsSpace(stageName))
             {
@@ -54,7 +57,9 @@ namespace Extreal.SampleApp.Holiday.Screens.LoadingScreen
             }
         }
 
-        protected override void OnStageExiting(StageName stageName)
+        protected override void OnStageExiting(
+            StageName stageName,
+            AppState appState)
         {
             if (AppUtils.IsSpace(stageName))
             {

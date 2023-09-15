@@ -21,14 +21,32 @@ MonoBehaviour:
     m_Address: AvatarArmature
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 5dd0a9896b950494ca1303948d70b252
     m_Address: MessageConfig
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c9621e13487611747aedb2e10c7c4aa5
     m_Address: AvatarConfig
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 60f62b0f283062a4092d1ab18c497448
+    m_Address: MultiplayConfig
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3ce9f7a676c41ca45aeddd2fcf78e28a
+    m_Address: P2PConfig
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: abe9dfda252ecb44bada33ddee4fce9f
+    m_Address: ChatConfig
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 70324997c374a0844916ed3e0c6c273b, type: 2}
   m_SchemaSet:

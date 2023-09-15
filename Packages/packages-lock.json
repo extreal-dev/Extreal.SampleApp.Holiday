@@ -1,12 +1,5 @@
 {
   "dependencies": {
-    "com.cysharp.csprojmodifier": {
-      "version": "https://github.com/Cysharp/CsprojModifier.git?path=src/CsprojModifier/Assets/CsprojModifier",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "1eddf959c5e3d21a6c139ca3c704e2f4ca6e6c03"
-    },
     "com.cysharp.unitask": {
       "version": "2.3.3",
       "depth": 1,
@@ -22,11 +15,11 @@
       "url": "https://package.openupm.com"
     },
     "com.unity.addressables": {
-      "version": "1.21.12",
-      "depth": 0,
+      "version": "1.21.17",
+      "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.scriptablebuildpipeline": "1.21.5",
+        "com.unity.scriptablebuildpipeline": "1.21.9",
         "com.unity.modules.assetbundle": "1.0.0",
         "com.unity.modules.imageconversion": "1.0.0",
         "com.unity.modules.jsonserialize": "1.0.0",
@@ -78,12 +71,19 @@
     },
     "com.unity.collections": {
       "version": "1.2.4",
-      "depth": 3,
+      "depth": 1,
       "source": "registry",
       "dependencies": {
         "com.unity.burst": "1.6.6",
         "com.unity.test-framework": "1.1.31"
       },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.editorcoroutines": {
+      "version": "1.0.0",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.ext.nunit": {
@@ -103,19 +103,12 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.visualstudio": {
-      "version": "2.0.18",
+      "version": "2.0.21",
       "depth": 0,
       "source": "registry",
       "dependencies": {
         "com.unity.test-framework": "1.1.9"
       },
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.ide.vscode": {
-      "version": "1.2.5",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.inputsystem": {
@@ -158,13 +151,6 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-    "com.unity.nuget.newtonsoft-json": {
-      "version": "3.2.1",
-      "depth": 2,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://packages.unity.com"
-    },
     "com.unity.render-pipelines.core": {
       "version": "14.0.8",
       "depth": 1,
@@ -188,8 +174,8 @@
       }
     },
     "com.unity.scriptablebuildpipeline": {
-      "version": "1.21.5",
-      "depth": 1,
+      "version": "1.21.9",
+      "depth": 2,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
@@ -199,28 +185,6 @@
       "depth": 2,
       "source": "registry",
       "dependencies": {},
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.services.core": {
-      "version": "1.9.0",
-      "depth": 2,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.modules.unitywebrequest": "1.0.0",
-        "com.unity.nuget.newtonsoft-json": "3.2.1",
-        "com.unity.modules.androidjni": "1.0.0"
-      },
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.services.vivox": {
-      "version": "15.1.200000-pre.1",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.settings-manager": "2.0.0",
-        "com.unity.services.core": "1.3.1",
-        "com.unity.nuget.newtonsoft-json": "3.0.2"
-      },
       "url": "https://packages.unity.com"
     },
     "com.unity.settings-manager": {
@@ -337,6 +301,17 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.webrtc": {
+      "version": "3.0.0-pre.6",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.modules.jsonserialize": "1.0.0",
+        "com.unity.editorcoroutines": "1.0.0",
+        "com.unity.modules.audio": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.veriorpies.parrelsync": {
       "version": "1.5.2",
       "depth": 0,
@@ -375,33 +350,35 @@
       "hash": "3f819c0fbe2611cb0468069e25d1dfdeb05f1a33"
     },
     "jp.co.tis.extreal.integration.assetworkflow.addressables": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.AssetWorkflow.Addressables.git#1.1.0-next.3",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.AssetWorkflow.Addressables.git#1.2.0-next.2",
       "depth": 0,
       "source": "git",
       "dependencies": {
         "jp.co.tis.extreal.core.logging": "1.2.0-next.1",
         "jp.co.tis.extreal.core.common": "1.1.0-next.4",
-        "com.unity.addressables": "1.21.12",
+        "com.unity.addressables": "1.21.17",
         "com.cysharp.unitask": "2.3.3",
         "com.neuecc.unirx": "7.1.0"
       },
-      "hash": "84aefb1a19cf5784f1c3f63bac14cf878135458e"
+      "hash": "4f5e43501b061688d56f5e877d7e759565309bce"
     },
-    "jp.co.tis.extreal.integration.chat.vivox": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.Chat.Vivox.git#1.2.0-next.1",
+    "jp.co.tis.extreal.integration.chat.webrtc": {
+      "version": "https://github.com/extreal-dev/Extreal.Integration.Chat.WebRTC.git#1.2.0-next.2",
       "depth": 0,
       "source": "git",
       "dependencies": {
+        "com.unity.webrtc": "3.0.0-pre.6",
+        "com.cysharp.unitask": "2.3.3",
+        "com.neuecc.unirx": "7.1.0",
         "jp.co.tis.extreal.core.logging": "1.2.0-next.1",
         "jp.co.tis.extreal.core.common": "1.1.0-next.4",
-        "com.unity.services.vivox": "15.1.200000-pre.1",
-        "com.cysharp.unitask": "2.3.3",
-        "com.neuecc.unirx": "7.1.0"
+        "jp.co.tis.extreal.integration.web.common": "1.0.0-next.1",
+        "jp.co.tis.extreal.integration.p2p.webrtc": "1.0.0-next.3"
       },
-      "hash": "f777e8045894c5862fc978b59e5dcd4df0aa50b6"
+      "hash": "efa594f6ca6c138a8dc42c8ce70f39201cbc96d2"
     },
     "jp.co.tis.extreal.integration.multiplay.ngo": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.Multiplay.NGO.git#1.2.0-next.3",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.Multiplay.NGO.git#1.2.0-next.6",
       "depth": 0,
       "source": "git",
       "dependencies": {
@@ -411,7 +388,29 @@
         "com.cysharp.unitask": "2.3.3",
         "com.neuecc.unirx": "7.1.0"
       },
-      "hash": "378528bdd9a3d3809e74e8072c058b304d557892"
+      "hash": "556cd2482d97252b029d955c98a3abceb4bab6a2"
+    },
+    "jp.co.tis.extreal.integration.p2p.webrtc": {
+      "version": "https://github.com/extreal-dev/Extreal.Integration.P2P.WebRTC.git#1.2.0-next.2",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.collections": "1.2.4",
+        "com.unity.webrtc": "3.0.0-pre.6",
+        "com.cysharp.unitask": "2.3.3",
+        "com.neuecc.unirx": "7.1.0",
+        "jp.co.tis.extreal.core.logging": "1.2.0-next.1",
+        "jp.co.tis.extreal.core.common": "1.1.0-next.4",
+        "jp.co.tis.extreal.integration.web.common": "1.0.0-next.1"
+      },
+      "hash": "eda19c5ee47baafcfdcc5f8363344024070ac8dd"
+    },
+    "jp.co.tis.extreal.integration.web.common": {
+      "version": "https://github.com/extreal-dev/Extreal.Integration.Web.Common.git#1.2.0-next.2",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "f53317b1cd11d2a9a728f8d078ea98133bfc5d09"
     },
     "jp.hadashikick.vcontainer": {
       "version": "1.13.2",
@@ -421,6 +420,43 @@
         "com.unity.nuget.mono-cecil": "1.10.1"
       },
       "url": "https://package.openupm.com"
+    },
+    "org.kumas.nuget-importer": {
+      "version": "https://github.com/kumaS-nu/NuGet-importer-for-Unity.git?path=NuGetImporterForUnity/Packages/NuGet Importer",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "f61cf16941b98b9ffdb9cdfca0326b29cc6517ae"
+    },
+    "org.nuget.microsoft.bcl.asyncinterfaces": {
+      "version": "file:Microsoft.Bcl.AsyncInterfaces",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "org.nuget.socketioclient": {
+      "version": "file:SocketIOClient",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "org.nuget.system.runtime.compilerservices.unsafe": {
+      "version": "file:System.Runtime.CompilerServices.Unsafe",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "org.nuget.system.text.encodings.web": {
+      "version": "file:System.Text.Encodings.Web",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "org.nuget.system.text.json": {
+      "version": "file:System.Text.Json",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",

@@ -8,6 +8,7 @@
         InputControl = 101,
         NotificationControl = 102,
         ClientControl = 107,
+        P2PControl = 110,
         MultiplayControl = 104,
         TextChatControl = 105,
         VoiceChatControl = 106,
@@ -20,5 +21,6 @@
         ConfirmationScreen = 205,
         TitleScreen = 200,
         AvatarSelectionScreen = 201,
+        GroupSelectionScreen = 202,
     }
 }

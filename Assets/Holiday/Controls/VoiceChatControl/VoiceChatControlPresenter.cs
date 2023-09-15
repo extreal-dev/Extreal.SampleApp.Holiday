@@ -1,59 +1,51 @@
-﻿using Extreal.Core.StageNavigation;
-using Extreal.Integration.Chat.Vivox;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using Extreal.Core.StageNavigation;
+using Extreal.Integration.Chat.WebRTC;
 using Extreal.SampleApp.Holiday.App;
-using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.App.Config;
+using Extreal.SampleApp.Holiday.App.Stages;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
 {
     public class VoiceChatControlPresenter : StagePresenterBase
     {
-        private readonly VivoxClient vivoxClient;
+        private readonly VoiceChatClient voiceChatClient;
         private readonly VoiceChatControlView voiceChatScreenView;
-        private readonly AppState appState;
-
-        private VoiceChatChannel voiceChatChannel;
 
         public VoiceChatControlPresenter
         (
             StageNavigator<StageName, SceneName> stageNavigator,
-            VivoxClient vivoxClient,
-            VoiceChatControlView voiceChatScreenView,
-            AppState appState
-        ) : base(stageNavigator)
+            AppState appState,
+            VoiceChatClient voiceChatClient,
+            VoiceChatControlView voiceChatScreenView
+        ) : base(stageNavigator, appState)
         {
-            this.vivoxClient = vivoxClient;
+            this.voiceChatClient = voiceChatClient;
             this.voiceChatScreenView = voiceChatScreenView;
-            this.appState = appState;
         }
 
         protected override void Initialize(
-            StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables) =>
-            voiceChatScreenView.OnMuteButtonClicked
-                .Subscribe(_ => voiceChatChannel.ToggleMuteAsync().Forget())
+            StageNavigator<StageName, SceneName> stageNavigator,
+            AppState appState,
+            CompositeDisposable sceneDisposables)
+            => voiceChatScreenView.OnMuteButtonClicked
+                .Subscribe(_ => voiceChatClient.ToggleMute())
                 .AddTo(sceneDisposables);
 
-        protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
+        [SuppressMessage("CodeCracker", "CC0092")]
+        protected override void OnStageEntered(
+            StageName stageName,
+            AppState appState,
+            CompositeDisposable stageDisposables)
         {
-            voiceChatChannel = new VoiceChatChannel(vivoxClient, $"HolidayVoiceChat{stageName}");
-            stageDisposables.Add(voiceChatChannel);
-
-            voiceChatChannel.OnConnected
-                .Subscribe(appState.SetVoiceChatReady)
-                .AddTo(stageDisposables);
-
-            voiceChatChannel.OnMuted
+            voiceChatClient.OnMuted
                 .Subscribe(voiceChatScreenView.ToggleMute)
                 .AddTo(stageDisposables);
-
-            voiceChatChannel.JoinAsync().Forget();
         }
 
-        protected override void OnStageExiting(StageName stageName)
-        {
-            appState.SetVoiceChatReady(false);
-            voiceChatChannel.Leave();
-        }
+        protected override void OnStageExiting(StageName stageName, AppState appState)
+            => voiceChatClient.Clear();
     }
 }

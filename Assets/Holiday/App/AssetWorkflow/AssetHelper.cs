@@ -6,8 +6,8 @@ using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
 using Extreal.Integration.AssetWorkflow.Addressables;
-using Extreal.Integration.Chat.Vivox;
-using Extreal.Integration.Multiplay.NGO;
+using Extreal.Integration.Chat.WebRTC;
+using Extreal.Integration.P2P.WebRTC;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.Screens.ConfirmationScreen;
 using UniRx;
@@ -23,10 +23,12 @@ namespace Extreal.SampleApp.Holiday.App.AssetWorkflow
         public IObservable<bool> OnConnectRetried => assetProvider.OnConnectRetried;
 
         public MessageConfig MessageConfig { get; private set; }
-        public VivoxAppConfig VivoxAppConfig { get; private set; }
-        public NgoConfig NgoConfig { get; private set; }
-        public IRetryStrategy NgoClientRetryStrategy { get; private set; }
+        public PeerConfig PeerConfig { get; private set; }
+        public HostConfig NgoHostConfig { get; private set; }
+        public ClientConfig NgoClientConfig { get; private set; }
         public AvatarConfig AvatarConfig { get; private set; }
+
+        public VoiceChatConfig VoiceChatConfig { get; private set; }
 
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(AssetHelper));
 
@@ -52,11 +54,13 @@ namespace Extreal.SampleApp.Holiday.App.AssetWorkflow
             {
                 assetDisposables.Clear();
                 MessageConfig = await LoadAndAddToDisposablesAsync<MessageConfig>();
+                PeerConfig = await LoadAndReleaseAsync<P2PConfig, PeerConfig>(asset => asset.PeerConfig);
                 AvatarConfig = await LoadAndAddToDisposablesAsync<AvatarConfig>();
-                VivoxAppConfig = await LoadAndReleaseAsync<ChatConfig, VivoxAppConfig>(asset => asset.VivoxAppConfig);
-                (NgoConfig, NgoClientRetryStrategy) =
-                    await LoadAndReleaseAsync<MultiplayConfig, (NgoConfig, IRetryStrategy)>(
-                        asset => (asset.NgoConfig, asset.RetryStrategy));
+                (NgoHostConfig, NgoClientConfig)
+                    = await LoadAndReleaseAsync<MultiplayConfig, (HostConfig, ClientConfig)>(
+                        asset => (asset.HostConfig, asset.ClientConfig));
+                VoiceChatConfig = await LoadAndReleaseAsync<ChatConfig, VoiceChatConfig>(
+                    asset => asset.VoiceChatConfig);
                 stageNavigator.ReplaceAsync(nextStage).Forget();
             };
             DownloadAsync(nameof(MessageConfig), nextFunc).Forget();

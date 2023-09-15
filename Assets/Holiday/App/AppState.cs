@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
+using Extreal.Integration.P2P.WebRTC;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.Controls.RetryStatusControl;
 using Extreal.SampleApp.Holiday.Screens.ConfirmationScreen;
@@ -14,20 +16,24 @@ namespace Extreal.SampleApp.Holiday.App
     {
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(AppState));
 
-        public IReadOnlyReactiveProperty<string> PlayerName => playerName.AddTo(disposables);
-        private readonly ReactiveProperty<string> playerName = new ReactiveProperty<string>("Guest");
+        private PeerRole role = PeerRole.Host;
 
-        public IReadOnlyReactiveProperty<AvatarConfig.Avatar> Avatar => avatar.AddTo(disposables);
-        private readonly ReactiveProperty<AvatarConfig.Avatar> avatar = new ReactiveProperty<AvatarConfig.Avatar>(null);
-
-        public IReadOnlyReactiveProperty<string> SpaceName => spaceName.AddTo(disposables);
-        private readonly ReactiveProperty<string> spaceName = new ReactiveProperty<string>(null);
+        public string PlayerName { get; private set; } = "Guest";
+        public AvatarConfig.Avatar Avatar { get; private set; }
+        public bool IsHost => role == PeerRole.Host;
+        public bool IsClient => role == PeerRole.Client;
+        public string GroupName { get; private set; } // Host only
+        public string GroupId { get; private set; } // Client only
+        public string SpaceName { get; private set; }
 
         public IReadOnlyReactiveProperty<bool> PlayingReady => playingReady.AddTo(disposables);
         private readonly ReactiveProperty<bool> playingReady = new ReactiveProperty<bool>(false);
 
         public IReadOnlyReactiveProperty<bool> SpaceReady => spaceReady.AddTo(disposables);
         private readonly ReactiveProperty<bool> spaceReady = new ReactiveProperty<bool>(false);
+
+        public IReadOnlyReactiveProperty<bool> P2PReady => p2PReady.AddTo(disposables);
+        private readonly ReactiveProperty<bool> p2PReady = new ReactiveProperty<bool>(false);
 
         public IObservable<string> OnNotificationReceived => onNotificationReceived.AddTo(disposables);
         private readonly Subject<string> onNotificationReceived = new Subject<string>();
@@ -39,8 +45,6 @@ namespace Extreal.SampleApp.Holiday.App
         private readonly Subject<RetryStatus> onRetryStatusReceived = new Subject<RetryStatus>();
 
         private readonly BoolReactiveProperty multiplayReady = new BoolReactiveProperty(false);
-        private readonly BoolReactiveProperty textChatReady = new BoolReactiveProperty(false);
-        private readonly BoolReactiveProperty voiceChatReady = new BoolReactiveProperty(false);
 
         private readonly CompositeDisposable disposables = new CompositeDisposable();
 
@@ -49,20 +53,16 @@ namespace Extreal.SampleApp.Holiday.App
         public AppState()
         {
             multiplayReady.AddTo(disposables);
-            textChatReady.AddTo(disposables);
-            voiceChatReady.AddTo(disposables);
 
             MonitorPlayingReadyStatus();
             RestorePlayingReadyStatus();
         }
 
+        [SuppressMessage("Usage", "CC0033")]
         private void MonitorPlayingReadyStatus() =>
-            multiplayReady.Merge(textChatReady, voiceChatReady, spaceReady)
-                .Where(_ =>
-                {
-                    LogWaitingStatus();
-                    return multiplayReady.Value && textChatReady.Value && voiceChatReady.Value && spaceReady.Value;
-                })
+            Observable.
+                CombineLatest(multiplayReady, spaceReady, p2PReady)
+                .Where(readies => readies.All(ready => ready))
                 .Subscribe(_ =>
                 {
                     if (Logger.IsDebug())
@@ -73,35 +73,29 @@ namespace Extreal.SampleApp.Holiday.App
                 })
                 .AddTo(disposables);
 
+        [SuppressMessage("Usage", "CC0033")]
         private void RestorePlayingReadyStatus() =>
-            multiplayReady.Merge(textChatReady, voiceChatReady, spaceReady)
-                .Where(_ => !multiplayReady.Value && !textChatReady.Value && !voiceChatReady.Value && !spaceReady.Value)
-                .Subscribe(_ =>
-                {
-                    if (Logger.IsDebug())
-                    {
-                        Logger.LogDebug("Stop playing");
-                    }
-                    playingReady.Value = false;
-                })
-                .AddTo(disposables);
+                    Observable
+                        .CombineLatest(multiplayReady, spaceReady, p2PReady)
+                        .Where(readies => readies.All(ready => !ready))
+                        .Subscribe(_ =>
+                        {
+                            if (Logger.IsDebug())
+                            {
+                                Logger.LogDebug("Stop playing");
+                            }
+                            playingReady.Value = false;
+                        })
+                        .AddTo(disposables);
 
-        private void LogWaitingStatus()
-        {
-            if (Logger.IsDebug())
-            {
-                Logger.LogDebug($"Multiplay, TextChat, VoiceChat, Space Ready: " +
-                                $"{multiplayReady.Value}, {textChatReady.Value}, " +
-                                $"{voiceChatReady.Value}, {spaceReady.Value}");
-            }
-        }
-
-        public void SetPlayerName(string playerName) => this.playerName.Value = playerName;
-        public void SetAvatar(AvatarConfig.Avatar avatar) => this.avatar.Value = avatar;
-        public void SetSpaceName(string spaceName) => this.spaceName.Value = spaceName;
+        public void SetPlayerName(string playerName) => PlayerName = playerName;
+        public void SetAvatar(AvatarConfig.Avatar avatar) => Avatar = avatar;
+        public void SetRole(PeerRole role) => this.role = role;
+        public void SetGroupName(string groupName) => GroupName = groupName;
+        public void SetGroupId(string groupId) => GroupId = groupId;
+        public void SetSpaceName(string spaceName) => SpaceName = spaceName;
+        public void SetP2PReady(bool ready) => p2PReady.Value = ready;
         public void SetMultiplayReady(bool ready) => multiplayReady.Value = ready;
-        public void SetTextChatReady(bool ready) => textChatReady.Value = ready;
-        public void SetVoiceChatReady(bool ready) => voiceChatReady.Value = ready;
         public void SetSpaceReady(bool ready) => spaceReady.Value = ready;
         public void SetStage(StageName stageName) => StageState = new StageState(stageName);
 

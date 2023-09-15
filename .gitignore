@@ -63,14 +63,6 @@ crashlytics-build.properties
 # Idea
 .idea
 
-# Application config scriptable object
-ChatConfig.asset*
-MultiplayConfig.asset*
-AppUsageConfig.asset*
-
-# Addressables connection server config
-SecretVariables.cs*
-
 # CodeCoverage
 CodeCoverage/
 
@@ -85,5 +77,18 @@ Assets/Mixamo/*/tex/*
 AvatarAmy.prefab*
 AvatarMichelle.prefab*
 
+# NuGet importer
+/[Aa]ssets/[Pp]ackages.meta
+/[Aa]ssets/[Pp]ackages/
+/[Nn]u[Gg]et/
+/[Pp]ackages/*/
+
 # Docker data
-Servers/VisualizationOfAppUsage/.data
+Servers/AppUsage/.data
+
+# WebGL
+Assets/WebGLScripts~/node_modules
+WebGLBuild/Holiday/*
+WebGLBuild/Data/*
+Assets/WebGLTemplates/Holiday/index.js
+Assets/WebGLTemplates/Holiday/index.js.meta

@@ -32,6 +32,8 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
             mainColor = mutedString.color;
         }
 
+        private void Start() => ToggleMute(assetHelper.VoiceChatConfig.InitialMute);
+
         public void ToggleMute(bool isMute)
         {
             mutedString.text = isMute ? muteOffButtonLabel : muteOnButtonLabel;

@@ -1,65 +1,57 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Extreal.Core.StageNavigation;
-using Extreal.Integration.Chat.Vivox;
+using Extreal.Integration.Chat.WebRTC;
 using Extreal.SampleApp.Holiday.App;
-using Extreal.SampleApp.Holiday.App.Common;
 using Extreal.SampleApp.Holiday.App.Config;
+using Extreal.SampleApp.Holiday.App.Stages;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
 {
     public class TextChatControlPresenter : StagePresenterBase
     {
-        private readonly VivoxClient vivoxClient;
+        private readonly TextChatClient textChatClient;
         private readonly TextChatControlView textChatControlView;
-        private readonly AppState appState;
-
-        private TextChatChannel textChatChannel;
 
         public TextChatControlPresenter
         (
             StageNavigator<StageName, SceneName> stageNavigator,
-            VivoxClient vivoxClient,
-            TextChatControlView textChatControlView,
-            AppState appState
-        ) : base(stageNavigator)
+            AppState appState,
+            TextChatClient textChatClient,
+            TextChatControlView textChatControlView
+        ) : base(stageNavigator, appState)
         {
-            this.vivoxClient = vivoxClient;
+            this.textChatClient = textChatClient;
             this.textChatControlView = textChatControlView;
-            this.appState = appState;
         }
 
         [SuppressMessage("CodeCracker", "CC0020")]
-        protected override void Initialize(StageNavigator<StageName, SceneName> stageNavigator, CompositeDisposable sceneDisposables) =>
-            textChatControlView.OnSendButtonClicked
+        protected override void Initialize(
+            StageNavigator<StageName, SceneName> stageNavigator,
+            AppState appState,
+            CompositeDisposable sceneDisposables)
+            => textChatControlView.OnSendButtonClicked
                 .Where(message => !string.IsNullOrWhiteSpace(message))
                 .Subscribe(message =>
                 {
-                    textChatChannel.SendMessage(message);
+                    textChatClient.Send(message);
                     appState.StageState.CountUpTextChats();
                 })
                 .AddTo(sceneDisposables);
 
-        protected override void OnStageEntered(StageName stageName, CompositeDisposable stageDisposables)
+        [SuppressMessage("CodeCracker", "CC0092")]
+        protected override void OnStageEntered(
+            StageName stageName,
+            AppState appState,
+            CompositeDisposable stageDisposables)
         {
-            textChatChannel = new TextChatChannel(vivoxClient, $"HolidayTextChat{stageName}");
-            stageDisposables.Add(textChatChannel);
-
-            textChatChannel.OnConnected
-                .Subscribe(appState.SetTextChatReady)
-                .AddTo(stageDisposables);
-
-            textChatChannel.OnMessageReceived
+            textChatClient.OnMessageReceived
                 .Subscribe(textChatControlView.ShowMessage)
                 .AddTo(stageDisposables);
-
-            textChatChannel.JoinAsync().Forget();
         }
 
-        protected override void OnStageExiting(StageName stageName)
-        {
-            appState.SetTextChatReady(false);
-            textChatChannel.Leave();
-        }
+        protected override void OnStageExiting(StageName stageName, AppState appState)
+            => textChatClient.Clear();
     }
 }
