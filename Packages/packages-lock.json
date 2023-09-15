@@ -1,12 +1,5 @@
 {
   "dependencies": {
-    "com.cysharp.csprojmodifier": {
-      "version": "https://github.com/Cysharp/CsprojModifier.git?path=src/CsprojModifier/Assets/CsprojModifier",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "1eddf959c5e3d21a6c139ca3c704e2f4ca6e6c03"
-    },
     "com.cysharp.unitask": {
       "version": "2.3.3",
       "depth": 1,
@@ -22,11 +15,11 @@
       "url": "https://package.openupm.com"
     },
     "com.unity.addressables": {
-      "version": "1.21.12",
-      "depth": 0,
+      "version": "1.21.17",
+      "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.scriptablebuildpipeline": "1.21.5",
+        "com.unity.scriptablebuildpipeline": "1.21.9",
         "com.unity.modules.assetbundle": "1.0.0",
         "com.unity.modules.imageconversion": "1.0.0",
         "com.unity.modules.jsonserialize": "1.0.0",
@@ -110,19 +103,12 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.visualstudio": {
-      "version": "2.0.18",
+      "version": "2.0.21",
       "depth": 0,
       "source": "registry",
       "dependencies": {
         "com.unity.test-framework": "1.1.9"
       },
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.ide.vscode": {
-      "version": "1.2.5",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.inputsystem": {
@@ -188,8 +174,8 @@
       }
     },
     "com.unity.scriptablebuildpipeline": {
-      "version": "1.21.5",
-      "depth": 1,
+      "version": "1.21.9",
+      "depth": 2,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
@@ -364,20 +350,20 @@
       "hash": "3f819c0fbe2611cb0468069e25d1dfdeb05f1a33"
     },
     "jp.co.tis.extreal.integration.assetworkflow.addressables": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.AssetWorkflow.Addressables.git#1.1.0-next.5",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.AssetWorkflow.Addressables.git#1.2.0-next.2",
       "depth": 0,
       "source": "git",
       "dependencies": {
         "jp.co.tis.extreal.core.logging": "1.2.0-next.1",
         "jp.co.tis.extreal.core.common": "1.1.0-next.4",
-        "com.unity.addressables": "1.21.12",
+        "com.unity.addressables": "1.21.17",
         "com.cysharp.unitask": "2.3.3",
         "com.neuecc.unirx": "7.1.0"
       },
-      "hash": "3de1f06c14529f329f4a92a7439e25fd7376afad"
+      "hash": "4f5e43501b061688d56f5e877d7e759565309bce"
     },
     "jp.co.tis.extreal.integration.chat.webrtc": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.Chat.WebRTC.git#1.0.0-next.1",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.Chat.WebRTC.git#1.2.0-next.2",
       "depth": 0,
       "source": "git",
       "dependencies": {
@@ -389,10 +375,10 @@
         "jp.co.tis.extreal.integration.web.common": "1.0.0-next.1",
         "jp.co.tis.extreal.integration.p2p.webrtc": "1.0.0-next.3"
       },
-      "hash": "8a29b3b7a3dd1195f68d3c2538b4d59164eb6add"
+      "hash": "efa594f6ca6c138a8dc42c8ce70f39201cbc96d2"
     },
     "jp.co.tis.extreal.integration.multiplay.ngo": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.Multiplay.NGO.git#1.2.0-next.4",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.Multiplay.NGO.git#1.2.0-next.6",
       "depth": 0,
       "source": "git",
       "dependencies": {
@@ -402,10 +388,10 @@
         "com.cysharp.unitask": "2.3.3",
         "com.neuecc.unirx": "7.1.0"
       },
-      "hash": "063bd3c7b3e43288620dba0de8c116efa286cc28"
+      "hash": "556cd2482d97252b029d955c98a3abceb4bab6a2"
     },
     "jp.co.tis.extreal.integration.p2p.webrtc": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.P2P.WebRTC.git#1.0.0-next.4",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.P2P.WebRTC.git#1.2.0-next.2",
       "depth": 0,
       "source": "git",
       "dependencies": {
@@ -417,14 +403,14 @@
         "jp.co.tis.extreal.core.common": "1.1.0-next.4",
         "jp.co.tis.extreal.integration.web.common": "1.0.0-next.1"
       },
-      "hash": "7b15e7d7a647de57319aa6434c2195807fe2d4a2"
+      "hash": "eda19c5ee47baafcfdcc5f8363344024070ac8dd"
     },
     "jp.co.tis.extreal.integration.web.common": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.Web.Common.git#1.0.0-next.2",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.Web.Common.git#1.2.0-next.2",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "82ca98b17e65924eeaf3c628fdf919e09e3af48b"
+      "hash": "f53317b1cd11d2a9a728f8d078ea98133bfc5d09"
     },
     "jp.hadashikick.vcontainer": {
       "version": "1.13.2",
