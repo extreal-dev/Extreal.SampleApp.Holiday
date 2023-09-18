@@ -63,7 +63,6 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
                 {
                     appState.SetSpaceName("PanoramicImageSpace");
                     appState.SetSpace(assetHelper.SpaceConfig.Spaces.Find(space => space.SpaceName == "PanoramicImageSpace"));
-
                     stageNavigator.ReplaceAsync(StageName.PanoramicImageStage).Forget();
                 }
                 )

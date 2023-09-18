@@ -11,20 +11,18 @@ namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl.LandscapePlayers.I
         public LandscapeType LandscapeType => LandscapeType.Image;
 
         private readonly AppState appState;
-        private readonly AssetHelper assetHelper;
         private readonly Renderer panoramicRenderer;
 
-        public LandscapeImagePlayerFactory(AppState appState, AssetHelper assetHelper, Renderer panoramicRenderer)
+        private readonly LandscapeConfig landscapeConfig;
+        public LandscapeImagePlayerFactory(AppState appState, Renderer panoramicRenderer, AssetHelper assetHelper)
         {
             this.appState = appState;
-            this.assetHelper = assetHelper;
             this.panoramicRenderer = panoramicRenderer;
+            landscapeConfig = assetHelper.LandscapeConfig;
         }
-
-        public async UniTask<ILandscapePlayer> CreateAsync(StageName stageName)
-        {
-            var disposableAsset = await assetHelper.LoadAssetAsync<Sprite>(stageName.ToString());
-            return new LandscapeImagePlayer(appState, panoramicRenderer, disposableAsset);
-        }
+#pragma warning disable CS1998
+        public async UniTask<ILandscapePlayer> CreateAsync(StageName stageName) =>
+            new LandscapeImagePlayer(appState, landscapeConfig, panoramicRenderer, $"{stageName}.jpg");
+#pragma warning restore CS1998
     }
 }

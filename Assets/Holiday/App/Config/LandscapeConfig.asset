@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de095b56920b482458a182e93f616a58, type: 3}
   m_Name: LandscapeConfig
   m_EditorClassIdentifier: 
-  baseUrl: http://localhost:3333/Video/
+  baseUrl: http://localhost:3333/Panorama/
