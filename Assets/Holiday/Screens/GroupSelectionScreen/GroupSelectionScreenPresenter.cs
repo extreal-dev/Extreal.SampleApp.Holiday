@@ -8,6 +8,7 @@ using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.App.Stages;
 using Extreal.SampleApp.Holiday.Controls.ClientControl;
 using UniRx;
+using UnityEngine;
 
 namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
 {
@@ -58,7 +59,14 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
                 .AddTo(sceneDisposables);
 
             groupSelectionScreenView.OnGoButtonClicked
-                .Subscribe(_ => assetHelper.DownloadSpaceAsset("VirtualSpace", StageName.VirtualStage))
+                .Subscribe(_ =>
+                {
+                    appState.SetSpaceName("PanoramicImageSpace");
+                    appState.SetSpace(assetHelper.SpaceConfig.Spaces.Find(space => space.SpaceName == "PanoramicImageSpace"));
+
+                    stageNavigator.ReplaceAsync(StageName.PanoramicImageStage).Forget();
+                }
+                )
                 .AddTo(sceneDisposables);
 
             groupSelectionScreenView.OnBackButtonClicked

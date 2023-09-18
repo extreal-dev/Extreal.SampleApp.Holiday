@@ -6,6 +6,9 @@ serve(
         if (path.startsWith("/assets")) {
             return serveDir(req, { fsRoot: "./Data/" });
         }
+        if (path.startsWith("/Video")) {
+            return serveDir(req, { fsRoot: "./VideoData/" });
+        }
         return serveDir(req, { fsRoot: "./Holiday/" });
     },
     { port: 3333 },

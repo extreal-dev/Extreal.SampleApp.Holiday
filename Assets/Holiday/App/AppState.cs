@@ -20,6 +20,7 @@ namespace Extreal.SampleApp.Holiday.App
 
         public string PlayerName { get; private set; } = "Guest";
         public AvatarConfig.Avatar Avatar { get; private set; }
+        public SpaceConfig.Space Space { get; private set; }
         public bool IsHost => role == PeerRole.Host;
         public bool IsClient => role == PeerRole.Client;
         public string GroupName { get; private set; } // Host only
@@ -45,6 +46,7 @@ namespace Extreal.SampleApp.Holiday.App
         private readonly Subject<RetryStatus> onRetryStatusReceived = new Subject<RetryStatus>();
 
         private readonly BoolReactiveProperty multiplayReady = new BoolReactiveProperty(false);
+        private readonly BoolReactiveProperty landscapeInitialized = new BoolReactiveProperty(false);
 
         private readonly CompositeDisposable disposables = new CompositeDisposable();
 
@@ -53,6 +55,7 @@ namespace Extreal.SampleApp.Holiday.App
         public AppState()
         {
             multiplayReady.AddTo(disposables);
+            landscapeInitialized.AddTo(disposables);
 
             MonitorPlayingReadyStatus();
             RestorePlayingReadyStatus();
@@ -61,7 +64,7 @@ namespace Extreal.SampleApp.Holiday.App
         [SuppressMessage("Usage", "CC0033")]
         private void MonitorPlayingReadyStatus() =>
             Observable.
-                CombineLatest(multiplayReady, spaceReady, p2PReady)
+                CombineLatest(multiplayReady, spaceReady, p2PReady, landscapeInitialized)
                 .Where(readies => readies.All(ready => ready))
                 .Subscribe(_ =>
                 {
@@ -76,7 +79,7 @@ namespace Extreal.SampleApp.Holiday.App
         [SuppressMessage("Usage", "CC0033")]
         private void RestorePlayingReadyStatus() =>
                     Observable
-                        .CombineLatest(multiplayReady, spaceReady, p2PReady)
+                        .CombineLatest(multiplayReady, spaceReady, p2PReady, landscapeInitialized)
                         .Where(readies => readies.All(ready => !ready))
                         .Subscribe(_ =>
                         {
@@ -90,6 +93,7 @@ namespace Extreal.SampleApp.Holiday.App
 
         public void SetPlayerName(string playerName) => PlayerName = playerName;
         public void SetAvatar(AvatarConfig.Avatar avatar) => Avatar = avatar;
+        public void SetSpace(SpaceConfig.Space space) => Space = space;
         public void SetRole(PeerRole role) => this.role = role;
         public void SetGroupName(string groupName) => GroupName = groupName;
         public void SetGroupId(string groupId) => GroupId = groupId;
@@ -97,6 +101,7 @@ namespace Extreal.SampleApp.Holiday.App
         public void SetP2PReady(bool ready) => p2PReady.Value = ready;
         public void SetMultiplayReady(bool ready) => multiplayReady.Value = ready;
         public void SetSpaceReady(bool ready) => spaceReady.Value = ready;
+        public void SetLandscapeInitialized(bool initialized) => landscapeInitialized.Value = initialized;
         public void SetStage(StageName stageName) => StageState = new StageState(stageName);
 
         public void Notify(string message)

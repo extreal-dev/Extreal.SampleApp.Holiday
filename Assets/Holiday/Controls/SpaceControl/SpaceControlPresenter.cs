@@ -50,9 +50,9 @@ namespace Extreal.SampleApp.Holiday.Controls.SpaceControl
             {
                 Logger.LogDebug($"Load space: {spaceName}");
             }
-            var scene = await assetHelper.LoadSceneAsync(spaceName);
-            stageDisposables.Add(scene);
-            appState.SetSpaceReady(true);
+            // var scene = await assetHelper.LoadSceneAsync(spaceName);
+            // stageDisposables.Add(scene);
+            // appState.SetSpaceReady(true);
         }
 
         protected override void OnStageExiting(
