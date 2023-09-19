@@ -1,42 +1,42 @@
-# 性能テスト(P2Pマルチプレイ)
-## 性能テスト用のビルド
-### 1. 性能テストシーンを追加
-性能テストでは全プレイヤーを自動操作させる。  
-`Build Settings` - `Scenes in Build`で`Holiday.PerformanceTest/PerformanceTest`をチェックを入れ、先頭に配置する。
-### 2. ホスト・クライアントの選択
-P2Pマルチプレイにおいてホストとクライアントで自動操作の内容が異なる。  
-どちらで動作させるかは、`Assets/Holiday.PerformanceTest/PerformanceTestConfig`の`Role`で選択する
-### 3. シグナリングサーバのアドレス設定
-P2P接続のシグナリングサーバのアドレスをP2PConfig > Signaling Urlに設定する。
-### 4. 利用状況可視化サーバのアドレス設定
-利用状況可視化サーバのアドレスをAppUsageConfig > Push Urlに設定する。
+## Performance test (P2P multiplayer)
+## Build for performance test
+### 1. add a performance test scene
+Have all players operate automatically in the performance test.  
+In `Build Settings` - `Scenes in Build`, check `Holiday.PerformanceTest/PerformanceTest` and place it at the top.
+### 2. Host/Client Selection
+In P2P multiplayer, the automatic operation differs between the host and the client.  
+To select which one to operate, use `Role` in `Assets/Holiday.PerformanceTest/PerformanceTestConfig`.
+### 3. setting the signaling server address
+Set the address of the signaling server for P2P connections in P2PConfig > Signaling Url.
+### Set the address of the usage visualization server.
+Set the address of the usage visualization server in AppUsageConfig > Push Url.
 ### 5. Build Settings
 - WebGL
-    - `Development Build`はオフ
-    - `Code Optimization`は`Shorter Build Time`
-- Windows Dedicated Server(負荷クライアント)
-    - `Development Build`は**オン**。オンにしないと起動時エラーが発生する。
+    - Development Build` is off.
+    - `Code Optimization` is set to `Shorter Build Time
+- Windows Dedicated Server (load client)
+    - Development Build is **ON**. If not turned on, a startup error will occur.
 
-## 性能テスト実施
-#### 負荷クライアント開始バッチファイルのパラメータ修正
-負荷条件に応じて[負荷クライアント開始バッチファイル](Assets/Holiday.PerformanceTest/.Client/StartPerformanceTest.bat)を修正する。
-|パラメータ|機能|
+## Perform performance test
+#### Modify parameters in the load client start batch file
+Modify the [Load Client Start Batch File](Assets/Holiday.PerformanceTest/.Client/StartPerformanceTest.bat) according to the load conditions.
+|parameters|functions|
 |--|--|
-|exec_time|性能テストの起動時間。この時間を経過（＝完了）するとS3に結果をアップロードする|
-|client_num|起動する負荷クライアントの数|
-### 負荷クライアントのセットアップ
-1. 負荷クライアントPCに[.Client](Assets/Holiday.PerformanceTest/.Client/)フォルダをコピーする。
-1. `.Client`フォルダに性能テスト用にビルドしたWindowsアプリのファイル郡を直下に全てコピーする。
-    - ※Holiday.exeとStartPerformanceTest.batが同じ階層に存在する状態
-### 負荷クライアントの実行
-1. `StartPerformanceTest.bat`を実行する
-### 性能テスト結果整理
-#### 負荷クライアントのメモリ使用量結果計測ツール
-- [DataAnalysis.py](/Assets/Holiday.PerformanceTest/.Server/DataAnalysis.py)
-    - メモリ使用量は起動したクライアントごとのファイルに出力される。複数クライアント全体でメモリのmaxとminを集計するツール。
-    - 使い方
-        - 例）下記フォルダの状態の時。
-      ```
+|exec_time| the startup time of the performance test. Upload results to S3 when this time elapses (=completes)||
+||client_num|Number of load clients to start|
+### Load Client Setup
+1. copy the [.Client](Assets/Holiday.PerformanceTest/.Client/) folder to the load client PC.
+1. Copy all the Windows application file counts that you have built for the performance test directly under the `.Client` folder.
+    - Holiday.exe and StartPerformanceTest.bat exist in the same hierarchy.
+### Running the Load Client
+1. run `StartPerformanceTest.bat`.
+### Organize performance test results
+#### Load client memory usage result measurement tool
+- DataAnalysis.py](/Assets/Holiday.PerformanceTest/.Server/DataAnalysis.py)
+    - Memory usage is output to a file for each client launched. A tool that aggregates memory max and min across multiple clients.
+    - Usage
+        - Example: In the following folder state.
+      ````
       ├─ DataAnalysis.py
       └──1
          ├─ dev-stress-server1_CpuUtilization.csv
@@ -44,11 +44,8 @@ P2P接続のシグナリングサーバのアドレスをP2PConfig > Signaling U
          ├─ dev-stress-server1_MemoryUtilization0.txt
          ├─ dev-stress-server1_MemoryUtilization1.txt
          └─ dev-stress-server1_MemoryUtilization2.txt
-      ```
-        - 実行コマンドは下記
+      ````
+        - The execution command is as follows
           ```
           $ python DataAnalysis.py 1/dev-stress-server1_MemoryUtilization\*
           ```
-
-
-
