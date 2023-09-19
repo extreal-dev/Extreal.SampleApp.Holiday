@@ -16,11 +16,7 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: a648e7384a280974c99a53160dc78d48
-  m_SerializeEntries:
-  - m_GUID: 6998577d024e09143869c5c8099418a0
-    m_Address: VirtualSpace
-    m_ReadOnly: 0
-    m_SerializedLabels: []
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 70324997c374a0844916ed3e0c6c273b, type: 2}
   m_SchemaSet:
