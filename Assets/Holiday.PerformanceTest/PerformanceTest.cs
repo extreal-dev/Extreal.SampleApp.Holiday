@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -21,6 +22,9 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
 {
     public class PerformanceTest : MonoBehaviour
     {
+        [SerializeField]
+        private PerformanceTestConfig performanceTestConfig;
+
         private bool isDestroyed;
         [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeCracker", "CC0033")]
         private readonly CancellationTokenSource cts = new CancellationTokenSource();
@@ -91,6 +95,41 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
             await UniTask.Yield();
             var avatarDropdown = FindObjectOfType<TMP_Dropdown>();
             avatarDropdown.value = UnityEngine.Random.Range(0, avatarDropdown.options.Count);
+
+
+            // Enters Group Selection Screen
+            FindObjectOfType<Button>().onClick.Invoke();
+            await UniTask.WaitUntil(() =>
+                FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.GroupSelectionScreen.ToString());
+
+            await UniTask.Yield();
+            var roleDropdown = FindObjectOfType<TMP_Dropdown>();
+            roleDropdown.value = (int)performanceTestConfig.Role;
+
+            if (performanceTestConfig.Role == Role.Client)
+            {
+                await UniTask.Yield();
+                var groupDropdown = FindObjectsOfType<TMP_Dropdown>()
+                    .First(dropdown => dropdown.name == "GroupDropdown");
+                PushButtonNamed("UpdateButton");
+                await UniTask.WaitUntil(() => groupDropdown.options.Count > 0);
+                await UniTask.Yield();
+                PushButtonNamed("GoButton");
+            }
+            else
+            {
+                await UniTask.Yield();
+                var groupName = FindObjectOfType<TMP_InputField>();
+                var now = DateTime.Now;
+                groupName.text = "TEST" + now.ToString("HHmmss");
+                groupName.onEndEdit.Invoke(groupName.text);
+                await UniTask.Yield();
+                PushButtonNamed("GoButton");
+            }
+
+            PushButtonNamed("OkButton");
+            await UniTask.WaitUntil(() =>
+                FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.TextChatControl.ToString());
 
             // Enters VirtualSpace
             FindObjectOfType<Button>().onClick.Invoke();
@@ -230,6 +269,33 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
         private bool InRange(Vector3 position)
             => movableRangeMin.x <= position.x && position.x <= movableRangeMax.x
                 && movableRangeMin.z <= position.z && position.z <= movableRangeMax.z;
+
+        private static bool ExistButtonOfSceneNamed(params SceneName[] sceneNames)
+        {
+            foreach (var button in FindObjectsOfType<Button>())
+            {
+                foreach (var sceneName in sceneNames)
+                {
+                    if (button.gameObject.scene.name == sceneName.ToString())
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private static void PushButtonNamed(string name)
+        {
+            foreach (var button in FindObjectsOfType<Button>())
+            {
+                if (button.name == name)
+                {
+                    button.onClick.Invoke();
+                    return;
+                }
+            }
+        }
 
         private async UniTaskVoid OutputMemoryStatisticsAsync()
         {
