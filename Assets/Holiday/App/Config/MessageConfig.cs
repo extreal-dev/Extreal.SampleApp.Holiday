@@ -17,6 +17,8 @@ namespace Extreal.SampleApp.Holiday.App.Config
         [SerializeField] private string groupSelectionUpdateButtonLabel;
         [SerializeField] private string groupSelectionGoButtonLabel;
         [SerializeField] private string groupSelectionBackButtonLabel;
+
+        [SerializeField] private string spaceGoButtonLabel;
         [SerializeField] private string spaceBackButtonLabel;
 
         [SerializeField] private string groupMatchingUpdateFailureMessage;
@@ -43,6 +45,8 @@ namespace Extreal.SampleApp.Holiday.App.Config
         public string GroupSelectionUpdateButtonLabel => groupSelectionUpdateButtonLabel;
         public string GroupSelectionGoButtonLabel => groupSelectionGoButtonLabel;
         public string GroupSelectionBackButtonLabel => groupSelectionBackButtonLabel;
+
+        public string SpaceGoButtonLabel => spaceGoButtonLabel;
         public string SpaceBackButtonLabel => spaceBackButtonLabel;
 
         public string GroupMatchingUpdateFailureMessage => groupMatchingUpdateFailureMessage;

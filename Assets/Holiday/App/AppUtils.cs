@@ -13,7 +13,7 @@ namespace Extreal.SampleApp.Holiday.App
             => false;
 #endif
 
-        private static readonly HashSet<StageName> SpaceStages = new HashSet<StageName> { StageName.VirtualStage };
+        private static readonly HashSet<StageName> SpaceStages = new HashSet<StageName> { StageName.VirtualStage, StageName.PanoramicVideoStage, StageName.PanoramicImageStage };
 
         public static bool IsSpace(StageName stageName) => SpaceStages.Contains(stageName);
 

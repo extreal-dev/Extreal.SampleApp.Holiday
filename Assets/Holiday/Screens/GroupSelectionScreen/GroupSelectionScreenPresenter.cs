@@ -59,13 +59,7 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
                 .AddTo(sceneDisposables);
 
             groupSelectionScreenView.OnGoButtonClicked
-                .Subscribe(_ =>
-                {
-                    appState.SetSpaceName("PanoramicImageSpace");
-                    appState.SetSpace(assetHelper.SpaceConfig.Spaces.Find(space => space.SpaceName == "PanoramicImageSpace"));
-                    stageNavigator.ReplaceAsync(StageName.PanoramicImageStage).Forget();
-                }
-                )
+                .Subscribe(_ => assetHelper.DownloadSpaceAsset("VirtualSpace", StageName.VirtualStage))
                 .AddTo(sceneDisposables);
 
             groupSelectionScreenView.OnBackButtonClicked
@@ -94,6 +88,7 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
             CompositeDisposable stageDisposables
         )
         {
+            appState.SetSpace(assetHelper.SpaceConfig.Spaces.First());
             groupSelectionScreenView.Initialize();
             groupSelectionScreenView.SetInitialValues(appState.IsHost ? PeerRole.Host : PeerRole.Client);
         }

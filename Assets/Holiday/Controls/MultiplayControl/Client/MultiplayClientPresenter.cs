@@ -58,6 +58,10 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
 
         protected override void OnStageExiting(StageName stageName, AppState appState)
         {
+            if (AppUtils.IsSpace(stageName))
+            {
+                return;
+            }
             appState.SetMultiplayReady(false);
             multiplayClient.LeaveAsync().Forget();
         }

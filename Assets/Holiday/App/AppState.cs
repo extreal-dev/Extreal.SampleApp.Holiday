@@ -91,6 +91,15 @@ namespace Extreal.SampleApp.Holiday.App
                         })
                         .AddTo(disposables);
 
+        private void LogWaitingStatus()
+        {
+            if (Logger.IsDebug())
+            {
+                Logger.LogDebug($"Multiplay, Space Ready, Landscape Initialized: " +
+                                $"{multiplayReady.Value}, {spaceReady.Value}, {landscapeInitialized.Value}");
+            }
+        }
+
         public void SetPlayerName(string playerName) => PlayerName = playerName;
         public void SetAvatar(AvatarConfig.Avatar avatar) => Avatar = avatar;
         public void SetSpace(SpaceConfig.Space space) => Space = space;

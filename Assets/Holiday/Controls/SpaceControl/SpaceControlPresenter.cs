@@ -1,4 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System.Linq;
+using Cysharp.Threading.Tasks;
 using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App;
@@ -34,16 +35,64 @@ namespace Extreal.SampleApp.Holiday.Controls.SpaceControl
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState,
             CompositeDisposable sceneDisposables)
-            => spaceControlView.OnBackButtonClicked
+        {
+            spaceControlView.OnSpaceChanged
+                .Subscribe(spaceName =>
+                {
+                    var space = assetHelper.SpaceConfig.Spaces.First(space => space.SpaceName == spaceName);
+                    appState.SetSpace(space);
+                })
+                .AddTo(sceneDisposables);
+
+            spaceControlView.OnGoButtonClicked
+                .Subscribe(_ =>
+                {
+                    SwitchSpace(appState, stageNavigator);
+                })
+                .AddTo(sceneDisposables);
+
+            spaceControlView.OnBackButtonClicked
                 .Subscribe(_ => stageNavigator.ReplaceAsync(StageName.GroupSelectionStage).Forget())
                 .AddTo(sceneDisposables);
+
+            InitializeView(appState);
+        }
+
 
         protected override void OnStageEntered(
             StageName stageName,
             AppState appState,
             CompositeDisposable stageDisposables)
-            => LoadSpaceAsync(appState.SpaceName, stageDisposables).Forget();
+        {
+        }
 
+        private void InitializeView(AppState appState)
+        {
+            var spaces = assetHelper.SpaceConfig.Spaces;
+            var spaceNames = spaces.Select(space => space.SpaceName).ToList();
+
+            spaceControlView.Initialize(spaceNames);
+            spaceControlView.SetSpaceDropdownValue(appState.Space.SpaceName);
+        }
+
+        private void SwitchSpace(AppState appState, StageNavigator<StageName, SceneName> stageNavigator)
+        {
+            var landscapeType = appState.Space.LandscapeType;
+            if (landscapeType == LandscapeType.None)
+            {
+                assetHelper.DownloadSpaceAsset(appState.SpaceName, appState.Space.StageName);
+            }
+            if (landscapeType == LandscapeType.Image)
+            {
+                appState.SetSpace(assetHelper.SpaceConfig.Spaces.Find(space => space.SpaceName == "PanoramicImageSpace"));
+                stageNavigator.ReplaceAsync(StageName.PanoramicImageStage).Forget();
+            }
+            if (landscapeType == LandscapeType.Video)
+            {
+                appState.SetSpace(assetHelper.SpaceConfig.Spaces.Find(space => space.SpaceName == "PanoramicVideoSpace"));
+                stageNavigator.ReplaceAsync(StageName.PanoramicVideoStage).Forget();
+            }
+        }
         private async UniTaskVoid LoadSpaceAsync(string spaceName, CompositeDisposable stageDisposables)
         {
             if (Logger.IsDebug())
@@ -58,6 +107,6 @@ namespace Extreal.SampleApp.Holiday.Controls.SpaceControl
         protected override void OnStageExiting(
             StageName stageName,
             AppState appState)
-            => appState.SetSpaceReady(false);
+        { }
     }
 }

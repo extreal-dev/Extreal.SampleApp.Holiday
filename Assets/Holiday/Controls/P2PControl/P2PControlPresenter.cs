@@ -55,7 +55,16 @@ namespace Extreal.SampleApp.Holiday.Controls.P2PControl
         }
 
         protected override void OnStageEntered(
-            StageName stageName, AppState appState, CompositeDisposable stageDisposables) => StartPeerClientAsync(appState).Forget();
+            StageName stageName, AppState appState, CompositeDisposable stageDisposables)
+        {
+            {
+                if (peerClient.IsRunning)
+                {
+                    return;
+                }
+                StartPeerClientAsync(appState).Forget();
+            }
+        }
 
         private async UniTask StartPeerClientAsync(AppState appState)
         {
@@ -82,6 +91,10 @@ namespace Extreal.SampleApp.Holiday.Controls.P2PControl
 
         protected override void OnStageExiting(StageName stageName, AppState appState)
         {
+            if (AppUtils.IsSpace(stageName))
+            {
+                return;
+            }
             peerClient.Stop();
             appState.SetP2PReady(false);
         }
