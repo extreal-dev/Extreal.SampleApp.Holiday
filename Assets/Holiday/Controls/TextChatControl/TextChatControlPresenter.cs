@@ -44,14 +44,17 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
         protected override void OnStageEntered(
             StageName stageName,
             AppState appState,
-            CompositeDisposable stageDisposables)
-        {
-            textChatClient.OnMessageReceived
+            CompositeDisposable stageDisposables) => textChatClient.OnMessageReceived
                 .Subscribe(textChatControlView.ShowMessage)
                 .AddTo(stageDisposables);
-        }
 
         protected override void OnStageExiting(StageName stageName, AppState appState)
-            => textChatClient.Clear();
+        {
+            if (AppUtils.IsSpace(stageName))
+            {
+                return;
+            }
+            textChatClient.Clear();
+        }
     }
 }

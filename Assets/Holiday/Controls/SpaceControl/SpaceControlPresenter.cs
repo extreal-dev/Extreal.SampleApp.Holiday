@@ -5,6 +5,7 @@ using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
+using Extreal.SampleApp.Holiday.App.P2P;
 using Extreal.SampleApp.Holiday.App.Stages;
 using UniRx;
 
@@ -48,11 +49,20 @@ namespace Extreal.SampleApp.Holiday.Controls.SpaceControl
                 .Subscribe(_ =>
                 {
                     SwitchSpace(appState, stageNavigator);
+                    appState.SendMessage(
+                        new Message(
+                            MessageId.SpaceTransition,
+                            new SpaceTransitionMessageContent(appState.Space.StageName)));
                 })
                 .AddTo(sceneDisposables);
 
             spaceControlView.OnBackButtonClicked
                 .Subscribe(_ => stageNavigator.ReplaceAsync(StageName.GroupSelectionStage).Forget())
+                .AddTo(sceneDisposables);
+
+            appState.OnMessageReceived
+                .Where(message => message.MessageId == MessageId.SpaceTransition)
+                .Subscribe(message => ChangeSpace(message, appState, stageNavigator))
                 .AddTo(sceneDisposables);
 
             InitializeView(appState);
@@ -66,13 +76,10 @@ namespace Extreal.SampleApp.Holiday.Controls.SpaceControl
         {
         }
 
-        private void InitializeView(AppState appState)
+        protected override void OnStageExiting(
+            StageName stageName,
+            AppState appState)
         {
-            var spaces = assetHelper.SpaceConfig.Spaces;
-            var spaceNames = spaces.Select(space => space.SpaceName).ToList();
-
-            spaceControlView.Initialize(spaceNames);
-            spaceControlView.SetSpaceDropdownValue(appState.Space.SpaceName);
         }
 
         private void SwitchSpace(AppState appState, StageNavigator<StageName, SceneName> stageNavigator)
@@ -94,9 +101,23 @@ namespace Extreal.SampleApp.Holiday.Controls.SpaceControl
             }
         }
 
-        protected override void OnStageExiting(
-            StageName stageName,
-            AppState appState)
-        { }
+        private void InitializeView(AppState appState)
+        {
+            var spaces = assetHelper.SpaceConfig.Spaces;
+            var spaceNames = spaces.Select(space => space.SpaceName).ToList();
+
+            spaceControlView.Initialize(spaceNames);
+            spaceControlView.SetSpaceDropdownValue(appState.Space.SpaceName);
+        }
+
+        private void ChangeSpace(Message message, AppState appState, StageNavigator<StageName, SceneName> stageNavigator)
+        {
+            var content = (SpaceTransitionMessageContent)message.Content;
+            var nextSpace = assetHelper.SpaceConfig.Spaces.First(space => space.StageName == content.StageName);
+            appState.SetSpace(nextSpace);
+
+            spaceControlView.SetSpaceDropdownValue(appState.Space.SpaceName);
+            SwitchSpace(appState, stageNavigator);
+        }
     }
 }
