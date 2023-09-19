@@ -26,7 +26,7 @@
 
         // Spaces
         VirtualSpace = 300,
-        CableRailwaySpace = 301,
-        ForestSpace = 302,
+        PanoramicVideoSpace = 301,
+        PanoramicImageSpace = 302,
     }
 }

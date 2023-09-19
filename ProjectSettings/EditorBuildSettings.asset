@@ -63,10 +63,10 @@ EditorBuildSettings:
     path: Assets/Holiday/Spaces/VirtualSpace/VirtualSpace.unity
     guid: 6998577d024e09143869c5c8099418a0
   - enabled: 1
-    path: Assets/Holiday/Spaces/CableRailwaySpace/CableRailwaySpace.unity
+    path: Assets/Holiday/Spaces/PanoramicVideoSpace/PanoramicVideoSpace.unity
     guid: 44c72888b85ffac49b021647f8c97636
   - enabled: 1
-    path: Assets/Holiday/Spaces/ForestSpace/ForestSpace.unity
+    path: Assets/Holiday/Spaces/PanoramicImageSpace/PanoramicImageSpace.unity
     guid: b155e54f3e6acde488fe2e87d11ad813
   - enabled: 1
     path: Assets/Holiday/Controls/LandscapeControl/LandscapeControl.unity
