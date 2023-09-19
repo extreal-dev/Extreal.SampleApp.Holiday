@@ -1,16 +1,20 @@
+using System.Diagnostics;
 using Cysharp.Threading.Tasks;
+using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.App.Stages;
 using Extreal.SampleApp.Holiday.Controls.LandscapeControl.LandscapePlayers;
+using log4net.Repository.Hierarchy;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl
 {
     public class LandscapeControlPresenter : StagePresenterBase
     {
+        private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(LandscapeControlPresenter));
         private readonly LandscapePlayerManager landscapePlayerManager;
         private readonly LandscapeControlView landscapeControlView;
         private readonly AssetHelper assetHelper;
@@ -72,6 +76,10 @@ namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl
             landscapePlayer.AddTo(stageDisposables);
 
             landscapePlayer.Play();
+            if (Logger.IsDebug())
+            {
+                Logger.LogDebug($"landscapePlayer: {landscapePlayer.GetType().Name}");
+            }
         }
     }
 }

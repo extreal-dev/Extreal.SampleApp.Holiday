@@ -63,9 +63,12 @@ namespace Extreal.SampleApp.Holiday.App
 
         [SuppressMessage("Usage", "CC0033")]
         private void MonitorPlayingReadyStatus() =>
-            Observable.
-                CombineLatest(multiplayReady, spaceReady, p2PReady, landscapeInitialized)
-                .Where(readies => readies.All(ready => ready))
+            multiplayReady.Merge(spaceReady, p2PReady, landscapeInitialized)
+                .Where(_ =>
+                {
+                    LogWaitingStatus();
+                    return multiplayReady.Value && spaceReady.Value && p2PReady.Value && landscapeInitialized.Value;
+                })
                 .Subscribe(_ =>
                 {
                     if (Logger.IsDebug())
@@ -78,25 +81,28 @@ namespace Extreal.SampleApp.Holiday.App
 
         [SuppressMessage("Usage", "CC0033")]
         private void RestorePlayingReadyStatus() =>
-                    Observable
-                        .CombineLatest(multiplayReady, spaceReady, p2PReady, landscapeInitialized)
-                        .Where(readies => readies.All(ready => !ready))
-                        .Subscribe(_ =>
-                        {
-                            if (Logger.IsDebug())
-                            {
-                                Logger.LogDebug("Stop playing");
-                            }
-                            playingReady.Value = false;
-                        })
-                        .AddTo(disposables);
+            spaceReady.Merge(landscapeInitialized)
+                .Where(_ =>
+                {
+                    LogWaitingStatus();
+                    return !spaceReady.Value && !landscapeInitialized.Value;
+                })
+                .Subscribe(_ =>
+                {
+                    if (Logger.IsDebug())
+                    {
+                        Logger.LogDebug("Stop playing");
+                    }
+                    playingReady.Value = false;
+                })
+                .AddTo(disposables);
 
         private void LogWaitingStatus()
         {
             if (Logger.IsDebug())
             {
-                Logger.LogDebug($"Multiplay, Space Ready, Landscape Initialized: " +
-                                $"{multiplayReady.Value}, {spaceReady.Value}, {landscapeInitialized.Value}");
+                Logger.LogDebug($"Multiplay, Space Ready, P2P Ready, Landscape Initialized: " +
+                                $"{multiplayReady.Value}, {spaceReady.Value},  {p2PReady.Value}, {landscapeInitialized.Value}");
             }
         }
 
