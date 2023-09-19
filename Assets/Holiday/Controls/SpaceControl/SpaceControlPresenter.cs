@@ -93,16 +93,6 @@ namespace Extreal.SampleApp.Holiday.Controls.SpaceControl
                 stageNavigator.ReplaceAsync(StageName.PanoramicVideoStage).Forget();
             }
         }
-        private async UniTaskVoid LoadSpaceAsync(string spaceName, CompositeDisposable stageDisposables)
-        {
-            if (Logger.IsDebug())
-            {
-                Logger.LogDebug($"Load space: {spaceName}");
-            }
-            // var scene = await assetHelper.LoadSceneAsync(spaceName);
-            // stageDisposables.Add(scene);
-            // appState.SetSpaceReady(true);
-        }
 
         protected override void OnStageExiting(
             StageName stageName,

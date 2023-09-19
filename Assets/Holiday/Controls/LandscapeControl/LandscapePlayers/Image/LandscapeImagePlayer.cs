@@ -4,6 +4,7 @@ using Extreal.SampleApp.Holiday.App;
 using UnityEngine;
 using UnityEngine.Networking;
 using Extreal.Core.Logging;
+using UniRx;
 
 namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl.LandscapePlayers.Image
 {
@@ -14,6 +15,8 @@ namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl.LandscapePlayers.I
         private readonly LandscapeConfig landscapeConfig;
         private readonly string imageUrl;
         private readonly Renderer panoramicRenderer;
+
+        private bool isPlaying;
 
         public LandscapeImagePlayer(AppState appState, LandscapeConfig landscapeConfig, Renderer panoramicRenderer, string imageFileName)
         {
@@ -26,30 +29,28 @@ namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl.LandscapePlayers.I
 
         public override void Play() => DoPlayAsync().Forget();
 
-        private static async UniTask<Texture> GetTextureAsync(string imageUrl)
+        private async UniTask<Texture> GetTextureAsync(string imageUrl)
         {
             using var request = UnityWebRequestTexture.GetTexture(imageUrl);
-            await request.SendWebRequest();
+            _ = await request.SendWebRequest();
 
             if (request.result != UnityWebRequest.Result.Success)
             {
-                if (Logger.IsDebug())
-                {
-                    Logger.LogDebug($"error occured! {request.error}");
-                }
+                ErrorReceived(request.error);
             }
-            else
-            {
-                if (Logger.IsDebug())
-                {
-                    Logger.LogDebug($"sueccess!");
-                }
-                return ((DownloadHandlerTexture)request.downloadHandler).texture;
-            }
-            return null;
+
+            return ((DownloadHandlerTexture)request.downloadHandler).texture;
         }
-        // TODO:
-        // private void ErrorReceived( string message)
+
+        private void ErrorReceived(string message)
+        {
+            OnErrorOccurredSubject.OnNext(Unit.Default);
+            Logger.LogError(message);
+            if (!isPlaying)
+            {
+                appState.SetLandscapeInitialized(true);
+            }
+        }
 
         private async UniTask DoPlayAsync()
         {

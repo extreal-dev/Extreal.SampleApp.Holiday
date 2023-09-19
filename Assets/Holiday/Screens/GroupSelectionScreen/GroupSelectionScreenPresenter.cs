@@ -8,7 +8,6 @@ using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.App.Stages;
 using Extreal.SampleApp.Holiday.Controls.ClientControl;
 using UniRx;
-using UnityEngine;
 
 namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
 {

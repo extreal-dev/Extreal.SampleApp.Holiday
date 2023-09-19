@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
@@ -7,7 +6,6 @@ using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.App.Stages;
 using Extreal.SampleApp.Holiday.Controls.LandscapeControl.LandscapePlayers;
-using log4net.Repository.Hierarchy;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl
