@@ -12,17 +12,15 @@
         "UniTask",
         "VContainer",
         "Unity.Netcode.Runtime",
-        "VivoxUnity",
         "StarterAsserts",
         "Extreal.Core.Logging",
         "Extreal.Core.StageNavigation",
         "Extreal.Core.Common",
-        "Extreal.Integration.Multiplay.NGO",
-        "Extreal.Integration.Chat.Vivox",
-        "Extreal.SampleApp.Holiday.MultiplayCommon"
+        "Extreal.Integration.Multiplay.NGO"
     ],
     "includePlatforms": [
         "Editor",
+        "WebGL",
         "WindowsStandalone64"
     ],
     "excludePlatforms": [],
