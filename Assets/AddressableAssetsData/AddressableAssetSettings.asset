@@ -47,7 +47,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d57c51f5be2793546828e3518fc49122, type: 2}
   - {fileID: 11400000, guid: a103d381e22f4cb4c8c8ee4801c6ebaf, type: 2}
   - {fileID: 11400000, guid: 7b2ad813c3811e540927b4ed7827ba8b, type: 2}
-  - {fileID: 11400000, guid: cee8e500b43a07a48939c09dda9a342e, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
@@ -161,7 +160,7 @@ MonoBehaviour:
           m_Key: HostingServiceUploadSpeed
         - m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
           m_ClassName: System.String
-          m_Data: WebGLBuild/Data/assets/0.1.0/StandaloneWindows64
+          m_Data: WebGLBuild/Data/assets/0.1.0/WebGL
           m_Key: ContentRoot
         - m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
           m_ClassName: System.Boolean
