@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using Extreal.Core.Logging;
 using UniRx;
+using System;
 
 namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl.LandscapePlayers.Image
 {
@@ -15,8 +16,6 @@ namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl.LandscapePlayers.I
         private readonly LandscapeConfig landscapeConfig;
         private readonly string imageUrl;
         private readonly Renderer panoramicRenderer;
-
-        private bool isPlaying;
 
         public LandscapeImagePlayer(AppState appState, LandscapeConfig landscapeConfig, Renderer panoramicRenderer, string imageFileName)
         {
@@ -31,25 +30,29 @@ namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl.LandscapePlayers.I
 
         private async UniTask<Texture> GetTextureAsync(string imageUrl)
         {
-            using var request = UnityWebRequestTexture.GetTexture(imageUrl);
-            _ = await request.SendWebRequest();
-
-            if (request.result != UnityWebRequest.Result.Success)
+            try
             {
-                ErrorReceived(request.error);
+                using var request = UnityWebRequestTexture.GetTexture(imageUrl);
+                _ = await request.SendWebRequest();
+                if (request.result != UnityWebRequest.Result.Success)
+                {
+                    ErrorReceived(request.error);
+                }
+
+                return ((DownloadHandlerTexture)request.downloadHandler).texture;
+            }
+            catch (Exception e)
+            {
+                ErrorReceived(e.Message);
             }
 
-            return ((DownloadHandlerTexture)request.downloadHandler).texture;
+            return null;
         }
 
         private void ErrorReceived(string message)
         {
             OnErrorOccurredSubject.OnNext(Unit.Default);
             Logger.LogError(message);
-            if (!isPlaying)
-            {
-                appState.SetLandscapeInitialized(true);
-            }
         }
 
         private async UniTask DoPlayAsync()

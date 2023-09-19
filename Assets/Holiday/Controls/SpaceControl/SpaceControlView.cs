@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using TMPro;
 using UniRx;
@@ -20,6 +21,7 @@ namespace Extreal.SampleApp.Holiday.Controls.SpaceControl
         [SerializeField] private TMP_Text backButtonLabel;
 
         [Inject] private AssetHelper assetHelper;
+        [Inject] private AppState appState;
 
         public IObservable<Unit> OnGoButtonClicked
             => goButton.OnClickAsObservable().TakeUntilDestroy(this);
@@ -36,7 +38,15 @@ namespace Extreal.SampleApp.Holiday.Controls.SpaceControl
         [SuppressMessage("Usage", "IDE0051")]
         private void Awake()
         {
-            goButtonLabel.text = assetHelper.MessageConfig.SpaceGoButtonLabel;
+            if (appState.IsClient)
+            {
+                goButton.gameObject.SetActive(false);
+                spaceDropdown.gameObject.SetActive(false);
+            }
+            else
+            {
+                goButtonLabel.text = assetHelper.MessageConfig.SpaceGoButtonLabel;
+            }
             backButtonLabel.text = assetHelper.MessageConfig.SpaceBackButtonLabel;
         }
 

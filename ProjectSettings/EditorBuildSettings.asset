@@ -59,6 +59,18 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Holiday/Screens/GroupSelectionScreen/GroupSelectionScreen.unity
     guid: 941aced16ea6a8d47b62dc2634433238
+  - enabled: 1
+    path: Assets/Holiday/Spaces/VirtualSpace/VirtualSpace.unity
+    guid: 6998577d024e09143869c5c8099418a0
+  - enabled: 1
+    path: Assets/Holiday/Spaces/CableRailwaySpace/CableRailwaySpace.unity
+    guid: 44c72888b85ffac49b021647f8c97636
+  - enabled: 1
+    path: Assets/Holiday/Spaces/ForestSpace/ForestSpace.unity
+    guid: b155e54f3e6acde488fe2e87d11ad813
+  - enabled: 1
+    path: Assets/Holiday/Controls/LandscapeControl/LandscapeControl.unity
+    guid: c54f116fcc699f14eb76d004011ace35
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 1c5b30508a76c8e49b630eaba074f4f3,
       type: 2}
