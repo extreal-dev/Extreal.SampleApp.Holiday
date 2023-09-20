@@ -28,6 +28,12 @@ namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl.LandscapePlayers.I
 
         public override void Play() => DoPlayAsync().Forget();
 
+        private async UniTask DoPlayAsync()
+        {
+            panoramicRenderer.material.mainTexture = await GetTextureAsync(imageUrl);
+            appState.SetLandscapeInitialized(true);
+        }
+
         private async UniTask<Texture> GetTextureAsync(string imageUrl)
         {
             try
@@ -53,12 +59,6 @@ namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl.LandscapePlayers.I
         {
             OnErrorOccurredSubject.OnNext(Unit.Default);
             Logger.LogError(message);
-        }
-
-        private async UniTask DoPlayAsync()
-        {
-            panoramicRenderer.material.mainTexture = await GetTextureAsync(imageUrl);
-            appState.SetLandscapeInitialized(true);
         }
     }
 }
