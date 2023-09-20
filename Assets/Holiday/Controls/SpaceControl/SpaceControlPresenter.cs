@@ -68,7 +68,6 @@ namespace Extreal.SampleApp.Holiday.Controls.SpaceControl
             InitializeView(appState);
         }
 
-
         protected override void OnStageEntered(
             StageName stageName,
             AppState appState,
