@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   verticalSyncs: 0
   targetFrameRate: 60
-  downloadTimeoutSeconds: 10
+  downloadTimeoutSeconds: 60
   downloadMaxRetryCount: 5
   downloadConnectRetryMessage: 'Reconnect for download : {0}'
   downloadRetrySuccessMessage: Successfully reconnected for download.
