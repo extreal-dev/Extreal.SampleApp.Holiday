@@ -12,17 +12,18 @@ namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl.LandscapePlayers.I
     public class LandscapeImagePlayer : LandscapePlayerBase
     {
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(LandscapeImagePlayer));
+
         private readonly AppState appState;
         private readonly LandscapeConfig landscapeConfig;
-        private readonly string imageUrl;
         private readonly Renderer panoramicRenderer;
+        private readonly string imageUrl;
 
         public LandscapeImagePlayer(AppState appState, LandscapeConfig landscapeConfig, Renderer panoramicRenderer, string imageFileName)
         {
             this.appState = appState;
             this.landscapeConfig = landscapeConfig;
-            imageUrl = AppUtils.ConcatUrl(this.landscapeConfig.BaseUrl, imageFileName);
             this.panoramicRenderer = panoramicRenderer;
+            imageUrl = AppUtils.ConcatUrl(this.landscapeConfig.BaseUrl, imageFileName);
 
         }
 
