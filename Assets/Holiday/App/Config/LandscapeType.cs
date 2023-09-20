@@ -5,7 +5,5 @@ namespace Extreal.SampleApp.Holiday.App.Config
         None = 0,
         Image = 1,
         Video = 2,
-        Hls = 3,
-        Realtime = 4,
     }
 }
