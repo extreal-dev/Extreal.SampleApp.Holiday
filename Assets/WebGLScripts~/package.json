@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "@extreal-dev/extreal.integration.chat.webrtc": "^0.0.2",
-    "@extreal-dev/extreal.integration.multiplay.ngo.webrtc": "^0.0.2",
+    "@extreal-dev/extreal.integration.multiplay.ngo.webrtc": "^0.0.3",
     "@extreal-dev/extreal.integration.p2p.webrtc": "^0.0.6"
   },
   "devDependencies": {

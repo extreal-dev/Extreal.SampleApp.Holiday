@@ -10,10 +10,10 @@
     "@extreal-dev/extreal.integration.p2p.webrtc" "^0.0.6"
     "@extreal-dev/extreal.integration.web.common" "^0.0.7"
 
-"@extreal-dev/extreal.integration.multiplay.ngo.webrtc@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.multiplay.ngo.webrtc/-/extreal.integration.multiplay.ngo.webrtc-0.0.2.tgz#385d5c990f50e21bb46511983f015e2fb9408877"
-  integrity sha512-pDbciAFUnQjsADf1xZV13xoyIUiTXRBpXcVNIEHzs9crfwgzpPvGT6nQzjR76C4cVDZBZ+DagXq0ng2er+lMDA==
+"@extreal-dev/extreal.integration.multiplay.ngo.webrtc@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.multiplay.ngo.webrtc/-/extreal.integration.multiplay.ngo.webrtc-0.0.3.tgz#99f8eb90d36cb6ca92e9f950440d7a5dd70b1329"
+  integrity sha512-5tgycHB1EnvYEhkH2CWg7ZdEyiOmz7Br1eocoGBJ5h/N+heij9VHE3g9PJO9N8POTpqLyX6OfWElCAoraDc2og==
   dependencies:
     "@extreal-dev/extreal.integration.p2p.webrtc" "^0.0.6"
     "@extreal-dev/extreal.integration.web.common" "^0.0.7"
