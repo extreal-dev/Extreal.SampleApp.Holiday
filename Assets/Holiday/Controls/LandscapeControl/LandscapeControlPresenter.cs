@@ -31,15 +31,6 @@ namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl
             this.assetHelper = assetHelper;
         }
 
-        protected override void Initialize
-        (
-            StageNavigator<StageName, SceneName> stageNavigator,
-            AppState appState,
-            CompositeDisposable sceneDisposables
-        )
-        {
-        }
-
         protected override void OnStageEntered
         (
             StageName stageName,
