@@ -24,7 +24,6 @@ namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl.LandscapePlayers.I
             this.landscapeConfig = landscapeConfig;
             this.panoramicRenderer = panoramicRenderer;
             imageUrl = AppUtils.ConcatUrl(this.landscapeConfig.BaseUrl, imageFileName);
-
         }
 
         public override void Play() => DoPlayAsync().Forget();
