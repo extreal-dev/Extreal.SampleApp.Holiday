@@ -68,19 +68,6 @@ namespace Extreal.SampleApp.Holiday.Controls.SpaceControl
             InitializeView(appState);
         }
 
-        protected override void OnStageEntered(
-            StageName stageName,
-            AppState appState,
-            CompositeDisposable stageDisposables)
-        {
-        }
-
-        protected override void OnStageExiting(
-            StageName stageName,
-            AppState appState)
-        {
-        }
-
         private void SwitchSpace(AppState appState, StageNavigator<StageName, SceneName> stageNavigator)
         {
             var landscapeType = appState.Space.LandscapeType;
