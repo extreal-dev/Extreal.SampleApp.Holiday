@@ -75,15 +75,10 @@ namespace Extreal.SampleApp.Holiday.Controls.SpaceControl
             {
                 assetHelper.DownloadSpaceAsset(appState.SpaceName, appState.Space.StageName);
             }
-            if (landscapeType == LandscapeType.Image)
+            else
             {
-                appState.SetSpace(assetHelper.SpaceConfig.Spaces.Find(space => space.SpaceName == "PanoramicImageSpace"));
-                stageNavigator.ReplaceAsync(StageName.PanoramicImageStage).Forget();
-            }
-            if (landscapeType == LandscapeType.Video)
-            {
-                appState.SetSpace(assetHelper.SpaceConfig.Spaces.Find(space => space.SpaceName == "PanoramicVideoSpace"));
-                stageNavigator.ReplaceAsync(StageName.PanoramicVideoStage).Forget();
+                appState.SetSpace(appState.Space);
+                stageNavigator.ReplaceAsync(appState.Space.StageName).Forget();
             }
         }
 
