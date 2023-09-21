@@ -87,7 +87,6 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
             CompositeDisposable stageDisposables
         )
         {
-            appState.SetSpace(assetHelper.SpaceConfig.Spaces.First());
             groupSelectionScreenView.Initialize();
             groupSelectionScreenView.SetInitialValues(appState.IsHost ? PeerRole.Host : PeerRole.Client);
         }
