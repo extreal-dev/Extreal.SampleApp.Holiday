@@ -1,4 +1,3 @@
-using Cysharp.Threading.Tasks;
 using Extreal.SampleApp.Holiday.App.Config;
 using System.Collections.Generic;
 
@@ -17,7 +16,7 @@ namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl.LandscapePlayers
             }
         }
 
-        public async UniTask<ILandscapePlayer> CreateAsync(StageName stageName, LandscapeType landscapeType)
-            => await landscapePlayerFactories[landscapeType].CreateAsync(stageName);
+        public ILandscapePlayer Create(StageName stageName, LandscapeType landscapeType)
+            => landscapePlayerFactories[landscapeType].Create(stageName);
     }
 }

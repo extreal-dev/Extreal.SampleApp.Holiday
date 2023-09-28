@@ -1,4 +1,3 @@
-using Cysharp.Threading.Tasks;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
@@ -20,9 +19,8 @@ namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl.LandscapePlayers.I
             this.panoramicRenderer = panoramicRenderer;
             landscapeConfig = assetHelper.LandscapeConfig;
         }
-#pragma warning disable CS1998
-        public async UniTask<ILandscapePlayer> CreateAsync(StageName stageName) =>
+
+        public ILandscapePlayer Create(StageName stageName) =>
             new LandscapeImagePlayer(appState, landscapeConfig, panoramicRenderer, $"{stageName}.jpg");
-#pragma warning restore CS1998
     }
 }

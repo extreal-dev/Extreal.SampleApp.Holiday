@@ -1,4 +1,3 @@
-using Cysharp.Threading.Tasks;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.Config;
 
@@ -13,9 +12,7 @@ namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl.LandscapePlayers.N
         public LandscapeNonePlayerFactory(AppState appState)
             => this.appState = appState;
 
-#pragma warning disable CS1998
-        public async UniTask<ILandscapePlayer> CreateAsync(StageName stageName)
+        public ILandscapePlayer Create(StageName stageName)
             => new LandscapeNonePlayer(appState);
-#pragma warning restore CS1998
     }
 }
