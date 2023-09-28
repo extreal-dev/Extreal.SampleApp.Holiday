@@ -40,7 +40,7 @@ namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl
         {
             var isLandscapeTypeNone = appState.Space.LandscapeType == LandscapeType.None;
             landscapeControlView.SetStageActive(!isLandscapeTypeNone);
-            PlayLandscapeAsync(stageName, appState, stageDisposables).Forget();
+            PlayLandscapeAsync(stageName, appState, stageDisposables);
         }
 
         protected override void OnStageExiting(StageName stageName, AppState appState)
@@ -50,14 +50,14 @@ namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl
             appState.SetLandscapeInitialized(false);
         }
 
-        private async UniTaskVoid PlayLandscapeAsync
+        private void PlayLandscapeAsync
         (
             StageName stageName,
             AppState appState,
             CompositeDisposable stageDisposables
         )
         {
-            var landscapePlayer = await landscapePlayerManager.CreateAsync(stageName, appState.Space.LandscapeType);
+            var landscapePlayer = landscapePlayerManager.Create(stageName, appState.Space.LandscapeType);
             landscapePlayer.OnErrorOccurred
                 .Subscribe(_ => appState.Notify(assetHelper.MessageConfig.LandscapeErrorMessage))
                 .AddTo(stageDisposables);
