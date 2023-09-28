@@ -15,12 +15,10 @@ namespace Extreal.SampleApp.Holiday.App.Config
             [SerializeField] private string spaceName;
             [SerializeField] private StageName stageName;
             [SerializeField] private LandscapeType landscapeType;
-            [SerializeField] private string assetName;
 
             public string SpaceName => spaceName;
             public StageName StageName => stageName;
             public LandscapeType LandscapeType => landscapeType;
-            public string AssetName => assetName;
         }
 
         [SerializeField] private List<Space> spaces;
