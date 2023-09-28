@@ -3,7 +3,7 @@ using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.Spaces.Common;
 
-namespace Extreal.SampleApp.Holiday.Spaces.CableRailwaySpace
+namespace Extreal.SampleApp.Holiday.Spaces.PanoramicVideoSpace
 {
     public class PanoramicVideoSpacePresenter : SpacePresenterBase
     {

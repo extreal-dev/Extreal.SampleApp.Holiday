@@ -1,7 +1,7 @@
 using VContainer;
 using VContainer.Unity;
 
-namespace Extreal.SampleApp.Holiday.Spaces.ForestSpace
+namespace Extreal.SampleApp.Holiday.Spaces.PanoramicImageSpace
 {
     public class PanoramicImageSpaceScope : LifetimeScope
     {
