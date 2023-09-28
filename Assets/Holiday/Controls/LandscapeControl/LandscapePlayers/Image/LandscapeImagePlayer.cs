@@ -42,20 +42,20 @@ namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl.LandscapePlayers.I
                 _ = await request.SendWebRequest();
                 if (request.result != UnityWebRequest.Result.Success)
                 {
-                    ErrorReceived(request.error);
+                    HandleError(request.error);
                 }
 
                 return ((DownloadHandlerTexture)request.downloadHandler).texture;
             }
             catch (Exception e)
             {
-                ErrorReceived(e.Message);
+                HandleError(e.Message);
             }
 
             return null;
         }
 
-        private void ErrorReceived(string message)
+        private void HandleError(string message)
         {
             OnErrorOccurredSubject.OnNext(Unit.Default);
             Logger.LogError(message);
