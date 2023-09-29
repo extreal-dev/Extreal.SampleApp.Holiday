@@ -40,10 +40,6 @@ namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl.LandscapePlayers.I
             {
                 using var request = UnityWebRequestTexture.GetTexture(imageUrl);
                 _ = await request.SendWebRequest();
-                if (request.result != UnityWebRequest.Result.Success)
-                {
-                    HandleError(request.error);
-                }
 
                 return ((DownloadHandlerTexture)request.downloadHandler).texture;
             }
