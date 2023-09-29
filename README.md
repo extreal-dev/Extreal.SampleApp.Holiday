@@ -21,6 +21,7 @@
   - Add the `AvatarAmy` asset to the default group of Addressables with the name `AvatarAmy`.
   - Create an avatar prefab about `Michelle` in the same way as above.
 - See [README](Servers/P2P/README.md) to start a signaling server for P2P.
+- See [README](WebGLBuild/README.md) to set a local file server for playing panoramic image/video.
 - Open multiple Unity editors using [ParrelSync.](https://github.com/VeriorPies/ParrelSync). ParrelSync is already installed in this project.
 - Run the application.
   - Run the following scene: `/Assets/Holiday/App/App`
