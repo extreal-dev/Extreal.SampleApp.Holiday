@@ -288,17 +288,9 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
             {
                 //Don't multiply mouse input by Time.deltaTime;
                 float deltaTimeMultiplier = Time.deltaTime;
-
-                if (preLook.sqrMagnitude < _threshold)
-                {
-                    onRotateStart.OnNext(Unit.Default);
-                }
-
                 _cinemachineTargetYaw += Input.look.x * deltaTimeMultiplier;
                 _cinemachineTargetPitch += Input.look.y * deltaTimeMultiplier;
             }
-
-            preLook = Input.look;
 
             // clamp our rotations so our values are limited 360 degrees
             _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
