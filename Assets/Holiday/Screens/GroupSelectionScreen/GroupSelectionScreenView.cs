@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Extreal.Integration.P2P.WebRTC;
-using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using TMPro;
 using UniRx;
@@ -27,7 +26,6 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
         [SerializeField] private TMP_Text backButtonLabel;
 
         [Inject] private AssetHelper assetHelper;
-        [Inject] private AppState appState;
 
         public IObservable<PeerRole> OnRoleChanged =>
             roleDropdown.onValueChanged.AsObservable()
@@ -63,8 +61,6 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
 
             OnRoleChanged.Subscribe(SwitchInputMode).AddTo(this);
             OnGroupNameChanged.Subscribe(_ => CanGo(PeerRole.Host));
-
-            appState.SetSpace(assetHelper.SpaceConfig.Spaces.First());
         }
 
         private void SwitchInputMode(PeerRole role)
