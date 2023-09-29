@@ -86,6 +86,7 @@ namespace Extreal.SampleApp.Holiday.Controls.SpaceControl
         {
             var spaces = assetHelper.SpaceConfig.Spaces;
             var spaceNames = spaces.Select(space => space.SpaceName).ToList();
+            appState.SetSpace(assetHelper.SpaceConfig.Spaces.First());
 
             spaceControlView.Initialize(spaceNames);
             spaceControlView.SetSpaceDropdownValue(appState.Space.SpaceName);
