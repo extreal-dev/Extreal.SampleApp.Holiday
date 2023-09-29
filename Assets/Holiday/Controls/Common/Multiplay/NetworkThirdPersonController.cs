@@ -124,14 +124,6 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
 
         private bool isTouchDevice;
 
-        public IObservable<Unit> OnMoveStart => onMoveStart;
-        private readonly Subject<Unit> onMoveStart = new Subject<Unit>();
-        public IObservable<Unit> OnRotateStart => onRotateStart;
-        private readonly Subject<Unit> onRotateStart = new Subject<Unit>();
-
-        private Vector2 preMove;
-        private Vector2 preLook;
-
         public void Initialize(Avatar avatar, bool isTouchDevice)
         {
             SetAvatar(avatar);
@@ -307,16 +299,9 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
             // if there is an input and camera position is not fixed
             if (Input.look.sqrMagnitude >= _threshold && !LockCameraPosition && mouse.leftButton.isPressed)
             {
-                if (preLook.sqrMagnitude < _threshold)
-                {
-                    onRotateStart.OnNext(Unit.Default);
-                }
-
                 yawDelta += Input.look.x * cameraRotateSpeed;
                 pitchDelta += Input.look.y * cameraRotateSpeed;
             }
-
-            preLook = Input.look;
 
             _cinemachineTargetYaw += yawDelta * dampingFactor;
             _cinemachineTargetPitch += pitchDelta * dampingFactor;
