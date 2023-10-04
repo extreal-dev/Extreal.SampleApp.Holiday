@@ -54,10 +54,18 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
                 .Where(ready => ready)
                 .Subscribe(_ => multiplayClient.ResetPosition())
                 .AddTo(sceneDisposables);
+
+            appState.OnMessageSent
+                .Subscribe(multiplayClient.SendToEveryone)
+                .AddTo(sceneDisposables);
         }
 
         protected override void OnStageExiting(StageName stageName, AppState appState)
         {
+            if (AppUtils.IsSpace(stageName))
+            {
+                return;
+            }
             appState.SetMultiplayReady(false);
             multiplayClient.LeaveAsync().Forget();
         }

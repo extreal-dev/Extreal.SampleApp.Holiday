@@ -14,6 +14,7 @@
         VoiceChatControl = 106,
         SpaceControl = 108,
         RetryStatusControl = 109,
+        LandscapeControl = 111,
 
         // Screens
         BackgroundScreen = 204,
@@ -22,5 +23,10 @@
         TitleScreen = 200,
         AvatarSelectionScreen = 201,
         GroupSelectionScreen = 202,
+
+        // Spaces
+        VirtualSpace = 300,
+        PanoramicVideoSpace = 301,
+        PanoramicImageSpace = 302,
     }
 }

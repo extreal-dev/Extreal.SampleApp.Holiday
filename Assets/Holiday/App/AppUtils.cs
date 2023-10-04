@@ -13,7 +13,7 @@ namespace Extreal.SampleApp.Holiday.App
             => false;
 #endif
 
-        private static readonly HashSet<StageName> SpaceStages = new HashSet<StageName> { StageName.VirtualStage };
+        private static readonly HashSet<StageName> SpaceStages = new HashSet<StageName> { StageName.VirtualStage, StageName.PanoramicVideoStage, StageName.PanoramicImageStage };
 
         public static bool IsSpace(StageName stageName) => SpaceStages.Contains(stageName);
 
@@ -45,6 +45,13 @@ namespace Extreal.SampleApp.Holiday.App
                 appState.Retry(new RetryStatus(RetryStatus.RunState.Failure));
                 appState.Notify(failureMessage);
             }
+        }
+
+        public static string ConcatUrl(string baseUrl, string relativePath)
+        {
+            baseUrl = baseUrl.TrimEnd('/');
+            relativePath = relativePath.TrimStart('/');
+            return $"{baseUrl}/{relativePath}";
         }
 
         public static long ToMb(long bytes) => bytes >> 20;

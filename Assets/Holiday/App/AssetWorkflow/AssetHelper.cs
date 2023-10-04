@@ -30,6 +30,9 @@ namespace Extreal.SampleApp.Holiday.App.AssetWorkflow
 
         public VoiceChatConfig VoiceChatConfig { get; private set; }
 
+        public SpaceConfig SpaceConfig { get; private set; }
+        public LandscapeConfig LandscapeConfig { get; private set; }
+
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(AssetHelper));
 
         private readonly StageNavigator<StageName, SceneName> stageNavigator;
@@ -56,11 +59,13 @@ namespace Extreal.SampleApp.Holiday.App.AssetWorkflow
                 MessageConfig = await LoadAndAddToDisposablesAsync<MessageConfig>();
                 PeerConfig = await LoadAndReleaseAsync<P2PConfig, PeerConfig>(asset => asset.PeerConfig);
                 AvatarConfig = await LoadAndAddToDisposablesAsync<AvatarConfig>();
+                SpaceConfig = await LoadAndAddToDisposablesAsync<SpaceConfig>();
                 (NgoHostConfig, NgoClientConfig)
                     = await LoadAndReleaseAsync<MultiplayConfig, (HostConfig, ClientConfig)>(
                         asset => (asset.HostConfig, asset.ClientConfig));
                 VoiceChatConfig = await LoadAndReleaseAsync<ChatConfig, VoiceChatConfig>(
                     asset => asset.VoiceChatConfig);
+                LandscapeConfig = await LoadAndAddToDisposablesAsync<LandscapeConfig>();
                 stageNavigator.ReplaceAsync(nextStage).Forget();
             };
             DownloadAsync(nameof(MessageConfig), nextFunc).Forget();
