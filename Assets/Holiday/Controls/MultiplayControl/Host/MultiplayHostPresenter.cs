@@ -50,16 +50,15 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl.Host
             multiplayHost = new MultiplayHost(ngoHost, playerPrefab, assetHelper);
             sceneDisposables.Add(multiplayHost);
 
-            Observable
-                .CombineLatest(appState.SpaceReady, appState.P2PReady)
-                .Where(readies => readies.All(ready => ready))
+            appState.SpaceReady
+                .First(ready => ready)
                 .Subscribe(_ => multiplayHost.StartHostAsync().Forget())
                 .AddTo(sceneDisposables);
         }
 
         protected override void OnStageExiting(StageName stageName, AppState appState)
         {
-            if (!appState.IsHost)
+            if (!appState.IsHost || AppUtils.IsSpace(stageName))
             {
                 return;
             }

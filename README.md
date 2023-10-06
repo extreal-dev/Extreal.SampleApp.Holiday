@@ -21,7 +21,15 @@
   - Add the `AvatarAmy` asset to the default group of Addressables with the name `AvatarAmy`.
   - Create an avatar prefab about `Michelle` in the same way as above.
 - See [README](Servers/P2P/README.md) to start a signaling server for P2P.
-- Open multiple Unity editors using [ParrelSync.](https://github.com/VeriorPies/ParrelSync). ParrelSync is already installed in this project.
+- Put panoramic image/video files in the `WebGLBuild/PanoramicData/Panorama/` directory.
+  - Set image file name as `PanoramicImageStage.jpg`
+  - Set video file name as `PanoramicVideoStage.mp4`
+- Enable the panoramic image/video distribution server.
+  - Enter the following command in the `WebGLBuild` directory.
+```
+deno run --allow-net --allow-read=. index.ts
+```
+- Open multiple Unity editors using [ParrelSync](https://github.com/VeriorPies/ParrelSync). ParrelSync is already installed in this project.
 - Run the application.
   - Run the following scene: `/Assets/Holiday/App/App`
 - Enjoy playing!
@@ -37,8 +45,16 @@
 - Open `Build Settings` and change the platform to `WebGL`.
 - Select `Holiday` from `Player Settings > Resolution and Presentation > WebGL Template`.
 - See [README](Servers/P2P/README.md) to start a signaling server.
+- See [README](WebGLBuild/README.md) to complete WebGL setting in the local environment.
+- Put panoramic image/video files in the `WebGLBuild/PanoramicData/Panorama/` directory.
+  - Set image file name as `PanoramicImageStage.jpg`
+  - Set video file name as `PanoramicVideoStage.mp4`
+- Enable the panoramic image/video distribution server and WebGL running server locally. 
+  - Enter the following command in the `WebGLBuild` directory.
+```
+deno run --allow-net --allow-read=. index.ts
+```
 - Play from `Build And Run`.
-- See [README](WebGLBuild/README.md) to check in the local environment.
 
 ## How to visualize application usage
 

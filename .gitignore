@@ -89,6 +89,7 @@ Servers/AppUsage/.data
 # WebGL
 Assets/WebGLScripts~/node_modules
 WebGLBuild/Holiday/*
+WebGLBuild/PanoramicData/Panorama/
 WebGLBuild/Data/*
 Assets/WebGLTemplates/Holiday/index.js
 Assets/WebGLTemplates/Holiday/index.js.meta

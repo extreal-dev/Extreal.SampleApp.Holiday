@@ -8,6 +8,7 @@ using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.Controls.RetryStatusControl;
 using Extreal.SampleApp.Holiday.Screens.ConfirmationScreen;
 using UniRx;
+using Message = Extreal.SampleApp.Holiday.App.P2P.Message;
 
 namespace Extreal.SampleApp.Holiday.App
 {
@@ -20,6 +21,7 @@ namespace Extreal.SampleApp.Holiday.App
 
         public string PlayerName { get; private set; } = "Guest";
         public AvatarConfig.Avatar Avatar { get; private set; }
+        public SpaceConfig.Space Space { get; private set; }
         public bool IsHost => role == PeerRole.Host;
         public bool IsClient => role == PeerRole.Client;
         public string GroupName { get; private set; } // Host only
@@ -35,6 +37,12 @@ namespace Extreal.SampleApp.Holiday.App
         public IReadOnlyReactiveProperty<bool> P2PReady => p2PReady.AddTo(disposables);
         private readonly ReactiveProperty<bool> p2PReady = new ReactiveProperty<bool>(false);
 
+        public IObservable<Message> OnMessageSent => onMessageSent.AddTo(disposables);
+        private readonly Subject<Message> onMessageSent = new Subject<Message>();
+
+        public IObservable<Message> OnMessageReceived => onMessageReceived.AddTo(disposables);
+        private readonly Subject<Message> onMessageReceived = new Subject<Message>();
+
         public IObservable<string> OnNotificationReceived => onNotificationReceived.AddTo(disposables);
         private readonly Subject<string> onNotificationReceived = new Subject<string>();
 
@@ -45,6 +53,7 @@ namespace Extreal.SampleApp.Holiday.App
         private readonly Subject<RetryStatus> onRetryStatusReceived = new Subject<RetryStatus>();
 
         private readonly BoolReactiveProperty multiplayReady = new BoolReactiveProperty(false);
+        private readonly BoolReactiveProperty landscapeInitialized = new BoolReactiveProperty(false);
 
         private readonly CompositeDisposable disposables = new CompositeDisposable();
 
@@ -53,6 +62,7 @@ namespace Extreal.SampleApp.Holiday.App
         public AppState()
         {
             multiplayReady.AddTo(disposables);
+            landscapeInitialized.AddTo(disposables);
 
             MonitorPlayingReadyStatus();
             RestorePlayingReadyStatus();
@@ -60,9 +70,12 @@ namespace Extreal.SampleApp.Holiday.App
 
         [SuppressMessage("Usage", "CC0033")]
         private void MonitorPlayingReadyStatus() =>
-            Observable.
-                CombineLatest(multiplayReady, spaceReady, p2PReady)
-                .Where(readies => readies.All(ready => ready))
+            multiplayReady.Merge(spaceReady, p2PReady, landscapeInitialized)
+                .Where(_ =>
+                {
+                    LogWaitingStatus();
+                    return multiplayReady.Value && spaceReady.Value && p2PReady.Value && landscapeInitialized.Value;
+                })
                 .Subscribe(_ =>
                 {
                     if (Logger.IsDebug())
@@ -75,21 +88,34 @@ namespace Extreal.SampleApp.Holiday.App
 
         [SuppressMessage("Usage", "CC0033")]
         private void RestorePlayingReadyStatus() =>
-                    Observable
-                        .CombineLatest(multiplayReady, spaceReady, p2PReady)
-                        .Where(readies => readies.All(ready => !ready))
-                        .Subscribe(_ =>
-                        {
-                            if (Logger.IsDebug())
-                            {
-                                Logger.LogDebug("Stop playing");
-                            }
-                            playingReady.Value = false;
-                        })
-                        .AddTo(disposables);
+            spaceReady.Merge(landscapeInitialized)
+                .Where(_ =>
+                {
+                    LogWaitingStatus();
+                    return !spaceReady.Value && !landscapeInitialized.Value;
+                })
+                .Subscribe(_ =>
+                {
+                    if (Logger.IsDebug())
+                    {
+                        Logger.LogDebug("Stop playing");
+                    }
+                    playingReady.Value = false;
+                })
+                .AddTo(disposables);
+
+        private void LogWaitingStatus()
+        {
+            if (Logger.IsDebug())
+            {
+                Logger.LogDebug($"Multiplay, Space Ready, P2P Ready, Landscape Initialized: " +
+                                $"{multiplayReady.Value}, {spaceReady.Value},  {p2PReady.Value}, {landscapeInitialized.Value}");
+            }
+        }
 
         public void SetPlayerName(string playerName) => PlayerName = playerName;
         public void SetAvatar(AvatarConfig.Avatar avatar) => Avatar = avatar;
+        public void SetSpace(SpaceConfig.Space space) => Space = space;
         public void SetRole(PeerRole role) => this.role = role;
         public void SetGroupName(string groupName) => GroupName = groupName;
         public void SetGroupId(string groupId) => GroupId = groupId;
@@ -97,7 +123,12 @@ namespace Extreal.SampleApp.Holiday.App
         public void SetP2PReady(bool ready) => p2PReady.Value = ready;
         public void SetMultiplayReady(bool ready) => multiplayReady.Value = ready;
         public void SetSpaceReady(bool ready) => spaceReady.Value = ready;
+        public void SetLandscapeInitialized(bool initialized) => landscapeInitialized.Value = initialized;
         public void SetStage(StageName stageName) => StageState = new StageState(stageName);
+
+        public void SendMessage(Message message) => onMessageSent.OnNext(message);
+
+        public void ReceivedMessage(Message message) => onMessageReceived.OnNext(message);
 
         public void Notify(string message)
         {

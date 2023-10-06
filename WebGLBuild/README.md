@@ -5,8 +5,3 @@
    set to Remote. If not, change it.
 1. Set the build directory to `WebGLBuild/Holiday` directory and build the
    application.
-1. Enter the following command in the `WebGLBuild` directory.
-
-```
-deno run --allow-net --allow-read=. index.ts
-```

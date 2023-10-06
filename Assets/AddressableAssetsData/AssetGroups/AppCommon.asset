@@ -17,11 +17,6 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: f2b2967d531f20348b75f02e0528aacd
   m_SerializeEntries:
-  - m_GUID: c6ae014bfb0f10d45a7451f05c0c220b
-    m_Address: AvatarArmature
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 5dd0a9896b950494ca1303948d70b252
     m_Address: MessageConfig
     m_ReadOnly: 0
@@ -44,6 +39,21 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: abe9dfda252ecb44bada33ddee4fce9f
     m_Address: ChatConfig
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c6ae014bfb0f10d45a7451f05c0c220b
+    m_Address: AvatarArmature
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d2d735dc7a9b2a04aaac4b867f92ca5d
+    m_Address: LandscapeConfig
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dac329d0652cea1478e0d98a0696f88d
+    m_Address: SpaceConfig
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
