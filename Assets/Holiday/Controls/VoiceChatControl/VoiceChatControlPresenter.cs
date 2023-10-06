@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using Extreal.Core.StageNavigation;
 using Extreal.Integration.Chat.WebRTC;
 using Extreal.SampleApp.Holiday.App;
@@ -38,14 +37,17 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
         protected override void OnStageEntered(
             StageName stageName,
             AppState appState,
-            CompositeDisposable stageDisposables)
-        {
-            voiceChatClient.OnMuted
+            CompositeDisposable stageDisposables) => voiceChatClient.OnMuted
                 .Subscribe(voiceChatScreenView.ToggleMute)
                 .AddTo(stageDisposables);
-        }
 
         protected override void OnStageExiting(StageName stageName, AppState appState)
-            => voiceChatClient.Clear();
+        {
+            if (AppUtils.IsSpace(stageName))
+            {
+                return;
+            }
+            voiceChatClient.Clear();
+        }
     }
 }

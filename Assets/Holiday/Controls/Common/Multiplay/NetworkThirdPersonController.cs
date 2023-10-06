@@ -1,10 +1,13 @@
-﻿using Cinemachine;
+﻿using System;
+using Cinemachine;
 using StarterAssets;
 using TMPro;
+using UniRx;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using Random = UnityEngine.Random;
 
 /* Note: animations are called via the controller for both the character and capsule using animator null checks
  */
@@ -78,6 +81,11 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
 
         [Header("Input")] public PlayerInput PlayerInput;
         public StarterAssetsInputs Input;
+
+        private const float cameraRotateSpeed = 10.0f;
+        private const float dampingFactor = 0.1f;
+        private float yawDelta = 0.0f;
+        private float pitchDelta = 0.0f;
 
         // cinemachine
         private float _cinemachineTargetYaw;
@@ -230,7 +238,14 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
                 (EventSystem.current.currentSelectedGameObject == null
                  || EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>() == null))
             {
-                CameraRotation();
+                if (IsCurrentDeviceMouse && !isTouchDevice)
+                {
+                    MouseCameraRotation();
+                }
+                else
+                {
+                    TouchDeviceCameraRotation();
+                }
             }
         }
 
@@ -258,16 +273,41 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
             }
         }
 
-        private void CameraRotation()
+        private void TouchDeviceCameraRotation()
         {
             // if there is an input and camera position is not fixed
             if (Input.look.sqrMagnitude >= _threshold && !LockCameraPosition)
             {
                 //Don't multiply mouse input by Time.deltaTime;
-                float deltaTimeMultiplier = IsCurrentDeviceMouse && !isTouchDevice ? 1.0f : Time.deltaTime;
+                float deltaTimeMultiplier = Time.deltaTime;
                 _cinemachineTargetYaw += Input.look.x * deltaTimeMultiplier;
                 _cinemachineTargetPitch += Input.look.y * deltaTimeMultiplier;
             }
+
+            // clamp our rotations so our values are limited 360 degrees
+            _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
+            _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
+
+            // Cinemachine will follow this target
+            CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
+                _cinemachineTargetYaw, 0.0f);
+        }
+
+        private void MouseCameraRotation()
+        {
+            var mouse = Mouse.current;
+            // if there is an input and camera position is not fixed
+            if (Input.look.sqrMagnitude >= _threshold && !LockCameraPosition && mouse.leftButton.isPressed)
+            {
+                yawDelta += Input.look.x * cameraRotateSpeed;
+                pitchDelta += Input.look.y * cameraRotateSpeed;
+            }
+
+            _cinemachineTargetYaw += yawDelta * dampingFactor;
+            _cinemachineTargetPitch += pitchDelta * dampingFactor;
+
+            yawDelta *= 1f - dampingFactor;
+            pitchDelta *= 1f - dampingFactor;
 
             // clamp our rotations so our values are limited 360 degrees
             _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);

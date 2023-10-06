@@ -35,10 +35,5 @@ MonoBehaviour:
   multiplayConnectRetryFailureMessage: Failed to reconnect to multiplayer. If you
     wish to reconnect, please re-enter the space.
   multiplayUnexpectedDisconnectedMessage: Multiplayer disconnected unexpectedly.
-  chatConnectRetryMessage: 'Reconnect to chat : {0}'
-  chatConnectRetrySuccessMessage: Successfully reconnected to chat.
-  chatConnectRetryFailureMessage: Failed to reconnect to chat. If you wish to reconnect,
-    please re-enter the space.
-  chatUnexpectedDisconnectedMessage: Chat disconnected unexpectedly.
   landscapeErrorMessage: An error occurred on Landscape playback. If you wish to
-    play video, please re-enter the space.
+    play Landscape, please re-enter the space.
