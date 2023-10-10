@@ -39,15 +39,15 @@ namespace Extreal.SampleApp.Holiday.Controls.P2PControl
                 .Subscribe(_ => appState.SetP2PReady(true))
                 .AddTo(sceneDisposables);
 
-            peerClient.OnStartedFailed
+            peerClient.OnStarteFailed
                 .Subscribe(_ => appState.Notify(assetHelper.MessageConfig.P2PStartFailureMessage))
                 .AddTo(disposables);
 
-            peerClient.OnConnectFailed
+            peerClient.OnSignalingConnectFailed
                 .Subscribe(_ => appState.Notify(assetHelper.MessageConfig.P2PStartFailureMessage))
                 .AddTo(sceneDisposables);
 
-            peerClient.OnDisconnected
+            peerClient.OnSignalingDisconnected
                 .Subscribe(_ => appState.Notify(assetHelper.MessageConfig.P2PUnexpectedDisconnectedMessage))
                 .AddTo(sceneDisposables);
 
