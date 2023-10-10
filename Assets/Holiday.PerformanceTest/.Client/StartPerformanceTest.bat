@@ -35,6 +35,6 @@ taskkill /im Holiday.exe
 
 timeout 5
 
-aws s3 cp --recursive %work_dir%\ s3://extreal-dev/PerformanceTest/Data/%my_date%/%dir_count%/
+aws s3 cp --recursive %work_dir%\ s3://extreal-webgl/PerformanceTest/Data/%my_date%/%dir_count%/
 
 endlocal
