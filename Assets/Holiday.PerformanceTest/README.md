@@ -15,7 +15,8 @@ Set the address of the usage visualization server in AppUsageConfig > Push Url.
     - Development Build` is off.
     - `Code Optimization` is set to `Shorter Build Time
 - Windows Dedicated Server (load client)
-    - Development Build is **ON**. If not turned on, a startup error will occur.
+    - Change Project Settings > Player > Other Settings > Optimization > Managed Stripping Level to "Minimal".
+    - It is recommended to turn on Development Build to reduce build time.
 
 ## Perform performance test
 #### Modify parameters in the load client start batch file
