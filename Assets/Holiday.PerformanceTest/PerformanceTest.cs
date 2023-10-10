@@ -79,14 +79,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                 || FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.AvatarSelectionScreen.ToString());
             if (FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.ConfirmationScreen.ToString())
             {
-                foreach (var button in FindObjectsOfType<Button>())
-                {
-                    if (button.name == "OkButton")
-                    {
-                        button.onClick.Invoke();
-                        break;
-                    }
-                }
+                PushButtonNamed("OkButton");
                 await UniTask.WaitUntil(() =>
                     FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.AvatarSelectionScreen.ToString());
             }
@@ -138,14 +131,8 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                             || FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.TextChatControl.ToString());
             if (FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.ConfirmationScreen.ToString())
             {
-                foreach (var button in FindObjectsOfType<Button>())
-                {
-                    if (button.name == "OkButton")
-                    {
-                        button.onClick.Invoke();
-                        break;
-                    }
-                }
+
+                PushButtonNamed("OkButton");
                 await UniTask.WaitUntil(() =>
                     FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.TextChatControl.ToString());
             }
@@ -195,14 +182,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
 
             var messageInput = FindObjectOfType<TMP_InputField>();
             Button sendButton = null;
-            foreach (var button in FindObjectsOfType<Button>())
-            {
-                if (button.name == "SendButton")
-                {
-                    sendButton = button;
-                }
-            }
-
+            PushButtonNamed("SendButton");
             var messagePeriod = PerformanceTestArgumentHandler.SendMessagePeriod;
             while (player != null)
             {
@@ -269,21 +249,6 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
         private bool InRange(Vector3 position)
             => movableRangeMin.x <= position.x && position.x <= movableRangeMax.x
                 && movableRangeMin.z <= position.z && position.z <= movableRangeMax.z;
-
-        private static bool ExistButtonOfSceneNamed(params SceneName[] sceneNames)
-        {
-            foreach (var button in FindObjectsOfType<Button>())
-            {
-                foreach (var sceneName in sceneNames)
-                {
-                    if (button.gameObject.scene.name == sceneName.ToString())
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
 
         private static void PushButtonNamed(string name)
         {
