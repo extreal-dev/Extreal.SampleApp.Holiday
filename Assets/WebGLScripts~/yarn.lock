@@ -2,34 +2,34 @@
 # yarn lockfile v1
 
 
-"@extreal-dev/extreal.integration.chat.webrtc@^0.0.7":
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.chat.webrtc/-/extreal.integration.chat.webrtc-0.0.7.tgz#0d43620c11542ca884719d893fb3f77c8b21cfd6"
-  integrity sha512-PlN/0Zgn1gDgd9S0IWBvoaO3QOJrkS+tG7MLHhu8l7ZbzM5DUflfhK12PWin3elmIm1F12kPn//vnY8qiLqfbg==
-  dependencies:
-    "@extreal-dev/extreal.integration.p2p.webrtc" "^0.0.11"
-    "@extreal-dev/extreal.integration.web.common" "^0.0.8"
-
-"@extreal-dev/extreal.integration.multiplay.ngo.webrtc@^0.0.8":
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.multiplay.ngo.webrtc/-/extreal.integration.multiplay.ngo.webrtc-0.0.8.tgz#1e1174d616170cb08e5d11f1285dc7decbd37cbe"
-  integrity sha512-Ux0DRoZe/UYtbXIiZPXe8V7Un6VOdYPVHTNoTVZjqQlMohr/0Q27MweSySn7VbyM9mRGkLUIVk+OKt1iVVrLoA==
-  dependencies:
-    "@extreal-dev/extreal.integration.p2p.webrtc" "^0.0.11"
-    "@extreal-dev/extreal.integration.web.common" "^0.0.8"
-
-"@extreal-dev/extreal.integration.p2p.webrtc@^0.0.11":
+"@extreal-dev/extreal.integration.chat.webrtc@^0.0.11":
   version "0.0.11"
-  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.p2p.webrtc/-/extreal.integration.p2p.webrtc-0.0.11.tgz#f748a19dc700528e96f3b3aedbe853cb76e1cd15"
-  integrity sha512-eOSORrp9/DQE+VqEhenWNsSd5nE2QyIl6huspJj/An9Oa1QjjbsG942PUJHSIEEuNC8RiZMZfU0xowOKzmT4gA==
+  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.chat.webrtc/-/extreal.integration.chat.webrtc-0.0.11.tgz#eb6941a4e3226108eca28309b36849bc70f1d3fe"
+  integrity sha512-wYDHA/2JzkzxGLqam9PycwJWfJm3VfMx4utL/JmbWOJWDf+qjIjhiUfamR+kkK6TSjTtFJQgHecyzDBQa5Gd4Q==
   dependencies:
-    "@extreal-dev/extreal.integration.web.common" "^0.0.8"
+    "@extreal-dev/extreal.integration.p2p.webrtc" "^0.0.15"
+    "@extreal-dev/extreal.integration.web.common" "^0.0.9"
+
+"@extreal-dev/extreal.integration.multiplay.ngo.webrtc@^0.0.11":
+  version "0.0.11"
+  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.multiplay.ngo.webrtc/-/extreal.integration.multiplay.ngo.webrtc-0.0.11.tgz#5f43c8084a6571c462a92dc79f3275152a94ff4f"
+  integrity sha512-/pZcgwI8UmstPgCGm0PTCrYywbd36khK2LF5TSpFAKOvfgAtu/onpxIydPVzpAXY6/GtwQWhwY/k6ytNftizgw==
+  dependencies:
+    "@extreal-dev/extreal.integration.p2p.webrtc" "^0.0.15"
+    "@extreal-dev/extreal.integration.web.common" "^0.0.9"
+
+"@extreal-dev/extreal.integration.p2p.webrtc@^0.0.15":
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.p2p.webrtc/-/extreal.integration.p2p.webrtc-0.0.15.tgz#08c6e8e8c693cef58e3bbecaa3d3599d485776a1"
+  integrity sha512-VW5ozr6vpanw+x4I8q/WBxSaGSF4wwfrgkh/jp4+m5Fajof+yXiMZseslG5WXZFIyIXkmNjsPkhYD+9AFommhg==
+  dependencies:
+    "@extreal-dev/extreal.integration.web.common" "^0.0.9"
     socket.io-client "^4.7.1"
 
-"@extreal-dev/extreal.integration.web.common@^0.0.8":
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.web.common/-/extreal.integration.web.common-0.0.8.tgz#9f01cbcb2ae2f6f2ad10fca233d168add0e3e73d"
-  integrity sha512-CK83lVQe6x93LnJS+u0yiQCJ3wku9zp8mggTnXkr/ov63mpj6M7g3p9SvFMaFWDfEKLPlVjy5t5wQ2bN+t/iqA==
+"@extreal-dev/extreal.integration.web.common@^0.0.9":
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.web.common/-/extreal.integration.web.common-0.0.9.tgz#10e5674e744e6d835bbc6f197fbf14790eae608e"
+  integrity sha512-HVtXEX7ukxv265SKcHfk1y1FefeWlQrotF7YnJn/gyPw9qp9hTjZ/qVXr0byk8hIC0pXrFYOux/sqgAbrAupiw==
 
 "@jridgewell/gen-mapping@^0.3.0":
   version "0.3.3"
