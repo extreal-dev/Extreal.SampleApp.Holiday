@@ -363,7 +363,7 @@
       "hash": "522e9ccd62d987e83b51a4424bde0ea6db990d14"
     },
     "jp.co.tis.extreal.integration.chat.webrtc": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.Chat.WebRTC.git#1.0.0-next.5",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.Chat.WebRTC.git#1.0.0-next.6",
       "depth": 0,
       "source": "git",
       "dependencies": {
@@ -373,9 +373,9 @@
         "jp.co.tis.extreal.core.logging": "1.2.0-next.1",
         "jp.co.tis.extreal.core.common": "1.1.0-next.4",
         "jp.co.tis.extreal.integration.web.common": "1.0.0-next.5",
-        "jp.co.tis.extreal.integration.p2p.webrtc": "1.0.0-next.9"
+        "jp.co.tis.extreal.integration.p2p.webrtc": "1.0.0-next.10"
       },
-      "hash": "45b9d6662437a2a28bc20f61e2ce202b858268c2"
+      "hash": "e1c5c534764b1a32ea24cc9c73b2391e786e9a25"
     },
     "jp.co.tis.extreal.integration.multiplay.ngo": {
       "version": "https://github.com/extreal-dev/Extreal.Integration.Multiplay.NGO.git#1.2.0-next.9",
@@ -391,7 +391,7 @@
       "hash": "5beb027c481df7be1bbcd52d123fdc77e744add9"
     },
     "jp.co.tis.extreal.integration.p2p.webrtc": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.P2P.WebRTC.git#1.0.0-next.9",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.P2P.WebRTC.git#1.0.0-next.10",
       "depth": 0,
       "source": "git",
       "dependencies": {
@@ -403,7 +403,7 @@
         "jp.co.tis.extreal.core.common": "1.1.0-next.4",
         "jp.co.tis.extreal.integration.web.common": "1.0.0-next.5"
       },
-      "hash": "7c90371a730a154724c8ce8b0475dcccf249722f"
+      "hash": "b82b75c6228a94cac781afebc95b32b5144b0d03"
     },
     "jp.co.tis.extreal.integration.web.common": {
       "version": "https://github.com/extreal-dev/Extreal.Integration.Web.Common.git#1.0.0-next.5",
