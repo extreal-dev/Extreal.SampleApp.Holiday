@@ -70,18 +70,16 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
         {
             // Loads application
             await SceneManager.LoadSceneAsync(nameof(App), LoadSceneMode.Additive);
-            await UniTask.WaitUntil(() => FindObjectOfType<Button>() != null);
+            await UniTask.WaitUntil(() => ExistButtonOfSceneNamed(SceneName.TitleScreen));
 
             // Starts to download data and enters AvatarSelectionScreen
-            FindObjectOfType<Button>().onClick.Invoke();
+            PushButtonNamed("GoButton");
             await UniTask.WaitUntil(() =>
-                FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.ConfirmationScreen.ToString()
-                || FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.AvatarSelectionScreen.ToString());
-            if (FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.ConfirmationScreen.ToString())
+                ExistButtonOfSceneNamed(SceneName.ConfirmationScreen, SceneName.AvatarSelectionScreen));
+            if (ExistButtonOfSceneNamed(SceneName.ConfirmationScreen))
             {
                 PushButtonNamed("OkButton");
-                await UniTask.WaitUntil(() =>
-                    FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.AvatarSelectionScreen.ToString());
+                await UniTask.WaitUntil(() => ExistButtonOfSceneNamed(SceneName.AvatarSelectionScreen));
             }
 
             // Selects avatar
@@ -89,12 +87,10 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
             var avatarDropdown = FindObjectOfType<TMP_Dropdown>();
             avatarDropdown.value = UnityEngine.Random.Range(0, avatarDropdown.options.Count);
 
-
             // Enters Group Selection Screen
-            FindObjectOfType<Button>().onClick.Invoke();
+            PushButtonNamed("ScreenButton");
             await UniTask.WaitUntil(() =>
-                FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.GroupSelectionScreen.ToString());
-
+                ExistButtonOfSceneNamed(SceneName.GroupSelectionScreen));
             await UniTask.Yield();
             var roleDropdown = FindObjectOfType<TMP_Dropdown>();
             roleDropdown.value = (int)performanceTestConfig.Role;
@@ -122,19 +118,18 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
 
             PushButtonNamed("OkButton");
             await UniTask.WaitUntil(() =>
-                FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.TextChatControl.ToString());
+                ExistButtonOfSceneNamed(SceneName.TextChatControl));
 
             // Enters VirtualSpace
             FindObjectOfType<Button>().onClick.Invoke();
             await UniTask.WaitUntil(() =>
-                            FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.ConfirmationScreen.ToString()
-                            || FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.TextChatControl.ToString());
-            if (FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.ConfirmationScreen.ToString())
+                ExistButtonOfSceneNamed(SceneName.ConfirmationScreen) || ExistButtonOfSceneNamed(SceneName.TextChatControl));
+            if (ExistButtonOfSceneNamed(SceneName.ConfirmationScreen))
             {
 
                 PushButtonNamed("OkButton");
                 await UniTask.WaitUntil(() =>
-                    FindObjectOfType<Button>()?.gameObject.scene.name == SceneName.TextChatControl.ToString());
+                    ExistButtonOfSceneNamed(SceneName.TextChatControl));
             }
 
             var appControlScope = FindObjectOfType<ClientControlScope>();
@@ -181,8 +176,6 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
             var playerInput = player.GetComponent<StarterAssetsInputs>();
 
             var messageInput = FindObjectOfType<TMP_InputField>();
-            Button sendButton = null;
-            PushButtonNamed("SendButton");
             var messagePeriod = PerformanceTestArgumentHandler.SendMessagePeriod;
             while (player != null)
             {
@@ -219,7 +212,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                     {
                         var message = messageRepertoire[UnityEngine.Random.Range(0, messageRepertoire.Length)];
                         messageInput.text = message;
-                        sendButton.onClick.Invoke();
+                        PushButtonNamed("SendButton");
 
                         if (logger.IsDebug())
                         {
@@ -250,6 +243,25 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
             => movableRangeMin.x <= position.x && position.x <= movableRangeMax.x
                 && movableRangeMin.z <= position.z && position.z <= movableRangeMax.z;
 
+        private static bool ExistButtonOfSceneNamed(params SceneName[] sceneNames)
+        {
+            foreach (var button in FindObjectsOfType<Button>())
+            {
+                foreach (var sceneName in sceneNames)
+                {
+                    if (button.gameObject.scene.name == sceneName.ToString())
+                    {
+                        if (logger.IsDebug())
+                        {
+                            logger.LogDebug($"Exist Button {button.gameObject.scene.name}");
+                        }
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         private static void PushButtonNamed(string name)
         {
             foreach (var button in FindObjectsOfType<Button>())
@@ -257,6 +269,10 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                 if (button.name == name)
                 {
                     button.onClick.Invoke();
+                    if (logger.IsDebug())
+                    {
+                        logger.LogDebug($"{button.name} Button Clicked");
+                    }
                     return;
                 }
             }
