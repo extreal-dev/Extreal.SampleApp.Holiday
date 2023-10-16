@@ -1,12 +1,12 @@
 ## Performance test (P2P multiplayer)
 ## Build for performance test
-### 1. add a performance test scene
+### 1. Add a performance test scene
 Have all players operate automatically in the performance test.  
 In `Build Settings` - `Scenes in Build`, check `Holiday.PerformanceTest/PerformanceTest` and place it at the top.
 ### 2. Host/Client Selection
 In P2P multiplayer, the automatic operation differs between the host and the client.  
 To select which one to operate, use `Role` in `Assets/Holiday.PerformanceTest/PerformanceTestConfig`.
-### 3. setting the signaling server address
+### 3. Set the address of the signaling server.
 Set the address of the signaling server for P2P connections in P2PConfig > Signaling Url.
 ### 4. Set the address of the usage visualization server.
 Set the address of the usage visualization server in AppUsageConfig > Push Url.
