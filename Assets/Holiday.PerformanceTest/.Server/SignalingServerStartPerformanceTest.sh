@@ -23,7 +23,7 @@ sleep 100
 mkdir $work_dir/tmp
 aws s3 cp --recursive s3://extreal-webgl/PerformanceTest/$dir_name/ $work_dir/tmp/
 
-for i in `seq 1 5`
+for i in `seq 1 $((client_num_per_server - 1))`
 do
     python3 DataAnalysis.py $work_dir/tmp/NGO_Client_00${i}_MemoryUtilization\*
     aws s3 cp $work_dir/tmp/NGO_Client_00${i}_MemoryUtilization.csv s3://extreal-webgl/PerformanceTest/$dir_name/
