@@ -8,15 +8,22 @@ In P2P multiplayer, the automatic operation differs between the host and the cli
 To select which one to operate, use `Role` in `Assets/Holiday.PerformanceTest/PerformanceTestConfig`.
 ### 3. setting the signaling server address
 Set the address of the signaling server for P2P connections in P2PConfig > Signaling Url.
-### Set the address of the usage visualization server.
+### 4. Set the address of the usage visualization server.
 Set the address of the usage visualization server in AppUsageConfig > Push Url.
-### 5. Build Settings
+### 5. Exclude VoiceChat.(Dedicated Server Build only)
+- Remove "Voice Chat Control" from "StageConfig.asset".
+- Comment out the following line from "ClientControlScope.cs".
+  ````
+  var voiceChatClient = VoiceChatClientProvider.Provide(peerClient, assetHelper.VoiceChatConfig);
+  builder.RegisterComponent(voiceChatClient);
+  ````
+### 6. Build Settings
 - WebGL
-    - Development Build` is off.
-    - `Code Optimization` is set to `Shorter Build Time
+  - Development Build` is off.
+  - `Code Optimization` is set to `Shorter Build Time
 - Windows Dedicated Server (load client)
-    - Change Project Settings > Player > Other Settings > Optimization > Managed Stripping Level to "Minimal".
-    - It is recommended to turn on Development Build to reduce build time.
+  - Change Project Settings > Player > Other Settings > Optimization > Managed Stripping Level to "Minimal".
+  - It is recommended to turn on Development Build to reduce build time.
 
 ## Perform performance test
 #### Modify parameters in the load client start batch file
