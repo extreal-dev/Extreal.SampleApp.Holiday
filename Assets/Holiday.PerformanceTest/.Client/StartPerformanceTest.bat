@@ -9,8 +9,6 @@ set /a get_cpu_lifetime=%player_lifetime%+%client_num%*10
 set /a loop_count=%client_num%-1
 
 set my_date=%date:/=%
-set my_date=%my_date:~-8%
-set my_date=%my_date:~-4%%my_date:~,4%
 
 mkdir ..\Data\%my_date% > NUL 2>&1
 for /f "usebackq delims=" %%A in (`dir /AD /B ..\Data\%my_date% ^| find /c /v ""`) do set dir_count=%%A
