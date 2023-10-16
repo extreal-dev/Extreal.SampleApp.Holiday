@@ -26,9 +26,9 @@
   - Set video file name as `PanoramicVideoStage.mp4`
 - Enable the panoramic image/video distribution server.
   - Enter the following command in the `WebGLBuild` directory.
-```
-deno run --allow-net --allow-read=. index.ts
-```
+    ```
+    deno run --allow-net --allow-read=. index.ts
+    ```
 - Open multiple Unity editors using [ParrelSync](https://github.com/VeriorPies/ParrelSync). ParrelSync is already installed in this project.
 - Run the application.
   - Run the following scene: `/Assets/Holiday/App/App`
@@ -37,7 +37,7 @@ deno run --allow-net --allow-read=. index.ts
 ## How to play with WebGL
 
 - First, you need to make it playable on the Unity Editor.
-- Enter the following command in the `Assets/WebScripts` directory.
+- Enter the following command in the `Assets/WebGLScripts` directory.
    ```bash
    $ yarn
    $ yarn dev
@@ -51,9 +51,9 @@ deno run --allow-net --allow-read=. index.ts
   - Set video file name as `PanoramicVideoStage.mp4`
 - Enable the panoramic image/video distribution server and WebGL running server locally. 
   - Enter the following command in the `WebGLBuild` directory.
-```
-deno run --allow-net --allow-read=. index.ts
-```
+    ```
+    deno run --allow-net --allow-read=. index.ts
+    ```
 - Play from `Build And Run`.
 
 ## How to visualize application usage

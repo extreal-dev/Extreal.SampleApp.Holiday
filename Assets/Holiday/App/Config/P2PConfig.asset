@@ -13,6 +13,11 @@ MonoBehaviour:
   m_Name: P2PConfig
   m_EditorClassIdentifier: 
   signalingUrl: http://127.0.0.1:3010
-  timeoutSeconds: 60
-  iceServerUrls:
-  - stun:stun.l.google.com:19302
+  signalingTimeoutSeconds: 3
+  p2PTimeoutSeconds: 15
+  vanillaIceTimeoutSeconds: 5
+  iceServers:
+  - urls:
+    - stun:stun.l.google.com:19302
+    username: 
+    credential: 
