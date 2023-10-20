@@ -43,7 +43,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                         }
                         if (period > 0f)
                         {
-                            SendMessagePeriod = (int)(period * 5400);
+                            SendMessagePeriod = (int)period;
                         }
 
                         break;

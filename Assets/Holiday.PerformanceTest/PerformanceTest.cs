@@ -173,10 +173,13 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                     player = networkObject;
                 }
             }
-            var playerInput = player.GetComponent<StarterAssetsInputs>();
 
+            var playerInput = player.GetComponent<StarterAssetsInputs>();
             var messageInput = FindObjectOfType<TMP_InputField>();
             var messagePeriod = PerformanceTestArgumentHandler.SendMessagePeriod;
+
+            RepeatTextMessageSendAsync(messageInput, messagePeriod).Forget();
+
             while (player != null)
             {
                 var moveDuration = UnityEngine.Random.Range(1f, 5f);
@@ -207,18 +210,6 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                         playerInput.JumpInput(true);
                     }
                     playerInput.MoveInput(moveDirection);
-
-                    if (UnityEngine.Random.Range(0, messagePeriod) == 1)
-                    {
-                        var message = messageRepertoire[UnityEngine.Random.Range(0, messageRepertoire.Length)];
-                        messageInput.text = message;
-                        PushButtonNamed("SendButton");
-
-                        if (logger.IsDebug())
-                        {
-                            logger.LogDebug($"Send message: {message}");
-                        }
-                    }
 
                     await UniTask.Yield();
                 }
@@ -315,6 +306,23 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
             }
 
             file.Close();
+        }
+
+        private async UniTaskVoid RepeatTextMessageSendAsync(TMP_InputField messageInput, int messagePeriod)
+        {
+            while (true)
+            {
+                var message = messageRepertoire[UnityEngine.Random.Range(0, messageRepertoire.Length)];
+                messageInput.text = message;
+                PushButtonNamed("SendButton");
+
+                if (logger.IsDebug())
+                {
+                    logger.LogDebug($"Send message: {message}");
+                }
+
+                await UniTask.Delay(messagePeriod * 1000);
+            }
         }
 
         private static async UniTaskVoid DestroyInLifetimeSecondsAsync()
