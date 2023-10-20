@@ -25,8 +25,8 @@ aws s3 cp --recursive s3://extreal-webgl/PerformanceTest/$dir_name/ $work_dir/tm
 
 for i in `seq 1 $((client_num_per_server - 1))`
 do
-    python3 DataAnalysis.py $work_dir/tmp/NGO_Client_00${i}_MemoryUtilization\*
-    aws s3 cp $work_dir/tmp/NGO_Client_00${i}_MemoryUtilization.csv s3://extreal-webgl/PerformanceTest/$dir_name/
+    python3 DataAnalysis.py $work_dir/tmp/_MemoryUtilization${i}\*
+    aws s3 cp $work_dir/tmp/_MemoryUtilization${i}.csv s3://extreal-webgl/PerformanceTest/$dir_name/
 done
 
 mv $work_dir/tmp/NGO_Client_00?_MemoryUtilization.csv $work_dir
