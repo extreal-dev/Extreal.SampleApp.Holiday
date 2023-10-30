@@ -1,8 +1,8 @@
 {
   "dependencies": {
-    "@extreal-dev/extreal.integration.chat.webrtc": "^0.0.11",
-    "@extreal-dev/extreal.integration.multiplay.ngo.webrtc": "^0.0.11",
-    "@extreal-dev/extreal.integration.p2p.webrtc": "^0.0.15"
+    "@extreal-dev/extreal.integration.chat.webrtc": "1.0.0",
+    "@extreal-dev/extreal.integration.multiplay.ngo.webrtc": "1.0.0",
+    "@extreal-dev/extreal.integration.p2p.webrtc": "1.0.0"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.1.0",
