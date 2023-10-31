@@ -21,28 +21,28 @@ To select which one to operate, use `Role` in `Assets/Holiday.PerformanceTest/Pe
 
 ## Perform performance test
 #### Modify parameters in the load client start batch file
-Modify the [Load Client Start Batch File](Assets/Holiday.PerformanceTest/.Client/StartPerformanceTest.bat) according to the load conditions.
+Modify the [Load Client Start Batch File](.Client/StartPerformanceTest.bat) according to the load conditions.
 |parameters|functions|
 |--|--|
 |exec_time| the startup time of the performance test. Upload results to S3 when this time elapses (=completes)||
-||client_num|Number of load clients to start|
-### Load Client Setup
-1. copy the [.Client](Assets/Holiday.PerformanceTest/.Client/) folder to the load client PC.
+|client_num|Number of load clients to start|
+### 1. Load Client Setup
+1. copy the [.Client](.Client/) folder to the load client PC.
 1. Copy all the Windows application file counts that you have built for the performance test directly under the `.Client` folder.
     - Holiday.exe and StartPerformanceTest.bat exist in the same hierarchy.
 
-### Checking Signaling Server resource usage
+### 2. Checking Signaling Server resource usage
 1. run `SignalingServerStartPerformanceTest.sh`.
 
-### Checking AppUsage Server resource usage
+### 3. Checking AppUsage Server resource usage
 1. run `AppUsageServerStartPerformanceTest.sh`.
 
-### PChecking WebGL app resource usage
+### 4. Checking WebGL app resource usage
 Please Check manually.
 1. Close all applications and Chrome tabs other than the one you are using.
 1. Start Task Manager and check Google Chrome's CPU and memory from the Processes tab.
 1. Start Resource Monitor and check the sending and receiving of chrome.exe from the network tab.
 1. run the app.
 
-### Running the Load Client
+### 5. Running the Load Client
 1. run `StartPerformanceTest.bat`.
