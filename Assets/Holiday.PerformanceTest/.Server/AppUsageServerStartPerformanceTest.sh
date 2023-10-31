@@ -1,6 +1,6 @@
 #!/bin/bash
 
-exec_time=5400
+exec_time=3800
 client_num_per_server=9
 
 lifetime=`expr $exec_time + $client_num_per_server \* 10 + 120`
