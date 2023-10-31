@@ -1,16 +1,14 @@
 @echo off
 setlocal EnableDelayedExpansion
 
-set exec_time=5400
-set client_num=18
+set exec_time=3800
+set client_num=9
 
 set /a player_lifetime=%exec_time%+60
 set /a get_cpu_lifetime=%player_lifetime%+%client_num%*10
 set /a loop_count=%client_num%-1
 
 set my_date=%date:/=%
-set my_date=%my_date:~-8%
-set my_date=%my_date:~-4%%my_date:~,4%
 
 mkdir ..\Data\%my_date% > NUL 2>&1
 for /f "usebackq delims=" %%A in (`dir /AD /B ..\Data\%my_date% ^| find /c /v ""`) do set dir_count=%%A
@@ -35,6 +33,6 @@ taskkill /im Holiday.exe
 
 timeout 5
 
-aws s3 cp --recursive %work_dir%\ s3://extreal-dev/PerformanceTest/Data/%my_date%/%dir_count%/
+aws s3 cp --recursive %work_dir%\ s3://extreal-webgl/PerformanceTest/Data/%my_date%/%dir_count%/
 
 endlocal
