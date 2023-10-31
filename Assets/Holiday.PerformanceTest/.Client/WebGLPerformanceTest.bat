@@ -1,7 +1,6 @@
 @echo off
 setlocal
 
-REM set exec_time=5400
 set exec_time=3800
 set client_num=9
 
