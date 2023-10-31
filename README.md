@@ -3,6 +3,8 @@
 ## How to play with Unity Editor
 
 - Clone the repository.
+- If `Enter Safe Mode?` window shows, please press `Ignore`.
+- If `NuGet Importer` window shows, please press `Yes`.
 - See [README](Servers/P2P/README.md) to start a signaling server for P2P.`
 - Open multiple Unity editors using [ParrelSync](https://github.com/VeriorPies/ParrelSync). ParrelSync is already installed in this project.
 - Run the application.
