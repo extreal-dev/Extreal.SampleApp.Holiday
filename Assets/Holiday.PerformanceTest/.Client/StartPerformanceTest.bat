@@ -1,8 +1,8 @@
 @echo off
 setlocal EnableDelayedExpansion
 
-set exec_time=5400
-set client_num=8
+set exec_time=3800
+set client_num=9
 
 set /a player_lifetime=%exec_time%+60
 set /a get_cpu_lifetime=%player_lifetime%+%client_num%*10
