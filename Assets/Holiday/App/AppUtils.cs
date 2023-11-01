@@ -13,6 +13,13 @@ namespace Extreal.SampleApp.Holiday.App
             => false;
 #endif
 
+        public static bool HasMic()
+#if UNITY_WEBGL && !UNITY_EDITOR
+            => bool.Parse(Extreal.Integration.Web.Common.WebGLHelper.CallFunction(nameof(HasMic)));
+#else
+            => true;
+#endif
+
         private static readonly HashSet<StageName> SpaceStages = new HashSet<StageName> { StageName.VirtualStage, StageName.PanoramicVideoStage, StageName.PanoramicImageStage };
 
         public static bool IsSpace(StageName stageName) => SpaceStages.Contains(stageName);

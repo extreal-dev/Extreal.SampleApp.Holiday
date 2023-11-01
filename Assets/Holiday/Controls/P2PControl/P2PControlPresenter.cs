@@ -56,6 +56,11 @@ namespace Extreal.SampleApp.Holiday.Controls.P2PControl
                 appState.Notify(assetHelper.MessageConfig.P2PHostNameAlreadyExistsMessage);
                 stageNavigator.ReplaceAsync(StageName.GroupSelectionStage).Forget();
             };
+
+            appState.PlayingReady
+                .Where(ready => ready && !AppUtils.HasMic())
+                .Subscribe(_ => appState.Notify("Voice chat is not available due to missing microphone."))
+                .AddTo(sceneDisposables);
         }
 
         protected override void OnStageEntered(
