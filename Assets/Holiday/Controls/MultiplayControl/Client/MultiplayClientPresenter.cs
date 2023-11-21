@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Extreal.Core.StageNavigation;
-using Extreal.Integration.Multiplay.NGO;
+using Extreal.Integration.Multiplay.LiveKit;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
@@ -12,19 +12,19 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
 {
     public class MultiplayClientPresenter : StagePresenterBase
     {
-        private readonly NgoClient ngoClient;
+        private readonly LiveKitMultiplayClient liveKitMultiplayClient;
         private readonly AssetHelper assetHelper;
         private MultiplayClient multiplayClient;
 
         public MultiplayClientPresenter
         (
-            NgoClient ngoClient,
+            LiveKitMultiplayClient liveKitMultiplayClient,
             AssetHelper assetHelper,
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState
         ) : base(stageNavigator, appState)
         {
-            this.ngoClient = ngoClient;
+            this.liveKitMultiplayClient = liveKitMultiplayClient;
             this.assetHelper = assetHelper;
         }
 
@@ -36,7 +36,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
             CompositeDisposable sceneDisposables
         )
         {
-            multiplayClient = new MultiplayClient(ngoClient, assetHelper, appState);
+            multiplayClient = new MultiplayClient(liveKitMultiplayClient, assetHelper, appState);
             sceneDisposables.Add(multiplayClient);
 
             multiplayClient.IsPlayerSpawned
@@ -56,7 +56,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
                 .AddTo(sceneDisposables);
 
             appState.OnMessageSent
-                .Subscribe(multiplayClient.SendToEveryone)
+                .Subscribe(multiplayClient.SendToOthers)
                 .AddTo(sceneDisposables);
         }
 

@@ -7,7 +7,7 @@ using Cysharp.Threading.Tasks;
 using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
 using Extreal.Integration.AssetWorkflow.Addressables;
-using Extreal.Integration.Multiplay.NGO;
+using Extreal.Integration.Multiplay.LiveKit;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Avatars;
@@ -15,9 +15,9 @@ using Extreal.SampleApp.Holiday.App.P2P;
 using Extreal.SampleApp.Holiday.Controls.Common.Multiplay;
 using UniRx;
 using Unity.Collections;
-using Unity.Netcode;
 using UnityEngine;
 using Object = UnityEngine.Object;
+using LiveKit;
 
 namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
 {
@@ -27,9 +27,11 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
         [SuppressMessage("Usage", "CC0033")]
         private readonly BoolReactiveProperty isPlayerSpawned = new BoolReactiveProperty(false);
 
-        private readonly NgoClient ngoClient;
+        private readonly LiveKitMultiplayClient liveKitMultiplayClient;
         private readonly AssetHelper assetHelper;
+        private readonly List<string> avatarNames;
         private readonly AppState appState;
+        private readonly string userIdentity;
 
         [SuppressMessage("Usage", "CC0033")]
         private readonly CompositeDisposable disposables = new CompositeDisposable();
@@ -40,33 +42,38 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
         private readonly Dictionary<string, AssetDisposable<GameObject>> loadedAvatars
             = new Dictionary<string, AssetDisposable<GameObject>>();
 
-        private static Dictionary<ulong, NetworkObject> SpawnedObjects
-            => NetworkManager.Singleton.SpawnManager.SpawnedObjects;
+        private readonly Dictionary<string, GameObject> spawnedObjects = new Dictionary<string, GameObject>();
 
         private NetworkThirdPersonController myAvatar;
 
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(MultiplayClient));
 
-        public MultiplayClient(NgoClient ngoClient, AssetHelper assetHelper, AppState appState)
+        public MultiplayClient(LiveKitMultiplayClient liveKitMultiplayClient, AssetHelper assetHelper, AppState appState)
         {
-            this.ngoClient = ngoClient;
+            this.liveKitMultiplayClient = liveKitMultiplayClient;
             this.assetHelper = assetHelper;
             this.appState = appState;
+            spawnedObjects = liveKitMultiplayClient.ConnectedClients.ToDictionary(c => c.Participant.Identity, c => c.PlayerObject);
+            userIdentity = appState.PlayerName + "-" + Guid.NewGuid();
 
-            this.ngoClient.OnConnected
+            this.liveKitMultiplayClient.OnConnected
                 .Subscribe(_ =>
                 {
-                    ngoClient.RegisterMessageHandler(MessageName.PlayerSpawned.ToString(), PlayerSpawnedMessageHandler);
-                    ngoClient.RegisterMessageHandler(MessageName.ReceivedFromEveryone.ToString(), ReceivedFromEveryoneMessageHandler);
-                    SendPlayerSpawn(appState.Avatar.AssetName);
+                    liveKitMultiplayClient.Spawn(liveKitMultiplayClient.ConnectedClients.Select(client => client.PlayerObject).ToList());
+                    SetOwnerAvatarAsync(appState.Avatar.AssetName);
+                    SendPlayerAvatarName(appState.Avatar.AssetName);
                 })
                 .AddTo(disposables);
 
-            this.ngoClient.OnDisconnecting
+            this.liveKitMultiplayClient.OnMessageReceived
+                .Subscribe(HandleReceivedMessage)
+                .AddTo(disposables);
+
+            this.liveKitMultiplayClient.OnDisconnecting
                 .Subscribe(_ =>
                 {
                     isPlayerSpawned.Value = false;
-                    ngoClient.UnregisterMessageHandler(MessageName.PlayerSpawned.ToString());
+                    SendPlayerDespawn();
                 })
                 .AddTo(disposables);
         }
@@ -80,26 +87,26 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
         }
 
         public async UniTaskVoid JoinAsync()
-            => await ngoClient.ConnectAsync(assetHelper.NgoClientConfig.NgoConfig, cts.Token);
+            => await liveKitMultiplayClient.ConnectAsync("url", "accessToken");
 
-        public async UniTaskVoid LeaveAsync() => await ngoClient.DisconnectAsync();
+        public async UniTaskVoid LeaveAsync() => await liveKitMultiplayClient.DisconnectAsync();
 
-        public void ResetPosition()
-            => myAvatar.ResetPosition();
+        public void ResetPosition() => myAvatar.ResetPosition();
 
-        private void SendPlayerSpawn(string avatarAssetName)
+        private void SendPlayerAvatarName(string avatarAssetName)
         {
-            if (Logger.IsDebug())
-            {
-                Logger.LogDebug($"spawn: avatarAssetName: {avatarAssetName}");
-            }
-
-            var messageStream = new FastBufferWriter(FixedString64Bytes.UTF8MaxLengthInBytes, Allocator.Temp);
-            messageStream.WriteValueSafe(avatarAssetName);
-            ngoClient.SendMessage(MessageName.PlayerSpawn.ToString(), messageStream);
+            var messageJson = JsonUtility.ToJson(avatarAssetName);
+            liveKitMultiplayClient.SendMessage(MessageName.PlayerSpawn.ToString(), messageJson, DataPacketKind.RELIABLE);
         }
 
-        public void SendToEveryone(Message message)
+        private void SendPlayerDespawn()
+        {
+            var message = new LiveKitMultiplayMessage(LiveKidMultiplayMessageCommand.Delete);
+            var messageJson = message.ToJson();
+            liveKitMultiplayClient.SendMessage(MessageName.PlayerSpawn.ToString(), messageJson, DataPacketKind.RELIABLE);
+        }
+
+        public void SendToOthers(Message message)
         {
             if (Logger.IsDebug())
             {
@@ -108,30 +115,30 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
                     + $" message ID: {message.MessageId}" + Environment.NewLine
                     + $" content: {message.Content}");
             }
-
-            var messageStream = new FastBufferWriter(FixedString512Bytes.UTF8MaxLengthInBytes, Allocator.Temp);
-            messageStream.WriteValueSafe(message);
-            ngoClient.SendMessage(MessageName.SendToEveryone.ToString(), messageStream);
+            var messageJson = JsonUtility.ToJson(message);
+            liveKitMultiplayClient.SendMessage(MessageName.SendToEveryone.ToString(), messageJson, DataPacketKind.RELIABLE);
         }
 
-        private void PlayerSpawnedMessageHandler(ulong senderClientId, FastBufferReader messagePayload)
+        private async UniTaskVoid SetOwnerAvatarAsync(string avatarAssetName) => await SetAvatarAsync(spawnedObjects[userIdentity], avatarAssetName);
+
+        private void HandleReceivedMessage((Participant participant, string messageJson) tuple)
         {
-            messagePayload.ReadValueSafe(out SpawnedMessage spawnedMessage);
-            var spawnedObject = SpawnedObjects[spawnedMessage.NetworkObjectId];
-            if (spawnedObject.IsOwner)
+            var messageSpaceTransition = JsonUtility.FromJson<Message>(tuple.messageJson);
+            if (messageSpaceTransition.MessageId == MessageId.SpaceTransition)
             {
-                HandleOwnerAsync(spawnedMessage, spawnedObject).Forget();
+                HandleReceivedMessageSpaceTransition(messageSpaceTransition);
             }
-            else
+
+            var avatarNames = assetHelper.AvatarConfig.Avatars.Select(avatar => avatar.Name).ToList();
+            var messageAvatarName = JsonUtility.FromJson<string>(tuple.messageJson);
+            if (avatarNames.Contains(messageAvatarName))
             {
-                SetAvatarAsync(spawnedObject, spawnedMessage.AvatarAssetName).Forget();
+                HandleReceivedMessageAvatarName(tuple.participant, messageAvatarName);
             }
         }
 
-        private void ReceivedFromEveryoneMessageHandler(ulong senderClientId, FastBufferReader messagePayload)
+        private void HandleReceivedMessageSpaceTransition(Message message)
         {
-            messagePayload.ReadValueSafe(out Message message);
-
             if (Logger.IsDebug())
             {
                 Logger.LogDebug(
@@ -142,7 +149,13 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
             appState.ReceivedMessage(message);
         }
 
-        private async UniTaskVoid HandleOwnerAsync(SpawnedMessage spawnedMessage, NetworkObject spawnedObject)
+        private void HandleReceivedMessageAvatarName(Participant participant, string avatarAssetName)
+        {
+            var spawnedObject = spawnedObjects[participant.Identity];
+            SetAvatarAsync(spawnedObject, avatarAssetName).Forget();
+        }
+
+        private async UniTaskVoid HandleOwnerAsync(SpawnedMessage spawnedMessage, GameObject spawnedObject)
         {
             myAvatar = Controller(spawnedObject);
             myAvatar.AvatarAssetName.Value = spawnedMessage.AvatarAssetName;
@@ -152,22 +165,22 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
             isPlayerSpawned.Value = true;
         }
 
-        private static NetworkThirdPersonController Controller(NetworkObject networkObject)
+        private static NetworkThirdPersonController Controller(GameObject networkObject)
             => networkObject.GetComponent<NetworkThirdPersonController>();
 
         private void SetAvatarForExistingSpawnedObjects(ulong ownerId)
         {
-            foreach (var existingObject in SpawnedObjects.Values.ToArray())
+            foreach (var existingObject in spawnedObjects.Values.ToArray())
             {
-                if (ownerId != existingObject.NetworkObjectId)
-                {
-                    string avatarName = Controller(existingObject).AvatarAssetName.Value;
-                    SetAvatarAsync(existingObject, avatarName).Forget();
-                }
+                // if (ownerId != existingObject.NetworkObjectId)
+                // {
+                string avatarName = Controller(existingObject).AvatarAssetName.Value;
+                SetAvatarAsync(existingObject, avatarName).Forget();
+                // }
             }
         }
 
-        private async UniTask SetAvatarAsync(NetworkObject networkObject, string avatarAssetName)
+        private async UniTask SetAvatarAsync(GameObject networkObject, string avatarAssetName)
         {
             var assetDisposable = await LoadAvatarAsync(avatarAssetName);
             var avatarObject = Object.Instantiate(assetDisposable.Result, networkObject.transform);

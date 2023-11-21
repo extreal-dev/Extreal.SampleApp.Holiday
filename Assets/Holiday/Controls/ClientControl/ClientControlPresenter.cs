@@ -1,6 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using Extreal.Core.StageNavigation;
-using Extreal.Integration.Multiplay.NGO;
+using Extreal.Integration.Multiplay.LiveKit;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
@@ -12,30 +12,30 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
     public class ClientControlPresenter : StagePresenterBase
     {
         private readonly AssetHelper assetHelper;
-        private readonly NgoClient ngoClient;
+        private readonly LiveKitMultiplayClient liveKitMultiplayClient;
 
         public ClientControlPresenter(
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState,
             AssetHelper assetHelper,
-            NgoClient ngoClient) : base(stageNavigator, appState)
+            LiveKitMultiplayClient liveKitMultiplayClient) : base(stageNavigator, appState)
         {
             this.assetHelper = assetHelper;
-            this.ngoClient = ngoClient;
+            this.liveKitMultiplayClient = liveKitMultiplayClient;
         }
 
         protected override void Initialize(
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState,
             CompositeDisposable sceneDisposables)
-            => InitializeNgoClient(stageNavigator, appState, sceneDisposables);
+            => InitializeLiveKitMultiplayClient(stageNavigator, appState, sceneDisposables);
 
-        private void InitializeNgoClient(
+        private void InitializeLiveKitMultiplayClient(
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState,
             CompositeDisposable sceneDisposables)
         {
-            ngoClient.OnConnectionApprovalRejected
+            liveKitMultiplayClient.OnConnectionApprovalRejected
                 .Subscribe(_ =>
                 {
                     appState.Notify(assetHelper.MessageConfig.MultiplayConnectionApprovalRejectedMessage);
@@ -43,22 +43,22 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
                 })
                 .AddTo(sceneDisposables);
 
-            ngoClient.OnConnectRetrying
-                .Subscribe(retryCount => AppUtils.NotifyRetrying(
-                    appState,
-                    assetHelper.MessageConfig.MultiplayConnectRetryMessage,
-                    retryCount))
-                .AddTo(sceneDisposables);
+            // liveKitMultiplayClient.OnConnectRetrying
+            //     .Subscribe(retryCount => AppUtils.NotifyRetrying(
+            //         appState,
+            //         assetHelper.MessageConfig.MultiplayConnectRetryMessage,
+            //         retryCount))
+            //     .AddTo(sceneDisposables);
 
-            ngoClient.OnConnectRetried
-                .Subscribe(result => AppUtils.NotifyRetried(
-                    appState,
-                    result,
-                    assetHelper.MessageConfig.MultiplayConnectRetrySuccessMessage,
-                    assetHelper.MessageConfig.MultiplayConnectRetryFailureMessage))
-                .AddTo(sceneDisposables);
+            // liveKitMultiplayClient.OnConnectRetried
+            //     .Subscribe(result => AppUtils.NotifyRetried(
+            //         appState,
+            //         result,
+            //         assetHelper.MessageConfig.MultiplayConnectRetrySuccessMessage,
+            //         assetHelper.MessageConfig.MultiplayConnectRetryFailureMessage))
+            //     .AddTo(sceneDisposables);
 
-            ngoClient.OnUnexpectedDisconnected
+            liveKitMultiplayClient.OnUnexpectedDisconnected
                 .Subscribe(_ =>
                     appState.Notify(assetHelper.MessageConfig.MultiplayUnexpectedDisconnectedMessage))
                 .AddTo(sceneDisposables);
