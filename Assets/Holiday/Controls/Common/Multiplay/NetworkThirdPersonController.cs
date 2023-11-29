@@ -2,7 +2,6 @@
 using Cinemachine;
 using StarterAssets;
 using TMPro;
-using UniRx;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -17,7 +16,7 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
 #pragma warning disable
     [RequireComponent(typeof(CharacterController))]
     [RequireComponent(typeof(PlayerInput))]
-    public class NetworkThirdPersonController : NetworkBehaviour
+    public class NetworkThirdPersonController : MonoBehaviour
     {
         [Header("Player")]
         [Tooltip("Move speed of the character in m/s")]
@@ -123,14 +122,18 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
             = new NetworkVariable<NetworkString>(writePerm: NetworkVariableWritePermission.Owner);
 
         private bool isTouchDevice;
+        private bool isOwner;
+        private const bool isClient = true;
 
-        public void Initialize(Avatar avatar, bool isTouchDevice)
+        public void Initialize(Avatar avatar, bool isOwner, bool isTouchDevice)
         {
+            this.isOwner = isOwner;
             SetAvatar(avatar);
 
-            if (IsOwner && isTouchDevice)
+            if (isOwner && isTouchDevice)
             {
                 RegisterCurrentDeviceIsTouchDevice();
+                SetOwnerCamera();
             }
         }
 
@@ -197,11 +200,9 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
             _fallTimeoutDelta = FallTimeout;
         }
 
-        public override void OnNetworkSpawn()
+        private void SetOwnerCamera()
         {
-            base.OnNetworkSpawn();
-
-            if (IsClient && IsOwner)
+            if (isClient && isOwner)
             {
                 _mainCamera = Camera.main.gameObject;
                 _cinemachineVirtualCamera = FindObjectOfType<CinemachineVirtualCamera>();
@@ -213,7 +214,7 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
 
         private void Update()
         {
-            if (IsOwner)
+            if (isOwner)
             {
                 _hasAnimator = TryGetComponent(out _animator);
                 GroundedCheck();
@@ -234,7 +235,7 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
 
         private void LateUpdate()
         {
-            if (IsOwner &&
+            if (isOwner &&
                 (EventSystem.current.currentSelectedGameObject == null
                  || EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>() == null))
             {

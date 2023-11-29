@@ -10,7 +10,7 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
 {
     public class ClientControlScope : LifetimeScope
     {
-        [SerializeField] private LiveKitMultiplayClient liveKitMultiplayClient;
+        [SerializeField] private PubSubMultiplayClient liveKitMultiplayClient;
 
         protected override void Configure(IContainerBuilder builder)
         {

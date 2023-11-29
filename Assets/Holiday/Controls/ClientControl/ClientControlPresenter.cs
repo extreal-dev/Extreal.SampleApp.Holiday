@@ -12,13 +12,13 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
     public class ClientControlPresenter : StagePresenterBase
     {
         private readonly AssetHelper assetHelper;
-        private readonly LiveKitMultiplayClient liveKitMultiplayClient;
+        private readonly PubSubMultiplayClient liveKitMultiplayClient;
 
         public ClientControlPresenter(
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState,
             AssetHelper assetHelper,
-            LiveKitMultiplayClient liveKitMultiplayClient) : base(stageNavigator, appState)
+            PubSubMultiplayClient liveKitMultiplayClient) : base(stageNavigator, appState)
         {
             this.assetHelper = assetHelper;
             this.liveKitMultiplayClient = liveKitMultiplayClient;

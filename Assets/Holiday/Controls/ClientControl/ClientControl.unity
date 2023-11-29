@@ -149,7 +149,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1982724500}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eabbb3a242c9e0a4fb9c76549373b813, type: 3}
+  m_Script: {fileID: 11500000, guid: 9ec92b6b349be114184b903741203daf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   playerObject: {fileID: 7407036263737879821, guid: d2eae51810896804e9ece241a580a09a,
@@ -203,7 +203,7 @@ MonoBehaviour:
     TypeName: Extreal.SampleApp.Holiday.App.AppScope
   autoRun: 1
   autoInjectGameObjects: []
-  networkManager: {fileID: 0}
+  liveKitMultiplayClient: {fileID: 1982724501}
 --- !u!4 &1998090160
 Transform:
   m_ObjectHideFlags: 0

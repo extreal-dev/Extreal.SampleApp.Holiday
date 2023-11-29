@@ -12,13 +12,13 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
 {
     public class MultiplayClientPresenter : StagePresenterBase
     {
-        private readonly LiveKitMultiplayClient liveKitMultiplayClient;
+        private readonly PubSubMultiplayClient liveKitMultiplayClient;
         private readonly AssetHelper assetHelper;
         private MultiplayClient multiplayClient;
 
         public MultiplayClientPresenter
         (
-            LiveKitMultiplayClient liveKitMultiplayClient,
+            PubSubMultiplayClient liveKitMultiplayClient,
             AssetHelper assetHelper,
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState
@@ -45,7 +45,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
 
             Observable
                 .CombineLatest(appState.SpaceReady, appState.P2PReady)
-                .Where(readies => readies.All(ready => ready) && appState.IsClient)
+                .Where(readies => readies.All(ready => ready))
                 .Subscribe(_ => multiplayClient.JoinAsync().Forget())
                 .AddTo(sceneDisposables);
 
