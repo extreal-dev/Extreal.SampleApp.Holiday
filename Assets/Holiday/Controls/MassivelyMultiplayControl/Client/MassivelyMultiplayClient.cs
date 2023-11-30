@@ -18,9 +18,9 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 using LiveKit;
 
-namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
+namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
 {
-    public class MultiplayClient : DisposableBase
+    public class MassivelyMultiplayClient : DisposableBase
     {
         public IObservable<bool> IsPlayerSpawned => isPlayerSpawned;
         [SuppressMessage("Usage", "CC0033")]
@@ -48,9 +48,9 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
 
         private NetworkThirdPersonController myAvatar;
 
-        private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(MultiplayClient));
+        private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(MassivelyMultiplayClient));
 
-        public MultiplayClient(PubSubMultiplayClient pubSubMultiplayClient, AssetHelper assetHelper, AppState appState)
+        public MassivelyMultiplayClient(PubSubMultiplayClient pubSubMultiplayClient, AssetHelper assetHelper, AppState appState)
         {
             this.pubSubMultiplayClient = pubSubMultiplayClient;
             this.assetHelper = assetHelper;

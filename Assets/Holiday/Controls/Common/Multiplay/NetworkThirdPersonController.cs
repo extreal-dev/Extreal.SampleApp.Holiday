@@ -16,7 +16,7 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
 #pragma warning disable
     [RequireComponent(typeof(CharacterController))]
     [RequireComponent(typeof(PlayerInput))]
-    public class NetworkThirdPersonController : MonoBehaviour
+    public class NetworkThirdPersonController : NetworkBehaviour
     {
         [Header("Player")]
         [Tooltip("Move speed of the character in m/s")]
@@ -129,11 +129,11 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
         {
             this.isOwner = isOwner;
             SetAvatar(avatar);
+            SetOwnerCamera();
 
             if (isOwner && isTouchDevice)
             {
                 RegisterCurrentDeviceIsTouchDevice();
-                SetOwnerCamera();
             }
         }
 

@@ -425,6 +425,22 @@
       },
       "hash": "e53e3488c7bb443ea262cbd5e91846f6d1ee12a4"
     },
+    "jp.co.tis.extreal.integration.multiplay.ngo.webrtc": {
+      "version": "https://github.com/extreal-dev/Extreal.Integration.Multiplay.NGO.WebRTC.git#1.0.0",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.netcode.gameobjects": "1.5.1",
+        "com.cysharp.unitask": "2.3.3",
+        "com.neuecc.unirx": "7.1.0",
+        "jp.co.tis.extreal.core.logging": "1.2.0",
+        "jp.co.tis.extreal.core.common": "1.1.0",
+        "jp.co.tis.extreal.integration.web.common": "1.0.0",
+        "jp.co.tis.extreal.integration.p2p.webrtc": "1.0.0",
+        "jp.co.tis.extreal.integration.multiplay.ngo": "1.2.0"
+      },
+      "hash": "4b15cc449b17e6046248e5437473c3690285afb3"
+    },
     "jp.co.tis.extreal.integration.p2p.webrtc": {
       "version": "https://github.com/extreal-dev/Extreal.Integration.P2P.WebRTC.git#1.0.0",
       "depth": 0,

@@ -8,15 +8,15 @@ using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.App.Stages;
 using UniRx;
 
-namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
+namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
 {
-    public class MultiplayClientPresenter : StagePresenterBase
+    public class MassivelyMultiplayClientPresenter : StagePresenterBase
     {
         private readonly PubSubMultiplayClient liveKitMultiplayClient;
         private readonly AssetHelper assetHelper;
-        private MultiplayClient multiplayClient;
+        private MassivelyMultiplayClient multiplayClient;
 
-        public MultiplayClientPresenter
+        public MassivelyMultiplayClientPresenter
         (
             PubSubMultiplayClient liveKitMultiplayClient,
             AssetHelper assetHelper,
@@ -36,7 +36,12 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
             CompositeDisposable sceneDisposables
         )
         {
-            multiplayClient = new MultiplayClient(liveKitMultiplayClient, assetHelper, appState);
+            if (!appState.IsMassivelyForCommunication)
+            {
+                return;
+            }
+
+            multiplayClient = new MassivelyMultiplayClient(liveKitMultiplayClient, assetHelper, appState);
             sceneDisposables.Add(multiplayClient);
 
             multiplayClient.IsPlayerSpawned
@@ -62,7 +67,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplyControl.Client
 
         protected override void OnStageExiting(StageName stageName, AppState appState)
         {
-            if (AppUtils.IsSpace(stageName))
+            if (!appState.IsMassivelyForCommunication || AppUtils.IsSpace(stageName))
             {
                 return;
             }

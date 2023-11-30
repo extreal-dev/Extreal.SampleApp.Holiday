@@ -5,12 +5,16 @@ using Extreal.Integration.Multiplay.LiveKit;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
+using Unity.Netcode;
+using Extreal.Integration.Multiplay.NGO;
+using Extreal.Integration.Multiplay.NGO.WebRTC;
 
 namespace Extreal.SampleApp.Holiday.Controls.ClientControl
 {
     public class ClientControlScope : LifetimeScope
     {
-        [SerializeField] private PubSubMultiplayClient liveKitMultiplayClient;
+        [SerializeField] private NetworkManager networkManager;
+        [SerializeField] private PubSubMultiplayClient pubSubMultiplayClient;
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -21,7 +25,20 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
 
             builder.Register<GroupManager>(Lifetime.Singleton);
 
-            builder.RegisterComponent(liveKitMultiplayClient);
+            builder.RegisterComponent(networkManager);
+
+            var webRtcClient = WebRtcClientProvider.Provide(peerClient);
+            var webRtcTransportConnectionSetter = new WebRtcTransportConnectionSetter(webRtcClient);
+
+            var ngoHost = new NgoServer(networkManager);
+            ngoHost.AddConnectionSetter(webRtcTransportConnectionSetter);
+            builder.RegisterComponent(ngoHost);
+
+            var ngoClient = new NgoClient(networkManager);
+            ngoClient.AddConnectionSetter(webRtcTransportConnectionSetter);
+            builder.RegisterComponent(ngoClient);
+
+            builder.RegisterComponent(pubSubMultiplayClient);
 
             var textChatClient = TextChatClientProvider.Provide(peerClient);
             builder.RegisterComponent(textChatClient);

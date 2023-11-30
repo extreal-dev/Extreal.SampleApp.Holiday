@@ -41,6 +41,10 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
             CompositeDisposable sceneDisposables
         )
         {
+            groupSelectionScreenView.OnModeChanged
+                .Subscribe(appState.SetCommunicationMode)
+                .AddTo(sceneDisposables);
+
             groupSelectionScreenView.OnRoleChanged
                 .Subscribe(appState.SetRole)
                 .AddTo(sceneDisposables);
@@ -88,7 +92,9 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
         )
         {
             groupSelectionScreenView.Initialize();
-            groupSelectionScreenView.SetInitialValues(appState.IsHost ? PeerRole.Host : PeerRole.Client);
+            var role = appState.IsHost ? PeerRole.Host : PeerRole.Client;
+            var communicationMode = appState.IsLightForCommunication ? CommunicationMode.Light : CommunicationMode.Massively;
+            groupSelectionScreenView.SetInitialValues(role, communicationMode);
         }
     }
 }

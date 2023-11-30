@@ -5,6 +5,8 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.Common.System;
 using Extreal.Integration.Multiplay.LiveKit;
+using Extreal.Integration.P2P.WebRTC;
+using Extreal.SampleApp.Holiday.App;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.Controls.ClientControl
@@ -18,16 +20,31 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
         [SuppressMessage("Usage", "CC0033")]
         private readonly CompositeDisposable disposables = new CompositeDisposable();
 
-        private readonly PubSubMultiplayClient liveKitMultiplayClient;
+        private readonly PeerClient peerClient;
+        private readonly PubSubMultiplayClient pubSubMultiplayClient;
+        private readonly AppState appState;
 
-        public GroupManager(PubSubMultiplayClient liveKitMultiplayClient) => this.liveKitMultiplayClient = liveKitMultiplayClient;
+        public GroupManager(PeerClient peerClient, PubSubMultiplayClient pubSubMultiplayClient, AppState appState)
+        {
+            this.peerClient = peerClient;
+            this.pubSubMultiplayClient = pubSubMultiplayClient;
+            this.appState = appState;
+        }
 
         protected override void ReleaseManagedResources() => disposables.Dispose();
 
         public async UniTask UpdateGroupsAsync()
         {
-            var rooms = await liveKitMultiplayClient.ListRoomsAsync();
-            groups.Value = rooms.Select(room => new Group("room.Sid", "room.Name")).ToList();
+            if (appState.IsLightForCommunication)
+            {
+                var hosts = await peerClient.ListHostsAsync();
+                groups.Value = hosts.Select(host => new Group(host.Id, host.Name)).ToList();
+            }
+            else
+            {
+                var rooms = await pubSubMultiplayClient.ListRoomsAsync();
+                groups.Value = rooms.Select(room => new Group(room.Id, room.Name)).ToList();
+            }
         }
 
         public Group FindByName(string name) => groups.Value.First(groups => groups.Name == name);

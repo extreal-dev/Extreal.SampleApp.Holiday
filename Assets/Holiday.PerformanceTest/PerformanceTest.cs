@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.Logging;
-using Extreal.Integration.Multiplay.NGO;
+using Extreal.Integration.Multiplay.LiveKit;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.Controls.ClientControl;
@@ -134,7 +134,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
 
             var appControlScope = FindObjectOfType<ClientControlScope>();
             var appState = appControlScope.Container.Resolve(typeof(AppState)) as AppState;
-            var liveKitMultiplayClient = appControlScope.Container.Resolve(typeof(LiveKitMultiplayClient)) as LiveKitMultiplayClient;
+            var pubSubMultiplayClient = appControlScope.Container.Resolve(typeof(PubSubMultiplayClient)) as PubSubMultiplayClient;
 
             {
                 var playingReady = false;
@@ -146,7 +146,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                     .Subscribe(_ => playingReady = true);
 
                 using var isConnectionApprovalRejectedDisposable =
-                    liveKitMultiplayClient.OnConnectionApprovalRejected
+                    pubSubMultiplayClient.OnConnectionApprovalRejected
                         .Subscribe(_ => isConnectionApprovalRejected = true);
 
                 await UniTask.WaitUntil(() => playingReady || isConnectionApprovalRejected);
