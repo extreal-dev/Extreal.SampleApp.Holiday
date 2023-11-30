@@ -31,8 +31,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
         private readonly List<string> avatarNames;
         private readonly AppState appState;
         private readonly string userIdentity;
-        // private readonly string accessTokenUrl = "http://localhost:3000/";
-        private readonly string relayUrl = "https://massive-b001.dev.comet.ninja";
+        private readonly string relayUrl = "http://localhost:3030";
         private readonly ConnectionConfig connectionConfig;
 
         [SuppressMessage("Usage", "CC0033")]
@@ -62,8 +61,9 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
             this.pubSubMultiplayClient.OnConnected
                 .Subscribe(_ =>
                 {
+                    Logger.LogDebug("!!!pubSubMultiplayClient.OnConnected");
                     pubSubMultiplayClient.SpawnPlayer();
-                    Logger.LogDebug("!!!liveKitMultiplayClient.OnConnected");
+                    Logger.LogDebug("!!!After pubSubMultiplayClient.SpawnPlayer()");
                     SetOwnerAvatarAsync(appState.Avatar.AssetName).Forget();
                     // SendPlayerAvatarName(appState.Avatar.AssetName);
                 })
@@ -91,10 +91,8 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
 
         public async UniTaskVoid JoinAsync()
         {
-            // var response = await GetAccessToken(accessTokenUrl, appState.GroupName, userIdentity);
-            // var accessToken = response.AccessToken;
-            // var liveKitConnectionConfig = new LiveKitConnectionConfig(connectionConfig.Url, appState.GroupName, accessToken);
-            await pubSubMultiplayClient.ConnectAsync(connectionConfig);
+            var redisConnectionConfig = new RedisConnectionConfig(connectionConfig.Url, appState.GroupName);
+            await pubSubMultiplayClient.ConnectAsync(redisConnectionConfig);
             Logger.LogDebug($"!!!Localclient after connectAsync is: {pubSubMultiplayClient.LocalClient}");
         }
 
