@@ -17,7 +17,7 @@
         "Extreal.Core.StageNavigation",
         "Extreal.Core.Common",
         "Extreal.Integration.Multiplay.NGO",
-        "Extreal.Integration.Multiplay.LiveKit"
+        "Extreal.Integration.Multiplay.Common"
     ],
     "includePlatforms": [
         "Editor",

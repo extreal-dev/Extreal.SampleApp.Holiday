@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.Logging;
-using Extreal.Integration.Multiplay.LiveKit;
+using Extreal.Integration.Multiplay.Common;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.Controls.ClientControl;
@@ -134,7 +134,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
 
             var appControlScope = FindObjectOfType<ClientControlScope>();
             var appState = appControlScope.Container.Resolve(typeof(AppState)) as AppState;
-            var pubSubMultiplayClient = appControlScope.Container.Resolve(typeof(PubSubMultiplayClient)) as PubSubMultiplayClient;
+            var pubSubMultiplayClient = appControlScope.Container.Resolve(typeof(ExtrealMultiplayClient)) as ExtrealMultiplayClient;
 
             {
                 var playingReady = false;

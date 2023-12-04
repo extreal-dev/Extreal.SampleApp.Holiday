@@ -1,6 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using Extreal.Core.StageNavigation;
-using Extreal.Integration.Multiplay.LiveKit;
+using Extreal.Integration.Multiplay.Common;
 using Extreal.Integration.Multiplay.NGO;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
@@ -14,14 +14,14 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
     {
         private readonly AssetHelper assetHelper;
         private readonly NgoClient ngoClient;
-        private readonly PubSubMultiplayClient pubSubMultiplayClient;
+        private readonly ExtrealMultiplayClient pubSubMultiplayClient;
 
         public ClientControlPresenter(
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState,
             AssetHelper assetHelper,
             NgoClient ngoClient,
-            PubSubMultiplayClient pubSubMultiplayClient) : base(stageNavigator, appState)
+            ExtrealMultiplayClient pubSubMultiplayClient) : base(stageNavigator, appState)
         {
             this.assetHelper = assetHelper;
             this.ngoClient = ngoClient;

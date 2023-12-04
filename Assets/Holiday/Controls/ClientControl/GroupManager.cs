@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.Common.System;
-using Extreal.Integration.Multiplay.LiveKit;
+using Extreal.Integration.Multiplay.Common;
 using Extreal.Integration.P2P.WebRTC;
 using Extreal.SampleApp.Holiday.App;
 using UniRx;
@@ -21,10 +21,10 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
         private readonly CompositeDisposable disposables = new CompositeDisposable();
 
         private readonly PeerClient peerClient;
-        private readonly PubSubMultiplayClient pubSubMultiplayClient;
+        private readonly ExtrealMultiplayClient pubSubMultiplayClient;
         private readonly AppState appState;
 
-        public GroupManager(PeerClient peerClient, PubSubMultiplayClient pubSubMultiplayClient, AppState appState)
+        public GroupManager(PeerClient peerClient, ExtrealMultiplayClient pubSubMultiplayClient, AppState appState)
         {
             this.peerClient = peerClient;
             this.pubSubMultiplayClient = pubSubMultiplayClient;

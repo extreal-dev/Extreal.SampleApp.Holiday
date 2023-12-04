@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Extreal.Core.StageNavigation;
-using Extreal.Integration.Multiplay.LiveKit;
+using Extreal.Integration.Multiplay.Common;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
@@ -12,13 +12,13 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
 {
     public class MassivelyMultiplayClientPresenter : StagePresenterBase
     {
-        private readonly PubSubMultiplayClient liveKitMultiplayClient;
+        private readonly ExtrealMultiplayClient liveKitMultiplayClient;
         private readonly AssetHelper assetHelper;
         private MassivelyMultiplayClient multiplayClient;
 
         public MassivelyMultiplayClientPresenter
         (
-            PubSubMultiplayClient liveKitMultiplayClient,
+            ExtrealMultiplayClient liveKitMultiplayClient,
             AssetHelper assetHelper,
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState

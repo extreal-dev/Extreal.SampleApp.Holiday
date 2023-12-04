@@ -1,7 +1,7 @@
 ﻿using Extreal.Integration.Chat.WebRTC;
 using Extreal.Integration.P2P.WebRTC;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
-using Extreal.Integration.Multiplay.LiveKit;
+using Extreal.Integration.Multiplay.Common;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -14,7 +14,7 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
     public class ClientControlScope : LifetimeScope
     {
         [SerializeField] private NetworkManager networkManager;
-        [SerializeField] private PubSubMultiplayClient pubSubMultiplayClient;
+        [SerializeField] private ExtrealMultiplayClient pubSubMultiplayClient;
 
         protected override void Configure(IContainerBuilder builder)
         {
