@@ -39,17 +39,17 @@ namespace Extreal.SampleApp.Holiday.Controls.P2PControl
                 .Subscribe(_ => appState.SetP2PReady(true))
                 .AddTo(sceneDisposables);
 
-            peerClient.OnStartFailed
-                .Subscribe(_ => appState.Notify(assetHelper.MessageConfig.P2PStartFailureMessage))
-                .AddTo(sceneDisposables);
+            // peerClient.OnStartFailed
+            //     .Subscribe(_ => appState.Notify(assetHelper.MessageConfig.P2PStartFailureMessage))
+            //     .AddTo(sceneDisposables);
 
-            peerClient.OnConnectFailed
-                .Subscribe(_ => appState.Notify(assetHelper.MessageConfig.P2PStartFailureMessage))
-                .AddTo(sceneDisposables);
+            // peerClient.OnConnectFailed
+            //     .Subscribe(_ => appState.Notify(assetHelper.MessageConfig.P2PStartFailureMessage))
+            //     .AddTo(sceneDisposables);
 
-            peerClient.OnDisconnected
-                .Subscribe(_ => appState.Notify(assetHelper.MessageConfig.P2PUnexpectedDisconnectedMessage))
-                .AddTo(sceneDisposables);
+            // peerClient.OnDisconnected
+            //     .Subscribe(_ => appState.Notify(assetHelper.MessageConfig.P2PUnexpectedDisconnectedMessage))
+            //     .AddTo(sceneDisposables);
 
             handleOnHostNameAlreadyExists = () =>
             {
@@ -98,7 +98,7 @@ namespace Extreal.SampleApp.Holiday.Controls.P2PControl
                 return;
             }
             peerClient.Stop();
-            appState.SetP2PReady(false);
+            appState.SetP2PReady(true);
         }
     }
 }

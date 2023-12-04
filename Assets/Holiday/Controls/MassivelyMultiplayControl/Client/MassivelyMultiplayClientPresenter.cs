@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Extreal.Core.StageNavigation;
 using Extreal.Integration.Multiplay.LiveKit;
@@ -47,7 +48,9 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
             multiplayClient.IsPlayerSpawned
                 .Subscribe(appState.SetMultiplayReady)
                 .AddTo(sceneDisposables);
+            UnityEngine.Debug.LogWarning($"group name in Presenter is: {appState.GroupName}");
 
+            appState.SetGroupName("aaa");
             Observable
                 .CombineLatest(appState.SpaceReady, appState.P2PReady)
                 .Where(readies => readies.All(ready => ready))

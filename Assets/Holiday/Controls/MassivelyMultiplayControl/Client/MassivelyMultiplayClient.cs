@@ -16,7 +16,6 @@ using Extreal.SampleApp.Holiday.Controls.Common.Multiplay;
 using UniRx;
 using UnityEngine;
 using Object = UnityEngine.Object;
-using LiveKit;
 
 namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
 {
@@ -30,7 +29,6 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
         private readonly AssetHelper assetHelper;
         private readonly List<string> avatarNames;
         private readonly AppState appState;
-        private readonly string userIdentity;
         private readonly string relayUrl = "http://localhost:3030";
         private readonly ConnectionConfig connectionConfig;
 
@@ -43,7 +41,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
         private readonly Dictionary<string, AssetDisposable<GameObject>> loadedAvatars
             = new Dictionary<string, AssetDisposable<GameObject>>();
 
-        private readonly Dictionary<string, GameObject> spawnedObjects = new Dictionary<string, GameObject>();
+        private readonly Dictionary<string, GameObject> spawnedPlayerObjects = new Dictionary<string, GameObject>();
 
         private NetworkThirdPersonController myAvatar;
 
@@ -54,18 +52,18 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
             this.pubSubMultiplayClient = pubSubMultiplayClient;
             this.assetHelper = assetHelper;
             this.appState = appState;
-            spawnedObjects = pubSubMultiplayClient.ConnectedClients.ToDictionary(dic => dic.Key, dic => dic.Value.PlayerObject);
-            userIdentity = appState.PlayerName + "-" + Guid.NewGuid();
+            this.pubSubMultiplayClient.Topic = "aaa";
+            spawnedPlayerObjects = pubSubMultiplayClient.ConnectedClients.ToDictionary(dic => dic.Key, dic => dic.Value.PlayerObject);
             connectionConfig = new ConnectionConfig(relayUrl);
-
+            Debug.LogWarning($"Group name in MassiveClient is: {appState.GroupName}");
+            Debug.LogWarning($"Topic in MassiveClient is: {this.pubSubMultiplayClient.Topic}");
             this.pubSubMultiplayClient.OnConnected
                 .Subscribe(_ =>
                 {
-                    Logger.LogDebug("!!!pubSubMultiplayClient.OnConnected");
+                    appState.SetP2PReady(true);
                     pubSubMultiplayClient.SpawnPlayer();
-                    Logger.LogDebug("!!!After pubSubMultiplayClient.SpawnPlayer()");
                     SetOwnerAvatarAsync(appState.Avatar.AssetName).Forget();
-                    // SendPlayerAvatarName(appState.Avatar.AssetName);
+                    SendPlayerAvatarName(appState.Avatar.AssetName);
                 })
                 .AddTo(disposables);
 
@@ -93,7 +91,6 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
         {
             var redisConnectionConfig = new RedisConnectionConfig(connectionConfig.Url, appState.GroupName);
             await pubSubMultiplayClient.ConnectAsync(redisConnectionConfig);
-            Logger.LogDebug($"!!!Localclient after connectAsync is: {pubSubMultiplayClient.LocalClient}");
         }
 
         public async UniTaskVoid LeaveAsync()
@@ -109,8 +106,8 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
 
         private void SendPlayerAvatarName(string avatarAssetName)
         {
-            var messageJson = JsonUtility.ToJson(avatarAssetName);
-            pubSubMultiplayClient.SendMessage(messageJson, DataPacketKind.RELIABLE);
+            var userIdentityLocal = pubSubMultiplayClient.LocalClient.UserIdentity;
+            pubSubMultiplayClient.SendMessage(userIdentityLocal, message: avatarAssetName, command: MultiplayMessageCommand.AvatarName);
         }
 
         public void SendToOthers(Message message)
@@ -123,32 +120,35 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
                     + $" content: {message.Content}");
             }
             var messageJson = JsonUtility.ToJson(message);
-            pubSubMultiplayClient.SendMessage(appState.GroupName, messageJson);
+            pubSubMultiplayClient.SendMessage(pubSubMultiplayClient.LocalClient.UserIdentity, messageJson);
         }
 
         private async UniTaskVoid SetOwnerAvatarAsync(string avatarAssetName)
         {
-            Logger.LogDebug("!!!Before SetOwnerAvatarAsync");
+            myAvatar = Controller(pubSubMultiplayClient.LocalClient.PlayerObject);
+            myAvatar.AvatarAssetName.Value = (NetworkString)avatarAssetName;
             const bool isOwner = true;
             await SetAvatarAsync(pubSubMultiplayClient.LocalClient.PlayerObject, avatarAssetName, isOwner);
-
             isPlayerSpawned.Value = true;
-            Logger.LogDebug("!!!After SetOwnerAvatarAsync");
         }
 
         private void HandleReceivedMessage((string userIdentity, string messageJson) tuple)
         {
+            var userIdentityRemote = tuple.userIdentity;
             var messageSpaceTransition = JsonUtility.FromJson<Message>(tuple.messageJson);
             if (messageSpaceTransition.MessageId == MessageId.SpaceTransition)
             {
                 HandleReceivedMessageSpaceTransition(messageSpaceTransition);
             }
 
+            var messageAvatarName = JsonUtility.FromJson<MultiplayMessage>(tuple.messageJson);
             var avatarNames = assetHelper.AvatarConfig.Avatars.Select(avatar => avatar.Name).ToList();
-            var messageAvatarName = JsonUtility.FromJson<string>(tuple.messageJson);
-            if (avatarNames.Contains(messageAvatarName))
+            var remoteAvatarName = messageAvatarName.Message;
+            Debug.LogWarning($"### HandleReceivedMessage AvatarName: {userIdentityRemote}-{remoteAvatarName}");
+            if (avatarNames.Contains(remoteAvatarName))
             {
-                HandleReceivedMessageAvatarName(tuple.userIdentity, messageAvatarName);
+                Debug.LogWarning($"### Before HandleReceivedMessageAvatarName: {userIdentityRemote}-{remoteAvatarName}");
+                HandleReceivedMessageAvatarName(userIdentityRemote, remoteAvatarName);
             }
         }
 
@@ -164,11 +164,12 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
             appState.ReceivedMessage(message);
         }
 
-        private void HandleReceivedMessageAvatarName(string userIdentity, string avatarAssetName)
+        private void HandleReceivedMessageAvatarName(string userIdentityRemote, string avatarAssetName)
         {
-            var spawnedObject = spawnedObjects[userIdentity];
-            var isOwner = userIdentity.Equals(userIdentity);
+            var spawnedObject = spawnedPlayerObjects[userIdentityRemote];
+            const bool isOwner = false;
             SetAvatarAsync(spawnedObject, avatarAssetName, isOwner).Forget();
+            Debug.LogWarning($"### After HandleReceivedMessageAvatarName: {userIdentityRemote}-{avatarAssetName}");
         }
 
         private static NetworkThirdPersonController Controller(GameObject gameObject)
@@ -176,38 +177,10 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
 
         private async UniTask SetAvatarAsync(GameObject gameObject, string avatarAssetName, bool isOwner)
         {
-            Logger.LogDebug("!!!Before SetAvatarAsync");
-            Logger.LogDebug("!!!Before await LoadAvatarAsync(avatarAssetName)");
             var assetDisposable = await LoadAvatarAsync(avatarAssetName);
-            Logger.LogDebug("!!!After await LoadAvatarAsync(avatarAssetName)");
-
-            Logger.LogDebug("!!!Before Object.Instantiate");
             var avatarObject = Object.Instantiate(assetDisposable.Result, gameObject.transform);
-            Logger.LogDebug("!!!After Object.Instantiate");
-
             Controller(gameObject).Initialize(avatarObject.GetComponent<AvatarProvider>().Avatar, isOwner, AppUtils.IsTouchDevice());
-            Logger.LogDebug("!!!After SetAvatarAsync");
         }
-
-        // async UniTask<AccessTokenResponse> GetAccessToken(string url, string roomName, string userIdentity)
-        // {
-        //     var fullUrl = url + "getToken?RoomName=" + Uri.EscapeDataString(roomName) + "&ParticipantName=" + Uri.EscapeDataString(userIdentity);
-        //     try
-        //     {
-        //         using var request = UnityWebRequest.Get(fullUrl);
-        //         _ = await request.SendWebRequest();
-
-        //         var json = request.downloadHandler.text;
-        //         var response = JsonUtility.FromJson<AccessTokenResponse>(json);
-        //         return response;
-        //     }
-        //     catch (Exception e)
-        //     {
-        //         Logger.LogDebug(e.Message);
-        //     }
-
-        //     return null;
-        // }
 
         public async UniTask<AssetDisposable<GameObject>> LoadAvatarAsync(string avatarAssetName)
         {
