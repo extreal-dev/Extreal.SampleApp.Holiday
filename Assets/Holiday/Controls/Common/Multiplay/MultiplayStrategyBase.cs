@@ -1,85 +1,74 @@
-﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using Cinemachine;
-using StarterAssets;
-using TMPro;
-using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using Random = UnityEngine.Random;
-
-/* Note: animations are called via the controller for both the character and capsule using animator null checks
- */
 
 namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
 {
-#pragma warning disable
-    [RequireComponent(typeof(CharacterController))]
-    [RequireComponent(typeof(PlayerInput))]
-    public class NetworkThirdPersonController : NetworkBehaviour
+    public abstract class MultiplayStrategyBase : IMultipayStrategy
     {
+        private readonly GameObject player;
+
         [Header("Player")]
         [Tooltip("Move speed of the character in m/s")]
-        public float MoveSpeed = 2.0f;
+        private const float MoveSpeed = 2.0f;
 
         [Tooltip("Sprint speed of the character in m/s")]
-        public float SprintSpeed = 5.335f;
+        private const float SprintSpeed = 5.335f;
 
         [Tooltip("How fast the character turns to face movement direction")]
         [Range(0.0f, 0.3f)]
-        public float RotationSmoothTime = 0.12f;
+        private const float RotationSmoothTime = 0.12f;
 
         [Tooltip("Acceleration and deceleration")]
-        public float SpeedChangeRate = 10.0f;
-
-        public AudioClip LandingAudioClip;
-        public AudioClip[] FootstepAudioClips;
-        [Range(0, 1)] public float FootstepAudioVolume = 0.5f;
+        private const float SpeedChangeRate = 10.0f;
 
         [Space(10)]
         [Tooltip("The height the player can jump")]
-        public float JumpHeight = 1.2f;
+        private const float JumpHeight = 1.2f;
 
         [Tooltip("The character uses its own gravity value. The engine default is -9.81f")]
-        public float Gravity = -15.0f;
+        private const float Gravity = -15.0f;
 
         [Space(10)]
         [Tooltip("Time required to pass before being able to jump again. Set to 0f to instantly jump again")]
-        public float JumpTimeout = 0.50f;
+        private const float JumpTimeout = 0.50f;
 
         [Tooltip("Time required to pass before entering the fall state. Useful for walking down stairs")]
-        public float FallTimeout = 0.15f;
+        private const float FallTimeout = 0.15f;
 
         [Header("Player Grounded")]
         [Tooltip("If the character is grounded or not. Not part of the CharacterController built in grounded check")]
-        public bool Grounded = true;
+        private bool Grounded = true;
 
-        [Tooltip("Useful for rough ground")] public float GroundedOffset = -0.14f;
+        [Tooltip("Useful for rough ground")] private const float GroundedOffset = -0.14f;
 
         [Tooltip("The radius of the grounded check. Should match the radius of the CharacterController")]
-        public float GroundedRadius = 0.28f;
+        private const float GroundedRadius = 0.28f;
 
         [Tooltip("What layers the character uses as ground")]
-        public LayerMask GroundLayers;
+        private LayerMask groundLayers;
 
         [Header("Cinemachine")]
         [Tooltip("The follow target set in the Cinemachine Virtual Camera that the camera will follow")]
-        public GameObject CinemachineCameraTarget;
+        private GameObject cinemachineCameraTarget;
 
         [Tooltip("How far in degrees can you move the camera up")]
-        public float TopClamp = 70.0f;
+        private const float TopClamp = 70.0f;
 
         [Tooltip("How far in degrees can you move the camera down")]
-        public float BottomClamp = -30.0f;
+        private const float BottomClamp = -30.0f;
 
         [Tooltip("Additional degrees to override the camera. Useful for fine tuning camera position when locked")]
-        public float CameraAngleOverride = 0.0f;
+        private const float CameraAngleOverride = 0.0f;
 
         [Tooltip("For locking the camera position on all axis")]
-        public bool LockCameraPosition = false;
+        private const bool LockCameraPosition = false;
 
-        [Header("Input")] public PlayerInput PlayerInput;
-        public HolidayPlayerInput Input;
+        [Header("Input")] private PlayerInput PlayerInput;
+        private GetPlayerInput GetPlayerInput;
+        protected HolidayPlayerInput Input;
 
         private const float cameraRotateSpeed = 10.0f;
         private const float dampingFactor = 0.1f;
@@ -111,25 +100,31 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
 
         private Animator _animator;
         private CharacterController _controller;
-        private GameObject _mainCamera;
         private CinemachineVirtualCamera _cinemachineVirtualCamera;
 
         private const float _threshold = 0.01f;
 
         private bool _hasAnimator;
 
-        public NetworkVariable<NetworkString> AvatarAssetName { get; set; }
-            = new NetworkVariable<NetworkString>(writePerm: NetworkVariableWritePermission.Owner);
-
-        private bool isTouchDevice;
-        private bool isOwner;
+        protected bool isTouchDevice;
+        protected bool isOwner;
         private const bool isClient = true;
         private bool isNetcode;
 
-        public void Initialize(Avatar avatar, bool isOwner, bool isTouchDevice, bool isNetcode)
+        protected MultiplayStrategyBase(GameObject player, GameObject cinemachineCameraTarget, LayerMask groundLayers)
+        {
+            this.player = player;
+            this.cinemachineCameraTarget = cinemachineCameraTarget;
+            this.groundLayers = groundLayers;
+
+            PlayerInput = player.GetComponent<PlayerInput>();
+            GetPlayerInput = player.GetComponent<GetPlayerInput>();
+            Input = player.GetComponent<HolidayPlayerInput>();
+        }
+
+        public void Initialize(Avatar avatar, bool isOwner, bool isTouchDevice)
         {
             this.isOwner = isOwner;
-            this.isNetcode = isNetcode;
             SetAvatar(avatar);
             SetOwnerCamera();
 
@@ -137,14 +132,24 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
             {
                 RegisterCurrentDeviceIsTouchDevice();
             }
+
+            _cinemachineTargetYaw = cinemachineCameraTarget.transform.rotation.eulerAngles.y;
+
+            _hasAnimator = player.TryGetComponent(out _animator);
+            _controller = player.GetComponent<CharacterController>();
+
+            AssignAnimationIDs();
+
+            // reset our timeouts on start
+            _jumpTimeoutDelta = JumpTimeout;
+            _fallTimeoutDelta = FallTimeout;
         }
 
         private void SetAvatar(Avatar avatar)
         {
-
             if (!_hasAnimator)
             {
-                _hasAnimator = TryGetComponent(out _animator);
+                _hasAnimator = player.TryGetComponent(out _animator);
             }
 
             var speed = _animator.GetFloat(_animIDSpeed);
@@ -165,7 +170,7 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
         private void RegisterCurrentDeviceIsTouchDevice()
         {
             isTouchDevice = true;
-            var multiplayCanvasControllerInput = FindObjectOfType<MultiplayCanvasControllerInput>();
+            var multiplayCanvasControllerInput = Object.FindObjectOfType<MultiplayCanvasControllerInput>();
             multiplayCanvasControllerInput.SetHolidayPlayerInput(Input);
             PlayerInput.neverAutoSwitchControlSchemes = true;
         }
@@ -173,85 +178,26 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
         public void ResetPosition()
         {
             _controller.enabled = false;
-            transform.position = Vector3.zero;
-            transform.rotation = Quaternion.identity;
+            player.transform.position = Vector3.zero;
+            player.transform.rotation = Quaternion.identity;
             _cinemachineTargetYaw = 0f;
             _cinemachineTargetPitch = 0f;
             _controller.enabled = true;
-        }
-
-        private bool IsCurrentDeviceMouse
-        {
-            get
-            {
-                return PlayerInput.currentControlScheme == "KeyboardMouse";
-            }
-        }
-
-        private void Start()
-        {
-            _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
-
-            _hasAnimator = TryGetComponent(out _animator);
-            _controller = GetComponent<CharacterController>();
-
-            AssignAnimationIDs();
-
-            // reset our timeouts on start
-            _jumpTimeoutDelta = JumpTimeout;
-            _fallTimeoutDelta = FallTimeout;
         }
 
         private void SetOwnerCamera()
         {
             if (isClient && isOwner)
             {
-                _mainCamera = Camera.main.gameObject;
-                _cinemachineVirtualCamera = FindObjectOfType<CinemachineVirtualCamera>();
+                _cinemachineVirtualCamera = Object.FindObjectOfType<CinemachineVirtualCamera>();
 
                 PlayerInput.enabled = true;
-                _cinemachineVirtualCamera.Follow = CinemachineCameraTarget.transform;
+                GetPlayerInput.enabled = true;
+                _cinemachineVirtualCamera.Follow = cinemachineCameraTarget.transform;
             }
         }
 
-        private void Update()
-        {
-            if (isOwner || !isNetcode)
-            {
-                _hasAnimator = TryGetComponent(out _animator);
-                GroundedCheck();
-
-                if (EventSystem.current.currentSelectedGameObject == null
-                    || EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>() == null
-                    || !isNetcode && !isOwner)
-                {
-                    JumpAndGravity(true);
-                    Move(true);
-                }
-                else
-                {
-                    JumpAndGravity(false);
-                    Move(false);
-                }
-            }
-        }
-
-        private void LateUpdate()
-        {
-            if (isOwner &&
-                (EventSystem.current.currentSelectedGameObject == null
-                 || EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>() == null))
-            {
-                if (IsCurrentDeviceMouse && !isTouchDevice)
-                {
-                    MouseCameraRotation();
-                }
-                else
-                {
-                    TouchDeviceCameraRotation();
-                }
-            }
-        }
+        public abstract void DoLateUpdate();
 
         private void AssignAnimationIDs()
         {
@@ -262,12 +208,12 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
         }
 
-        private void GroundedCheck()
+        protected void GroundedCheck()
         {
             // set sphere position, with offset
-            Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset,
-                transform.position.z);
-            Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers,
+            Vector3 spherePosition = new Vector3(player.transform.position.x, player.transform.position.y - GroundedOffset,
+                player.transform.position.z);
+            Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, groundLayers,
                 QueryTriggerInteraction.Ignore);
 
             // update animator if using character
@@ -277,15 +223,15 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
             }
         }
 
-        private void TouchDeviceCameraRotation()
+        protected void TouchDeviceCameraRotation()
         {
             // if there is an input and camera position is not fixed
-            if (Input.Look.sqrMagnitude >= _threshold && !LockCameraPosition)
+            if (Input.HolidayValues.Look.sqrMagnitude >= _threshold && !LockCameraPosition)
             {
                 //Don't multiply mouse input by Time.deltaTime;
                 float deltaTimeMultiplier = Time.deltaTime;
-                _cinemachineTargetYaw += Input.Look.x * deltaTimeMultiplier;
-                _cinemachineTargetPitch += Input.Look.y * deltaTimeMultiplier;
+                _cinemachineTargetYaw += Input.HolidayValues.Look.x * deltaTimeMultiplier;
+                _cinemachineTargetPitch += Input.HolidayValues.Look.y * deltaTimeMultiplier;
             }
 
             // clamp our rotations so our values are limited 360 degrees
@@ -293,18 +239,18 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
             _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
 
             // Cinemachine will follow this target
-            CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
+            cinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
                 _cinemachineTargetYaw, 0.0f);
         }
 
-        private void MouseCameraRotation()
+        protected void MouseCameraRotation()
         {
             var mouse = Mouse.current;
             // if there is an input and camera position is not fixed
-            if (Input.Look.sqrMagnitude >= _threshold && !LockCameraPosition && mouse.leftButton.isPressed)
+            if (Input.HolidayValues.Look.sqrMagnitude >= _threshold && !LockCameraPosition && Input.HolidayValues.MouseLeftButtonPressed)
             {
-                yawDelta += Input.Look.x * cameraRotateSpeed;
-                pitchDelta += Input.Look.y * cameraRotateSpeed;
+                yawDelta += Input.HolidayValues.Look.x * cameraRotateSpeed;
+                pitchDelta += Input.HolidayValues.Look.y * cameraRotateSpeed;
             }
 
             _cinemachineTargetYaw += yawDelta * dampingFactor;
@@ -318,11 +264,43 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
             _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
 
             // Cinemachine will follow this target
-            CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
+            cinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
                 _cinemachineTargetYaw, 0.0f);
         }
 
-        private void Move(bool isMovable)
+        protected void OtherMouseCameraRotation()
+        {
+            if (isOwner)
+            {
+                return;
+            }
+
+            Debug.LogWarning($"OtherMouseCameraRotation: {Input.HolidayValues.MouseLeftButtonPressed}");
+
+            // if there is an input and camera position is not fixed
+            if (Input.HolidayValues.Look.sqrMagnitude >= _threshold && !LockCameraPosition && Input.HolidayValues.MouseLeftButtonPressed && !isNetcode)
+            {
+                Debug.LogWarning("Succeeded");
+                yawDelta += Input.HolidayValues.Look.x * cameraRotateSpeed;
+                pitchDelta += Input.HolidayValues.Look.y * cameraRotateSpeed;
+            }
+
+            _cinemachineTargetYaw += yawDelta * dampingFactor;
+            _cinemachineTargetPitch += pitchDelta * dampingFactor;
+
+            yawDelta *= 1f - dampingFactor;
+            pitchDelta *= 1f - dampingFactor;
+
+            // clamp our rotations so our values are limited 360 degrees
+            _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
+            _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
+
+            // Cinemachine will follow this target
+            cinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
+                _cinemachineTargetYaw, 0.0f);
+        }
+
+        protected void Move(bool isMovable)
         {
             var move = isMovable ? Input.HolidayValues.Move : Vector2.zero;
 
@@ -370,12 +348,12 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
             if (move != Vector2.zero)
             {
                 _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
-                                  _mainCamera.transform.eulerAngles.y;
-                float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity,
+                                  _cinemachineTargetYaw;
+                float rotation = Mathf.SmoothDampAngle(player.transform.eulerAngles.y, _targetRotation, ref _rotationVelocity,
                     RotationSmoothTime);
 
                 // rotate to face input direction relative to camera position
-                transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+                player.transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
             }
 
 
@@ -393,7 +371,7 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
             }
         }
 
-        private void JumpAndGravity(bool isJumpable)
+        protected void JumpAndGravity(bool isJumpable)
         {
             var jump = isJumpable && Input.HolidayValues.Jump;
             if (Grounded)
@@ -459,7 +437,7 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
                 _verticalVelocity += Gravity * Time.deltaTime;
             }
 
-            Input.JumpInput(false);
+            Input.SetJump(false);
         }
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
@@ -469,44 +447,6 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
             if (lfAngle > 360f)
                 lfAngle -= 360f;
             return Mathf.Clamp(lfAngle, lfMin, lfMax);
-        }
-
-        private void OnDrawGizmosSelected()
-        {
-            Color transparentGreen = new Color(0.0f, 1.0f, 0.0f, 0.35f);
-            Color transparentRed = new Color(1.0f, 0.0f, 0.0f, 0.35f);
-
-            if (Grounded)
-                Gizmos.color = transparentGreen;
-            else
-                Gizmos.color = transparentRed;
-
-            // when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
-            Gizmos.DrawSphere(
-                new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z),
-                GroundedRadius);
-        }
-
-        private void OnFootstep(AnimationEvent animationEvent)
-        {
-            if (animationEvent.animatorClipInfo.weight > 0.5f)
-            {
-                if (FootstepAudioClips.Length > 0)
-                {
-                    var index = Random.Range(0, FootstepAudioClips.Length);
-                    AudioSource.PlayClipAtPoint(FootstepAudioClips[index], transform.TransformPoint(_controller.center),
-                        FootstepAudioVolume);
-                }
-            }
-        }
-
-        private void OnLand(AnimationEvent animationEvent)
-        {
-            if (animationEvent.animatorClipInfo.weight > 0.5f)
-            {
-                AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center),
-                    FootstepAudioVolume);
-            }
         }
     }
 }

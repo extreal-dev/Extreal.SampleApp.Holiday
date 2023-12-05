@@ -400,8 +400,8 @@
       },
       "hash": "4d3b7ad3c1cd752e1ace152a0949fc5ec2e976d0"
     },
-    "jp.co.tis.extreal.integration.multiplay.livekit": {
-      "version": "file:Extreal.Integration.Multiplay.LiveKit",
+    "jp.co.tis.extreal.integration.multiplay.common": {
+      "version": "file:Extreal.Integration.Multiplay.Common",
       "depth": 0,
       "source": "embedded",
       "dependencies": {

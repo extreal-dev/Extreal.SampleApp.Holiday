@@ -43,7 +43,7 @@ namespace Extreal.SampleApp.Holiday.Controls.LightMultiplyControl.Client
         private static Dictionary<ulong, NetworkObject> SpawnedObjects
             => NetworkManager.Singleton.SpawnManager.SpawnedObjects;
 
-        private NetworkThirdPersonController myAvatar;
+        private NetcodeThirdPersonController myAvatar;
 
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(LightMultiplayClient));
 
@@ -152,8 +152,8 @@ namespace Extreal.SampleApp.Holiday.Controls.LightMultiplyControl.Client
             isPlayerSpawned.Value = true;
         }
 
-        private static NetworkThirdPersonController Controller(NetworkObject networkObject)
-            => networkObject.GetComponent<NetworkThirdPersonController>();
+        private static NetcodeThirdPersonController Controller(NetworkObject networkObject)
+            => networkObject.GetComponent<NetcodeThirdPersonController>();
 
         private void SetAvatarForExistingSpawnedObjects(ulong ownerId)
         {
@@ -172,7 +172,7 @@ namespace Extreal.SampleApp.Holiday.Controls.LightMultiplyControl.Client
             var assetDisposable = await LoadAvatarAsync(avatarAssetName);
             var avatarObject = Object.Instantiate(assetDisposable.Result, networkObject.transform);
             var controller = Controller(networkObject);
-            controller.Initialize(avatarObject.GetComponent<AvatarProvider>().Avatar, controller.IsOwner, AppUtils.IsTouchDevice(), true);
+            controller.Initialize(avatarObject.GetComponent<AvatarProvider>().Avatar, controller.IsOwner, AppUtils.IsTouchDevice());
         }
 
         public async UniTask<AssetDisposable<GameObject>> LoadAvatarAsync(string avatarAssetName)

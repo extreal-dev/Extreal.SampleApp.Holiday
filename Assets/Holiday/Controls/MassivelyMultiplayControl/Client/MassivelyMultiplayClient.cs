@@ -43,7 +43,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
 
         private IReadOnlyDictionary<string, NetworkClient> ConnectedClients => pubSubMultiplayClient.ConnectedClients;
 
-        private NetworkThirdPersonController myAvatar;
+        private RedisThirdPersonController myAvatar;
 
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(MassivelyMultiplayClient));
 
@@ -185,15 +185,15 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
             SetAvatarAsync(spawnedObject, avatarAssetName, isOwner).Forget();
         }
 
-        private static NetworkThirdPersonController Controller(GameObject gameObject)
-            => gameObject.GetComponent<NetworkThirdPersonController>();
+        private static RedisThirdPersonController Controller(GameObject gameObject)
+            => gameObject.GetComponent<RedisThirdPersonController>();
 
         private async UniTask SetAvatarAsync(GameObject gameObject, string avatarAssetName, bool isOwner)
         {
             var assetDisposable = await LoadAvatarAsync(avatarAssetName);
 
             var avatarObject = Object.Instantiate(assetDisposable.Result, gameObject.transform);
-            Controller(gameObject).Initialize(avatarObject.GetComponent<AvatarProvider>().Avatar, isOwner, AppUtils.IsTouchDevice(), false);
+            Controller(gameObject).Initialize(avatarObject.GetComponent<AvatarProvider>().Avatar, isOwner, AppUtils.IsTouchDevice());
         }
 
         public async UniTask<AssetDisposable<GameObject>> LoadAvatarAsync(string avatarAssetName)
