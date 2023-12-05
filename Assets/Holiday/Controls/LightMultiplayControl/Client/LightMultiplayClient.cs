@@ -172,7 +172,7 @@ namespace Extreal.SampleApp.Holiday.Controls.LightMultiplyControl.Client
             var assetDisposable = await LoadAvatarAsync(avatarAssetName);
             var avatarObject = Object.Instantiate(assetDisposable.Result, networkObject.transform);
             var controller = Controller(networkObject);
-            controller.Initialize(avatarObject.GetComponent<AvatarProvider>().Avatar, controller.IsOwner, AppUtils.IsTouchDevice());
+            controller.Initialize(avatarObject.GetComponent<AvatarProvider>().Avatar, controller.IsOwner, AppUtils.IsTouchDevice(), true);
         }
 
         public async UniTask<AssetDisposable<GameObject>> LoadAvatarAsync(string avatarAssetName)

@@ -56,7 +56,6 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
             this.pubSubMultiplayClient.OnConnected
                 .Subscribe(_ =>
                 {
-                    appState.SetP2PReady(true);// 暫定対応
                     pubSubMultiplayClient.SpawnPlayer(message: appState.Avatar.AssetName);
                 })
                 .AddTo(disposables);
@@ -92,18 +91,15 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
             disposables.Dispose();
         }
 
-        public async UniTaskVoid JoinAsync()
-        {
-            await pubSubMultiplayClient.ConnectAsync(appState.GroupName);
-        }
+        public async UniTaskVoid JoinAsync() => await pubSubMultiplayClient.ConnectAsync(appState.GroupName);
 
         public async UniTaskVoid LeaveAsync()
         {
+            if (appState.IsHost)
+            {
+                await pubSubMultiplayClient.DeleteRoomAsync();
+            }
             pubSubMultiplayClient.Disconnect();
-            // if (appState.IsHost)
-            // {
-            //     await liveKitMultiplayClient.DeleteRoomAsync();
-            // }
         }
 
         public void ResetPosition() => myAvatar.ResetPosition();
@@ -197,7 +193,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
             var assetDisposable = await LoadAvatarAsync(avatarAssetName);
 
             var avatarObject = Object.Instantiate(assetDisposable.Result, gameObject.transform);
-            Controller(gameObject).Initialize(avatarObject.GetComponent<AvatarProvider>().Avatar, isOwner, AppUtils.IsTouchDevice());
+            Controller(gameObject).Initialize(avatarObject.GetComponent<AvatarProvider>().Avatar, isOwner, AppUtils.IsTouchDevice(), false);
         }
 
         public async UniTask<AssetDisposable<GameObject>> LoadAvatarAsync(string avatarAssetName)

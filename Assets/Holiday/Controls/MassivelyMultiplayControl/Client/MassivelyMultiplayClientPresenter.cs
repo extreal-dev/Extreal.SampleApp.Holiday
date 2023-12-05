@@ -49,7 +49,6 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
                 .Subscribe(appState.SetMultiplayReady)
                 .AddTo(sceneDisposables);
 
-            appState.SetGroupName("aaa");
             Observable
                 .CombineLatest(appState.SpaceReady, appState.P2PReady)
                 .Where(readies => readies.All(ready => ready))

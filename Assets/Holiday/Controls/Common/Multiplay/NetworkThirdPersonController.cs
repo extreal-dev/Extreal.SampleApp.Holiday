@@ -79,7 +79,7 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
         public bool LockCameraPosition = false;
 
         [Header("Input")] public PlayerInput PlayerInput;
-        public StarterAssetsInputs Input;
+        public HolidayPlayerInput Input;
 
         private const float cameraRotateSpeed = 10.0f;
         private const float dampingFactor = 0.1f;
@@ -124,10 +124,12 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
         private bool isTouchDevice;
         private bool isOwner;
         private const bool isClient = true;
+        private bool isNetcode;
 
-        public void Initialize(Avatar avatar, bool isOwner, bool isTouchDevice)
+        public void Initialize(Avatar avatar, bool isOwner, bool isTouchDevice, bool isNetcode)
         {
             this.isOwner = isOwner;
+            this.isNetcode = isNetcode;
             SetAvatar(avatar);
             SetOwnerCamera();
 
@@ -163,8 +165,8 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
         private void RegisterCurrentDeviceIsTouchDevice()
         {
             isTouchDevice = true;
-            var uiCanvasControllerInput = FindObjectOfType<UICanvasControllerInput>();
-            uiCanvasControllerInput.starterAssetsInputs = Input;
+            var multiplayCanvasControllerInput = FindObjectOfType<MultiplayCanvasControllerInput>();
+            multiplayCanvasControllerInput.SetHolidayPlayerInput(Input);
             PlayerInput.neverAutoSwitchControlSchemes = true;
         }
 
@@ -214,13 +216,14 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
 
         private void Update()
         {
-            if (isOwner)
+            if (isOwner || !isNetcode)
             {
                 _hasAnimator = TryGetComponent(out _animator);
                 GroundedCheck();
 
                 if (EventSystem.current.currentSelectedGameObject == null
-                    || EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>() == null)
+                    || EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>() == null
+                    || !isNetcode && !isOwner)
                 {
                     JumpAndGravity(true);
                     Move(true);
@@ -277,12 +280,12 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
         private void TouchDeviceCameraRotation()
         {
             // if there is an input and camera position is not fixed
-            if (Input.look.sqrMagnitude >= _threshold && !LockCameraPosition)
+            if (Input.Look.sqrMagnitude >= _threshold && !LockCameraPosition)
             {
                 //Don't multiply mouse input by Time.deltaTime;
                 float deltaTimeMultiplier = Time.deltaTime;
-                _cinemachineTargetYaw += Input.look.x * deltaTimeMultiplier;
-                _cinemachineTargetPitch += Input.look.y * deltaTimeMultiplier;
+                _cinemachineTargetYaw += Input.Look.x * deltaTimeMultiplier;
+                _cinemachineTargetPitch += Input.Look.y * deltaTimeMultiplier;
             }
 
             // clamp our rotations so our values are limited 360 degrees
@@ -298,10 +301,10 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
         {
             var mouse = Mouse.current;
             // if there is an input and camera position is not fixed
-            if (Input.look.sqrMagnitude >= _threshold && !LockCameraPosition && mouse.leftButton.isPressed)
+            if (Input.Look.sqrMagnitude >= _threshold && !LockCameraPosition && mouse.leftButton.isPressed)
             {
-                yawDelta += Input.look.x * cameraRotateSpeed;
-                pitchDelta += Input.look.y * cameraRotateSpeed;
+                yawDelta += Input.Look.x * cameraRotateSpeed;
+                pitchDelta += Input.Look.y * cameraRotateSpeed;
             }
 
             _cinemachineTargetYaw += yawDelta * dampingFactor;
@@ -321,10 +324,10 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
 
         private void Move(bool isMovable)
         {
-            var move = isMovable ? Input.move : Vector2.zero;
+            var move = isMovable ? Input.HolidayValues.Move : Vector2.zero;
 
             // set target speed based on move speed, sprint speed and if sprint is pressed
-            float targetSpeed = Input.sprint ? SprintSpeed : MoveSpeed;
+            float targetSpeed = Input.HolidayValues.Sprint ? SprintSpeed : MoveSpeed;
 
             // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
@@ -337,7 +340,6 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
             float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.z).magnitude;
 
             float speedOffset = 0.1f;
-            float inputMagnitude = Input.analogMovement ? move.magnitude : 1f;
 
             // accelerate or decelerate to target speed
             if (currentHorizontalSpeed < targetSpeed - speedOffset ||
@@ -345,7 +347,7 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
             {
                 // creates curved result rather than a linear one giving a more organic speed change
                 // note T in Lerp is clamped, so we don't need to clamp our speed
-                _speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude,
+                _speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed,
                     Time.deltaTime * SpeedChangeRate);
 
                 // round speed to 3 decimal places
@@ -387,13 +389,13 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
             if (_hasAnimator)
             {
                 _animator.SetFloat(_animIDSpeed, _animationBlend);
-                _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
+                _animator.SetFloat(_animIDMotionSpeed, 1f);
             }
         }
 
         private void JumpAndGravity(bool isJumpable)
         {
-            var jump = isJumpable && Input.jump;
+            var jump = isJumpable && Input.HolidayValues.Jump;
             if (Grounded)
             {
                 // reset the fall timeout timer
@@ -457,7 +459,7 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
                 _verticalVelocity += Gravity * Time.deltaTime;
             }
 
-            Input.jump = false;
+            Input.JumpInput(false);
         }
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)

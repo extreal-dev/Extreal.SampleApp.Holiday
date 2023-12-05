@@ -38,7 +38,7 @@ namespace Extreal.SampleApp.Holiday.App
         private readonly ReactiveProperty<bool> spaceReady = new ReactiveProperty<bool>(false);
 
         public IReadOnlyReactiveProperty<bool> P2PReady => p2PReady.AddTo(disposables);
-        private readonly ReactiveProperty<bool> p2PReady = new ReactiveProperty<bool>(true);
+        private readonly ReactiveProperty<bool> p2PReady = new ReactiveProperty<bool>(false);
 
         public IObservable<Message> OnMessageSent => onMessageSent.AddTo(disposables);
         private readonly Subject<Message> onMessageSent = new Subject<Message>();

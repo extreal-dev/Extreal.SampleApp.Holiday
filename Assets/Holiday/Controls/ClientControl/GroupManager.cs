@@ -4,9 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.Common.System;
-using Extreal.Integration.Multiplay.LiveKit;
 using Extreal.Integration.P2P.WebRTC;
-using Extreal.SampleApp.Holiday.App;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.Controls.ClientControl
@@ -21,30 +19,15 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
         private readonly CompositeDisposable disposables = new CompositeDisposable();
 
         private readonly PeerClient peerClient;
-        private readonly PubSubMultiplayClient pubSubMultiplayClient;
-        private readonly AppState appState;
 
-        public GroupManager(PeerClient peerClient, PubSubMultiplayClient pubSubMultiplayClient, AppState appState)
-        {
-            this.peerClient = peerClient;
-            this.pubSubMultiplayClient = pubSubMultiplayClient;
-            this.appState = appState;
-        }
+        public GroupManager(PeerClient peerClient) => this.peerClient = peerClient;
 
         protected override void ReleaseManagedResources() => disposables.Dispose();
 
         public async UniTask UpdateGroupsAsync()
         {
-            if (appState.IsLightForCommunication)
-            {
-                var hosts = await peerClient.ListHostsAsync();
-                groups.Value = hosts.Select(host => new Group(host.Id, host.Name)).ToList();
-            }
-            else
-            {
-                var rooms = await pubSubMultiplayClient.ListRoomsAsync();
-                groups.Value = rooms.Select(room => new Group(room.Id, room.Name)).ToList();
-            }
+            var hosts = await peerClient.ListHostsAsync();
+            groups.Value = hosts.Select(host => new Group(host.Id, host.Name)).ToList();
         }
 
         public Group FindByName(string name) => groups.Value.First(groups => groups.Name == name);
