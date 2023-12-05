@@ -1,11 +1,14 @@
 using System;
 using Unity.Netcode;
+using UnityEngine;
 
 namespace Extreal.SampleApp.Holiday.App.P2P
 {
+    [Serializable]
     public struct Message : INetworkSerializable
     {
         public readonly MessageId MessageId => messageId;
+        [SerializeField]
         private MessageId messageId;
 
         public readonly INetworkSerializable Content => content;

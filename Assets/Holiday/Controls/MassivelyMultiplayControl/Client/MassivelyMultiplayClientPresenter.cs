@@ -48,7 +48,6 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
             multiplayClient.IsPlayerSpawned
                 .Subscribe(appState.SetMultiplayReady)
                 .AddTo(sceneDisposables);
-            UnityEngine.Debug.LogWarning($"group name in Presenter is: {appState.GroupName}");
 
             appState.SetGroupName("aaa");
             Observable
