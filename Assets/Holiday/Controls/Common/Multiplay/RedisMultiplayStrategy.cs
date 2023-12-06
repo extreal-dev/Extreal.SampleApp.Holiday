@@ -14,7 +14,7 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
             {
                 GroundedCheck();
 
-                if (Input.HolidayValues.InputFieldTyping)
+                if (!Input.HolidayValues.InputFieldTyping)
                 {
                     JumpAndGravity(true);
                     Move(true);
@@ -38,12 +38,10 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
             {
                 GroundedCheck();
 
-                if (Input.HolidayValues.InputFieldTyping)
+                if (!Input.HolidayValues.InputFieldTyping)
                 {
                     JumpAndGravity(true);
                     Move(true);
-
-                    OtherMouseCameraRotation();
                 }
                 else
                 {

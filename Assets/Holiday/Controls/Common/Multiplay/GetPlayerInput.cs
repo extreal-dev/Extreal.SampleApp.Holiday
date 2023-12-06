@@ -10,12 +10,9 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
         [SerializeField] private HolidayPlayerInput input;
 
         private void Update()
-        {
-            input.SetMouseLeftButtonPressed(Mouse.current.leftButton.isPressed);
-            input.SetInputFieldTyping(
-                EventSystem.current.currentSelectedGameObject == null
-                || EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>() == null);
-        }
+            => input.SetInputFieldTyping(
+                EventSystem.current.currentSelectedGameObject != null
+                && EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>() != null);
 
         public void OnMove(InputValue value)
             => input.SetMove(value.Get<Vector2>());

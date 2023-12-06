@@ -226,12 +226,12 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
         protected void TouchDeviceCameraRotation()
         {
             // if there is an input and camera position is not fixed
-            if (Input.HolidayValues.Look.sqrMagnitude >= _threshold && !LockCameraPosition)
+            if (Input.Look.sqrMagnitude >= _threshold && !LockCameraPosition)
             {
                 //Don't multiply mouse input by Time.deltaTime;
                 float deltaTimeMultiplier = Time.deltaTime;
-                _cinemachineTargetYaw += Input.HolidayValues.Look.x * deltaTimeMultiplier;
-                _cinemachineTargetPitch += Input.HolidayValues.Look.y * deltaTimeMultiplier;
+                _cinemachineTargetYaw += Input.Look.x * deltaTimeMultiplier;
+                _cinemachineTargetPitch += Input.Look.y * deltaTimeMultiplier;
             }
 
             // clamp our rotations so our values are limited 360 degrees
@@ -247,42 +247,10 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
         {
             var mouse = Mouse.current;
             // if there is an input and camera position is not fixed
-            if (Input.HolidayValues.Look.sqrMagnitude >= _threshold && !LockCameraPosition && Input.HolidayValues.MouseLeftButtonPressed)
+            if (Input.Look.sqrMagnitude >= _threshold && !LockCameraPosition && mouse.leftButton.isPressed)
             {
-                yawDelta += Input.HolidayValues.Look.x * cameraRotateSpeed;
-                pitchDelta += Input.HolidayValues.Look.y * cameraRotateSpeed;
-            }
-
-            _cinemachineTargetYaw += yawDelta * dampingFactor;
-            _cinemachineTargetPitch += pitchDelta * dampingFactor;
-
-            yawDelta *= 1f - dampingFactor;
-            pitchDelta *= 1f - dampingFactor;
-
-            // clamp our rotations so our values are limited 360 degrees
-            _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
-            _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
-
-            // Cinemachine will follow this target
-            cinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
-                _cinemachineTargetYaw, 0.0f);
-        }
-
-        protected void OtherMouseCameraRotation()
-        {
-            if (isOwner)
-            {
-                return;
-            }
-
-            Debug.LogWarning($"OtherMouseCameraRotation: {Input.HolidayValues.MouseLeftButtonPressed}");
-
-            // if there is an input and camera position is not fixed
-            if (Input.HolidayValues.Look.sqrMagnitude >= _threshold && !LockCameraPosition && Input.HolidayValues.MouseLeftButtonPressed && !isNetcode)
-            {
-                Debug.LogWarning("Succeeded");
-                yawDelta += Input.HolidayValues.Look.x * cameraRotateSpeed;
-                pitchDelta += Input.HolidayValues.Look.y * cameraRotateSpeed;
+                yawDelta += Input.Look.x * cameraRotateSpeed;
+                pitchDelta += Input.Look.y * cameraRotateSpeed;
             }
 
             _cinemachineTargetYaw += yawDelta * dampingFactor;
@@ -352,16 +320,22 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
                 float rotation = Mathf.SmoothDampAngle(player.transform.eulerAngles.y, _targetRotation, ref _rotationVelocity,
                     RotationSmoothTime);
 
-                // rotate to face input direction relative to camera position
-                player.transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+                if (isOwner)
+                {
+                    // rotate to face input direction relative to camera position
+                    player.transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+                }
             }
 
 
             Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
 
-            // move the player
-            _controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) +
-                             new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+            if (isOwner)
+            {
+                // move the player
+                _controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) +
+                                 new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+            }
 
             // update animator if using character
             if (_hasAnimator)
