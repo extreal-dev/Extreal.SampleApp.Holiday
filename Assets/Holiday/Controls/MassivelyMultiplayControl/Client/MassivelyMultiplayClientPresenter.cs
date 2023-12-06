@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Extreal.Core.StageNavigation;
-using Extreal.Integration.Multiplay.LiveKit;
+using Extreal.Integration.Multiplay.Common;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
@@ -49,9 +49,8 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
                 .Subscribe(appState.SetMultiplayReady)
                 .AddTo(sceneDisposables);
 
-            Observable
-                .CombineLatest(appState.SpaceReady, appState.P2PReady)
-                .Where(readies => readies.All(ready => ready))
+            appState.SpaceReady
+                .Where(ready => ready && !appState.MultiplayReady.Value)
                 .Subscribe(_ => multiplayClient.JoinAsync().Forget())
                 .AddTo(sceneDisposables);
 

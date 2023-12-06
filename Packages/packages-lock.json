@@ -158,13 +158,6 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-    "com.unity.nuget.newtonsoft-json": {
-      "version": "3.2.1",
-      "depth": 2,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://packages.unity.com"
-    },
     "com.unity.render-pipelines.core": {
       "version": "14.0.8",
       "depth": 1,
@@ -333,15 +326,6 @@
       "dependencies": {},
       "url": "https://package.openupm.com"
     },
-    "io.livekit.unity": {
-      "version": "1.5.0",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.nuget.newtonsoft-json": "2.0.0"
-      },
-      "url": "https://package.openupm.com"
-    },
     "jp.co.tis.extreal.core.common": {
       "version": "https://github.com/extreal-dev/Extreal.Core.Common.git#1.1.0",
       "depth": 0,
@@ -400,6 +384,29 @@
       },
       "hash": "4d3b7ad3c1cd752e1ace152a0949fc5ec2e976d0"
     },
+    "jp.co.tis.extreal.integration.messaging.common": {
+      "version": "file:Extreal.Integration.Messaging.Common",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.cysharp.unitask": "2.3.3",
+        "com.neuecc.unirx": "7.1.0",
+        "jp.co.tis.extreal.core.logging": "1.2.0",
+        "jp.co.tis.extreal.core.common": "1.1.0"
+      }
+    },
+    "jp.co.tis.extreal.integration.messaging.redis": {
+      "version": "file:Extreal.Integration.Messaging.Redis",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.cysharp.unitask": "2.3.3",
+        "com.neuecc.unirx": "7.1.0",
+        "jp.co.tis.extreal.core.logging": "1.2.0",
+        "jp.co.tis.extreal.core.common": "1.1.0",
+        "jp.co.tis.extreal.integration.messaging.common": "1.0.0-Next.1"
+      }
+    },
     "jp.co.tis.extreal.integration.multiplay.common": {
       "version": "file:Extreal.Integration.Multiplay.Common",
       "depth": 0,
@@ -407,7 +414,6 @@
       "dependencies": {
         "com.cysharp.unitask": "2.3.3",
         "com.neuecc.unirx": "7.1.0",
-        "io.livekit.unity": "1.5.0",
         "jp.co.tis.extreal.core.logging": "1.2.0",
         "jp.co.tis.extreal.core.common": "1.1.0"
       }

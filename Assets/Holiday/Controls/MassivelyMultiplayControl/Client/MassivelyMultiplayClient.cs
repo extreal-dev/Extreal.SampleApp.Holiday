@@ -7,12 +7,15 @@ using Cysharp.Threading.Tasks;
 using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
 using Extreal.Integration.AssetWorkflow.Addressables;
-using Extreal.Integration.Multiplay.LiveKit;
+using Extreal.Integration.Messaging.Common;
+using Extreal.Integration.Messaging.Redis;
+using Extreal.Integration.Multiplay.Common;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Avatars;
 using Extreal.SampleApp.Holiday.App.P2P;
 using Extreal.SampleApp.Holiday.Controls.Common.Multiplay;
+using SocketIOClient;
 using UniRx;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -53,6 +56,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
             this.assetHelper = assetHelper;
             this.appState = appState;
             connectionConfig = new ConnectionConfig(relayUrl);
+
             this.pubSubMultiplayClient.OnConnected
                 .Subscribe(_ =>
                 {
@@ -91,7 +95,12 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
             disposables.Dispose();
         }
 
-        public async UniTaskVoid JoinAsync() => await pubSubMultiplayClient.ConnectAsync(appState.GroupName);
+        public async UniTaskVoid JoinAsync()
+        {
+            var messagingConnectionConfig = new MessagingConnectionConfig(appState.GroupName, assetHelper.NgoHostConfig.MaxCapacity);
+            var multiplayConnectionConfig = new MessagingMultiplayConnectionConfig(messagingConnectionConfig);
+            await pubSubMultiplayClient.ConnectAsync(multiplayConnectionConfig);
+        }
 
         public async UniTaskVoid LeaveAsync()
         {

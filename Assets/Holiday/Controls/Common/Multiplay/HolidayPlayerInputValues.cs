@@ -1,5 +1,5 @@
 using System;
-using Extreal.Integration.Multiplay.LiveKit;
+using Extreal.Integration.Multiplay.Common;
 using UnityEngine;
 
 namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay

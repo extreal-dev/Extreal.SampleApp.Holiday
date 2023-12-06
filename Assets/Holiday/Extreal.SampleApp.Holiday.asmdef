@@ -19,14 +19,15 @@
         "Extreal.Core.StageNavigation",
         "Extreal.Core.Common",
         "Extreal.Integration.Multiplay.NGO",
+        "Extreal.Integration.Multiplay.NGO.WebRTC",
         "Extreal.Integration.AssetWorkflow.Addressables",
         "Extreal.Integration.Web.Common",
         "Extreal.Integration.P2P.WebRTC",
         "Extreal.Integration.Chat.WebRTC",
         "Extreal.SampleApp.Holiday.Analyzer",
-        "Extreal.Integration.Multiplay.LiveKit",
-        "LiveKitBridge",
-        "Extreal.Integration.Multiplay.NGO.WebRTC"
+        "Extreal.Integration.Multiplay.Common",
+        "Extreal.Integration.Messaging.Common",
+        "Extreal.Integration.Messaging.Redis"
     ],
     "includePlatforms": [
         "Android",
