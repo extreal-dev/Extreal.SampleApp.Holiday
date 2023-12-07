@@ -40,7 +40,7 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
             ngoClient.AddConnectionSetter(webRtcTransportConnectionSetter);
             builder.RegisterComponent(ngoClient);
 
-            var redisMessagingTransport = new RedisMessagingTransport(
+            var redisMessagingTransport = new NativeRedisMessagingTransport(
                 new RedisMessagingConfig("http://localhost:3030", new SocketIOOptions { EIO = EngineIO.V4 }));
             var messagingMultiplayTransport = new NativeMultiplayTransport(redisMessagingTransport);
             pubSubMultiplayClient.SetTransport(messagingMultiplayTransport);
