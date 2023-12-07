@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@extreal-dev/extreal.integration.chat.webrtc": "^1.0.0",
+    "@extreal-dev/extreal.integration.messaging.redis": "../../Packages/Extreal.Integration.Messaging.Redis/WebScripts~/",
     "@extreal-dev/extreal.integration.multiplay.ngo.webrtc": "^1.0.0",
     "@extreal-dev/extreal.integration.p2p.webrtc": "^1.0.0"
   },
