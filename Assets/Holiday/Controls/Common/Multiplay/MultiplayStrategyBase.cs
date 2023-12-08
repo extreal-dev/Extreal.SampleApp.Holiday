@@ -125,13 +125,6 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
         public void Initialize(Avatar avatar, bool isOwner, bool isTouchDevice)
         {
             this.isOwner = isOwner;
-            SetAvatar(avatar);
-            SetOwnerCamera();
-
-            if (isOwner && isTouchDevice)
-            {
-                RegisterCurrentDeviceIsTouchDevice();
-            }
 
             _cinemachineTargetYaw = cinemachineCameraTarget.transform.rotation.eulerAngles.y;
 
@@ -143,6 +136,14 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
+
+            SetAvatar(avatar);
+            SetOwnerCamera();
+
+            if (isOwner && isTouchDevice)
+            {
+                RegisterCurrentDeviceIsTouchDevice();
+            }
         }
 
         private void SetAvatar(Avatar avatar)
