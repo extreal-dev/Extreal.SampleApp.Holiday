@@ -13,13 +13,13 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
 {
     public class MassivelyMultiplayClientPresenter : StagePresenterBase
     {
-        private readonly PubSubMultiplayClient liveKitMultiplayClient;
+        private readonly ExtrealMultiplayClient liveKitMultiplayClient;
         private readonly AssetHelper assetHelper;
         private MassivelyMultiplayClient multiplayClient;
 
         public MassivelyMultiplayClientPresenter
         (
-            PubSubMultiplayClient liveKitMultiplayClient,
+            ExtrealMultiplayClient liveKitMultiplayClient,
             AssetHelper assetHelper,
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState

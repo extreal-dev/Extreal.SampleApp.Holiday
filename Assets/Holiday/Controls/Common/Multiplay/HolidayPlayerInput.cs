@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
 {
-    public class HolidayPlayerInput : RedisPlayerInput
+    public class HolidayPlayerInput : MultiplayPlayerInput
     {
         public override MultiplayPlayerInputValues Values => HolidayValues;
         public HolidayPlayerInputValues HolidayValues { get; } = new HolidayPlayerInputValues();

@@ -14,18 +14,18 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
     {
         private readonly AssetHelper assetHelper;
         private readonly NgoClient ngoClient;
-        private readonly PubSubMultiplayClient pubSubMultiplayClient;
+        private readonly ExtrealMultiplayClient extrealMultiplayClient;
 
         public ClientControlPresenter(
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState,
             AssetHelper assetHelper,
             NgoClient ngoClient,
-            PubSubMultiplayClient pubSubMultiplayClient) : base(stageNavigator, appState)
+            ExtrealMultiplayClient extrealMultiplayClient) : base(stageNavigator, appState)
         {
             this.assetHelper = assetHelper;
             this.ngoClient = ngoClient;
-            this.pubSubMultiplayClient = pubSubMultiplayClient;
+            this.extrealMultiplayClient = extrealMultiplayClient;
         }
 
         protected override void Initialize(
@@ -34,7 +34,7 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
             CompositeDisposable sceneDisposables)
         {
             InitializeNgoClient(stageNavigator, appState, sceneDisposables);
-            InitializePubSubMultiplayClient(stageNavigator, appState, sceneDisposables);
+            InitializeExtrealMultiplayClient(stageNavigator, appState, sceneDisposables);
         }
 
         private void InitializeNgoClient(
@@ -71,12 +71,12 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
                 .AddTo(sceneDisposables);
         }
 
-        private void InitializePubSubMultiplayClient(
+        private void InitializeExtrealMultiplayClient(
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState,
             CompositeDisposable sceneDisposables)
         {
-            pubSubMultiplayClient.OnConnectionApprovalRejected
+            extrealMultiplayClient.OnConnectionApprovalRejected
                 .Subscribe(_ =>
                 {
                     appState.Notify(assetHelper.MessageConfig.MultiplayConnectionApprovalRejectedMessage);
@@ -84,22 +84,7 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
                 })
                 .AddTo(sceneDisposables);
 
-            // liveKitMultiplayClient.OnConnectRetrying
-            //     .Subscribe(retryCount => AppUtils.NotifyRetrying(
-            //         appState,
-            //         assetHelper.MessageConfig.MultiplayConnectRetryMessage,
-            //         retryCount))
-            //     .AddTo(sceneDisposables);
-
-            // liveKitMultiplayClient.OnConnectRetried
-            //     .Subscribe(result => AppUtils.NotifyRetried(
-            //         appState,
-            //         result,
-            //         assetHelper.MessageConfig.MultiplayConnectRetrySuccessMessage,
-            //         assetHelper.MessageConfig.MultiplayConnectRetryFailureMessage))
-            //     .AddTo(sceneDisposables);
-
-            pubSubMultiplayClient.OnUnexpectedDisconnected
+            extrealMultiplayClient.OnUnexpectedDisconnected
                 .Subscribe(_ =>
                     appState.Notify(assetHelper.MessageConfig.MultiplayUnexpectedDisconnectedMessage))
                 .AddTo(sceneDisposables);

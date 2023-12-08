@@ -10,13 +10,14 @@ using Extreal.Integration.Multiplay.NGO;
 using Extreal.Integration.Multiplay.NGO.WebRTC;
 using Extreal.Integration.Messaging.Redis;
 using SocketIOClient;
+using Extreal.Integration.Multiplay.Messaging;
 
 namespace Extreal.SampleApp.Holiday.Controls.ClientControl
 {
     public class ClientControlScope : LifetimeScope
     {
         [SerializeField] private NetworkManager networkManager;
-        [SerializeField] private PubSubMultiplayClient pubSubMultiplayClient;
+        [SerializeField] private ExtrealMultiplayClient extrealMultiplayClient;
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -42,9 +43,9 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
 
             var redisMessagingTransport = RedisMessagingTransportProvider.Provide(
                 new RedisMessagingConfig("http://localhost:3030", new SocketIOOptions { EIO = EngineIO.V4 }));
-            var messagingMultiplayTransport = new NativeMultiplayTransport(redisMessagingTransport);
-            pubSubMultiplayClient.SetTransport(messagingMultiplayTransport);
-            builder.RegisterComponent(pubSubMultiplayClient);
+            var messagingMultiplayTransport = new MessagingMultiplayTransport(redisMessagingTransport);
+            extrealMultiplayClient.SetTransport(messagingMultiplayTransport);
+            builder.RegisterComponent(extrealMultiplayClient);
 
             var textChatClient = TextChatClientProvider.Provide(peerClient);
             builder.RegisterComponent(textChatClient);

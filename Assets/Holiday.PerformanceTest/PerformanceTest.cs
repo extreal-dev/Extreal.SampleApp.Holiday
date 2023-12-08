@@ -134,7 +134,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
 
             var appControlScope = FindObjectOfType<ClientControlScope>();
             var appState = appControlScope.Container.Resolve(typeof(AppState)) as AppState;
-            var pubSubMultiplayClient = appControlScope.Container.Resolve(typeof(PubSubMultiplayClient)) as PubSubMultiplayClient;
+            var extrealMultiplayClient = appControlScope.Container.Resolve(typeof(ExtrealMultiplayClient)) as ExtrealMultiplayClient;
 
             {
                 var playingReady = false;
@@ -146,7 +146,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                     .Subscribe(_ => playingReady = true);
 
                 using var isConnectionApprovalRejectedDisposable =
-                    pubSubMultiplayClient.OnConnectionApprovalRejected
+                    extrealMultiplayClient.OnConnectionApprovalRejected
                         .Subscribe(_ => isConnectionApprovalRejected = true);
 
                 await UniTask.WaitUntil(() => playingReady || isConnectionApprovalRejected);
