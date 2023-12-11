@@ -60,7 +60,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
                 .AddTo(disposables);
 
             this.extrealMultiplayClient.OnUserConnected
-                .Subscribe(userId => extrealMultiplayClient.SendMessage(userId, appState.Avatar.AssetName))
+                .Subscribe(userId => extrealMultiplayClient.SendMessage(appState.Avatar.AssetName, userId))
                 .AddTo(disposables);
 
             this.extrealMultiplayClient.OnMessageReceived
@@ -122,7 +122,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
 
         private void HandleObjectSpawned((string userIdentity, GameObject spawnedObject, string message) tuple)
         {
-            if (tuple.userIdentity == extrealMultiplayClient.LocalClient?.UserIdentity)
+            if (tuple.userIdentity == extrealMultiplayClient.LocalClient?.UserId)
             {
                 SetOwnerAvatarAsync(appState.Avatar.AssetName).Forget();
             }
