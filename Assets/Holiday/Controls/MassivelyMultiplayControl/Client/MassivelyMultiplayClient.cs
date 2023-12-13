@@ -93,7 +93,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
             {
                 await groupManager.DeleteGroupAsync();
             }
-            multiplayClient.Disconnect();
+            await multiplayClient.DisconnectAsync();
         }
 
         public void ResetPosition() => myAvatar.ResetPosition();
