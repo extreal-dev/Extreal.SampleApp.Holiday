@@ -10,14 +10,14 @@ using Extreal.Integration.Multiplay.NGO;
 using Extreal.Integration.Multiplay.NGO.WebRTC;
 using Extreal.Integration.Messaging.Redis;
 using SocketIOClient;
-using Extreal.Integration.Multiplay.Messaging;
+using Extreal.Integration.Messaging.Common;
 
 namespace Extreal.SampleApp.Holiday.Controls.ClientControl
 {
     public class ClientControlScope : LifetimeScope
     {
         [SerializeField] private NetworkManager networkManager;
-        [SerializeField] private ExtrealMultiplayClient extrealMultiplayClient;
+        [SerializeField] private MultiplayClient multiplayClient;
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -41,11 +41,18 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
             ngoClient.AddConnectionSetter(webRtcTransportConnectionSetter);
             builder.RegisterComponent(ngoClient);
 
-            var redisMessagingTransport = RedisMessagingTransportProvider.Provide(
-                new RedisMessagingConfig("http://localhost:3030", new SocketIOOptions { EIO = EngineIO.V4 }));
-            var messagingMultiplayTransport = new MessagingMultiplayTransport(redisMessagingTransport);
-            extrealMultiplayClient.SetTransport(messagingMultiplayTransport);
-            builder.RegisterComponent(extrealMultiplayClient);
+            var redisMessagingConfig = new RedisMessagingConfig("http://localhost:3030", new SocketIOOptions { EIO = EngineIO.V4 });
+            var redisMessagingTransport = RedisMessagingTransportProvider.Provide(redisMessagingConfig);
+
+            var messagingGroupManager = new Integration.Messaging.Common.GroupManager();
+            messagingGroupManager.SetTransport(redisMessagingTransport);
+            builder.RegisterComponent(messagingGroupManager);
+
+            var messagingClient = new MessagingClient();
+            messagingClient.SetTransport(redisMessagingTransport);
+            var queuingMessagingClient = new QueuingMessagingClient(messagingClient);
+            multiplayClient.SetMessagingClient(queuingMessagingClient);
+            builder.RegisterComponent(multiplayClient);
 
             var textChatClient = TextChatClientProvider.Provide(peerClient);
             builder.RegisterComponent(textChatClient);

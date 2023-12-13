@@ -1,7 +1,7 @@
-﻿using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Extreal.Core.StageNavigation;
+using Extreal.Integration.Messaging.Common;
 using Extreal.Integration.Multiplay.Common;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
@@ -13,19 +13,22 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
 {
     public class MassivelyMultiplayClientPresenter : StagePresenterBase
     {
-        private readonly ExtrealMultiplayClient liveKitMultiplayClient;
+        private readonly MultiplayClient multiplayClient;
+        private readonly GroupManager groupManager;
         private readonly AssetHelper assetHelper;
-        private MassivelyMultiplayClient multiplayClient;
+        private MassivelyMultiplayClient massivelyMultiplayClient;
 
         public MassivelyMultiplayClientPresenter
         (
-            ExtrealMultiplayClient liveKitMultiplayClient,
+            MultiplayClient multiplayClient,
+            GroupManager groupManager,
             AssetHelper assetHelper,
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState
         ) : base(stageNavigator, appState)
         {
-            this.liveKitMultiplayClient = liveKitMultiplayClient;
+            this.multiplayClient = multiplayClient;
+            this.groupManager = groupManager;
             this.assetHelper = assetHelper;
         }
 
@@ -42,26 +45,26 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
                 return;
             }
 
-            multiplayClient = new MassivelyMultiplayClient(liveKitMultiplayClient, assetHelper, appState);
-            sceneDisposables.Add(multiplayClient);
+            massivelyMultiplayClient = new MassivelyMultiplayClient(multiplayClient, groupManager, assetHelper, appState);
+            sceneDisposables.Add(massivelyMultiplayClient);
 
-            multiplayClient.IsPlayerSpawned
+            massivelyMultiplayClient.IsPlayerSpawned
                 .Subscribe(appState.SetMultiplayReady)
                 .AddTo(sceneDisposables);
 
             appState.SpaceReady
                 .Where(ready => ready && !appState.MultiplayReady.Value)
-                .Subscribe(_ => multiplayClient.JoinAsync().Forget())
+                .Subscribe(_ => massivelyMultiplayClient.JoinAsync().Forget())
                 .AddTo(sceneDisposables);
 
             appState.PlayingReady
                 .Skip(1)
                 .Where(ready => ready)
-                .Subscribe(_ => multiplayClient.ResetPosition())
+                .Subscribe(_ => massivelyMultiplayClient.ResetPosition())
                 .AddTo(sceneDisposables);
 
             appState.OnMessageSent
-                .Subscribe(multiplayClient.SendToOthers)
+                .Subscribe(massivelyMultiplayClient.SendToOthers)
                 .AddTo(sceneDisposables);
         }
 
@@ -72,7 +75,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
                 return;
             }
             appState.SetMultiplayReady(false);
-            multiplayClient.LeaveAsync().Forget();
+            massivelyMultiplayClient.LeaveAsync().Forget();
         }
     }
 }

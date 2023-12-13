@@ -219,7 +219,7 @@ GameObject:
   - component: {fileID: 1982724502}
   - component: {fileID: 1982724503}
   m_Layer: 0
-  m_Name: ExtrealMultiplayClient
+  m_Name: MultiplayClient
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -289,7 +289,7 @@ MonoBehaviour:
   autoRun: 1
   autoInjectGameObjects: []
   networkManager: {fileID: 411411940}
-  extrealMultiplayClient: {fileID: 1982724503}
+  multiplayClient: {fileID: 1982724503}
 --- !u!4 &1998090160
 Transform:
   m_ObjectHideFlags: 0
