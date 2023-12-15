@@ -39,7 +39,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
         private readonly Dictionary<string, AssetDisposable<GameObject>> loadedAvatars
             = new Dictionary<string, AssetDisposable<GameObject>>();
 
-        private IReadOnlyDictionary<string, NetworkClient> ConnectedClients => multiplayClient.ConnectedClients;
+        private IReadOnlyDictionary<string, NetworkClient> ConnectedUsers => multiplayClient.ConnectedUsers;
 
         private RedisThirdPersonController myAvatar;
 
@@ -164,7 +164,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
 
         private void HandleReceivedAvatarName(string userIdentityRemote, string avatarAssetName)
         {
-            var spawnedObject = ConnectedClients[userIdentityRemote].PlayerObject;
+            var spawnedObject = ConnectedUsers[userIdentityRemote].PlayerObject;
             const bool isOwner = false;
             SetAvatarAsync(spawnedObject, avatarAssetName, isOwner).Forget();
         }
