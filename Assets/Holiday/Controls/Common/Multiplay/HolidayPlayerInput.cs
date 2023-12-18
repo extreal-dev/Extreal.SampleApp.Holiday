@@ -11,9 +11,6 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
         public Vector2 Look => look;
         [SerializeField] private Vector2 look;
 
-        public override void SetMove(Vector2 newMoveDirection)
-            => HolidayValues.SetMove(newMoveDirection);
-
         public void SetLook(Vector2 newLookDirection)
             => look = newLookDirection;
 
@@ -26,14 +23,14 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
         public void SetInputFieldTyping(bool newValue)
             => HolidayValues.SetInputFieldTyping(newValue);
 
-        public override void SetValues(MultiplayPlayerInputValues values)
+        public override void ApplyValues(MultiplayPlayerInputValues synchronizedValues)
         {
-            var holidayValues = values as HolidayPlayerInputValues;
+            var synchronizedHolidayValues = synchronizedValues as HolidayPlayerInputValues;
 
-            base.SetValues(holidayValues);
-            SetSprint(holidayValues.Sprint);
-            SetJump(holidayValues.Jump);
-            SetInputFieldTyping(holidayValues.InputFieldTyping);
+            base.ApplyValues(synchronizedHolidayValues);
+            SetSprint(synchronizedHolidayValues.Sprint);
+            SetJump(synchronizedHolidayValues.Jump);
+            SetInputFieldTyping(synchronizedHolidayValues.InputFieldTyping);
         }
     }
 }
