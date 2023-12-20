@@ -76,7 +76,7 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
             AppState appState,
             CompositeDisposable sceneDisposables)
         {
-            multiplayClient.OnConnectionApprovalRejected
+            multiplayClient.OnJoiningApprovalRejected
                 .Subscribe(_ =>
                 {
                     appState.Notify(assetHelper.MessageConfig.MultiplayConnectionApprovalRejectedMessage);
@@ -84,7 +84,7 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
                 })
                 .AddTo(sceneDisposables);
 
-            multiplayClient.OnUnexpectedDisconnected
+            multiplayClient.OnUnexpectedLeft
                 .Subscribe(_ =>
                     appState.Notify(assetHelper.MessageConfig.MultiplayUnexpectedDisconnectedMessage))
                 .AddTo(sceneDisposables);

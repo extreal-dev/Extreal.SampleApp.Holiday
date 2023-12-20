@@ -3,7 +3,7 @@ import { WebRtcAdapter } from "@extreal-dev/extreal.integration.multiplay.ngo.we
 import { TextChatAdapter, VoiceChatAdapter } from "@extreal-dev/extreal.integration.chat.webrtc";
 import { addFunction, isDebug } from "@extreal-dev/extreal.integration.web.common";
 import { isTouchDevice } from "./isTouchDevice";
-import { RedisMessagingTransportAdapter } from "@extreal-dev/extreal.integration.messaging.redis";
+import { RedisMessagingAdapter } from "@extreal-dev/extreal.integration.messaging.redis";
 
 const peerAdapter = new PeerAdapter();
 peerAdapter.adapt();
@@ -17,8 +17,8 @@ textChatAdapter.adapt(peerAdapter.getPeerClient);
 const voiceChatAdapter = new VoiceChatAdapter();
 voiceChatAdapter.adapt(peerAdapter.getPeerClient);
 
-const redisMessagingTransportAdapter = new RedisMessagingTransportAdapter();
-redisMessagingTransportAdapter.adapt();
+const redisMessagingAdapter = new RedisMessagingAdapter();
+redisMessagingAdapter.adapt();
 
 addFunction("IsTouchDevice", () => {
     const result = isTouchDevice();

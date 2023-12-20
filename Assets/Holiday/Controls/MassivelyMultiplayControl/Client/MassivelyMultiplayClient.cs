@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -26,7 +27,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
         private readonly BoolReactiveProperty isPlayerSpawned = new BoolReactiveProperty(false);
 
         private readonly MultiplayClient multiplayClient;
-        private readonly GroupManager groupManager;
+        private readonly QueuingMessagingClient messagingClient;
         private readonly AssetHelper assetHelper;
         private readonly AppState appState;
 
@@ -39,28 +40,28 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
         private readonly Dictionary<string, AssetDisposable<GameObject>> loadedAvatars
             = new Dictionary<string, AssetDisposable<GameObject>>();
 
-        private IReadOnlyDictionary<string, NetworkClient> ConnectedUsers => multiplayClient.ConnectedUsers;
+        private IReadOnlyDictionary<string, NetworkClient> ConnectedUsers => multiplayClient.JoinedUsers;
 
         private RedisThirdPersonController myAvatar;
 
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(MassivelyMultiplayClient));
 
-        public MassivelyMultiplayClient(MultiplayClient multiplayClient, GroupManager groupManager, AssetHelper assetHelper, AppState appState)
+        public MassivelyMultiplayClient(MultiplayClient multiplayClient, QueuingMessagingClient messagingClient, GameObject playerPrefab, AssetHelper assetHelper, AppState appState)
         {
             this.multiplayClient = multiplayClient;
-            this.groupManager = groupManager;
+            this.messagingClient = messagingClient;
             this.assetHelper = assetHelper;
             this.appState = appState;
 
-            this.multiplayClient.OnConnected
-                .Subscribe(_ => multiplayClient.SpawnPlayer(message: appState.Avatar.AssetName))
+            this.multiplayClient.OnJoined
+                .Subscribe(_ => multiplayClient.SpawnObject(playerPrefab, message: appState.Avatar.AssetName))
                 .AddTo(disposables);
 
             this.multiplayClient.OnObjectSpawned
                 .Subscribe(HandleObjectSpawned)
                 .AddTo(disposables);
 
-            this.multiplayClient.OnUserConnected
+            this.multiplayClient.OnUserJoined
                 .Subscribe(userId => multiplayClient.SendMessage(appState.Avatar.AssetName, userId))
                 .AddTo(disposables);
 
@@ -68,7 +69,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
                 .Subscribe(HandleReceivedMessage)
                 .AddTo(disposables);
 
-            this.multiplayClient.OnDisconnecting
+            this.multiplayClient.OnLeaving
                 .Subscribe(_ => isPlayerSpawned.Value = false)
                 .AddTo(disposables);
         }
@@ -83,17 +84,25 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
 
         public async UniTaskVoid JoinAsync()
         {
-            var connectionConfig = new MessagingConnectionConfig(appState.GroupName, assetHelper.NgoHostConfig.MaxCapacity);
-            await multiplayClient.ConnectAsync(connectionConfig);
+            var groups = await messagingClient.ListGroupsAsync();
+            if (!groups.Select(group => group.Name).Contains(appState.GroupName))
+            {
+                var groupConfig = new GroupConfig(appState.GroupName, assetHelper.NgoHostConfig.MaxCapacity);
+                await messagingClient.CreateGroupAsync(groupConfig);
+            }
+
+            var messagingJoiningConfig = new MessagingJoiningConfig(appState.GroupName);
+            var joiningConfig = new MultiplayJoiningConfig(messagingJoiningConfig);
+            await multiplayClient.JoinAsync(joiningConfig);
         }
 
         public async UniTaskVoid LeaveAsync()
         {
             if (appState.IsHost)
             {
-                await groupManager.DeleteGroupAsync();
+                await messagingClient.DeleteGroupAsync(appState.GroupName);
             }
-            await multiplayClient.DisconnectAsync();
+            await multiplayClient.LeaveAsync();
         }
 
         public void ResetPosition() => myAvatar.ResetPosition();
@@ -113,10 +122,10 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
 
         private async UniTaskVoid SetOwnerAvatarAsync(string avatarAssetName)
         {
-            myAvatar = Controller(multiplayClient.LocalClient.PlayerObject);
+            myAvatar = Controller(multiplayClient.LocalClient.NetworkObjects[0]);
             myAvatar.AvatarAssetName.Value = (NetworkString)avatarAssetName;
             const bool isOwner = true;
-            await SetAvatarAsync(multiplayClient.LocalClient.PlayerObject, avatarAssetName, isOwner);
+            await SetAvatarAsync(multiplayClient.LocalClient.NetworkObjects[0], avatarAssetName, isOwner);
             isPlayerSpawned.Value = true;
         }
 
@@ -164,7 +173,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
 
         private void HandleReceivedAvatarName(string userIdentityRemote, string avatarAssetName)
         {
-            var spawnedObject = ConnectedUsers[userIdentityRemote].PlayerObject;
+            var spawnedObject = ConnectedUsers[userIdentityRemote].NetworkObjects[0];
             const bool isOwner = false;
             SetAvatarAsync(spawnedObject, avatarAssetName, isOwner).Forget();
         }

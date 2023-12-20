@@ -17,7 +17,7 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
     public class ClientControlScope : LifetimeScope
     {
         [SerializeField] private NetworkManager networkManager;
-        [SerializeField] private MultiplayClient multiplayClient;
+        [SerializeField] private NetworkObjectsProvider networkObjectsProvider;
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -42,17 +42,10 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
             builder.RegisterComponent(ngoClient);
 
             var redisMessagingConfig = new RedisMessagingConfig("http://localhost:3030", new SocketIOOptions { EIO = EngineIO.V4 });
-            var redisMessagingTransport = RedisMessagingTransportProvider.Provide(redisMessagingConfig);
-
-            var messagingGroupManager = new Integration.Messaging.Common.GroupManager();
-            messagingGroupManager.SetTransport(redisMessagingTransport);
-            builder.RegisterComponent(messagingGroupManager);
-
-            var messagingClient = new MessagingClient();
-            messagingClient.SetTransport(redisMessagingTransport);
-            var queuingMessagingClient = new QueuingMessagingClient(messagingClient);
-            multiplayClient.SetMessagingClient(queuingMessagingClient);
-            builder.RegisterComponent(multiplayClient);
+            var redisMessagingClient = RedisMessagingClientProvider.Provide(redisMessagingConfig);
+            var queuingMessagingClient = new QueuingMessagingClient(redisMessagingClient);
+            builder.RegisterComponent(queuingMessagingClient);
+            builder.Register<MultiplayClient>(Lifetime.Singleton).WithParameter(queuingMessagingClient).WithParameter<INetworkObjectsProvider>(networkObjectsProvider);
 
             var textChatClient = TextChatClientProvider.Provide(peerClient);
             builder.RegisterComponent(textChatClient);

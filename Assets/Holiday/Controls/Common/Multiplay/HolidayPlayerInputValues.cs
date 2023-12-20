@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
 {
     [Serializable]
-    public class HolidayPlayerInputValues : MultiplayPlayerInputValues
+    public class HolidayPlayerInputValues : PlayerInputValues
     {
         private Vector2 preMove;
         private bool isMoveChanged;

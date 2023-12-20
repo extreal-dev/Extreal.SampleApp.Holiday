@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
 {
-    public class HolidayPlayerInput : MultiplayPlayerInput
+    public class HolidayPlayerInput : PlayerInput
     {
-        public override MultiplayPlayerInputValues Values => HolidayValues;
+        public override PlayerInputValues Values => HolidayValues;
         public HolidayPlayerInputValues HolidayValues { get; } = new HolidayPlayerInputValues();
 
         public Vector2 Look => look;
@@ -23,7 +23,7 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
         public void SetInputFieldTyping(bool newValue)
             => HolidayValues.SetInputFieldTyping(newValue);
 
-        public override void ApplyValues(MultiplayPlayerInputValues synchronizedValues)
+        public override void ApplyValues(PlayerInputValues synchronizedValues)
         {
             var synchronizedHolidayValues = synchronizedValues as HolidayPlayerInputValues;
 

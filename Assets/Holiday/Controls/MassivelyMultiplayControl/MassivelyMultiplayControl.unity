@@ -171,3 +171,5 @@ MonoBehaviour:
     TypeName: Extreal.SampleApp.Holiday.Controls.ClientControl.ClientControlScope
   autoRun: 1
   autoInjectGameObjects: []
+  playerPrefab: {fileID: 7407036263737879821, guid: d2eae51810896804e9ece241a580a09a,
+    type: 3}

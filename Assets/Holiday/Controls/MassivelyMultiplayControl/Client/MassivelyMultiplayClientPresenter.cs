@@ -8,27 +8,31 @@ using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.App.Stages;
 using UniRx;
+using UnityEngine;
 
 namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
 {
     public class MassivelyMultiplayClientPresenter : StagePresenterBase
     {
         private readonly MultiplayClient multiplayClient;
-        private readonly GroupManager groupManager;
+        private readonly QueuingMessagingClient messagingClient;
+        private readonly GameObject playerPrefab;
         private readonly AssetHelper assetHelper;
         private MassivelyMultiplayClient massivelyMultiplayClient;
 
         public MassivelyMultiplayClientPresenter
         (
             MultiplayClient multiplayClient,
-            GroupManager groupManager,
+            QueuingMessagingClient messagingClient,
+            GameObject playerPrefab,
             AssetHelper assetHelper,
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState
         ) : base(stageNavigator, appState)
         {
             this.multiplayClient = multiplayClient;
-            this.groupManager = groupManager;
+            this.messagingClient = messagingClient;
+            this.playerPrefab = playerPrefab;
             this.assetHelper = assetHelper;
         }
 
@@ -45,7 +49,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
                 return;
             }
 
-            massivelyMultiplayClient = new MassivelyMultiplayClient(multiplayClient, groupManager, assetHelper, appState);
+            massivelyMultiplayClient = new MassivelyMultiplayClient(multiplayClient, messagingClient, playerPrefab, assetHelper, appState);
             sceneDisposables.Add(massivelyMultiplayClient);
 
             massivelyMultiplayClient.IsPlayerSpawned
