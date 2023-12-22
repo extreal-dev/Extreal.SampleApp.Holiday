@@ -63,12 +63,6 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
             textChatRoom.JoinAsync().Forget();
         }
 
-        // [SuppressMessage("CodeCracker", "CC0092")]
-        // protected override void OnStageEntered(
-        //     StageName stageName,
-        //     AppState appState,
-        //     CompositeDisposable stageDisposables) =>
-
         protected override void OnStageExiting(StageName stageName, AppState appState)
         {
             if (AppUtils.IsSpace(stageName))

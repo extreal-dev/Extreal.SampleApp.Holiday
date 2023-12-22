@@ -6,7 +6,6 @@ using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 using Extreal.Integration.Messaging.Redis;
-using SocketIOClient;
 using Extreal.Integration.Messaging.Common;
 
 namespace Extreal.SampleApp.Holiday.Controls.ClientControl
@@ -24,13 +23,12 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
 
             builder.Register<GroupManager>(Lifetime.Singleton);
 
-            var redisMessagingConfig = new RedisMessagingConfig("http://localhost:3030", new SocketIOOptions { EIO = EngineIO.V4 });
-            var redisMessagingClient = RedisMessagingClientProvider.Provide(redisMessagingConfig);
+            var redisMessagingClient = RedisMessagingClientProvider.Provide(assetHelper.MessagingConfig.RedisMessagingConfig);
             var queuingMessagingClient = new QueuingMessagingClient(redisMessagingClient);
             builder.RegisterComponent(queuingMessagingClient);
             builder.Register<MultiplayClient>(Lifetime.Singleton).WithParameter(queuingMessagingClient).WithParameter<INetworkObjectsProvider>(networkObjectsProvider);
 
-            var textChatClient = RedisMessagingClientProvider.Provide(redisMessagingConfig);
+            var textChatClient = RedisMessagingClientProvider.Provide(assetHelper.MessagingConfig.RedisMessagingConfig);
             builder.RegisterComponent<MessagingClient>(textChatClient);
             var voiceChatClient = VoiceChatClientProvider.Provide(peerClient, assetHelper.VoiceChatConfig);
             builder.RegisterComponent(voiceChatClient);

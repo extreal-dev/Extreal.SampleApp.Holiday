@@ -28,9 +28,6 @@ namespace Extreal.SampleApp.Holiday.App.Config
         [SerializeField] private string p2PHostNameAlreadyExistsMessage;
 
         [SerializeField] private string multiplayConnectionApprovalRejectedMessage;
-        [SerializeField] private string multiplayConnectRetryMessage;
-        [SerializeField] private string multiplayConnectRetrySuccessMessage;
-        [SerializeField] private string multiplayConnectRetryFailureMessage;
         [SerializeField] private string multiplayUnexpectedDisconnectedMessage;
 
         [SerializeField] private string landscapeErrorMessage;
@@ -56,9 +53,6 @@ namespace Extreal.SampleApp.Holiday.App.Config
         public string P2PHostNameAlreadyExistsMessage => p2PHostNameAlreadyExistsMessage;
 
         public string MultiplayConnectionApprovalRejectedMessage => multiplayConnectionApprovalRejectedMessage;
-        public string MultiplayConnectRetryMessage => multiplayConnectRetryMessage;
-        public string MultiplayConnectRetrySuccessMessage => multiplayConnectRetrySuccessMessage;
-        public string MultiplayConnectRetryFailureMessage => multiplayConnectRetryFailureMessage;
         public string MultiplayUnexpectedDisconnectedMessage => multiplayUnexpectedDisconnectedMessage;
 
         public string LandscapeErrorMessage => landscapeErrorMessage;

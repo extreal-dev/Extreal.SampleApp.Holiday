@@ -65,7 +65,7 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
             groupName = $"TextChat#{appState.GroupName}";
             if (appState.IsHost)
             {
-                var groupConfig = new GroupConfig(groupName, assetHelper.MultiplayConfig.MaxCapacity);
+                var groupConfig = new GroupConfig(groupName, assetHelper.MessagingConfig.MaxCapacity);
                 await messagingClient.CreateGroupAsync(groupConfig);
             }
 

@@ -8,12 +8,6 @@ import { RedisMessagingAdapter } from "@extreal-dev/extreal.integration.messagin
 const peerAdapter = new PeerAdapter();
 peerAdapter.adapt();
 
-const webRtcAdapter = new WebRtcAdapter();
-webRtcAdapter.adapt(peerAdapter.getPeerClient);
-
-const textChatAdapter = new TextChatAdapter();
-textChatAdapter.adapt(peerAdapter.getPeerClient);
-
 const voiceChatAdapter = new VoiceChatAdapter();
 voiceChatAdapter.adapt(peerAdapter.getPeerClient);
 

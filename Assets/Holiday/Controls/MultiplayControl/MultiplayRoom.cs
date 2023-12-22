@@ -86,7 +86,17 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
             if (!groups.Select(group => group.Name).Contains(groupName))
             {
                 var groupConfig = new GroupConfig(groupName, assetHelper.MultiplayConfig.MaxCapacity);
-                await messagingClient.CreateGroupAsync(groupConfig);
+                try
+                {
+                    await messagingClient.CreateGroupAsync(groupConfig);
+                }
+                catch (GroupNameAlreadyExistsException e)
+                {
+                    if (Logger.IsDebug())
+                    {
+                        Logger.LogDebug("Group name already existed", e);
+                    }
+                }
             }
 
             var messagingJoiningConfig = new MessagingJoiningConfig(groupName);
@@ -139,8 +149,11 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
         {
             var assetDisposable = await LoadAvatarAsync(avatarAssetName);
 
-            var avatarObject = Object.Instantiate(assetDisposable.Result, gameObject.transform);
-            Controller(gameObject).Initialize(avatarObject.GetComponent<AvatarProvider>().Avatar, isOwner, AppUtils.IsTouchDevice());
+            if (gameObject.GetComponentInChildren<AvatarProvider>() == null)
+            {
+                var avatarObject = Object.Instantiate(assetDisposable.Result, gameObject.transform);
+                Controller(gameObject).Initialize(avatarObject.GetComponent<AvatarProvider>().Avatar, isOwner, AppUtils.IsTouchDevice());
+            }
         }
 
         public async UniTask<AssetDisposable<GameObject>> LoadAvatarAsync(string avatarAssetName)

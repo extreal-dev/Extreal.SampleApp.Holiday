@@ -34,9 +34,6 @@ namespace Extreal.SampleApp.Holiday.App
         public IReadOnlyReactiveProperty<bool> SpaceReady => spaceReady.AddTo(disposables);
         private readonly ReactiveProperty<bool> spaceReady = new ReactiveProperty<bool>(false);
 
-        public IReadOnlyReactiveProperty<bool> MultiplayReady => multiplayReady;
-        private readonly BoolReactiveProperty multiplayReady = new BoolReactiveProperty(false);
-
         public IReadOnlyReactiveProperty<bool> P2PReady => p2PReady.AddTo(disposables);
         private readonly ReactiveProperty<bool> p2PReady = new ReactiveProperty<bool>(false);
 
@@ -55,6 +52,7 @@ namespace Extreal.SampleApp.Holiday.App
         public IObservable<RetryStatus> OnRetryStatusReceived => onRetryStatusReceived.AddTo(disposables);
         private readonly Subject<RetryStatus> onRetryStatusReceived = new Subject<RetryStatus>();
 
+        private readonly BoolReactiveProperty multiplayReady = new BoolReactiveProperty(false);
         private readonly BoolReactiveProperty landscapeInitialized = new BoolReactiveProperty(false);
 
         private readonly CompositeDisposable disposables = new CompositeDisposable();
