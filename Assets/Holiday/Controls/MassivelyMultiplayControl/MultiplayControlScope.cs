@@ -5,11 +5,11 @@ using VContainer.Unity;
 
 namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl
 {
-    public class MassivelyMultiplayControlScope : LifetimeScope
+    public class MultiplayControlScope : LifetimeScope
     {
         [SerializeField] private GameObject playerPrefab;
 
         protected override void Configure(IContainerBuilder builder)
-            => builder.RegisterEntryPoint<MassivelyMultiplayClientPresenter>().WithParameter(playerPrefab);
+            => builder.RegisterEntryPoint<MultiplayControlPresenter>().WithParameter(playerPrefab);
     }
 }

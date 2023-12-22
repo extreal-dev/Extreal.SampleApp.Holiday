@@ -5,9 +5,6 @@ using Extreal.Integration.Multiplay.Common;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
-using Unity.Netcode;
-using Extreal.Integration.Multiplay.NGO;
-using Extreal.Integration.Multiplay.NGO.WebRTC;
 using Extreal.Integration.Messaging.Redis;
 using SocketIOClient;
 using Extreal.Integration.Messaging.Common;
@@ -16,7 +13,6 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
 {
     public class ClientControlScope : LifetimeScope
     {
-        [SerializeField] private NetworkManager networkManager;
         [SerializeField] private NetworkObjectsProvider networkObjectsProvider;
 
         protected override void Configure(IContainerBuilder builder)
@@ -27,19 +23,6 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
             builder.RegisterComponent(peerClient);
 
             builder.Register<GroupManager>(Lifetime.Singleton);
-
-            builder.RegisterComponent(networkManager);
-
-            var webRtcClient = WebRtcClientProvider.Provide(peerClient);
-            var webRtcTransportConnectionSetter = new WebRtcTransportConnectionSetter(webRtcClient);
-
-            var ngoHost = new NgoServer(networkManager);
-            ngoHost.AddConnectionSetter(webRtcTransportConnectionSetter);
-            builder.RegisterComponent(ngoHost);
-
-            var ngoClient = new NgoClient(networkManager);
-            ngoClient.AddConnectionSetter(webRtcTransportConnectionSetter);
-            builder.RegisterComponent(ngoClient);
 
             var redisMessagingConfig = new RedisMessagingConfig("http://localhost:3030", new SocketIOOptions { EIO = EngineIO.V4 });
             var redisMessagingClient = RedisMessagingClientProvider.Provide(redisMessagingConfig);

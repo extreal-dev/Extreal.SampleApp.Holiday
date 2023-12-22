@@ -11,12 +11,10 @@
         "UniRx",
         "UniTask",
         "VContainer",
-        "Unity.Netcode.Runtime",
         "StarterAsserts",
         "Extreal.Core.Logging",
         "Extreal.Core.StageNavigation",
         "Extreal.Core.Common",
-        "Extreal.Integration.Multiplay.NGO",
         "Extreal.Integration.Multiplay.Common"
     ],
     "includePlatforms": [

@@ -18,15 +18,12 @@ namespace Extreal.SampleApp.Holiday.App
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(AppState));
 
         private PeerRole role = PeerRole.Host;
-        private CommunicationMode communicationMode = CommunicationMode.Light;
 
         public string PlayerName { get; private set; } = "Guest";
         public AvatarConfig.Avatar Avatar { get; private set; }
         public SpaceConfig.Space Space { get; private set; }
         public bool IsHost => role == PeerRole.Host;
         public bool IsClient => role == PeerRole.Client;
-        public bool IsLightForCommunication => communicationMode == CommunicationMode.Light;
-        public bool IsMassivelyForCommunication => communicationMode == CommunicationMode.Massively;
         public string GroupName { get; private set; } // Host only
         public string GroupId { get; private set; } // Client only
         public string SpaceName { get; private set; }
@@ -122,7 +119,6 @@ namespace Extreal.SampleApp.Holiday.App
         public void SetAvatar(AvatarConfig.Avatar avatar) => Avatar = avatar;
         public void SetSpace(SpaceConfig.Space space) => Space = space;
         public void SetRole(PeerRole role) => this.role = role;
-        public void SetCommunicationMode(CommunicationMode communicationMode) => this.communicationMode = communicationMode;
         public void SetGroupName(string groupName) => GroupName = groupName;
         public void SetGroupId(string groupId) => GroupId = groupId;
         public void SetSpaceName(string spaceName) => SpaceName = spaceName;

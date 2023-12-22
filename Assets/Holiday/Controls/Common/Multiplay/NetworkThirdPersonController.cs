@@ -1,74 +1,81 @@
-using System.Collections;
-using System.Collections.Generic;
-using Cinemachine;
+﻿using Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Random = UnityEngine.Random;
+
+/* Note: animations are called via the controller for both the character and capsule using animator null checks
+ */
 
 namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
 {
-    public abstract class MultiplayStrategyBase : IMultipayStrategy
+#pragma warning disable
+    [RequireComponent(typeof(CharacterController))]
+    [RequireComponent(typeof(PlayerInput))]
+    public class NetworkThirdPersonController : MonoBehaviour
     {
-        private readonly GameObject player;
-
         [Header("Player")]
         [Tooltip("Move speed of the character in m/s")]
-        private const float MoveSpeed = 2.0f;
+        public float MoveSpeed = 2.0f;
 
         [Tooltip("Sprint speed of the character in m/s")]
-        private const float SprintSpeed = 5.335f;
+        public float SprintSpeed = 5.335f;
 
         [Tooltip("How fast the character turns to face movement direction")]
         [Range(0.0f, 0.3f)]
-        private const float RotationSmoothTime = 0.12f;
+        public float RotationSmoothTime = 0.12f;
 
         [Tooltip("Acceleration and deceleration")]
-        private const float SpeedChangeRate = 10.0f;
+        public float SpeedChangeRate = 10.0f;
+
+        public AudioClip LandingAudioClip;
+        public AudioClip[] FootstepAudioClips;
+        [Range(0, 1)] public float FootstepAudioVolume = 0.5f;
 
         [Space(10)]
         [Tooltip("The height the player can jump")]
-        private const float JumpHeight = 1.2f;
+        public float JumpHeight = 1.2f;
 
         [Tooltip("The character uses its own gravity value. The engine default is -9.81f")]
-        private const float Gravity = -15.0f;
+        public float Gravity = -15.0f;
 
         [Space(10)]
         [Tooltip("Time required to pass before being able to jump again. Set to 0f to instantly jump again")]
-        private const float JumpTimeout = 0.50f;
+        public float JumpTimeout = 0.50f;
 
         [Tooltip("Time required to pass before entering the fall state. Useful for walking down stairs")]
-        private const float FallTimeout = 0.15f;
+        public float FallTimeout = 0.15f;
 
         [Header("Player Grounded")]
         [Tooltip("If the character is grounded or not. Not part of the CharacterController built in grounded check")]
-        private bool Grounded = true;
+        public bool Grounded = true;
 
-        [Tooltip("Useful for rough ground")] private const float GroundedOffset = -0.14f;
+        [Tooltip("Useful for rough ground")] public float GroundedOffset = -0.14f;
 
         [Tooltip("The radius of the grounded check. Should match the radius of the CharacterController")]
-        private const float GroundedRadius = 0.28f;
+        public float GroundedRadius = 0.28f;
 
         [Tooltip("What layers the character uses as ground")]
-        private LayerMask groundLayers;
+        public LayerMask GroundLayers;
 
         [Header("Cinemachine")]
         [Tooltip("The follow target set in the Cinemachine Virtual Camera that the camera will follow")]
-        private GameObject cinemachineCameraTarget;
+        public GameObject CinemachineCameraTarget;
 
         [Tooltip("How far in degrees can you move the camera up")]
-        private const float TopClamp = 70.0f;
+        public float TopClamp = 70.0f;
 
         [Tooltip("How far in degrees can you move the camera down")]
-        private const float BottomClamp = -30.0f;
+        public float BottomClamp = -30.0f;
 
         [Tooltip("Additional degrees to override the camera. Useful for fine tuning camera position when locked")]
-        private const float CameraAngleOverride = 0.0f;
+        public float CameraAngleOverride = 0.0f;
 
         [Tooltip("For locking the camera position on all axis")]
-        private const bool LockCameraPosition = false;
+        public bool LockCameraPosition = false;
 
-        [Header("Input")] private PlayerInput PlayerInput;
-        private GetPlayerInput GetPlayerInput;
-        protected HolidayPlayerInput Input;
+        [Header("Input")] public PlayerInput PlayerInput;
+        public GetPlayerInput GetPlayerInput;
+        public HolidayPlayerInput Input;
 
         private const float cameraRotateSpeed = 10.0f;
         private const float dampingFactor = 0.1f;
@@ -106,41 +113,17 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
 
         private bool _hasAnimator;
 
-        protected bool isTouchDevice;
-        protected bool isOwner;
-        private const bool isClient = true;
-        private bool isNetcode;
-
-        protected MultiplayStrategyBase(GameObject player, GameObject cinemachineCameraTarget, LayerMask groundLayers)
-        {
-            this.player = player;
-            this.cinemachineCameraTarget = cinemachineCameraTarget;
-            this.groundLayers = groundLayers;
-
-            PlayerInput = player.GetComponent<PlayerInput>();
-            GetPlayerInput = player.GetComponent<GetPlayerInput>();
-            Input = player.GetComponent<HolidayPlayerInput>();
-        }
+        private bool isTouchDevice;
+        private bool isOwner;
 
         public void Initialize(Avatar avatar, bool isOwner, bool isTouchDevice)
         {
             this.isOwner = isOwner;
 
-            _cinemachineTargetYaw = cinemachineCameraTarget.transform.rotation.eulerAngles.y;
-
-            _hasAnimator = player.TryGetComponent(out _animator);
-            _controller = player.GetComponent<CharacterController>();
-
-            AssignAnimationIDs();
-
-            // reset our timeouts on start
-            _jumpTimeoutDelta = JumpTimeout;
-            _fallTimeoutDelta = FallTimeout;
-
             SetAvatar(avatar);
-            SetOwnerCamera();
+            OnNetworkSpawn();
 
-            if (isOwner && isTouchDevice)
+            if (this.isOwner && isTouchDevice)
             {
                 RegisterCurrentDeviceIsTouchDevice();
             }
@@ -148,9 +131,10 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
 
         private void SetAvatar(Avatar avatar)
         {
+
             if (!_hasAnimator)
             {
-                _hasAnimator = player.TryGetComponent(out _animator);
+                _hasAnimator = TryGetComponent(out _animator);
             }
 
             var speed = _animator.GetFloat(_animIDSpeed);
@@ -179,26 +163,78 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
         public void ResetPosition()
         {
             _controller.enabled = false;
-            player.transform.position = Vector3.zero;
-            player.transform.rotation = Quaternion.identity;
+            transform.position = Vector3.zero;
+            transform.rotation = Quaternion.identity;
             _cinemachineTargetYaw = 0f;
             _cinemachineTargetPitch = 0f;
             _controller.enabled = true;
         }
 
-        private void SetOwnerCamera()
+        private bool IsCurrentDeviceMouse
         {
-            if (isClient && isOwner)
+            get
             {
-                _cinemachineVirtualCamera = Object.FindObjectOfType<CinemachineVirtualCamera>();
-
-                PlayerInput.enabled = true;
-                GetPlayerInput.enabled = true;
-                _cinemachineVirtualCamera.Follow = cinemachineCameraTarget.transform;
+                return PlayerInput.currentControlScheme == "KeyboardMouse";
             }
         }
 
-        public abstract void DoLateUpdate();
+        private void Awake()
+        {
+            _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
+
+            _hasAnimator = TryGetComponent(out _animator);
+            _controller = GetComponent<CharacterController>();
+
+            AssignAnimationIDs();
+
+            // reset our timeouts on start
+            _jumpTimeoutDelta = JumpTimeout;
+            _fallTimeoutDelta = FallTimeout;
+        }
+
+        public void OnNetworkSpawn()
+        {
+            if (isOwner)
+            {
+                _cinemachineVirtualCamera = FindObjectOfType<CinemachineVirtualCamera>();
+
+                PlayerInput.enabled = true;
+                GetPlayerInput.enabled = true;
+                _cinemachineVirtualCamera.Follow = CinemachineCameraTarget.transform;
+            }
+        }
+
+        private void Update()
+        {
+            _hasAnimator = TryGetComponent(out _animator);
+            GroundedCheck();
+
+            if (!Input.HolidayValues.InputFieldTyping)
+            {
+                JumpAndGravity(true);
+                Move(true);
+            }
+            else
+            {
+                JumpAndGravity(false);
+                Move(false);
+            }
+        }
+
+        private void LateUpdate()
+        {
+            if (isOwner && !Input.HolidayValues.InputFieldTyping)
+            {
+                if (IsCurrentDeviceMouse && !isTouchDevice)
+                {
+                    MouseCameraRotation();
+                }
+                else
+                {
+                    TouchDeviceCameraRotation();
+                }
+            }
+        }
 
         private void AssignAnimationIDs()
         {
@@ -209,12 +245,12 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
         }
 
-        protected void GroundedCheck()
+        private void GroundedCheck()
         {
             // set sphere position, with offset
-            Vector3 spherePosition = new Vector3(player.transform.position.x, player.transform.position.y - GroundedOffset,
-                player.transform.position.z);
-            Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, groundLayers,
+            Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset,
+                transform.position.z);
+            Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers,
                 QueryTriggerInteraction.Ignore);
 
             // update animator if using character
@@ -224,7 +260,7 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
             }
         }
 
-        protected void TouchDeviceCameraRotation()
+        private void TouchDeviceCameraRotation()
         {
             // if there is an input and camera position is not fixed
             if (Input.Look.sqrMagnitude >= _threshold && !LockCameraPosition)
@@ -240,11 +276,11 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
             _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
 
             // Cinemachine will follow this target
-            cinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
+            CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
                 _cinemachineTargetYaw, 0.0f);
         }
 
-        protected void MouseCameraRotation()
+        private void MouseCameraRotation()
         {
             var mouse = Mouse.current;
             // if there is an input and camera position is not fixed
@@ -265,11 +301,11 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
             _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
 
             // Cinemachine will follow this target
-            cinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
+            CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
                 _cinemachineTargetYaw, 0.0f);
         }
 
-        protected void Move(bool isMovable)
+        private void Move(bool isMovable)
         {
             var move = isMovable ? Input.HolidayValues.Move : Vector2.zero;
 
@@ -318,13 +354,13 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
             {
                 _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
                                   _cinemachineTargetYaw;
-                float rotation = Mathf.SmoothDampAngle(player.transform.eulerAngles.y, _targetRotation, ref _rotationVelocity,
+                float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity,
                     RotationSmoothTime);
 
                 if (isOwner)
                 {
                     // rotate to face input direction relative to camera position
-                    player.transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+                    transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
                 }
             }
 
@@ -346,7 +382,7 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
             }
         }
 
-        protected void JumpAndGravity(bool isJumpable)
+        private void JumpAndGravity(bool isJumpable)
         {
             var jump = isJumpable && Input.HolidayValues.Jump;
             if (Grounded)
@@ -422,6 +458,44 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
             if (lfAngle > 360f)
                 lfAngle -= 360f;
             return Mathf.Clamp(lfAngle, lfMin, lfMax);
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            Color transparentGreen = new Color(0.0f, 1.0f, 0.0f, 0.35f);
+            Color transparentRed = new Color(1.0f, 0.0f, 0.0f, 0.35f);
+
+            if (Grounded)
+                Gizmos.color = transparentGreen;
+            else
+                Gizmos.color = transparentRed;
+
+            // when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
+            Gizmos.DrawSphere(
+                new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z),
+                GroundedRadius);
+        }
+
+        private void OnFootstep(AnimationEvent animationEvent)
+        {
+            if (animationEvent.animatorClipInfo.weight > 0.5f)
+            {
+                if (FootstepAudioClips.Length > 0)
+                {
+                    var index = Random.Range(0, FootstepAudioClips.Length);
+                    AudioSource.PlayClipAtPoint(FootstepAudioClips[index], transform.TransformPoint(_controller.center),
+                        FootstepAudioVolume);
+                }
+            }
+        }
+
+        private void OnLand(AnimationEvent animationEvent)
+        {
+            if (animationEvent.animatorClipInfo.weight > 0.5f)
+            {
+                AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center),
+                    FootstepAudioVolume);
+            }
         }
     }
 }

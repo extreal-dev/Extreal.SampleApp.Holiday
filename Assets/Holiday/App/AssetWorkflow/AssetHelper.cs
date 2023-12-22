@@ -24,8 +24,7 @@ namespace Extreal.SampleApp.Holiday.App.AssetWorkflow
 
         public MessageConfig MessageConfig { get; private set; }
         public PeerConfig PeerConfig { get; private set; }
-        public HostConfig NgoHostConfig { get; private set; }
-        public ClientConfig NgoClientConfig { get; private set; }
+        public MultiplayConfig MultiplayConfig { get; private set; }
         public AvatarConfig AvatarConfig { get; private set; }
 
         public VoiceChatConfig VoiceChatConfig { get; private set; }
@@ -60,9 +59,7 @@ namespace Extreal.SampleApp.Holiday.App.AssetWorkflow
                 PeerConfig = await LoadAndReleaseAsync<P2PConfig, PeerConfig>(asset => asset.PeerConfig);
                 AvatarConfig = await LoadAndAddToDisposablesAsync<AvatarConfig>();
                 SpaceConfig = await LoadAndAddToDisposablesAsync<SpaceConfig>();
-                (NgoHostConfig, NgoClientConfig)
-                    = await LoadAndReleaseAsync<MultiplayConfig, (HostConfig, ClientConfig)>(
-                        asset => (asset.HostConfig, asset.ClientConfig));
+                MultiplayConfig = await LoadAndAddToDisposablesAsync<MultiplayConfig>();
                 VoiceChatConfig = await LoadAndReleaseAsync<ChatConfig, VoiceChatConfig>(
                     asset => asset.VoiceChatConfig);
                 LandscapeConfig = await LoadAndAddToDisposablesAsync<LandscapeConfig>();

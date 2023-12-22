@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -9,6 +10,7 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
     {
         [SerializeField] private HolidayPlayerInput input;
 
+        [SuppressMessage("Usage", "IDE0051")]
         private void Update()
             => input.SetInputFieldTyping(
                 EventSystem.current.currentSelectedGameObject != null

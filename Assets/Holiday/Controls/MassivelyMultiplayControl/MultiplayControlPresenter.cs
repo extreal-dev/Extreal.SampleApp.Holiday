@@ -12,15 +12,15 @@ using UnityEngine;
 
 namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
 {
-    public class MassivelyMultiplayClientPresenter : StagePresenterBase
+    public class MultiplayControlPresenter : StagePresenterBase
     {
         private readonly MultiplayClient multiplayClient;
         private readonly QueuingMessagingClient messagingClient;
         private readonly GameObject playerPrefab;
         private readonly AssetHelper assetHelper;
-        private MassivelyMultiplayClient massivelyMultiplayClient;
+        private MultiplayRoom multiplayRoom;
 
-        public MassivelyMultiplayClientPresenter
+        public MultiplayControlPresenter
         (
             MultiplayClient multiplayClient,
             QueuingMessagingClient messagingClient,
@@ -44,42 +44,27 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
             CompositeDisposable sceneDisposables
         )
         {
-            if (!appState.IsMassivelyForCommunication)
-            {
-                return;
-            }
+            multiplayRoom = new MultiplayRoom(multiplayClient, messagingClient, playerPrefab, assetHelper, appState);
+            sceneDisposables.Add(multiplayRoom);
 
-            massivelyMultiplayClient = new MassivelyMultiplayClient(multiplayClient, messagingClient, playerPrefab, assetHelper, appState);
-            sceneDisposables.Add(massivelyMultiplayClient);
-
-            massivelyMultiplayClient.IsPlayerSpawned
+            multiplayRoom.IsPlayerSpawned
                 .Subscribe(appState.SetMultiplayReady)
                 .AddTo(sceneDisposables);
 
             appState.SpaceReady
-                .Where(ready => ready && !appState.MultiplayReady.Value)
-                .Subscribe(_ => massivelyMultiplayClient.JoinAsync().Forget())
-                .AddTo(sceneDisposables);
-
-            appState.PlayingReady
-                .Skip(1)
                 .Where(ready => ready)
-                .Subscribe(_ => massivelyMultiplayClient.ResetPosition())
+                .Subscribe(_ => multiplayRoom.JoinAsync().Forget())
                 .AddTo(sceneDisposables);
 
             appState.OnMessageSent
-                .Subscribe(massivelyMultiplayClient.SendToOthers)
+                .Subscribe(multiplayRoom.SendToOthers)
                 .AddTo(sceneDisposables);
         }
 
         protected override void OnStageExiting(StageName stageName, AppState appState)
         {
-            if (!appState.IsMassivelyForCommunication || AppUtils.IsSpace(stageName))
-            {
-                return;
-            }
             appState.SetMultiplayReady(false);
-            massivelyMultiplayClient.LeaveAsync().Forget();
+            multiplayRoom.LeaveAsync().Forget();
         }
     }
 }

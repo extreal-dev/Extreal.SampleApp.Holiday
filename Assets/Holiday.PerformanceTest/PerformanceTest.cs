@@ -5,14 +5,13 @@ using System.Text;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.Logging;
-using Extreal.Integration.Multiplay.NGO;
+using Extreal.Integration.Multiplay.Common;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.Controls.ClientControl;
 using StarterAssets;
 using TMPro;
 using UniRx;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.SceneManagement;
@@ -134,11 +133,11 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
 
             var appControlScope = FindObjectOfType<ClientControlScope>();
             var appState = appControlScope.Container.Resolve(typeof(AppState)) as AppState;
-            var ngoClient = appControlScope.Container.Resolve(typeof(NgoClient)) as NgoClient;
+            var multiplayClient = appControlScope.Container.Resolve(typeof(MultiplayClient)) as MultiplayClient;
 
             {
                 var playingReady = false;
-                var isConnectionApprovalRejected = false;
+                var isJoiningApprovalRejected = false;
 
                 using var isPlayingDisposable = appState.PlayingReady
                     .Skip(1)
@@ -146,12 +145,12 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                     .Subscribe(_ => playingReady = true);
 
                 using var isConnectionApprovalRejectedDisposable =
-                    ngoClient.OnConnectionApprovalRejected
-                        .Subscribe(_ => isConnectionApprovalRejected = true);
+                    multiplayClient.OnJoiningApprovalRejected
+                        .Subscribe(_ => isJoiningApprovalRejected = true);
 
-                await UniTask.WaitUntil(() => playingReady || isConnectionApprovalRejected);
+                await UniTask.WaitUntil(() => playingReady || isJoiningApprovalRejected);
 
-                if (isConnectionApprovalRejected)
+                if (isJoiningApprovalRejected)
                 {
 #if UNITY_EDITOR
                     UnityEditor.EditorApplication.isPlaying = false;
@@ -161,18 +160,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                 }
             }
 
-            var player = default(NetworkObject);
-            foreach (var networkObject in NetworkManager.Singleton.SpawnManager.SpawnedObjects.Values)
-            {
-                if (networkObject.IsOwner)
-                {
-                    if (logger.IsDebug())
-                    {
-                        logger.LogDebug("Get player object");
-                    }
-                    player = networkObject;
-                }
-            }
+            var player = multiplayClient.LocalClient.NetworkObjects[0];
 
             var playerInput = player.GetComponent<StarterAssetsInputs>();
             var messageInput = FindObjectOfType<TMP_InputField>();

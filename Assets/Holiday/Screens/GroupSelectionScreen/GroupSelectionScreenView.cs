@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Extreal.Integration.P2P.WebRTC;
-using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using TMPro;
 using UniRx;
@@ -15,7 +14,6 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
 {
     public class GroupSelectionScreenView : MonoBehaviour
     {
-        [SerializeField] private TMP_Dropdown modeDropdown;
         [SerializeField] private TMP_Dropdown roleDropdown;
         [SerializeField] private TMP_InputField groupNameInputField;
         [SerializeField] private TMP_Dropdown groupDropdown;
@@ -28,10 +26,6 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
         [SerializeField] private TMP_Text backButtonLabel;
 
         [Inject] private AssetHelper assetHelper;
-
-        public IObservable<CommunicationMode> OnModeChanged =>
-            modeDropdown.onValueChanged.AsObservable()
-                .Select(index => Modes[index]).TakeUntilDestroy(this);
 
         public IObservable<PeerRole> OnRoleChanged =>
             roleDropdown.onValueChanged.AsObservable()
@@ -48,7 +42,6 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
         public IObservable<Unit> OnGoButtonClicked => goButton.OnClickAsObservable().TakeUntilDestroy(this);
         public IObservable<Unit> OnBackButtonClicked => backButton.OnClickAsObservable().TakeUntilDestroy(this);
 
-        private static readonly List<CommunicationMode> Modes = new List<CommunicationMode> { CommunicationMode.Light, CommunicationMode.Massively };
         private static readonly List<PeerRole> Roles = new List<PeerRole> { PeerRole.Host, PeerRole.Client };
         private readonly List<string> groupNames = new List<string>();
 
@@ -63,11 +56,9 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
 
         public void Initialize()
         {
-            modeDropdown.options = Modes.Select(mode => new TMP_Dropdown.OptionData(mode.ToString())).ToList();
             roleDropdown.options = Roles.Select(role => new TMP_Dropdown.OptionData(role.ToString())).ToList();
             groupDropdown.options = new List<TMP_Dropdown.OptionData>();
 
-            OnModeChanged.Subscribe(_ => UpdateGroupNames(Array.Empty<string>()));
             OnRoleChanged.Subscribe(SwitchInputMode);
             OnGroupNameChanged.Subscribe(_ => CanGo(PeerRole.Host));
         }
@@ -85,9 +76,8 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
                 (role == PeerRole.Host && groupNameInputField.text.Length > 0)
                 || (role == PeerRole.Client && groupDropdown.options.Count > 0));
 
-        public void SetInitialValues(PeerRole role, CommunicationMode communicationMode)
+        public void SetInitialValues(PeerRole role)
         {
-            modeDropdown.value = Modes.IndexOf(communicationMode);
             roleDropdown.value = Roles.IndexOf(role);
             groupNameInputField.text = string.Empty;
             groupDropdown.value = 0;
