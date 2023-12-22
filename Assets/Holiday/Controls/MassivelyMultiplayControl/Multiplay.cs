@@ -12,7 +12,6 @@ using Extreal.Integration.Multiplay.Common;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Avatars;
-using Extreal.SampleApp.Holiday.App.P2P;
 using Extreal.SampleApp.Holiday.Controls.Common.Multiplay;
 using UniRx;
 using UnityEngine;
@@ -98,19 +97,6 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
         public async UniTaskVoid LeaveAsync()
             => await multiplayClient.LeaveAsync();
 
-        public void SendToOthers(Message message)
-        {
-            if (Logger.IsDebug())
-            {
-                Logger.LogDebug(
-                    "Send message spread to server" + Environment.NewLine
-                    + $" message ID: {message.MessageId}" + Environment.NewLine
-                    + $" content: {message.Content}");
-            }
-            var messageJson = JsonUtility.ToJson(message);
-            multiplayClient.SendMessage(messageJson);
-        }
-
         private async UniTaskVoid SetOwnerAvatarAsync(string avatarAssetName)
         {
             const bool isOwner = true;
@@ -135,29 +121,8 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
         private void HandleReceivedMessage((string userIdentity, string messageJson) tuple)
         {
             var userIdentityRemote = tuple.userIdentity;
-
-            if (tuple.messageJson.Contains("messageId"))
-            {
-                var everyoneMessage = JsonUtility.FromJson<Message>(tuple.messageJson);
-                everyoneMessage.OnAfterDeserialize();
-                HandleReceivedEveryoneMessage(everyoneMessage);
-                return;
-            }
-
             var remoteAvatarName = tuple.messageJson;
             HandleReceivedAvatarName(userIdentityRemote, remoteAvatarName);
-        }
-
-        private void HandleReceivedEveryoneMessage(Message message)
-        {
-            if (Logger.IsDebug())
-            {
-                Logger.LogDebug(
-                    "Received message spread from server" + Environment.NewLine
-                    + $" message ID: {message.MessageId}" + Environment.NewLine
-                    + $" parameter: {message.Content}");
-            }
-            appState.ReceivedMessage(message);
         }
 
         private void HandleReceivedAvatarName(string userIdentityRemote, string avatarAssetName)

@@ -30,8 +30,8 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
             builder.RegisterComponent(queuingMessagingClient);
             builder.Register<MultiplayClient>(Lifetime.Singleton).WithParameter(queuingMessagingClient).WithParameter<INetworkObjectsProvider>(networkObjectsProvider);
 
-            var textChatClient = TextChatClientProvider.Provide(peerClient);
-            builder.RegisterComponent(textChatClient);
+            var textChatClient = RedisMessagingClientProvider.Provide(redisMessagingConfig);
+            builder.RegisterComponent<MessagingClient>(textChatClient);
             var voiceChatClient = VoiceChatClientProvider.Provide(peerClient, assetHelper.VoiceChatConfig);
             builder.RegisterComponent(voiceChatClient);
 

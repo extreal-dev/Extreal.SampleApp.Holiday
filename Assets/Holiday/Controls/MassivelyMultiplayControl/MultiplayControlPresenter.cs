@@ -55,10 +55,6 @@ namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client
                 .Where(ready => ready)
                 .Subscribe(_ => multiplayRoom.JoinAsync().Forget())
                 .AddTo(sceneDisposables);
-
-            appState.OnMessageSent
-                .Subscribe(multiplayRoom.SendToOthers)
-                .AddTo(sceneDisposables);
         }
 
         protected override void OnStageExiting(StageName stageName, AppState appState)
