@@ -16,14 +16,6 @@
     "@extreal-dev/extreal.integration.web.common" "^1.0.0"
     socket.io-client "^4.7.1"
 
-"@extreal-dev/extreal.integration.multiplay.ngo.webrtc@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.multiplay.ngo.webrtc/-/extreal.integration.multiplay.ngo.webrtc-1.0.0.tgz#f388838d9a4dc60cd5dd4136fc81d32a51d4938b"
-  integrity sha512-8RliR/Oo02ateZjl9dmSOJiV7327L56oDnJR+z9nIQ+Fw0QLSpoio7vtG/yofdw05mCHdBTVmN3YPgspLmiAHg==
-  dependencies:
-    "@extreal-dev/extreal.integration.p2p.webrtc" "^1.0.0"
-    "@extreal-dev/extreal.integration.web.common" "^1.0.0"
-
 "@extreal-dev/extreal.integration.p2p.webrtc@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.p2p.webrtc/-/extreal.integration.p2p.webrtc-1.0.0.tgz#8ed6edc35435bcd369b976cd69b14b46cf3e30dd"
