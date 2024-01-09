@@ -15,7 +15,7 @@
         "Extreal.Core.Logging",
         "Extreal.Core.StageNavigation",
         "Extreal.Core.Common",
-        "Extreal.Integration.Multiplay.Common"
+        "Extreal.Integration.Multiplay.Messaging"
     ],
     "includePlatforms": [
         "Editor",

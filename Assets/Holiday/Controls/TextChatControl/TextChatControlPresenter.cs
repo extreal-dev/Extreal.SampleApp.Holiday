@@ -2,7 +2,7 @@
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.StageNavigation;
-using Extreal.Integration.Messaging.Common;
+using Extreal.Integration.Messaging;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;

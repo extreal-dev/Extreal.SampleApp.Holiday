@@ -363,8 +363,8 @@
       },
       "hash": "4d3b7ad3c1cd752e1ace152a0949fc5ec2e976d0"
     },
-    "jp.co.tis.extreal.integration.messaging.common": {
-      "version": "file:Extreal.Integration.Messaging.Common",
+    "jp.co.tis.extreal.integration.messaging": {
+      "version": "file:Extreal.Integration.Messaging",
       "depth": 0,
       "source": "embedded",
       "dependencies": {
@@ -383,11 +383,11 @@
         "com.neuecc.unirx": "7.1.0",
         "jp.co.tis.extreal.core.logging": "1.2.0",
         "jp.co.tis.extreal.core.common": "1.1.0",
-        "jp.co.tis.extreal.integration.messaging.common": "1.0.0-Next.1"
+        "jp.co.tis.extreal.integration.messaging": "1.0.0-next.1"
       }
     },
-    "jp.co.tis.extreal.integration.multiplay.common": {
-      "version": "file:Extreal.Integration.Multiplay.Common",
+    "jp.co.tis.extreal.integration.multiplay.messaging": {
+      "version": "file:Extreal.Integration.Multiplay.Messaging",
       "depth": 0,
       "source": "embedded",
       "dependencies": {
@@ -395,7 +395,7 @@
         "com.neuecc.unirx": "7.1.0",
         "jp.co.tis.extreal.core.logging": "1.2.0",
         "jp.co.tis.extreal.core.common": "1.1.0",
-        "jp.co.tis.extreal.integration.messaging.common": "1.0.0-next.1"
+        "jp.co.tis.extreal.integration.messaging": "1.0.0-next.1"
       }
     },
     "jp.co.tis.extreal.integration.p2p.webrtc": {

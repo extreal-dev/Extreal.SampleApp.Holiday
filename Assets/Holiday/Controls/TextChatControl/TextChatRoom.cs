@@ -2,10 +2,11 @@ using System;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
-using Extreal.Integration.Messaging.Common;
+using Extreal.Integration.Messaging;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.P2P;
+using SocketIOClient;
 using UniRx;
 using UnityEngine;
 
@@ -63,14 +64,22 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
         public async UniTaskVoid JoinAsync()
         {
             groupName = $"TextChat#{appState.GroupName}";
-            if (appState.IsHost)
+            try
             {
-                var groupConfig = new GroupConfig(groupName, assetHelper.MessagingConfig.MaxCapacity);
-                await messagingClient.CreateGroupAsync(groupConfig);
+                if (appState.IsHost)
+                {
+                    var groupConfig = new GroupConfig(groupName, assetHelper.MessagingConfig.MaxCapacity);
+                    await messagingClient.CreateGroupAsync(groupConfig);
+                }
+
+                var joiningConfig = new MessagingJoiningConfig(groupName);
+                await messagingClient.JoinAsync(joiningConfig);
+            }
+            catch (ConnectionException e)
+            {
+                appState.Notify(assetHelper.MessageConfig.MultiplayConnectionApprovalRejectedMessage);
             }
 
-            var joiningConfig = new MessagingJoiningConfig(groupName);
-            await messagingClient.JoinAsync(joiningConfig);
         }
 
         public async UniTaskVoid LeaveAsync()

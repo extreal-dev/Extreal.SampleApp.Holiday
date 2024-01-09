@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Extreal.Core.StageNavigation;
-using Extreal.Integration.Messaging.Common;
-using Extreal.Integration.Multiplay.Common;
+using Extreal.Integration.Messaging;
+using Extreal.Integration.Multiplay.Messaging;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;

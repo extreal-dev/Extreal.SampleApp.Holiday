@@ -1,6 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using Extreal.Core.StageNavigation;
-using Extreal.Integration.Multiplay.Common;
+using Extreal.Integration.Multiplay.Messaging;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
