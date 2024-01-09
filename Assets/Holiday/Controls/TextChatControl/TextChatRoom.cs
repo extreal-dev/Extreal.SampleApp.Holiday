@@ -75,9 +75,9 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
                 var joiningConfig = new MessagingJoiningConfig(groupName);
                 await messagingClient.JoinAsync(joiningConfig);
             }
-            catch (ConnectionException e)
+            catch (ConnectionException)
             {
-                appState.Notify(assetHelper.MessageConfig.MultiplayConnectionApprovalRejectedMessage);
+                appState.Notify(assetHelper.MessageConfig.MultiplayUnexpectedDisconnectedMessage);
             }
 
         }
