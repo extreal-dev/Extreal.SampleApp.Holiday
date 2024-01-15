@@ -1,4 +1,4 @@
-using Extreal.Integration.Multiplay.Common;
+using Extreal.Integration.Multiplay.Messaging;
 using UnityEngine;
 
 namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay

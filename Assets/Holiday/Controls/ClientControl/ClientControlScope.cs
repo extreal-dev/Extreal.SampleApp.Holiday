@@ -1,12 +1,11 @@
-﻿using Extreal.Integration.Chat.WebRTC;
-using Extreal.Integration.P2P.WebRTC;
-using Extreal.SampleApp.Holiday.App.AssetWorkflow;
-using Extreal.Integration.Multiplay.Common;
+﻿using Extreal.SampleApp.Holiday.App.AssetWorkflow;
+using Extreal.Integration.Multiplay.Messaging;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 using Extreal.Integration.Messaging.Redis;
-using Extreal.Integration.Messaging.Common;
+using Extreal.Integration.Messaging;
+using Extreal.Integration.Chat.OME;
 
 namespace Extreal.SampleApp.Holiday.Controls.ClientControl
 {
@@ -18,9 +17,6 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
         {
             var assetHelper = Parent.Container.Resolve<AssetHelper>();
 
-            var peerClient = PeerClientProvider.Provide(assetHelper.PeerConfig);
-            builder.RegisterComponent(peerClient);
-
             builder.Register<GroupManager>(Lifetime.Singleton);
 
             var redisMessagingClient = RedisMessagingClientProvider.Provide(assetHelper.MessagingConfig.RedisMessagingConfig);
@@ -30,7 +26,8 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
 
             var textChatClient = RedisMessagingClientProvider.Provide(assetHelper.MessagingConfig.RedisMessagingConfig);
             builder.RegisterComponent<MessagingClient>(textChatClient);
-            var voiceChatClient = VoiceChatClientProvider.Provide(peerClient, assetHelper.VoiceChatConfig);
+
+            var voiceChatClient = VoiceChatClientProvider.Provide(assetHelper.VoiceChatConfig);
             builder.RegisterComponent(voiceChatClient);
 
             builder.RegisterEntryPoint<ClientControlPresenter>();

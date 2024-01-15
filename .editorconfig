@@ -416,6 +416,8 @@ dotnet_naming_rule.parameters_rule.style                = camel_case_style
 dotnet_naming_rule.parameters_rule.severity             = warning
 
 # Disable
+# Simplify null check
+dotnet_diagnostic.IDE0031.severity = none
 # Variable declarations can be broken down
 dotnet_diagnostic.IDE0042.severity = none
 # Make field readonly
@@ -428,6 +430,8 @@ dotnet_diagnostic.IDE0039.severity = none
 dotnet_diagnostic.IDE0090.severity = none
 # Possible JSON string detected
 dotnet_diagnostic.JSON002.severity = none
+# You could use 'switch' instead of 'if'.
+dotnet_diagnostic.CC0019.severity = none
 # 'Xxxxx' should call GC.SuppressFinalize inside the Dispose method.
 dotnet_diagnostic.CC0029.severity = none
 # Ordering member inside this type.

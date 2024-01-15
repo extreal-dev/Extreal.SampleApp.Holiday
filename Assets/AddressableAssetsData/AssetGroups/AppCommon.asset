@@ -32,11 +32,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 3ce9f7a676c41ca45aeddd2fcf78e28a
-    m_Address: P2PConfig
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: abe9dfda252ecb44bada33ddee4fce9f
     m_Address: ChatConfig
     m_ReadOnly: 0

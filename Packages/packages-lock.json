@@ -7,6 +7,13 @@
       "dependencies": {},
       "url": "https://package.openupm.com"
     },
+    "com.endel.nativewebsocket": {
+      "version": "1.1.4",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://package.openupm.com"
+    },
     "com.neuecc.unirx": {
       "version": "7.1.0",
       "depth": 1,
@@ -348,6 +355,19 @@
       },
       "hash": "082ce097952ee64007c1434eb022cdb9d22ddecf"
     },
+    "jp.co.tis.extreal.integration.chat.ome": {
+      "version": "file:Extreal.Integration.Chat.OME",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.cysharp.unitask": "2.3.3",
+        "com.neuecc.unirx": "7.1.0",
+        "jp.co.tis.extreal.core.logging": "1.2.0",
+        "jp.co.tis.extreal.core.common": "1.1.0",
+        "com.endel.nativewebsocket": "1.1.4",
+        "com.unity.webrtc": "3.0.0-pre.6"
+      }
+    },
     "jp.co.tis.extreal.integration.chat.webrtc": {
       "version": "https://github.com/extreal-dev/Extreal.Integration.Chat.WebRTC.git#1.0.0",
       "depth": 0,
@@ -363,7 +383,7 @@
       },
       "hash": "4d3b7ad3c1cd752e1ace152a0949fc5ec2e976d0"
     },
-    "jp.co.tis.extreal.integration.messaging.common": {
+    "jp.co.tis.extreal.integration.messaging": {
       "version": "file:Extreal.Integration.Messaging.Common",
       "depth": 0,
       "source": "embedded",
@@ -383,10 +403,10 @@
         "com.neuecc.unirx": "7.1.0",
         "jp.co.tis.extreal.core.logging": "1.2.0",
         "jp.co.tis.extreal.core.common": "1.1.0",
-        "jp.co.tis.extreal.integration.messaging.common": "1.0.0-Next.1"
+        "jp.co.tis.extreal.integration.messaging": "1.0.0-next.1"
       }
     },
-    "jp.co.tis.extreal.integration.multiplay.common": {
+    "jp.co.tis.extreal.integration.multiplay.messaging": {
       "version": "file:Extreal.Integration.Multiplay.Common",
       "depth": 0,
       "source": "embedded",
@@ -395,7 +415,7 @@
         "com.neuecc.unirx": "7.1.0",
         "jp.co.tis.extreal.core.logging": "1.2.0",
         "jp.co.tis.extreal.core.common": "1.1.0",
-        "jp.co.tis.extreal.integration.messaging.common": "1.0.0-next.1"
+        "jp.co.tis.extreal.integration.messaging": "1.0.0-next.1"
       }
     },
     "jp.co.tis.extreal.integration.p2p.webrtc": {

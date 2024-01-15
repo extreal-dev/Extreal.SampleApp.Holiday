@@ -2,32 +2,14 @@
 # yarn lockfile v1
 
 
-"@extreal-dev/extreal.integration.chat.webrtc@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.chat.webrtc/-/extreal.integration.chat.webrtc-1.0.0.tgz#b3935426508f784283350d6ffa36660ad382745c"
-  integrity sha512-hZdKNgHWpaEqqvZNr6O0qn3TjQHjXBb9j4a3Xr4uHGEZevAhpPMmmOaYGeEwFVrxFW7+gSwa1J66InzfdCqEtg==
-  dependencies:
-    "@extreal-dev/extreal.integration.p2p.webrtc" "^1.0.0"
-    "@extreal-dev/extreal.integration.web.common" "^1.0.0"
-
-"@extreal-dev/extreal.integration.messaging.redis@../../Packages/Extreal.Integration.Messaging.Redis/WebScripts~/":
+"@extreal-dev/extreal.integration.chat.ome@../../Packages/Extreal.Integration.Chat.OME/WebScripts~/":
   version "1.0.0-Next.1"
   dependencies:
     "@extreal-dev/extreal.integration.web.common" "^1.0.0"
-    socket.io-client "^4.7.1"
+    uuid "^9.0.1"
 
-"@extreal-dev/extreal.integration.multiplay.ngo.webrtc@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.multiplay.ngo.webrtc/-/extreal.integration.multiplay.ngo.webrtc-1.0.0.tgz#f388838d9a4dc60cd5dd4136fc81d32a51d4938b"
-  integrity sha512-8RliR/Oo02ateZjl9dmSOJiV7327L56oDnJR+z9nIQ+Fw0QLSpoio7vtG/yofdw05mCHdBTVmN3YPgspLmiAHg==
-  dependencies:
-    "@extreal-dev/extreal.integration.p2p.webrtc" "^1.0.0"
-    "@extreal-dev/extreal.integration.web.common" "^1.0.0"
-
-"@extreal-dev/extreal.integration.p2p.webrtc@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.p2p.webrtc/-/extreal.integration.p2p.webrtc-1.0.0.tgz#8ed6edc35435bcd369b976cd69b14b46cf3e30dd"
-  integrity sha512-q05gRa1wS9zdAe/OPgD7H23MfcFwCs5nbl1nV5wpvd0EyKHJ21AasyMo0C3ar6FuqLiyUUcsY94xSm35622lZg==
+"@extreal-dev/extreal.integration.messaging.redis@../../Packages/Extreal.Integration.Messaging.Redis/WebScripts~/":
+  version "1.0.0-Next.1"
   dependencies:
     "@extreal-dev/extreal.integration.web.common" "^1.0.0"
     socket.io-client "^4.7.1"
@@ -376,6 +358,11 @@ typescript@^5.1.6:
   version "5.2.2"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.2.2.tgz#5ebb5e5a5b75f085f22bc3f8460fba308310fa78"
   integrity sha512-mI4WrpHsbCIcwT9cF4FZvr80QUeKvsUsUvKDoR+X/7XHQH98xYD8YHZg7ANtz2GtZt/CBq2QJ0thkGJMHfqc1w==
+
+uuid@^9.0.1:
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-9.0.1.tgz#e188d4c8853cc722220392c424cd637f32293f30"
+  integrity sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==
 
 ws@~8.11.0:
   version "8.11.0"
