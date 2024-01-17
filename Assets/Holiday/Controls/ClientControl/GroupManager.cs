@@ -25,7 +25,14 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
         protected override void ReleaseManagedResources() => disposables.Dispose();
 
         public async UniTask UpdateGroupsAsync()
-            => groups.Value = await messagingClient.ListGroupsAsync();
+        {
+            var updatedGroups = await messagingClient.ListGroupsAsync();
+            groups.Value =
+                updatedGroups
+                    .Where(group => !group.Name.StartsWith("Multiplay#"))
+                    .Select(group => new Group(group.Id, group.Name["TextChat#".Length..]))
+                    .ToList();
+        }
 
         public Group FindByName(string name) => groups.Value.First(groups => groups.Name == name);
     }
