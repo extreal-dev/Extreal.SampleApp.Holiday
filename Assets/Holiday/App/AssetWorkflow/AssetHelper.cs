@@ -7,6 +7,7 @@ using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
 using Extreal.Integration.AssetWorkflow.Addressables;
 using Extreal.Integration.Chat.OME;
+using Extreal.Integration.SFU.OME;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.Screens.ConfirmationScreen;
 using UniRx;
@@ -26,6 +27,7 @@ namespace Extreal.SampleApp.Holiday.App.AssetWorkflow
         public MultiplayConfig MultiplayConfig { get; private set; }
         public AvatarConfig AvatarConfig { get; private set; }
 
+        public OmeConfig OmeConfig { get; private set; }
         public VoiceChatConfig VoiceChatConfig { get; private set; }
 
         public SpaceConfig SpaceConfig { get; private set; }
@@ -59,6 +61,7 @@ namespace Extreal.SampleApp.Holiday.App.AssetWorkflow
                 SpaceConfig = await LoadAndAddToDisposablesAsync<SpaceConfig>();
                 MessagingConfig = await LoadAndAddToDisposablesAsync<MessagingConfig>();
                 MultiplayConfig = await LoadAndAddToDisposablesAsync<MultiplayConfig>();
+                OmeConfig = await LoadAndReleaseAsync<SfuConfig, OmeConfig>(asset => asset.OmeConfig);
                 VoiceChatConfig = await LoadAndReleaseAsync<ChatConfig, VoiceChatConfig>(
                     asset => asset.VoiceChatConfig);
                 LandscapeConfig = await LoadAndAddToDisposablesAsync<LandscapeConfig>();

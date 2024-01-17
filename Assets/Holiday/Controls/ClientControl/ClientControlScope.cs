@@ -6,6 +6,7 @@ using VContainer.Unity;
 using Extreal.Integration.Messaging.Redis;
 using Extreal.Integration.Messaging;
 using Extreal.Integration.Chat.OME;
+using Extreal.Integration.SFU.OME;
 
 namespace Extreal.SampleApp.Holiday.Controls.ClientControl
 {
@@ -27,7 +28,10 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
             var textChatClient = RedisMessagingClientProvider.Provide(assetHelper.MessagingConfig.RedisMessagingConfig);
             builder.RegisterComponent<MessagingClient>(textChatClient);
 
-            var voiceChatClient = VoiceChatClientProvider.Provide(assetHelper.VoiceChatConfig);
+            var omeClient = OmeClientProvider.Provide(assetHelper.OmeConfig);
+            builder.RegisterComponent(omeClient);
+
+            var voiceChatClient = VoiceChatClientProvider.Provide(omeClient, assetHelper.VoiceChatConfig);
             builder.RegisterComponent(voiceChatClient);
 
             builder.RegisterEntryPoint<ClientControlPresenter>();

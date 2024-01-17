@@ -6,8 +6,6 @@ using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.App.Stages;
 using UniRx;
 
-using System.Linq;
-
 namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
 {
     public class VoiceChatControlPresenter : StagePresenterBase
@@ -39,8 +37,6 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
             voiceChatClient.OnMuted
                 .Subscribe(voiceChatScreenView.ToggleMute)
                 .AddTo(sceneDisposables);
-
-            voiceChatClient.ConnectAsync(appState.GroupName).Forget();
         }
 
         protected override void OnStageExiting(StageName stageName, AppState appState)
@@ -49,7 +45,7 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
             {
                 return;
             }
-            voiceChatClient.DisconnectAsync().Forget();
+            voiceChatClient.Clear();
         }
     }
 }

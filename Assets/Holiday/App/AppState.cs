@@ -34,6 +34,9 @@ namespace Extreal.SampleApp.Holiday.App
         public IReadOnlyReactiveProperty<bool> SpaceReady => spaceReady.AddTo(disposables);
         private readonly ReactiveProperty<bool> spaceReady = new ReactiveProperty<bool>(false);
 
+        public IReadOnlyReactiveProperty<bool> SfuReady => sfuReady.AddTo(disposables);
+        private readonly ReactiveProperty<bool> sfuReady = new ReactiveProperty<bool>(false);
+
         public IObservable<Message> OnMessageSent => onMessageSent.AddTo(disposables);
         private readonly Subject<Message> onMessageSent = new Subject<Message>();
 
@@ -67,11 +70,11 @@ namespace Extreal.SampleApp.Holiday.App
 
         [SuppressMessage("Usage", "CC0033")]
         private void MonitorPlayingReadyStatus() =>
-            multiplayReady.Merge(spaceReady, landscapeInitialized)
+            multiplayReady.Merge(sfuReady, spaceReady, landscapeInitialized)
                 .Where(_ =>
                 {
                     LogWaitingStatus();
-                    return multiplayReady.Value && spaceReady.Value && landscapeInitialized.Value;
+                    return multiplayReady.Value && sfuReady.Value && spaceReady.Value && landscapeInitialized.Value;
                 })
                 .Subscribe(_ =>
                 {
@@ -105,8 +108,8 @@ namespace Extreal.SampleApp.Holiday.App
         {
             if (Logger.IsDebug())
             {
-                Logger.LogDebug($"Multiplay, Space Ready, Landscape Initialized: " +
-                                $"{multiplayReady.Value}, {spaceReady.Value}, {landscapeInitialized.Value}");
+                Logger.LogDebug($"Multiplay, SFU, Space Ready, Landscape Initialized: " +
+                                $"{multiplayReady.Value}, {sfuReady.Value}, {spaceReady.Value}, {landscapeInitialized.Value}");
             }
         }
 
@@ -118,6 +121,7 @@ namespace Extreal.SampleApp.Holiday.App
         public void SetGroupId(string groupId) => GroupId = groupId;
         public void SetSpaceName(string spaceName) => SpaceName = spaceName;
         public void SetMultiplayReady(bool ready) => multiplayReady.Value = ready;
+        public void SetSfuReady(bool ready) => sfuReady.Value = ready;
         public void SetSpaceReady(bool ready) => spaceReady.Value = ready;
         public void SetLandscapeInitialized(bool initialized) => landscapeInitialized.Value = initialized;
         public void SetStage(StageName stageName) => StageState = new StageState(stageName);
