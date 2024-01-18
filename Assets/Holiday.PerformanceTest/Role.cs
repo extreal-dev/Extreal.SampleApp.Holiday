@@ -1,6 +1,7 @@
 ﻿namespace Extreal.SampleApp.Holiday.PerformanceTest
 {
-    public enum Role {
+    public enum Role
+    {
         Host,
         Client,
     }

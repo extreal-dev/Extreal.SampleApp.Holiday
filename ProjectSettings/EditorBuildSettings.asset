@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Holiday.PerformanceTest/PerformanceTest.unity
+    guid: 6d9e9e50ba63d9742ab72714e3309779
+  - enabled: 1
     path: Assets/Holiday/App/App.unity
     guid: d5a2b30336f757949b77910e8bd24532
   - enabled: 1

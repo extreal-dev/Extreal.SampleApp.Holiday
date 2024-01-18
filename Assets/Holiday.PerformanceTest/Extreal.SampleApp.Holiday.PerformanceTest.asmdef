@@ -15,7 +15,9 @@
         "Extreal.Core.Logging",
         "Extreal.Core.StageNavigation",
         "Extreal.Core.Common",
-        "Extreal.Integration.Multiplay.Messaging"
+        "Extreal.Integration.P2P.WebRTC",
+        "Extreal.Integration.Multiplay.Messaging",
+        "Extreal.Integration.Messaging"
     ],
     "includePlatforms": [
         "Editor",
