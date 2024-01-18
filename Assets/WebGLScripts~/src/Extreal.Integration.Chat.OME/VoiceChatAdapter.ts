@@ -1,5 +1,5 @@
 import { addAction, addFunction, callback } from "@extreal-dev/extreal.integration.web.common";
-import { OmeClientProvider } from "../Extreal.Integration.SFU.OME/OmeAdapter";
+import { OmeClientProvider } from "../Extreal.Integration.SFU.OME";
 import { VoiceChatClient } from "./VoiceChatClient";
 
 let hasMicrophone = false;
