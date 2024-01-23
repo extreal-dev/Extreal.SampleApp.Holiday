@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bfcdf6ca3c38324b867d93472b881dc, type: 3}
   m_Name: MultiplayConfig
   m_EditorClassIdentifier: 
-  hostMaxCapacity: 10
-  clientTimeoutSeconds: 60
-  clientMaxRetryCount: 1
+  messagingUrl: http://127.0.0.1:3030
+  timeoutSeconds: 3
+  maxCapacity: 100

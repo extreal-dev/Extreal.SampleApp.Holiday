@@ -23,7 +23,7 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
 
             builder.Register<GroupManager>(Lifetime.Singleton);
 
-            var redisMessagingClient = RedisMessagingClientProvider.Provide(assetHelper.MessagingConfig.RedisMessagingConfig);
+            var redisMessagingClient = RedisMessagingClientProvider.Provide(assetHelper.MultiplayConfig.RedisMessagingConfig);
             var queuingMessagingClient = new QueuingMessagingClient(redisMessagingClient);
             builder.RegisterComponent(queuingMessagingClient);
             builder.Register<MultiplayClient>(Lifetime.Singleton).WithParameter(queuingMessagingClient).WithParameter<INetworkObjectsProvider>(networkObjectsProvider);

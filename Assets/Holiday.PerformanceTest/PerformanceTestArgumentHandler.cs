@@ -6,14 +6,19 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
     public static class PerformanceTestArgumentHandler
     {
         public static string MemoryUtilizationDumpFile { get; private set; }
+        public static string MultiplayStatusDumpFile { get; private set; }
+        public static string TextChatStatusDumpFile { get; private set; }
+        public static string VoiceChatStatusDumpFile { get; private set; }
         public static int SendMessagePeriod { get; private set; } = 5;
+        public static int SendVoicePeriod { get; private set; } = 5;
         public static float Lifetime { get; private set; }
         public static Role Role { get; private set; }
         public static string GroupName { get; private set; } = "TestGroup";
-        public static int GroupCapacity { get; private set; }
+        public static int GroupCapacity { get; private set; } = 100;
         public static string SpaceName { get; private set; }
-        public static bool SuppressMultiplayer { get; private set; }
+        public static bool SuppressMultiplay { get; private set; }
         public static bool SuppressTextChat { get; private set; }
+        public static bool SuppressVoiceChat { get; private set; }
 
         private const string ExecCommand = nameof(Holiday);
 
@@ -41,6 +46,39 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                         MemoryUtilizationDumpFile = args[i];
                         break;
                     }
+                    case "--multiplay-status-dump-file":
+                    {
+                        i++;
+                        if (i == argLength || args[i].StartsWith('-'))
+                        {
+                            DumpHelpWithErrorMessage();
+                            return;
+                        }
+                        MultiplayStatusDumpFile = args[i];
+                        break;
+                    }
+                    case "--text-chat-status-dump-file":
+                    {
+                        i++;
+                        if (i == argLength || args[i].StartsWith('-'))
+                        {
+                            DumpHelpWithErrorMessage();
+                            return;
+                        }
+                        TextChatStatusDumpFile = args[i];
+                        break;
+                    }
+                    case "--voice-chat-status-dump-file":
+                    {
+                        i++;
+                        if (i == argLength || args[i].StartsWith('-'))
+                        {
+                            DumpHelpWithErrorMessage();
+                            return;
+                        }
+                        VoiceChatStatusDumpFile = args[i];
+                        break;
+                    }
                     case "--send-message-period":
                     {
                         i++;
@@ -52,6 +90,21 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                         if (period > 0f)
                         {
                             SendMessagePeriod = period;
+                        }
+
+                        break;
+                    }
+                    case "--send-voice-period":
+                    {
+                        i++;
+                        if (i == argLength || !int.TryParse(args[i], out var period))
+                        {
+                            DumpHelpWithErrorMessage();
+                            return;
+                        }
+                        if (period > 0f)
+                        {
+                            SendVoicePeriod = period;
                         }
 
                         break;
@@ -116,14 +169,19 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                         SpaceName = args[i];
                         break;
                     }
-                    case "--suppress-multiplayer":
+                    case "--suppress-multiplay":
                     {
-                        SuppressMultiplayer = true;
+                        SuppressMultiplay = true;
                         break;
                     }
                     case "--suppress-text-chat":
                     {
                         SuppressTextChat = true;
+                        break;
+                    }
+                    case "--suppress-voice-chat":
+                    {
+                        SuppressVoiceChat = true;
                         break;
                     }
                     case "-h":
@@ -153,7 +211,15 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                     + "options:" + Environment.NewLine
                     + "  --memory-utilization-dump-file <file>: Gets the memory utilization and dumps to the <file>." + Environment.NewLine
                     + "                                         If not specified, the memory utilization is not measured." + Environment.NewLine
+                    + "  --multiplay-status-dump-file <file>  : Gets the multiplay status and dumps to the <file>." + Environment.NewLine
+                    + "                                         If not specified, the multiplay status is not captured." + Environment.NewLine
+                    + "  --text-chat-status-dump-file <file>  : Gets the text chat status and dumps to the <file>." + Environment.NewLine
+                    + "                                         If not specified, the text chat status is not captured." + Environment.NewLine
+                    + "  --voice-chat-status-dump-file <file> : Gets the voice chat status and dumps to the <file>." + Environment.NewLine
+                    + "                                         If not specified, the voice chat status is not captured." + Environment.NewLine
                     + "  --send-message-period <int num>      : The client sends a message once every <int num> seconds." + Environment.NewLine
+                    + "                                         If not specified/input 0 or lower, the period is set to 5." + Environment.NewLine
+                    + "  --send-voice-period <int num>        : The client sends voice once every <int num> seconds." + Environment.NewLine
                     + "                                         If not specified/input 0 or lower, the period is set to 5." + Environment.NewLine
                     + "  --lifetime <float num>               : The performance test will exit in <float num> seconds." + Environment.NewLine
                     + "    (also -l <float num>)                If not specified/input 0 or lower, it does not exit until Ctrl+C is pressed." + Environment.NewLine
@@ -168,8 +234,9 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                     + "                                         If the role is host, the client transitions to the <space name>" + Environment.NewLine
                     + "                                         when the num of the clients that joined group is equal to the group capacity." + Environment.NewLine
                     + "                                         See also \"--role\" and \"--space-name\"." + Environment.NewLine
-                    + "  --suppress-multiplayer               : The client never moves." + Environment.NewLine
+                    + "  --suppress-multiplay                 : The client never moves." + Environment.NewLine
                     + "  --suppress-text-chat                 : The client never sends any messages." + Environment.NewLine
+                    + "  --suppress-voice-chat                : The client never does voice chat." + Environment.NewLine
                     + "  --help (also -h)                     : Shows this help messages and exit.";
 
             Console.Error.WriteLine(helpMessage);

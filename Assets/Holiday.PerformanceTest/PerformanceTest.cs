@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.Logging;
+using Extreal.Integration.Chat.WebRTC;
 using Extreal.Integration.Messaging;
 using Extreal.Integration.Multiplay.Messaging;
 using Extreal.SampleApp.Holiday.App;
@@ -23,12 +25,11 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
 {
     public class PerformanceTest : MonoBehaviour
     {
-        [SerializeField]
-        private PerformanceTestConfig performanceTestConfig;
+        [SerializeField] private AudioClip audioClip;
 
         private bool isDestroyed;
         [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeCracker", "CC0033")]
-        private readonly CancellationTokenSource cts = new CancellationTokenSource();
+        private CancellationTokenSource cts = new CancellationTokenSource();
 
         private readonly Vector3 movableRangeMin = new Vector3(-13f, 0f, -3f);
         private readonly Vector3 movableRangeMax = new Vector3(21f, 0f, 30f);
@@ -61,10 +62,14 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
         }
 
         private void OnDestroy()
+            => Clear();
+
+        private void Clear()
         {
             isDestroyed = true;
             cts?.Cancel();
             cts?.Dispose();
+            cts = null;
         }
 
         private async UniTaskVoid StartTestAsync()
@@ -208,11 +213,12 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                 }
             }
 
-            if (!PerformanceTestArgumentHandler.SuppressMultiplayer)
+            if (!PerformanceTestArgumentHandler.SuppressMultiplay)
             {
                 var player = multiplayClient.LocalClient.NetworkObjects[0];
                 var playerInput = player.GetComponent<HolidayPlayerInput>();
                 RepeatMovePlayerAsync(player, playerInput).Forget();
+                DumpMultiplayStatusAsync(multiplayClient).Forget();
             }
 
             if (!PerformanceTestArgumentHandler.SuppressTextChat)
@@ -220,23 +226,16 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                 var messageInput = FindObjectOfType<TMP_InputField>();
                 var messagePeriod = PerformanceTestArgumentHandler.SendMessagePeriod;
                 RepeatTextMessageSendAsync(messageInput, messagePeriod).Forget();
+                DumpTextChatStatusAsync(messagingClient, messagePeriod).Forget();
             }
-        }
 
-        private async UniTaskVoid RepeatTextMessageSendAsync(TMP_InputField messageInput, int messagePeriod)
-        {
-            while (true)
+            if (!PerformanceTestArgumentHandler.SuppressVoiceChat)
             {
-                var message = messageRepertoire[UnityEngine.Random.Range(0, messageRepertoire.Length)];
-                messageInput.text = message;
-                PushButtonNamed("SendButton");
-
-                if (logger.IsDebug())
-                {
-                    logger.LogDebug($"Send message: {message}");
-                }
-
-                await UniTask.Delay(messagePeriod * 1000);
+                // var voiceChatClient = clientControlScope.Container.Resolve(typeof(VoiceChatClient)) as NativeVoiceChatClient;
+                var voicePeriod = PerformanceTestArgumentHandler.SendVoicePeriod;
+                SetAudioClipAsync().Forget();
+                RepeatVoiceChatSendAsync(voicePeriod).Forget();
+                // DumpVoiceChatStatusAsync(voiceChatClient, voicePeriod).Forget();
             }
         }
 
@@ -290,6 +289,188 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                     }
                 }
             }
+        }
+
+        private async UniTaskVoid DumpMultiplayStatusAsync(MultiplayClient multiplayClient)
+        {
+            var path = PerformanceTestArgumentHandler.MultiplayStatusDumpFile;
+            if (string.IsNullOrEmpty(path))
+            {
+                return;
+            }
+            if (File.Exists(path))
+            {
+                if (logger.IsDebug())
+                {
+                    logger.LogDebug($"There already exists a file at {path}");
+                }
+                return;
+            }
+
+            if (logger.IsDebug())
+            {
+                logger.LogDebug($"Creates a file {path} and writes data into it");
+            }
+
+            using var file = File.Create(path);
+            using var writer = new StreamWriter(file, Encoding.UTF8);
+            writer.WriteLine("Date Time MovingClientNum");
+
+            while (!isDestroyed)
+            {
+                var currentTime = DateTime.Now;
+                var movingClientNum =
+                    multiplayClient.JoinedUsers.Values
+                        .Sum(networkClient =>
+                            networkClient.NetworkObjects.Count > 0 && networkClient.NetworkObjects[0].GetComponent<Animator>().GetFloat("Speed") > 0f
+                                ? 1
+                                : 0);
+
+                writer.WriteLine($"{currentTime} {movingClientNum}");
+
+                try
+                {
+                    await UniTask.Delay(TimeSpan.FromSeconds(1), cancellationToken: cts.Token);
+                }
+                catch (Exception)
+                {
+                    break;
+                }
+            }
+        }
+
+        private async UniTaskVoid RepeatTextMessageSendAsync(TMP_InputField messageInput, int messagePeriod)
+        {
+            await UniTask.Delay(UnityEngine.Random.Range(0, messagePeriod * 1000));
+            while (true)
+            {
+                var message = messageRepertoire[UnityEngine.Random.Range(0, messageRepertoire.Length)];
+                messageInput.text = message;
+                PushButtonNamed("SendButton");
+
+                if (logger.IsDebug())
+                {
+                    logger.LogDebug($"Send message: {message}");
+                }
+
+                await UniTask.Delay(messagePeriod * 1000);
+            }
+        }
+
+        private async UniTaskVoid DumpTextChatStatusAsync(MessagingClient messagingClient, int messagePeriod)
+        {
+            var path = PerformanceTestArgumentHandler.TextChatStatusDumpFile;
+            if (string.IsNullOrEmpty(path))
+            {
+                return;
+            }
+            if (File.Exists(path))
+            {
+                if (logger.IsDebug())
+                {
+                    logger.LogDebug($"There already exists a file at {path}");
+                }
+                return;
+            }
+
+            if (logger.IsDebug())
+            {
+                logger.LogDebug($"Creates a file {path} and writes data into it");
+            }
+
+            using var file = File.Create(path);
+            using var writer = new StreamWriter(file, Encoding.UTF8);
+            writer.WriteLine("Date Time MessageReceivedCount");
+
+            var messageReceivedCount = 0;
+            messagingClient.OnMessageReceived
+                .Subscribe(_ => messageReceivedCount++)
+                .AddTo(this);
+
+            while (!isDestroyed)
+            {
+                var currentTime = DateTime.Now;
+                writer.WriteLine($"{currentTime} {messageReceivedCount}");
+
+                messageReceivedCount = 0;
+
+                try
+                {
+                    await UniTask.Delay(TimeSpan.FromSeconds(messagePeriod), cancellationToken: cts.Token);
+                }
+                catch (Exception)
+                {
+                    break;
+                }
+            }
+        }
+
+        private async UniTaskVoid SetAudioClipAsync()
+        {
+            var inAudios = new List<AudioSource>();
+            while (true)
+            {
+                var newInAudios =
+                    FindObjectsOfType<AudioSource>()
+                        .Where(audioSource => audioSource.name == "InAudio")
+                        .Except(inAudios);
+                foreach (var inAudio in newInAudios)
+                {
+                    inAudio.clip = audioClip;
+                    inAudio.Play();
+                }
+                inAudios.AddRange(newInAudios);
+                await UniTask.Yield();
+            }
+        }
+
+        private static async UniTaskVoid RepeatVoiceChatSendAsync(int voicePeriod)
+        {
+            await UniTask.Delay(UnityEngine.Random.Range(0, voicePeriod * 1000));
+            while (true)
+            {
+                PushButtonNamed("MuteButton");
+                if (logger.IsDebug())
+                {
+                    logger.LogDebug($"Start to send voice");
+                }
+                await UniTask.Delay(voicePeriod * 1000 / 5);
+
+                PushButtonNamed("MuteButton");
+                if (logger.IsDebug())
+                {
+                    logger.LogDebug($"Stop to send voice");
+                }
+                await UniTask.Delay(voicePeriod * 1000 * 4 / 5);
+            }
+        }
+
+        private async UniTaskVoid DumpVoiceChatStatusAsync(VoiceChatClient voiceChatClient, int voicePeriod)
+        {
+            var path = PerformanceTestArgumentHandler.VoiceChatStatusDumpFile;
+            if (string.IsNullOrEmpty(path))
+            {
+                return;
+            }
+            if (File.Exists(path))
+            {
+                if (logger.IsDebug())
+                {
+                    logger.LogDebug($"There already exists a file at {path}");
+                }
+                return;
+            }
+
+            if (logger.IsDebug())
+            {
+                logger.LogDebug($"Creates a file {path} and writes data into it");
+            }
+
+            using var file = File.Create(path);
+            using var writer = new StreamWriter(file, Encoding.UTF8);
+            writer.WriteLine("Date Time MessageReceivedCount");
+
+            // Handles voiceChatClient.OnAudioLevelChanged here
         }
 
         private bool InRange(Vector3 position)
@@ -352,8 +533,8 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                 logger.LogDebug($"Creates a file {path} and writes data into it");
             }
 
-            var file = File.Create(path);
-            var writer = new StreamWriter(file, Encoding.UTF8);
+            using var file = File.Create(path);
+            using var writer = new StreamWriter(file, Encoding.UTF8);
             writer.WriteLine("Date Time TotalReservedMemory TotalAllocatedMemory TotalUnusedReservedMemory");
 
             while (!isDestroyed)
@@ -364,13 +545,18 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                 var totalUnusedReservedMemory = Profiler.GetTotalUnusedReservedMemoryLong();
                 writer.WriteLine($"{currentTime} {totalReservedMemory} {totalAllocatedMemory} {totalUnusedReservedMemory}");
 
-                await UniTask.Delay(TimeSpan.FromSeconds(1), cancellationToken: cts.Token);
+                try
+                {
+                    await UniTask.Delay(TimeSpan.FromSeconds(1), cancellationToken: cts.Token);
+                }
+                catch (Exception)
+                {
+                    break;
+                }
             }
-
-            file.Close();
         }
 
-        private static async UniTaskVoid DestroyInLifetimeSecondsAsync()
+        private async UniTaskVoid DestroyInLifetimeSecondsAsync()
         {
             if (PerformanceTestArgumentHandler.Lifetime == 0)
             {
@@ -378,6 +564,9 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
             }
 
             await UniTask.Delay(TimeSpan.FromSeconds(PerformanceTestArgumentHandler.Lifetime));
+
+            Clear();
+            await UniTask.Yield();
 
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;

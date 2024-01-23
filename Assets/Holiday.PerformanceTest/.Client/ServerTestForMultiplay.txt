@@ -1,0 +1,9 @@
+// command for including host
+.\StartPerformanceTestBase.bat include_host do_multiplay suppress_text_chat suppress_voice_chat VirtualSpace
+.\StartPerformanceTestBase.bat include_host do_multiplay suppress_text_chat suppress_voice_chat PanoramicVideoSpace
+.\StartPerformanceTestBase.bat include_host do_multiplay suppress_text_chat suppress_voice_chat PanoramicImageSpace
+
+// command for client only
+.\StartPerformanceTestBase.bat client_only do_multiplay suppress_text_chat suppress_voice_chat VirtualSpace
+.\StartPerformanceTestBase.bat client_only do_multiplay suppress_text_chat suppress_voice_chat PanoramicVideoSpace
+.\StartPerformanceTestBase.bat client_only do_multiplay suppress_text_chat suppress_voice_chat PanoramicImageSpace

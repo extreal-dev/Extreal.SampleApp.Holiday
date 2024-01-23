@@ -152,8 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efe698837fb5f464595a7f3631c190a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  performanceTestConfig: {fileID: 11400000, guid: f42a9fd51a5caa64db72e6fdbd294a0c,
-    type: 2}
+  audioClip: {fileID: 0}
 --- !u!4 &1971500229
 Transform:
   m_ObjectHideFlags: 0
