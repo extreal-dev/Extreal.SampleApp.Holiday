@@ -4,7 +4,7 @@ using Extreal.Integration.Messaging.Redis;
 using SocketIOClient;
 using UnityEngine;
 
-namespace Extreal.SampleApp.Holiday
+namespace Extreal.SampleApp.Holiday.App.Config
 {
     [CreateAssetMenu(
         menuName = nameof(Holiday) + "/" + nameof(MessagingConfig),
