@@ -229,14 +229,14 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                 DumpTextChatStatusAsync(messagingClient, messagePeriod).Forget();
             }
 
-            if (!PerformanceTestArgumentHandler.SuppressVoiceChat)
-            {
-                // var voiceChatClient = clientControlScope.Container.Resolve(typeof(VoiceChatClient)) as NativeVoiceChatClient;
-                var voicePeriod = PerformanceTestArgumentHandler.SendVoicePeriod;
-                SetAudioClipAsync().Forget();
-                RepeatVoiceChatSendAsync(voicePeriod).Forget();
-                // DumpVoiceChatStatusAsync(voiceChatClient, voicePeriod).Forget();
-            }
+            // if (!PerformanceTestArgumentHandler.SuppressVoiceChat)
+            // {
+            //     // var voiceChatClient = clientControlScope.Container.Resolve(typeof(VoiceChatClient)) as NativeVoiceChatClient;
+            //     var voicePeriod = PerformanceTestArgumentHandler.SendVoicePeriod;
+            //     SetAudioClipAsync().Forget();
+            //     RepeatVoiceChatSendAsync(voicePeriod).Forget();
+            //     // DumpVoiceChatStatusAsync(voiceChatClient, voicePeriod).Forget();
+            // }
         }
 
         private async UniTaskVoid RepeatMovePlayerAsync(GameObject player, HolidayPlayerInput playerInput)

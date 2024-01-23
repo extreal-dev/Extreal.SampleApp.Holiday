@@ -70,11 +70,11 @@ namespace Extreal.SampleApp.Holiday.App
 
         [SuppressMessage("Usage", "CC0033")]
         private void MonitorPlayingReadyStatus() =>
-            multiplayReady.Merge(spaceReady, p2PReady, landscapeInitialized)
+            multiplayReady.Merge(spaceReady, landscapeInitialized)
                 .Where(_ =>
                 {
                     LogWaitingStatus();
-                    return multiplayReady.Value && spaceReady.Value && p2PReady.Value && landscapeInitialized.Value;
+                    return multiplayReady.Value && spaceReady.Value && landscapeInitialized.Value;
                 })
                 .Subscribe(_ =>
                 {
@@ -108,8 +108,8 @@ namespace Extreal.SampleApp.Holiday.App
         {
             if (Logger.IsDebug())
             {
-                Logger.LogDebug($"Multiplay, Space Ready, P2P Ready, Landscape Initialized: " +
-                                $"{multiplayReady.Value}, {spaceReady.Value},  {p2PReady.Value}, {landscapeInitialized.Value}");
+                Logger.LogDebug($"Multiplay, Space Ready, Landscape Initialized: " +
+                                $"{multiplayReady.Value}, {spaceReady.Value}, {landscapeInitialized.Value}");
             }
         }
 

@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.Common.System;
-using Extreal.Integration.P2P.WebRTC;
+using Extreal.Integration.Messaging;
 using UniRx;
 
 namespace Extreal.SampleApp.Holiday.Controls.ClientControl
@@ -18,16 +18,20 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
         [SuppressMessage("Usage", "CC0033")]
         private readonly CompositeDisposable disposables = new CompositeDisposable();
 
-        private readonly PeerClient peerClient;
+        private readonly MessagingClient messagingClient;
 
-        public GroupManager(PeerClient peerClient) => this.peerClient = peerClient;
+        public GroupManager(MessagingClient messagingClient) => this.messagingClient = messagingClient;
 
         protected override void ReleaseManagedResources() => disposables.Dispose();
 
         public async UniTask UpdateGroupsAsync()
         {
-            var hosts = await peerClient.ListHostsAsync();
-            groups.Value = hosts.Select(host => new Group(host.Id, host.Name)).ToList();
+            var updatedGroups = await messagingClient.ListGroupsAsync();
+            groups.Value =
+                updatedGroups
+                    .Where(group => !group.Name.StartsWith("Multiplay#"))
+                    .Select(group => new Group(group.Id, group.Name["TextChat#".Length..]))
+                    .ToList();
         }
 
         public Group FindByName(string name) => groups.Value.First(groups => groups.Name == name);
