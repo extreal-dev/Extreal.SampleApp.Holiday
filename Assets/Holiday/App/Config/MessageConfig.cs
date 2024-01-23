@@ -28,6 +28,7 @@ namespace Extreal.SampleApp.Holiday.App.Config
         [SerializeField] private string p2PHostNameAlreadyExistsMessage;
 
         [SerializeField] private string textChatMessagingGroupNameAlreadyExistsMessage;
+        [SerializeField] private string textChatUnexpectedDisconnectedMessage;
 
         [SerializeField] private string multiplayConnectionApprovalRejectedMessage;
         [SerializeField] private string multiplayUnexpectedDisconnectedMessage;
@@ -55,6 +56,7 @@ namespace Extreal.SampleApp.Holiday.App.Config
         public string P2PHostNameAlreadyExistsMessage => p2PHostNameAlreadyExistsMessage;
 
         public string TextChatMessagingGroupNameAlreadyExistsMessage => textChatMessagingGroupNameAlreadyExistsMessage;
+        public string TextChatUnexpectedDisconnectedMessage => textChatUnexpectedDisconnectedMessage;
 
         public string MultiplayConnectionApprovalRejectedMessage => multiplayConnectionApprovalRejectedMessage;
         public string MultiplayUnexpectedDisconnectedMessage => multiplayUnexpectedDisconnectedMessage;

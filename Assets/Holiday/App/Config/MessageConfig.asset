@@ -30,6 +30,7 @@ MonoBehaviour:
   p2PUnexpectedDisconnectedMessage: P2P disconnected unexpectedly.
   p2PHostNameAlreadyExistsMessage: Host name already exists
   textChatMessagingGroupNameAlreadyExistsMessage: Text chat group name already exists
+  textChatUnexpectedDisconnectedMessage: Text chat disconnected unexpectedly.
   multiplayConnectionApprovalRejectedMessage: Space is full.
   multiplayUnexpectedDisconnectedMessage: Multiplayer disconnected unexpectedly.
   landscapeErrorMessage: An error occurred on Landscape playback. If you wish to
