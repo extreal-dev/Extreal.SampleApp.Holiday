@@ -2,7 +2,6 @@
 using Cinemachine;
 using StarterAssets;
 using TMPro;
-using UniRx;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;

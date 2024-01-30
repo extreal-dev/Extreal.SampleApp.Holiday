@@ -9,7 +9,6 @@ namespace Extreal.SampleApp.Holiday.Screens.BackgroundScreen
     public class BackgroundScreenPresenter : StagePresenterBase
     {
         private readonly BackgroundScreenView backgroundScreenView;
-        private readonly AppState appState;
 
         public BackgroundScreenPresenter
         (
