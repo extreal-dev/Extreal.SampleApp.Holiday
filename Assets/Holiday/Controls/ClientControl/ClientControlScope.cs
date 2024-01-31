@@ -26,7 +26,11 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
             var redisMessagingClient = RedisMessagingClientProvider.Provide(assetHelper.MultiplayConfig.RedisMessagingConfig);
             var queuingMessagingClient = new QueuingMessagingClient(redisMessagingClient);
             builder.RegisterComponent(queuingMessagingClient);
+#if HOLIDAY_LOAD_CLIENT
+            builder.Register<MultiplayClient, MultiplayClientForTest>(Lifetime.Singleton).WithParameter(queuingMessagingClient).WithParameter<INetworkObjectsProvider>(networkObjectsProvider);
+#else
             builder.Register<MultiplayClient>(Lifetime.Singleton).WithParameter(queuingMessagingClient).WithParameter<INetworkObjectsProvider>(networkObjectsProvider);
+#endif
 
             var textChatClient = RedisMessagingClientProvider.Provide(assetHelper.MessagingConfig.RedisMessagingConfig);
             builder.RegisterComponent<MessagingClient>(textChatClient);

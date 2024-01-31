@@ -1,16 +1,17 @@
 @echo off
 setlocal EnableDelayedExpansion
 
-set exec_time=4200
+set exec_time=3600
+set room_count=3
 set process_count=20
 set group_capacity=100
 
-set /a player_lifetime=%exec_time%+60
+set /a player_lifetime=%exec_time%+(%room_count%-1)*%process_count%*10+120
 set /a get_cpu_lifetime=%player_lifetime%+%process_count%*10
 set /a loop_count=%process_count%-1
 
 set my_date=%date:/=%
-set my_date=%my_date:~4%
+set my_date=%my_date:~8%%my_date:~4,4%
 
 mkdir ..\Data\%my_date% > NUL 2>&1
 for /f "usebackq delims=" %%A in (`dir /AD /B ..\Data\%my_date% ^| find /c /v ""`) do set dir_count=%%A

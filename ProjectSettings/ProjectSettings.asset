@@ -133,7 +133,7 @@ PlayerSettings:
   vulkanEnableLateAcquireNextImage: 0
   vulkanEnableCommandBufferRecycling: 1
   loadStoreDebugModeEnabled: 0
-  bundleVersion: 0.1.0
+  bundleVersion: 1.3.0-next.1
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -792,7 +792,7 @@ PlayerSettings:
   webGLPowerPreference: 2
   scriptingDefineSymbols:
     Android: STARTER_ASSETS_PACKAGES_CHECKED
-    Server: STARTER_ASSETS_PACKAGES_CHECKED
+    Server: STARTER_ASSETS_PACKAGES_CHECKED;HOLIDAY_PROD;HOLIDAY_LOAD_CLIENT
     Standalone: STARTER_ASSETS_PACKAGES_CHECKED;ZIP_AVAILABLE;NUGET_PACKAGE_READY
     WebGL: STARTER_ASSETS_PACKAGES_CHECKED;ZIP_AVAILABLE;NUGET_PACKAGE_READY
     iPhone: STARTER_ASSETS_PACKAGES_CHECKED
@@ -827,7 +827,7 @@ PlayerSettings:
   suppressCommonWarnings: 1
   allowUnsafeCode: 0
   useDeterministicCompilation: 1
-  selectedPlatform: 2
+  selectedPlatform: 1
   additionalIl2CppArgs: 
   scriptingRuntimeVersion: 1
   gcIncremental: 1

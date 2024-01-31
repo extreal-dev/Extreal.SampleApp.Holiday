@@ -175,7 +175,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                         await UniTask.Yield();
 
                         // Enters specified space
-                        await UniTask.WaitUntil(() => multiplayClient.JoinedUsers.Count == PerformanceTestArgumentHandler.GroupCapacity);
+                        await UniTask.WaitUntil(() => multiplayClient.JoinedClients.Count == PerformanceTestArgumentHandler.GroupCapacity);
                         await UniTask.Delay(assetHelper.PeerConfig.P2PTimeout);
                         PushButtonNamed("GoButton");
                     }
@@ -218,7 +218,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                 var player = multiplayClient.LocalClient.NetworkObjects[0];
                 var playerInput = player.GetComponent<HolidayPlayerInput>();
                 RepeatMovePlayerAsync(player, playerInput).Forget();
-                DumpMultiplayStatusAsync(multiplayClient).Forget();
+                DumpMultiplayStatusAsync(multiplayClient as MultiplayClientForTest).Forget();
             }
 
             if (!PerformanceTestArgumentHandler.SuppressTextChat)
@@ -291,7 +291,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
             }
         }
 
-        private async UniTaskVoid DumpMultiplayStatusAsync(MultiplayClient multiplayClient)
+        private async UniTaskVoid DumpMultiplayStatusAsync(MultiplayClientForTest multiplayClient)
         {
             var path = PerformanceTestArgumentHandler.MultiplayStatusDumpFile;
             if (string.IsNullOrEmpty(path))
@@ -319,12 +319,8 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
             while (!isDestroyed)
             {
                 var currentTime = DateTime.Now;
-                var movingClientNum =
-                    multiplayClient.JoinedUsers.Values
-                        .Sum(networkClient =>
-                            networkClient.NetworkObjects.Count > 0 && networkClient.NetworkObjects[0].GetComponent<Animator>().GetFloat("Speed") > 0f
-                                ? 1
-                                : 0);
+                var movingClientNum = multiplayClient.UpdatedClients.Count + 1;
+                multiplayClient.UpdatedClients.Clear();
 
                 writer.WriteLine($"{currentTime} {movingClientNum}");
 

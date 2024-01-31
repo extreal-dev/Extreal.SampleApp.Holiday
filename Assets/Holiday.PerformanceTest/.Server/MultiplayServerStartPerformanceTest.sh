@@ -1,9 +1,10 @@
 #!/bin/bash
 
-exec_time=3800
-client_num_per_server=9
+exec_time=3600
+client_num_per_server=20
+room_num=3
 
-lifetime=`expr $exec_time + $client_num_per_server \* 10 + 120`
+lifetime=`expr $exec_time + $client_num_per_server \* $room_num \* 10 + 180`
 date=`date +%Y%m%d`
 
 mkdir -p ../Data/$date
