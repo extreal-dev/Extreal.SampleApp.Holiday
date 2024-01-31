@@ -1,4 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿#if UNITY_IOS
+using Cysharp.Threading.Tasks;
+#endif
+using System.Diagnostics.CodeAnalysis;
 using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App.AppUsage;
@@ -9,6 +12,9 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using VContainer;
 using VContainer.Unity;
+#if UNITY_ANDROID
+using UnityEngine.Android;
+#endif
 
 namespace Extreal.SampleApp.Holiday.App
 {
@@ -29,7 +35,12 @@ namespace Extreal.SampleApp.Holiday.App
             ClearCacheOnDev();
 
             var logLevel = InitializeLogging();
+#if UNITY_IOS || UNITY_ANDROID
+            InitializeMicrophone();
+#endif
+#if UNITY_EDITOR || UNITY_WEBGL
             InitializeWebGL();
+#endif
 
             var logger = LoggingManager.GetLogger(nameof(AppScope));
             if (logger.IsDebug())
@@ -73,6 +84,23 @@ namespace Extreal.SampleApp.Holiday.App
             public AppState AppState { get; private set; }
             internal AppStateProvider() { }
             internal void Init() => AppState = new AppState();
+        }
+
+        private static void InitializeMicrophone()
+        {
+#if UNITY_IOS
+            if (!Application.HasUserAuthorization(UserAuthorization.Microphone))
+            {
+                Application.RequestUserAuthorization(UserAuthorization.Microphone).ToUniTask().Forget();
+            }
+#endif
+
+#if UNITY_ANDROID
+            if (!Permission.HasUserAuthorizedPermission(Permission.Microphone))
+            {
+                Permission.RequestUserPermission(Permission.Microphone);
+            }
+#endif
         }
 
         [SuppressMessage("Design", "IDE0022"), SuppressMessage("Design", "CC0091")]
