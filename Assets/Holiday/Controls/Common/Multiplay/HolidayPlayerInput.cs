@@ -8,11 +8,10 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
         public override PlayerInputValues Values => HolidayValues;
         public HolidayPlayerInputValues HolidayValues { get; } = new HolidayPlayerInputValues();
 
-        public Vector2 Look => look;
-        [SerializeField] private Vector2 look;
+        public Vector2 Look { get; private set; }
 
         public void SetLook(Vector2 newLookDirection)
-            => look = newLookDirection;
+            => Look = newLookDirection;
 
         public void SetSprint(bool newSprint)
             => HolidayValues.SetSprint(newSprint);
