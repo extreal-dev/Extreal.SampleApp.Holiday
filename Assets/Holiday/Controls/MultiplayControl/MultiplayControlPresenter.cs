@@ -10,7 +10,7 @@ using Extreal.SampleApp.Holiday.App.Stages;
 using UniRx;
 using UnityEngine;
 
-namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplayControl.Client
+namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 {
     public class MultiplayControlPresenter : StagePresenterBase
     {

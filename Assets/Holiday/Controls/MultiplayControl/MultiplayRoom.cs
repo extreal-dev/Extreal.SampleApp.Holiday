@@ -18,7 +18,7 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 using SocketIOClient;
 
-namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplayControl.Client
+namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 {
     public class MultiplayRoom : DisposableBase
     {
