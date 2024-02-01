@@ -7,12 +7,6 @@
             ]
         },
         {
-            "packageName": "System.Text.Json",
-            "fileNames": [
-                "System.Text.Json"
-            ]
-        },
-        {
             "packageName": "Microsoft.Bcl.AsyncInterfaces",
             "fileNames": [
                 "Microsoft.Bcl.AsyncInterfaces"
@@ -25,9 +19,21 @@
             ]
         },
         {
+            "packageName": "System.Text.Json",
+            "fileNames": [
+                "System.Text.Json"
+            ]
+        },
+        {
             "packageName": "System.Runtime.CompilerServices.Unsafe",
             "fileNames": [
                 "System.Runtime.CompilerServices.Unsafe"
+            ]
+        },
+        {
+            "packageName": "Newtonsoft.Json",
+            "fileNames": [
+                "Newtonsoft.Json"
             ]
         }
     ]

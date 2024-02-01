@@ -1,4 +1,4 @@
-﻿using Extreal.SampleApp.Holiday.App.AssetWorkflow;
+using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.Integration.Multiplay.Messaging;
 using UnityEngine;
 using VContainer;
@@ -20,9 +20,9 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
 
             builder.Register<GroupManager>(Lifetime.Singleton);
 
-            var redisMessagingClient = RedisMessagingClientProvider.Provide(assetHelper.MessagingConfig.RedisMessagingConfig);
+            var redisMessagingClient = RedisMessagingClientProvider.Provide(assetHelper.MultiplayConfig.RedisMessagingConfig);
             var queuingMessagingClient = new QueuingMessagingClient(redisMessagingClient);
-            builder.RegisterComponent(queuingMessagingClient);
+
             builder.Register<MultiplayClient>(Lifetime.Singleton).WithParameter(queuingMessagingClient).WithParameter<INetworkObjectsProvider>(networkObjectsProvider);
 
             var textChatClient = RedisMessagingClientProvider.Provide(assetHelper.MessagingConfig.RedisMessagingConfig);

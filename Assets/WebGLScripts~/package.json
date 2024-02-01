@@ -3,7 +3,6 @@
     "@extreal-dev/extreal.integration.messaging.redis": "../../Packages/Extreal.Integration.Messaging.Redis/WebScripts~/",
     "@extreal-dev/extreal.integration.web.common": "^1.0.3",
     "uuid": "^9.0.1"
-
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.1.0",

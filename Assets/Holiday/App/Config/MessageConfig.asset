@@ -29,11 +29,9 @@ MonoBehaviour:
     retry.
   p2PUnexpectedDisconnectedMessage: P2P disconnected unexpectedly.
   p2PHostNameAlreadyExistsMessage: Host name already exists
+  textChatMessagingGroupNameAlreadyExistsMessage: Text chat group name already exists
+  textChatUnexpectedDisconnectedMessage: Text chat disconnected unexpectedly.
   multiplayConnectionApprovalRejectedMessage: Space is full.
-  multiplayConnectRetryMessage: 'Reconnect to multiplayer : {0}'
-  multiplayConnectRetrySuccessMessage: Successfully reconnected to multiplayer.
-  multiplayConnectRetryFailureMessage: Failed to reconnect to multiplayer. If you
-    wish to reconnect, please re-enter the space.
   multiplayUnexpectedDisconnectedMessage: Multiplayer disconnected unexpectedly.
   landscapeErrorMessage: An error occurred on Landscape playback. If you wish to
     play Landscape, please re-enter the space.

@@ -11,7 +11,7 @@ namespace Extreal.SampleApp.Holiday
     {
         [SerializeField] private GameObject playerPrefab;
 
-        public List<GameObject> Provide()
-            => new List<GameObject> { playerPrefab };
+        public Dictionary<string, GameObject> Provide()
+            => new Dictionary<string, GameObject> { { playerPrefab.name, playerPrefab } };
     }
 }

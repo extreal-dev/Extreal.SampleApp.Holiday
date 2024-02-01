@@ -1,14 +1,11 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Extreal.SampleApp.Holiday.App.Config
 {
     [CreateAssetMenu(
         menuName = nameof(Holiday) + "/" + nameof(MultiplayConfig),
         fileName = nameof(MultiplayConfig))]
-    public class MultiplayConfig : ScriptableObject
+    public class MultiplayConfig : MessagingConfig
     {
-        public int MaxCapacity => maxCapacity;
-        [SerializeField, SuppressMessage("Usage", "CC0052")] private int maxCapacity = 100;
     }
 }

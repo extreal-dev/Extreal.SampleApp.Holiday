@@ -1,27 +1,23 @@
-using System;
+using System.Diagnostics.CodeAnalysis;
 using Extreal.Integration.Multiplay.Messaging;
 using UnityEngine;
 
 namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
 {
-    [Serializable]
     public class HolidayPlayerInputValues : PlayerInputValues
     {
         private Vector2 preMove;
         private bool isMoveChanged;
 
-        public bool Sprint => sprint;
-        [SerializeField] private bool sprint;
+        [SuppressMessage("Usage", "CC0047")] public bool Sprint { get; set; }
         private bool preSprint;
         private bool isSprintChanged;
 
-        public bool Jump => jump;
-        [SerializeField] private bool jump;
+        [SuppressMessage("Usage", "CC0047")] public bool Jump { get; private set; }
         private bool preJump;
         private bool isJumpChanged;
 
-        public bool InputFieldTyping => inputFieldTyping;
-        [SerializeField] private bool inputFieldTyping;
+        [SuppressMessage("Usage", "CC0047")] public bool InputFieldTyping { get; private set; }
         private bool preInputFieldTyping;
         private bool isInputFieldTypingChanged;
 
@@ -34,23 +30,23 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
 
         public void SetSprint(bool sprint)
         {
-            preSprint = this.sprint;
-            this.sprint = sprint;
-            isSprintChanged = preSprint != this.sprint;
+            preSprint = Sprint;
+            Sprint = sprint;
+            isSprintChanged = preSprint != Sprint;
         }
 
         public void SetJump(bool jump)
         {
-            preJump = this.jump;
-            this.jump = jump;
-            isJumpChanged = preJump != this.jump;
+            preJump = Jump;
+            Jump = jump;
+            isJumpChanged = preJump != Jump;
         }
 
         public void SetInputFieldTyping(bool inputFieldTyping)
         {
-            preInputFieldTyping = this.inputFieldTyping;
-            this.inputFieldTyping = inputFieldTyping;
-            isInputFieldTypingChanged = preInputFieldTyping != this.inputFieldTyping;
+            preInputFieldTyping = InputFieldTyping;
+            InputFieldTyping = inputFieldTyping;
+            isInputFieldTypingChanged = preInputFieldTyping != InputFieldTyping;
         }
 
         public override bool CheckWhetherToSendData()

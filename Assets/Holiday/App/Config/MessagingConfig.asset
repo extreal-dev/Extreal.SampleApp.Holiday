@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76bb3a6d466fc304aa61e96ddb7d4e17, type: 3}
   m_Name: MessagingConfig
   m_EditorClassIdentifier: 
-  messagingUrl: http://127.0.0.1:3030
+  messagingUrl: http://localhost:3030
   timeoutSeconds: 3
   maxCapacity: 100
