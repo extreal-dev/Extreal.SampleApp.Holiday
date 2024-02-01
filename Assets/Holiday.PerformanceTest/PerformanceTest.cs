@@ -175,7 +175,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                         await UniTask.Yield();
 
                         // Enters specified space
-                        await UniTask.WaitUntil(() => multiplayClient.JoinedClients.Count == PerformanceTestArgumentHandler.GroupCapacity);
+                        await UniTask.WaitUntil(() => multiplayClient.JoinedUsers.Count == PerformanceTestArgumentHandler.GroupCapacity);
                         await UniTask.Delay(assetHelper.PeerConfig.P2PTimeout);
                         PushButtonNamed("GoButton");
                     }
