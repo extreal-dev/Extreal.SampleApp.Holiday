@@ -2,11 +2,11 @@
 setlocal EnableDelayedExpansion
 
 set exec_time=3600
-set room_count=3
+set group_count=3
 set process_count=20
 set group_capacity=100
 
-set /a player_lifetime=%exec_time%+(%room_count%-1)*%process_count%*10+120
+set /a player_lifetime=%exec_time%+(%group_count%-1)*%process_count%*10+120
 set /a get_cpu_lifetime=%player_lifetime%+%process_count%*10
 set /a loop_count=%process_count%-1
 
