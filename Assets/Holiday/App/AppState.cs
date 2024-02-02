@@ -3,8 +3,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
-using Extreal.Integration.P2P.WebRTC;
 using Extreal.SampleApp.Holiday.App.Config;
+using Extreal.SampleApp.Holiday.App.Group;
 using Extreal.SampleApp.Holiday.Controls.RetryStatusControl;
 using Extreal.SampleApp.Holiday.Screens.ConfirmationScreen;
 using UniRx;
@@ -17,13 +17,13 @@ namespace Extreal.SampleApp.Holiday.App
     {
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(AppState));
 
-        private PeerRole role = PeerRole.Host;
+        private GroupRole role = GroupRole.Host;
 
         public string PlayerName { get; private set; } = "Guest";
         public AvatarConfig.Avatar Avatar { get; private set; }
         public SpaceConfig.Space Space { get; private set; }
-        public bool IsHost => role == PeerRole.Host;
-        public bool IsClient => role == PeerRole.Client;
+        public bool IsHost => role == GroupRole.Host;
+        public bool IsClient => role == GroupRole.Client;
         public string GroupName { get; private set; } // Host only
         public string GroupId { get; private set; } // Client only
         public string SpaceName { get; private set; }
@@ -34,8 +34,8 @@ namespace Extreal.SampleApp.Holiday.App
         public IReadOnlyReactiveProperty<bool> SpaceReady => spaceReady.AddTo(disposables);
         private readonly ReactiveProperty<bool> spaceReady = new ReactiveProperty<bool>(false);
 
-        public IReadOnlyReactiveProperty<bool> P2PReady => p2PReady.AddTo(disposables);
-        private readonly ReactiveProperty<bool> p2PReady = new ReactiveProperty<bool>(false);
+        public IReadOnlyReactiveProperty<bool> SfuReady => sfuReady.AddTo(disposables);
+        private readonly ReactiveProperty<bool> sfuReady = new ReactiveProperty<bool>(false);
 
         public IObservable<Message> OnMessageSent => onMessageSent.AddTo(disposables);
         private readonly Subject<Message> onMessageSent = new Subject<Message>();
@@ -70,11 +70,11 @@ namespace Extreal.SampleApp.Holiday.App
 
         [SuppressMessage("Usage", "CC0033")]
         private void MonitorPlayingReadyStatus() =>
-            multiplayReady.Merge(spaceReady, landscapeInitialized)
+            multiplayReady.Merge(sfuReady, spaceReady, landscapeInitialized)
                 .Where(_ =>
                 {
                     LogWaitingStatus();
-                    return multiplayReady.Value && spaceReady.Value && landscapeInitialized.Value;
+                    return multiplayReady.Value && sfuReady.Value && spaceReady.Value && landscapeInitialized.Value;
                 })
                 .Subscribe(_ =>
                 {
@@ -108,20 +108,20 @@ namespace Extreal.SampleApp.Holiday.App
         {
             if (Logger.IsDebug())
             {
-                Logger.LogDebug($"Multiplay, Space Ready, Landscape Initialized: " +
-                                $"{multiplayReady.Value}, {spaceReady.Value}, {landscapeInitialized.Value}");
+                Logger.LogDebug($"Multiplay, SFU, Space Ready, Landscape Initialized: " +
+                                $"{multiplayReady.Value}, {sfuReady.Value}, {spaceReady.Value}, {landscapeInitialized.Value}");
             }
         }
 
         public void SetPlayerName(string playerName) => PlayerName = playerName;
         public void SetAvatar(AvatarConfig.Avatar avatar) => Avatar = avatar;
         public void SetSpace(SpaceConfig.Space space) => Space = space;
-        public void SetRole(PeerRole role) => this.role = role;
+        public void SetRole(GroupRole role) => this.role = role;
         public void SetGroupName(string groupName) => GroupName = groupName;
         public void SetGroupId(string groupId) => GroupId = groupId;
         public void SetSpaceName(string spaceName) => SpaceName = spaceName;
-        public void SetP2PReady(bool ready) => p2PReady.Value = ready;
         public void SetMultiplayReady(bool ready) => multiplayReady.Value = ready;
+        public void SetSfuReady(bool ready) => sfuReady.Value = ready;
         public void SetSpaceReady(bool ready) => spaceReady.Value = ready;
         public void SetLandscapeInitialized(bool initialized) => landscapeInitialized.Value = initialized;
         public void SetStage(StageName stageName) => StageState = new StageState(stageName);

@@ -8,7 +8,7 @@
         InputControl = 101,
         NotificationControl = 102,
         ClientControl = 107,
-        P2PControl = 110,
+        SfuControl = 110,
         MultiplayControl = 104,
         TextChatControl = 105,
         VoiceChatControl = 106,

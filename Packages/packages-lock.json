@@ -7,6 +7,13 @@
       "dependencies": {},
       "url": "https://package.openupm.com"
     },
+    "com.endel.nativewebsocket": {
+      "version": "1.1.4",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://package.openupm.com"
+    },
     "com.neuecc.unirx": {
       "version": "7.1.0",
       "depth": 1,
@@ -348,6 +355,18 @@
       },
       "hash": "082ce097952ee64007c1434eb022cdb9d22ddecf"
     },
+    "jp.co.tis.extreal.integration.chat.ome": {
+      "version": "file:Extreal.Integration.Chat.OME",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.cysharp.unitask": "2.3.3",
+        "com.neuecc.unirx": "7.1.0",
+        "jp.co.tis.extreal.core.logging": "1.2.0",
+        "jp.co.tis.extreal.core.common": "1.1.0",
+        "com.unity.webrtc": "3.0.0-pre.6"
+      }
+    },
     "jp.co.tis.extreal.integration.chat.webrtc": {
       "version": "https://github.com/extreal-dev/Extreal.Integration.Chat.WebRTC.git#1.0.0",
       "depth": 0,
@@ -412,6 +431,19 @@
         "jp.co.tis.extreal.integration.web.common": "1.0.0"
       },
       "hash": "092011acb0bf4a7123bf981c7009b65f23c3500d"
+    },
+    "jp.co.tis.extreal.integration.sfu.ome": {
+      "version": "file:Extreal.Integration.SFU.OME",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.cysharp.unitask": "2.3.3",
+        "com.neuecc.unirx": "7.1.0",
+        "jp.co.tis.extreal.core.logging": "1.2.0",
+        "jp.co.tis.extreal.core.common": "1.1.0",
+        "com.endel.nativewebsocket": "1.1.4",
+        "com.unity.webrtc": "3.0.0-pre.6"
+      }
     },
     "jp.co.tis.extreal.integration.web.common": {
       "version": "https://github.com/extreal-dev/Extreal.Integration.Web.Common.git#1.0.0",

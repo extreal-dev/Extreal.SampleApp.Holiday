@@ -39,14 +39,14 @@ EditorBuildSettings:
     path: Assets/Holiday/Controls/ClientControl/ClientControl.unity
     guid: f8e9d9e073b728e45b22ca0cb8e23f56
   - enabled: 1
-    path: Assets/Holiday/Controls/P2PControl/P2PControl.unity
-    guid: 8eda113d1d8f331438e946945484d79a
-  - enabled: 1
     path: Assets/Holiday/Controls/MultiplayControl/MultiplayControl.unity
     guid: b1045e6b146d9aa4fb4c24b20e98b21a
   - enabled: 1
     path: Assets/Holiday/Controls/TextChatControl/TextChatControl.unity
     guid: 3f48e4adbda811241b5d0ac51be58386
+  - enabled: 1
+    path: Assets/Holiday/Controls/SfuControl/SfuControl.unity
+    guid: 8eda113d1d8f331438e946945484d79a
   - enabled: 1
     path: Assets/Holiday/Controls/VoiceChatControl/VoiceChatControl.unity
     guid: ddc3394fd410a514483bd603ff8cdd92
