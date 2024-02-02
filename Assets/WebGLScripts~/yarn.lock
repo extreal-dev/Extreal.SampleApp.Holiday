@@ -5,10 +5,15 @@
 "@extreal-dev/extreal.integration.messaging.redis@../../Packages/Extreal.Integration.Messaging.Redis/WebScripts~/":
   version "1.0.0-next.1"
   dependencies:
-    "@extreal-dev/extreal.integration.web.common" "^1.0.0"
-    socket.io-client "^4.7.1"
+    "@extreal-dev/extreal.integration.web.common" "1.1.0-next.2"
+    socket.io-client "4.7.4"
 
-"@extreal-dev/extreal.integration.web.common@^1.0.0", "@extreal-dev/extreal.integration.web.common@^1.0.3":
+"@extreal-dev/extreal.integration.web.common@1.1.0-next.2":
+  version "1.1.0-next.2"
+  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.web.common/-/extreal.integration.web.common-1.1.0-next.2.tgz#752a8c9b89a4d92e49220b75cf39cb7070434a03"
+  integrity sha512-1xnnY+qGaL48bKy9X+ZStEO2yQ7xku4ChHvrADmtyFYlUMV2bhZUyxLkGrljFRp2qmor488AU29/UK5AibfkaQ==
+
+"@extreal-dev/extreal.integration.web.common@^1.0.3":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.web.common/-/extreal.integration.web.common-1.0.3.tgz#094bcb46aa1994177d1a1f624f31c1181f1f525b"
   integrity sha512-ntZmw43lJK2JnXRGQ8WTv86aKMZMQotcZFAYx2DPLJBCS3ZqjOL7kcdwKfFMgp2UEdR+/VP88gobHkTMQPOdyw==
@@ -304,7 +309,7 @@ smob@^1.0.0:
   resolved "https://registry.yarnpkg.com/smob/-/smob-1.4.1.tgz#66270e7df6a7527664816c5b577a23f17ba6f5b5"
   integrity sha512-9LK+E7Hv5R9u4g4C3p+jjLstaLe11MDsL21UpYaCNmapvMkYhqCV4A/f/3gyH8QjMyh6l68q9xC85vihY9ahMQ==
 
-socket.io-client@^4.7.1:
+socket.io-client@4.7.4:
   version "4.7.4"
   resolved "https://registry.yarnpkg.com/socket.io-client/-/socket.io-client-4.7.4.tgz#5f0e060ff34ac0a4b4c5abaaa88e0d1d928c64c8"
   integrity sha512-wh+OkeF0rAVCrABWQBaEjLfb7DVPotMbu0cgWgyR0v6eA4EoVnAwcIeIbcdTE3GT/H3kbdLl7OoH2+asoDRIIg==
