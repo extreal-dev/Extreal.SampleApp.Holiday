@@ -13,11 +13,11 @@ namespace Extreal.SampleApp.Holiday.Controls.Common.Multiplay
         private bool preSprint;
         private bool isSprintChanged;
 
-        [SuppressMessage("Usage", "CC0047")] public bool Jump { get; private set; }
+        [SuppressMessage("Usage", "CC0047")] public bool Jump { get; set; }
         private bool preJump;
         private bool isJumpChanged;
 
-        [SuppressMessage("Usage", "CC0047")] public bool InputFieldTyping { get; private set; }
+        [SuppressMessage("Usage", "CC0047")] public bool InputFieldTyping { get; set; }
         private bool preInputFieldTyping;
         private bool isInputFieldTypingChanged;
 
