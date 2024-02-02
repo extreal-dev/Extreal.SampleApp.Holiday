@@ -80,7 +80,7 @@ namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
         public async UniTaskVoid JoinAsync()
         {
             var groupName = $"Multiplay#{appState.Space.SpaceName}";
-            var messagingJoinConfig = new MessagingJoiningConfig(groupName, assetHelper.MultiplayConfig.MaxCapacity);
+            var messagingJoinConfig = new MessagingJoiningConfig(groupName);
             var multiplayJoiningConfig = new MultiplayJoiningConfig(messagingJoinConfig);
             try
             {
