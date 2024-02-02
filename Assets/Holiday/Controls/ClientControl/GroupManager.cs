@@ -18,9 +18,9 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
         [SuppressMessage("Usage", "CC0033")]
         private readonly CompositeDisposable disposables = new CompositeDisposable();
 
-        private readonly QueuingMessagingClient messagingClient;
+        private readonly MessagingClient messagingClient;
 
-        public GroupManager(QueuingMessagingClient messagingClient) => this.messagingClient = messagingClient;
+        public GroupManager(MessagingClient messagingClient) => this.messagingClient = messagingClient;
 
         protected override void ReleaseManagedResources() => disposables.Dispose();
 
