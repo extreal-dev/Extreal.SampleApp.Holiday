@@ -10,6 +10,7 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
     {
         public HashSet<string> UpdatedClients { get; } = new HashSet<string>();
 
+        private bool isSuppressed;
         private readonly PlayerInput input;
         private readonly HolidayPlayerInput holidayInput;
 
@@ -23,23 +24,39 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
             base.ReleaseManagedResources();
         }
 
+        public void Suppress()
+            => isSuppressed = true;
+
+        protected override void SynchronizeToOthers()
+        {
+            if (isSuppressed)
+            {
+                return;
+            }
+            base.SynchronizeToOthers();
+        }
+
         protected override void SynchronizeLocal()
         {
+            if (isSuppressed)
+            {
+                return;
+            }
             while (MessagingClient.ResponseQueueCount() > 0)
             {
                 (var from, var messageJson) = MessagingClient.DequeueResponse();
                 var message = MultiplayMessage.FromJson(messageJson);
                 if (message.Command == MultiplayMessageCommand.Update)
                 {
-                    message.NetworkObjectInfos[0].ApplyValuesTo(in input);
+                    message.NetworkObjects[0].ApplyValuesTo(in input);
                     if (holidayInput.HolidayValues.Move != default)
                     {
                         UpdatedClients.Add(from);
                     }
                 }
-                else if (message.Command is MultiplayMessageCommand.UserInitialized)
+                else if (message.Command is MultiplayMessageCommand.ClientInitialized)
                 {
-                    OnUserJoinedProtected.OnNext(from);
+                    OnClientJoinedProtected.OnNext(from);
                 }
             }
         }

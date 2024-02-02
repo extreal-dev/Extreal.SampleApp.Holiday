@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.Logging;
-using Extreal.Integration.Chat.WebRTC;
+using Extreal.Integration.Chat.OME;
 using Extreal.Integration.Messaging;
 using Extreal.Integration.Multiplay.Messaging;
 using Extreal.SampleApp.Holiday.App;
@@ -129,9 +129,14 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
 
             var clientControlScope = FindObjectOfType<ClientControlScope>();
             var appState = clientControlScope.Container.Resolve(typeof(AppState)) as AppState;
-            var multiplayClient = clientControlScope.Container.Resolve(typeof(MultiplayClient)) as MultiplayClient;
+            var multiplayClient = clientControlScope.Container.Resolve(typeof(MultiplayClient)) as MultiplayClientForTest;
             var messagingClient = clientControlScope.Container.Resolve(typeof(MessagingClient)) as MessagingClient;
             var assetHelper = clientControlScope.Container.Resolve(typeof(AssetHelper)) as AssetHelper;
+
+            if (PerformanceTestArgumentHandler.SuppressMultiplay)
+            {
+                multiplayClient.Suppress();
+            }
 
             {
                 var playingReady = false;
@@ -175,8 +180,8 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                         await UniTask.Yield();
 
                         // Enters specified space
-                        await UniTask.WaitUntil(() => multiplayClient.JoinedUsers.Count == PerformanceTestArgumentHandler.GroupCapacity);
-                        await UniTask.Delay(assetHelper.PeerConfig.P2PTimeout);
+                        await UniTask.WaitUntil(() => multiplayClient.JoinedClients.Count == PerformanceTestArgumentHandler.GroupCapacity);
+                        await UniTask.Delay(TimeSpan.FromSeconds(5));
                         PushButtonNamed("GoButton");
                     }
                 }
@@ -218,7 +223,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                 var player = multiplayClient.LocalClient.NetworkObjects[0];
                 var playerInput = player.GetComponent<HolidayPlayerInput>();
                 RepeatMovePlayerAsync(player, playerInput).Forget();
-                DumpMultiplayStatusAsync(multiplayClient as MultiplayClientForTest).Forget();
+                DumpMultiplayStatusAsync(multiplayClient).Forget();
             }
 
             if (!PerformanceTestArgumentHandler.SuppressTextChat)
@@ -229,14 +234,14 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                 DumpTextChatStatusAsync(messagingClient, messagePeriod).Forget();
             }
 
-            // if (!PerformanceTestArgumentHandler.SuppressVoiceChat)
-            // {
-            //     // var voiceChatClient = clientControlScope.Container.Resolve(typeof(VoiceChatClient)) as NativeVoiceChatClient;
-            //     var voicePeriod = PerformanceTestArgumentHandler.SendVoicePeriod;
-            //     SetAudioClipAsync().Forget();
-            //     RepeatVoiceChatSendAsync(voicePeriod).Forget();
-            //     // DumpVoiceChatStatusAsync(voiceChatClient, voicePeriod).Forget();
-            // }
+            if (!PerformanceTestArgumentHandler.SuppressVoiceChat)
+            {
+                var voiceChatClient = clientControlScope.Container.Resolve(typeof(VoiceChatClient)) as VoiceChatClient;
+                var voicePeriod = PerformanceTestArgumentHandler.SendVoicePeriod;
+                SetAudioClip();
+                RepeatVoiceChatSendAsync(voicePeriod).Forget();
+                DumpVoiceChatStatusAsync(voiceChatClient, voicePeriod).Forget();
+            }
         }
 
         private async UniTaskVoid RepeatMovePlayerAsync(GameObject player, HolidayPlayerInput playerInput)
@@ -401,23 +406,11 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
             }
         }
 
-        private async UniTaskVoid SetAudioClipAsync()
+        private void SetAudioClip()
         {
-            var inAudios = new List<AudioSource>();
-            while (true)
-            {
-                var newInAudios =
-                    FindObjectsOfType<AudioSource>()
-                        .Where(audioSource => audioSource.name == "InAudio")
-                        .Except(inAudios);
-                foreach (var inAudio in newInAudios)
-                {
-                    inAudio.clip = audioClip;
-                    inAudio.Play();
-                }
-                inAudios.AddRange(newInAudios);
-                await UniTask.Yield();
-            }
+            var inAudio = FindObjectsOfType<AudioSource>().First(audioSource => audioSource.name == "InAudio");
+            inAudio.clip = audioClip;
+            inAudio.Play();
         }
 
         private static async UniTaskVoid RepeatVoiceChatSendAsync(int voicePeriod)
@@ -464,9 +457,35 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
 
             using var file = File.Create(path);
             using var writer = new StreamWriter(file, Encoding.UTF8);
-            writer.WriteLine("Date Time MessageReceivedCount");
+            writer.WriteLine("Date Time VoiceReceivedCount");
 
-            // Handles voiceChatClient.OnAudioLevelChanged here
+            var audioLevelChangedClients = new List<string>();
+            voiceChatClient.OnAudioLevelChanged
+                .Subscribe(audioLevels =>
+                    audioLevelChangedClients =
+                        audioLevels
+                            .Where(audioLevel => audioLevel.Value != 0f)
+                            .Select(audioLevel => audioLevel.Key)
+                            .Union(audioLevelChangedClients)
+                            .ToList())
+                .AddTo(this);
+
+            while (!isDestroyed)
+            {
+                var currentTime = DateTime.Now;
+                writer.WriteLine($"{currentTime} {audioLevelChangedClients.Count}");
+
+                audioLevelChangedClients.Clear();
+
+                try
+                {
+                    await UniTask.Delay(TimeSpan.FromSeconds(voicePeriod), cancellationToken: cts.Token);
+                }
+                catch (Exception)
+                {
+                    break;
+                }
+            }
         }
 
         private bool InRange(Vector3 position)

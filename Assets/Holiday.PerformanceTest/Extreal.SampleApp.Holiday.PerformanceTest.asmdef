@@ -15,8 +15,7 @@
         "Extreal.Core.Logging",
         "Extreal.Core.StageNavigation",
         "Extreal.Core.Common",
-        "Extreal.Integration.P2P.WebRTC",
-        "Extreal.Integration.Chat.WebRTC",
+        "Extreal.Integration.Chat.OME",
         "Extreal.Integration.Multiplay.Messaging",
         "Extreal.Integration.Messaging"
     ],
