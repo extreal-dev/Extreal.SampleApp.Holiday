@@ -4,7 +4,7 @@ using Extreal.Integration.Messaging.Redis;
 using SocketIOClient;
 using UnityEngine;
 
-namespace Extreal.SampleApp.Holiday
+namespace Extreal.SampleApp.Holiday.App.Config
 {
     [CreateAssetMenu(
         menuName = nameof(Holiday) + "/" + nameof(MessagingConfig),
@@ -21,8 +21,5 @@ namespace Extreal.SampleApp.Holiday
                 });
         [SerializeField, SuppressMessage("Usage", "CC0052")] private string messagingUrl = "http://127.0.0.1:3030";
         [SerializeField, SuppressMessage("Usage", "CC0052")] private int timeoutSeconds = 3;
-
-        public int MaxCapacity => maxCapacity;
-        [SerializeField, SuppressMessage("Usage", "CC0052")] private int maxCapacity = 100;
     }
 }

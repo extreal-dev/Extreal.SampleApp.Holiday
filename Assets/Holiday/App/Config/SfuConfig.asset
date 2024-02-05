@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ba6ced8e53e72b43bc99dd689a8bd48, type: 3}
   m_Name: SfuConfig
   m_EditorClassIdentifier: 
-  serverUrl: wss://sfu.dev.comet.ninja:3000
+  serverUrl: ws://localhost:3000
   iceServers:
   - urls:
     - stun:stun.l.google.com:19302

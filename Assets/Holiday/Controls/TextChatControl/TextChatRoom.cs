@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
@@ -6,6 +7,7 @@ using Extreal.Integration.Messaging;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.P2P;
+using SocketIOClient;
 using UniRx;
 using UnityEngine;
 
@@ -63,27 +65,36 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
         public async UniTaskVoid JoinAsync()
         {
             groupName = $"TextChat#{appState.GroupName}";
-            if (appState.IsHost)
-            {
-                var groupConfig = new GroupConfig(groupName, assetHelper.MessagingConfig.MaxCapacity);
-                await messagingClient.CreateGroupAsync(groupConfig);
-            }
-
             var joiningConfig = new MessagingJoiningConfig(groupName);
-            await messagingClient.JoinAsync(joiningConfig);
+            ;
+            try
+            {
+                if (appState.IsHost)
+                {
+                    var groups = await messagingClient.ListGroupsAsync();
+                    var groupNames = groups.Select(group => group.Name).ToList();
+                    if (groupNames.Contains(joiningConfig.GroupName))
+                    {
+                        appState.Notify(assetHelper.MessageConfig.TextChatMessagingGroupNameAlreadyExistsMessage);
+                    }
+                    else
+                    {
+                        await messagingClient.JoinAsync(joiningConfig);
+                    }
+                }
+                else
+                {
+                    await messagingClient.JoinAsync(joiningConfig);
+                }
+            }
+            catch (ConnectionException)
+            {
+                appState.Notify(assetHelper.MessageConfig.TextChatUnexpectedDisconnectedMessage);
+            }
+
         }
 
-        public async UniTaskVoid LeaveAsync()
-        {
-            if (appState.IsHost)
-            {
-                await messagingClient.DeleteGroupAsync(groupName);
-            }
-            else
-            {
-                await messagingClient.LeaveAsync();
-            }
-        }
+        public async UniTaskVoid LeaveAsync() => await messagingClient.LeaveAsync();
 
         public async UniTaskVoid SendMessageAsync(string message)
         {

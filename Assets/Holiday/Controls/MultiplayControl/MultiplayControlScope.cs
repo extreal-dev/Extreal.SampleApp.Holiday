@@ -1,9 +1,8 @@
-﻿using Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl.Client;
-using UnityEngine;
+﻿using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
-namespace Extreal.SampleApp.Holiday.Controls.MassivelyMultiplyControl
+namespace Extreal.SampleApp.Holiday.Controls.MultiplayControl
 {
     public class MultiplayControlScope : LifetimeScope
     {
