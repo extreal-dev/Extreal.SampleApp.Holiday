@@ -1,8 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using Extreal.Core.StageNavigation;
-using Extreal.Integration.Chat.WebRTC;
+using Extreal.Integration.Messaging;
 using Extreal.SampleApp.Holiday.App;
+using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.App.Stages;
 using UniRx;
@@ -11,18 +13,22 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
 {
     public class TextChatControlPresenter : StagePresenterBase
     {
-        private readonly TextChatClient textChatClient;
+        private readonly AssetHelper assetHelper;
+        private readonly MessagingClient messagingClient;
         private readonly TextChatControlView textChatControlView;
+        private TextChatRoom textChatRoom;
 
         public TextChatControlPresenter
         (
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState,
-            TextChatClient textChatClient,
+            AssetHelper assetHelper,
+            MessagingClient messagingClient,
             TextChatControlView textChatControlView
         ) : base(stageNavigator, appState)
         {
-            this.textChatClient = textChatClient;
+            this.assetHelper = assetHelper;
+            this.messagingClient = messagingClient;
             this.textChatControlView = textChatControlView;
         }
 
@@ -31,22 +37,31 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState,
             CompositeDisposable sceneDisposables)
-            => textChatControlView.OnSendButtonClicked
+        {
+            textChatRoom = new TextChatRoom(messagingClient, appState, assetHelper);
+            textChatRoom.AddTo(sceneDisposables);
+
+            textChatControlView.OnSendButtonClicked
                 .Where(message => !string.IsNullOrWhiteSpace(message))
                 .Subscribe(message =>
                 {
-                    textChatClient.Send(message);
+                    textChatRoom.SendMessageAsync(message).Forget();
                     appState.StageState.CountUpTextChats();
+
+                    textChatControlView.ShowMessage(message);
                 })
                 .AddTo(sceneDisposables);
 
-        [SuppressMessage("CodeCracker", "CC0092")]
-        protected override void OnStageEntered(
-            StageName stageName,
-            AppState appState,
-            CompositeDisposable stageDisposables) => textChatClient.OnMessageReceived
+            textChatRoom.OnMessageReceived
                 .Subscribe(textChatControlView.ShowMessage)
-                .AddTo(stageDisposables);
+                .AddTo(sceneDisposables);
+
+            appState.OnMessageSent
+                .Subscribe(textChatRoom.SendEveryoneMessageAsync)
+                .AddTo(sceneDisposables);
+
+            textChatRoom.JoinAsync().Forget();
+        }
 
         protected override void OnStageExiting(StageName stageName, AppState appState)
         {
@@ -54,7 +69,8 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
             {
                 return;
             }
-            textChatClient.Clear();
+
+            textChatRoom.LeaveAsync().Forget();
         }
     }
 }

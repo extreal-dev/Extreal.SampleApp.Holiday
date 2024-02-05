@@ -27,10 +27,10 @@ namespace Extreal.SampleApp.Holiday.App.Config
         [SerializeField] private string p2PUnexpectedDisconnectedMessage;
         [SerializeField] private string p2PHostNameAlreadyExistsMessage;
 
+        [SerializeField] private string textChatMessagingGroupNameAlreadyExistsMessage;
+        [SerializeField] private string textChatUnexpectedDisconnectedMessage;
+
         [SerializeField] private string multiplayConnectionApprovalRejectedMessage;
-        [SerializeField] private string multiplayConnectRetryMessage;
-        [SerializeField] private string multiplayConnectRetrySuccessMessage;
-        [SerializeField] private string multiplayConnectRetryFailureMessage;
         [SerializeField] private string multiplayUnexpectedDisconnectedMessage;
 
         [SerializeField] private string landscapeErrorMessage;
@@ -55,10 +55,10 @@ namespace Extreal.SampleApp.Holiday.App.Config
         public string P2PUnexpectedDisconnectedMessage => p2PUnexpectedDisconnectedMessage;
         public string P2PHostNameAlreadyExistsMessage => p2PHostNameAlreadyExistsMessage;
 
+        public string TextChatMessagingGroupNameAlreadyExistsMessage => textChatMessagingGroupNameAlreadyExistsMessage;
+        public string TextChatUnexpectedDisconnectedMessage => textChatUnexpectedDisconnectedMessage;
+
         public string MultiplayConnectionApprovalRejectedMessage => multiplayConnectionApprovalRejectedMessage;
-        public string MultiplayConnectRetryMessage => multiplayConnectRetryMessage;
-        public string MultiplayConnectRetrySuccessMessage => multiplayConnectRetrySuccessMessage;
-        public string MultiplayConnectRetryFailureMessage => multiplayConnectRetryFailureMessage;
         public string MultiplayUnexpectedDisconnectedMessage => multiplayUnexpectedDisconnectedMessage;
 
         public string LandscapeErrorMessage => landscapeErrorMessage;

@@ -50,7 +50,11 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
                 .AddTo(sceneDisposables);
 
             groupSelectionScreenView.OnGroupChanged
-                .Subscribe((groupName) => appState.SetGroupId(groupManager.FindByName(groupName)?.Id))
+                .Subscribe((groupName) =>
+                {
+                    appState.SetGroupId(groupManager.FindByName(groupName)?.Id);
+                    appState.SetGroupName(groupName);
+                })
                 .AddTo(sceneDisposables);
 
             groupSelectionScreenView.OnUpdateButtonClicked
@@ -70,8 +74,11 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
                 {
                     var groupNames = groups.Select(group => group.Name).ToArray();
                     groupSelectionScreenView.UpdateGroupNames(groupNames);
-                    appState.SetGroupId(
-                        groups.Count > 0 ? groups.First().Id : null);
+                    if (groups.Count > 0)
+                    {
+                        appState.SetGroupName(groups.First().Name);
+                        appState.SetGroupId(groups.First().Id);
+                    }
                 })
                 .AddTo(sceneDisposables);
 
@@ -88,7 +95,8 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
         )
         {
             groupSelectionScreenView.Initialize();
-            groupSelectionScreenView.SetInitialValues(appState.IsHost ? PeerRole.Host : PeerRole.Client);
+            var role = appState.IsHost ? PeerRole.Host : PeerRole.Client;
+            groupSelectionScreenView.SetInitialValues(role);
         }
     }
 }

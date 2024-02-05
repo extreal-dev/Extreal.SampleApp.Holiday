@@ -3,8 +3,6 @@
     "rootNamespace": "Extreal.SampleApp.Holiday",
     "references": [
         "Cinemachine",
-        "Unity.Netcode.Components",
-        "Unity.Netcode.Runtime",
         "Unity.Addressables",
         "Unity.Collections",
         "Unity.InputSystem",
@@ -18,13 +16,14 @@
         "Extreal.Core.Logging",
         "Extreal.Core.StageNavigation",
         "Extreal.Core.Common",
-        "Extreal.Integration.Multiplay.NGO",
         "Extreal.Integration.AssetWorkflow.Addressables",
         "Extreal.Integration.Web.Common",
         "Extreal.Integration.P2P.WebRTC",
-        "Extreal.Integration.Multiplay.NGO.WebRTC",
         "Extreal.Integration.Chat.WebRTC",
-        "Extreal.SampleApp.Holiday.Analyzer"
+        "Extreal.SampleApp.Holiday.Analyzer",
+        "Extreal.Integration.Multiplay.Messaging",
+        "Extreal.Integration.Messaging",
+        "Extreal.Integration.Messaging.Redis"
     ],
     "includePlatforms": [
         "Android",

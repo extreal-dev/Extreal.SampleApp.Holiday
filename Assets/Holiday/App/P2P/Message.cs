@@ -1,33 +1,38 @@
 using System;
-using Unity.Netcode;
+using System.Diagnostics.CodeAnalysis;
+using UnityEngine;
 
 namespace Extreal.SampleApp.Holiday.App.P2P
 {
-    public struct Message : INetworkSerializable
+    [Serializable]
+    public class Message : ISerializationCallbackReceiver
     {
-        public readonly MessageId MessageId => messageId;
-        private MessageId messageId;
+        public MessageId MessageId => messageId;
+        [SerializeField, SuppressMessage("Usage", "CC0052")] private MessageId messageId;
 
-        public readonly INetworkSerializable Content => content;
-        private INetworkSerializable content;
+        public IMessageContent Content { get; private set; }
 
-        public Message(MessageId messageId, INetworkSerializable content)
+        [SerializeField] private string contentType;
+        [SerializeField] private string contentJson;
+
+        public Message(MessageId messageId, IMessageContent content)
         {
             this.messageId = messageId;
-            this.content = content;
+            Content = content;
         }
 
-        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        public void OnAfterDeserialize()
         {
-            var contentType = serializer.IsWriter ? content.GetType().ToString() : default;
-            serializer.SerializeValue(ref contentType);
-            if (serializer.IsReader)
+            if (!string.IsNullOrEmpty(contentType))
             {
-                content = Activator.CreateInstance(Type.GetType(contentType)) as INetworkSerializable;
+                Content = JsonUtility.FromJson(contentJson, Type.GetType(contentType)) as IMessageContent;
             }
+        }
 
-            serializer.SerializeValue(ref messageId);
-            content.NetworkSerialize(serializer);
+        public void OnBeforeSerialize()
+        {
+            contentType = Content != null ? Content.GetType().ToString() : default;
+            contentJson = JsonUtility.ToJson(Content);
         }
     }
 }

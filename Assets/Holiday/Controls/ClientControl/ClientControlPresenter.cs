@@ -1,6 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using Extreal.Core.StageNavigation;
-using Extreal.Integration.Multiplay.NGO;
+using Extreal.Integration.Multiplay.Messaging;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
@@ -12,30 +12,30 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
     public class ClientControlPresenter : StagePresenterBase
     {
         private readonly AssetHelper assetHelper;
-        private readonly NgoClient ngoClient;
+        private readonly MultiplayClient multiplayClient;
 
         public ClientControlPresenter(
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState,
             AssetHelper assetHelper,
-            NgoClient ngoClient) : base(stageNavigator, appState)
+            MultiplayClient multiplayClient) : base(stageNavigator, appState)
         {
             this.assetHelper = assetHelper;
-            this.ngoClient = ngoClient;
+            this.multiplayClient = multiplayClient;
         }
 
         protected override void Initialize(
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState,
             CompositeDisposable sceneDisposables)
-            => InitializeNgoClient(stageNavigator, appState, sceneDisposables);
+            => InitializeMultiplayClient(stageNavigator, appState, sceneDisposables);
 
-        private void InitializeNgoClient(
+        private void InitializeMultiplayClient(
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState,
             CompositeDisposable sceneDisposables)
         {
-            ngoClient.OnConnectionApprovalRejected
+            multiplayClient.OnJoiningApprovalRejected
                 .Subscribe(_ =>
                 {
                     appState.Notify(assetHelper.MessageConfig.MultiplayConnectionApprovalRejectedMessage);
@@ -43,22 +43,7 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
                 })
                 .AddTo(sceneDisposables);
 
-            ngoClient.OnConnectRetrying
-                .Subscribe(retryCount => AppUtils.NotifyRetrying(
-                    appState,
-                    assetHelper.MessageConfig.MultiplayConnectRetryMessage,
-                    retryCount))
-                .AddTo(sceneDisposables);
-
-            ngoClient.OnConnectRetried
-                .Subscribe(result => AppUtils.NotifyRetried(
-                    appState,
-                    result,
-                    assetHelper.MessageConfig.MultiplayConnectRetrySuccessMessage,
-                    assetHelper.MessageConfig.MultiplayConnectRetryFailureMessage))
-                .AddTo(sceneDisposables);
-
-            ngoClient.OnUnexpectedDisconnected
+            multiplayClient.OnUnexpectedLeft
                 .Subscribe(_ =>
                     appState.Notify(assetHelper.MessageConfig.MultiplayUnexpectedDisconnectedMessage))
                 .AddTo(sceneDisposables);

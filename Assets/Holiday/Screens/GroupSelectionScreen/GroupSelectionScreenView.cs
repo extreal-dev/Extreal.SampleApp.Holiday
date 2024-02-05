@@ -59,7 +59,7 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
             roleDropdown.options = Roles.Select(role => new TMP_Dropdown.OptionData(role.ToString())).ToList();
             groupDropdown.options = new List<TMP_Dropdown.OptionData>();
 
-            OnRoleChanged.Subscribe(SwitchInputMode).AddTo(this);
+            OnRoleChanged.Subscribe(SwitchInputMode);
             OnGroupNameChanged.Subscribe(_ => CanGo(PeerRole.Host));
         }
 
@@ -91,7 +91,7 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
             groupDropdown.options
                 = this.groupNames.Select(groupName => new TMP_Dropdown.OptionData(groupName)).ToList();
             groupDropdown.value = 0;
-            CanGo(PeerRole.Client);
+            CanGo(Roles[roleDropdown.value]);
         }
     }
 }
