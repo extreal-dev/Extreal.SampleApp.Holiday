@@ -56,7 +56,7 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
                 }
                 else if (message.Command is MultiplayMessageCommand.ClientInitialized)
                 {
-                    OnClientJoinedProtected.OnNext(from);
+                    FireOnClientJoined(from);
                 }
             }
         }

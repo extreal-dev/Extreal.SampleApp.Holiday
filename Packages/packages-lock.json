@@ -378,7 +378,7 @@
       "hash": "8d8e6429b7122ea2b162d2ece3f4beedaaac0b4d"
     },
     "jp.co.tis.extreal.integration.multiplay.messaging": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.multiplay.Messaging.git#1.0.0-next.2",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.multiplay.Messaging.git#1.0.0-next.3",
       "depth": 0,
       "source": "git",
       "dependencies": {
@@ -388,7 +388,7 @@
         "jp.co.tis.extreal.core.common": "1.2.0-next.1",
         "jp.co.tis.extreal.integration.messaging": "1.0.0-next.2"
       },
-      "hash": "873ac8dd88dd2af293e9e418728c5e6f601c0774"
+      "hash": "7656f921f462a9e1d261d8c8d4b7e3982963f2ab"
     },
     "jp.co.tis.extreal.integration.sfu.ome": {
       "version": "file:Extreal.Integration.SFU.OME",
