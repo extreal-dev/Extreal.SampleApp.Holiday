@@ -15,11 +15,11 @@
       "url": "https://package.openupm.com"
     },
     "com.unity.addressables": {
-      "version": "1.21.17",
+      "version": "1.21.19",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.scriptablebuildpipeline": "1.21.9",
+        "com.unity.scriptablebuildpipeline": "1.21.21",
         "com.unity.modules.assetbundle": "1.0.0",
         "com.unity.modules.imageconversion": "1.0.0",
         "com.unity.modules.jsonserialize": "1.0.0",
@@ -29,7 +29,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ai.navigation": {
-      "version": "1.1.4",
+      "version": "1.1.5",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -45,7 +45,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.burst": {
-      "version": "1.8.4",
+      "version": "1.8.11",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -63,20 +63,10 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.collab-proxy": {
-      "version": "2.0.4",
+      "version": "2.2.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.collections": {
-      "version": "1.2.4",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.burst": "1.6.6",
-        "com.unity.test-framework": "1.1.31"
-      },
       "url": "https://packages.unity.com"
     },
     "com.unity.editorcoroutines": {
@@ -94,7 +84,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.rider": {
-      "version": "3.0.24",
+      "version": "3.0.27",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -119,7 +109,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.inputsystem": {
-      "version": "1.6.1",
+      "version": "1.7.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -135,21 +125,14 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.mobile.android-logcat": {
-      "version": "1.3.2",
+      "version": "1.4.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-    "com.unity.nuget.mono-cecil": {
-      "version": "1.11.4",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://packages.unity.com"
-    },
     "com.unity.render-pipelines.core": {
-      "version": "14.0.8",
+      "version": "14.0.9",
       "depth": 1,
       "source": "builtin",
       "dependencies": {
@@ -160,18 +143,27 @@
       }
     },
     "com.unity.render-pipelines.universal": {
-      "version": "14.0.8",
+      "version": "14.0.9",
       "depth": 0,
       "source": "builtin",
       "dependencies": {
         "com.unity.mathematics": "1.2.1",
-        "com.unity.burst": "1.8.4",
-        "com.unity.render-pipelines.core": "14.0.8",
-        "com.unity.shadergraph": "14.0.8"
+        "com.unity.burst": "1.8.9",
+        "com.unity.render-pipelines.core": "14.0.9",
+        "com.unity.shadergraph": "14.0.9",
+        "com.unity.render-pipelines.universal-config": "14.0.9"
+      }
+    },
+    "com.unity.render-pipelines.universal-config": {
+      "version": "14.0.9",
+      "depth": 1,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.render-pipelines.core": "14.0.9"
       }
     },
     "com.unity.scriptablebuildpipeline": {
-      "version": "1.21.9",
+      "version": "1.21.21",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
@@ -192,11 +184,11 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.shadergraph": {
-      "version": "14.0.8",
+      "version": "14.0.9",
       "depth": 1,
       "source": "builtin",
       "dependencies": {
-        "com.unity.render-pipelines.core": "14.0.8",
+        "com.unity.render-pipelines.core": "14.0.9",
         "com.unity.searcher": "4.9.2"
       }
     },
@@ -247,7 +239,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.timeline": {
-      "version": "1.7.4",
+      "version": "1.7.6",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -278,7 +270,7 @@
       }
     },
     "com.unity.visualscripting": {
-      "version": "1.8.0",
+      "version": "1.9.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -288,8 +280,8 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.webrtc": {
-      "version": "3.0.0-pre.6",
-      "depth": 0,
+      "version": "3.0.0-pre.7",
+      "depth": 1,
       "source": "registry",
       "dependencies": {
         "com.unity.modules.jsonserialize": "1.0.0",
@@ -306,127 +298,127 @@
       "url": "https://package.openupm.com"
     },
     "jp.co.tis.extreal.core.common": {
-      "version": "https://github.com/extreal-dev/Extreal.Core.Common.git#1.1.0",
+      "version": "https://github.com/extreal-dev/Extreal.Core.Common.git#1.2.0-next.1",
       "depth": 0,
       "source": "git",
       "dependencies": {
         "jp.co.tis.extreal.core.logging": "1.2.0",
-        "com.cysharp.unitask": "2.3.3",
+        "com.cysharp.unitask": "2.5.0",
         "com.neuecc.unirx": "7.1.0"
       },
-      "hash": "9f8d573dac171ae357677ee34eaa291b0f1a18cd"
+      "hash": "cb2790a6e1b1c2049fad53abf95a05d7ec079495"
     },
     "jp.co.tis.extreal.core.logging": {
-      "version": "https://github.com/extreal-dev/Extreal.Core.Logging.git#1.2.0",
+      "version": "https://github.com/extreal-dev/Extreal.Core.Logging.git#1.3.0-next.1",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "460ebea3b77ee572f81bf6217c2fbb31e7a66158"
+      "hash": "8b8ce884fa002dccc44f314b21973c3f213a6262"
     },
     "jp.co.tis.extreal.core.stagenavigation": {
-      "version": "https://github.com/extreal-dev/Extreal.Core.StageNavigation.git#1.2.0",
+      "version": "https://github.com/extreal-dev/Extreal.Core.StageNavigation.git#1.3.0-next.1",
       "depth": 0,
       "source": "git",
       "dependencies": {
-        "jp.co.tis.extreal.core.logging": "1.2.0",
-        "jp.co.tis.extreal.core.common": "1.1.0",
-        "com.cysharp.unitask": "2.3.3",
+        "jp.co.tis.extreal.core.logging": "1.3.0-next.1",
+        "jp.co.tis.extreal.core.common": "1.2.0-next.1",
+        "com.cysharp.unitask": "2.5.0",
         "com.neuecc.unirx": "7.1.0"
       },
-      "hash": "764979bc0a2d4beded6aec41c22c9da7b6338ca1"
+      "hash": "5f8cef8eb16f4e409a81b3ce6ce915544fcc3d49"
     },
     "jp.co.tis.extreal.integration.assetworkflow.addressables": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.AssetWorkflow.Addressables.git#1.1.0",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.AssetWorkflow.Addressables.git#1.2.0-next.1",
       "depth": 0,
       "source": "git",
       "dependencies": {
-        "jp.co.tis.extreal.core.logging": "1.2.0",
-        "jp.co.tis.extreal.core.common": "1.1.0",
-        "com.unity.addressables": "1.21.17",
-        "com.cysharp.unitask": "2.3.3",
+        "jp.co.tis.extreal.core.logging": "1.3.0-next.1",
+        "jp.co.tis.extreal.core.common": "1.2.0-next.1",
+        "com.unity.addressables": "1.21.19",
+        "com.cysharp.unitask": "2.5.0",
         "com.neuecc.unirx": "7.1.0"
       },
-      "hash": "082ce097952ee64007c1434eb022cdb9d22ddecf"
+      "hash": "c43c503d80055fc4635b3c65f9f0521f34be0c1c"
     },
     "jp.co.tis.extreal.integration.chat.webrtc": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.Chat.WebRTC.git#1.0.0",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.Chat.WebRTC.git#1.1.0-next.1",
       "depth": 0,
       "source": "git",
       "dependencies": {
-        "com.unity.webrtc": "3.0.0-pre.6",
-        "com.cysharp.unitask": "2.3.3",
+        "com.unity.webrtc": "3.0.0-pre.7",
+        "com.cysharp.unitask": "2.5.0",
         "com.neuecc.unirx": "7.1.0",
-        "jp.co.tis.extreal.core.logging": "1.2.0",
-        "jp.co.tis.extreal.core.common": "1.1.0",
-        "jp.co.tis.extreal.integration.web.common": "1.0.0",
-        "jp.co.tis.extreal.integration.p2p.webrtc": "1.0.0"
+        "jp.co.tis.extreal.core.logging": "1.3.0-next.1",
+        "jp.co.tis.extreal.core.common": "1.2.0-next.1",
+        "jp.co.tis.extreal.integration.web.common": "1.1.0-next.2",
+        "jp.co.tis.extreal.integration.p2p.webrtc": "1.1.0-next.2"
       },
-      "hash": "4d3b7ad3c1cd752e1ace152a0949fc5ec2e976d0"
+      "hash": "1a71a040bee0974eaaa39b5af4f163efd4d8d754"
     },
     "jp.co.tis.extreal.integration.messaging": {
-      "version": "file:Extreal.Integration.Messaging",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.Messaging.git#1.0.0-next.2",
       "depth": 0,
-      "source": "embedded",
+      "source": "git",
       "dependencies": {
         "jp.co.tis.extreal.core.logging": "1.3.0-next.1",
         "jp.co.tis.extreal.core.common": "1.2.0-next.1",
         "com.cysharp.unitask": "2.5.0",
         "com.neuecc.unirx": "7.1.0"
-      }
+      },
+      "hash": "d858779112bf8ff76197dc2cf413f0238a5655b8"
     },
     "jp.co.tis.extreal.integration.messaging.redis": {
-      "version": "file:Extreal.Integration.Messaging.Redis",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.Messaging.Redis.git#1.0.0-next.3",
       "depth": 0,
-      "source": "embedded",
+      "source": "git",
       "dependencies": {
         "com.cysharp.unitask": "2.5.0",
         "com.neuecc.unirx": "7.1.0",
         "jp.co.tis.extreal.core.logging": "1.3.0-next.1",
         "jp.co.tis.extreal.core.common": "1.2.0-next.1",
-        "jp.co.tis.extreal.integration.messaging": "1.0.0-next.1"
-      }
+        "jp.co.tis.extreal.integration.messaging": "1.0.0-next.2"
+      },
+      "hash": "8d8e6429b7122ea2b162d2ece3f4beedaaac0b4d"
     },
     "jp.co.tis.extreal.integration.multiplay.messaging": {
-      "version": "file:Extreal.Integration.Multiplay.Messaging",
-      "depth": 0,
-      "source": "embedded",
-      "dependencies": {
-        "com.cysharp.unitask": "2.3.3",
-        "com.neuecc.unirx": "7.1.0",
-        "jp.co.tis.extreal.core.logging": "1.2.0",
-        "jp.co.tis.extreal.core.common": "1.1.0",
-        "jp.co.tis.extreal.integration.messaging": "1.0.0-next.1"
-      }
-    },
-    "jp.co.tis.extreal.integration.p2p.webrtc": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.P2P.WebRTC.git#1.0.0",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.multiplay.Messaging.git#1.0.0-next.2",
       "depth": 0,
       "source": "git",
       "dependencies": {
-        "com.unity.collections": "1.2.4",
-        "com.unity.webrtc": "3.0.0-pre.6",
-        "com.cysharp.unitask": "2.3.3",
+        "com.cysharp.unitask": "2.5.0",
         "com.neuecc.unirx": "7.1.0",
-        "jp.co.tis.extreal.core.logging": "1.2.0",
-        "jp.co.tis.extreal.core.common": "1.1.0",
-        "jp.co.tis.extreal.integration.web.common": "1.0.0"
+        "jp.co.tis.extreal.core.logging": "1.3.0-next.1",
+        "jp.co.tis.extreal.core.common": "1.2.0-next.1",
+        "jp.co.tis.extreal.integration.messaging": "1.0.0-next.2"
       },
-      "hash": "092011acb0bf4a7123bf981c7009b65f23c3500d"
+      "hash": "873ac8dd88dd2af293e9e418728c5e6f601c0774"
+    },
+    "jp.co.tis.extreal.integration.p2p.webrtc": {
+      "version": "https://github.com/extreal-dev/Extreal.Integration.P2P.WebRTC.git#1.1.0-next.2",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.webrtc": "3.0.0-pre.7",
+        "com.cysharp.unitask": "2.5.0",
+        "com.neuecc.unirx": "7.1.0",
+        "jp.co.tis.extreal.core.logging": "1.3.0-next.1",
+        "jp.co.tis.extreal.core.common": "1.2.0-next.1",
+        "jp.co.tis.extreal.integration.web.common": "1.1.0-next.2"
+      },
+      "hash": "c21de1f277d45207a6a380bcf084a230cf3bf3fe"
     },
     "jp.co.tis.extreal.integration.web.common": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.Web.Common.git#1.0.0",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.Web.Common.git#1.1.0-next.2",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "8f9d1e56328e8a4075d46e1f40debabf55426244"
+      "hash": "9935b25f748007439c23c5a4e6ab1aad8da035dc"
     },
     "jp.hadashikick.vcontainer": {
-      "version": "1.13.2",
+      "version": "1.14.0",
       "depth": 0,
       "source": "registry",
-      "dependencies": {
-        "com.unity.nuget.mono-cecil": "1.10.1"
-      },
+      "dependencies": {},
       "url": "https://package.openupm.com"
     },
     "org.kumas.nuget-importer": {

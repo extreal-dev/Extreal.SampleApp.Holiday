@@ -2,32 +2,34 @@
 # yarn lockfile v1
 
 
-"@extreal-dev/extreal.integration.chat.webrtc@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.chat.webrtc/-/extreal.integration.chat.webrtc-1.0.0.tgz#b3935426508f784283350d6ffa36660ad382745c"
-  integrity sha512-hZdKNgHWpaEqqvZNr6O0qn3TjQHjXBb9j4a3Xr4uHGEZevAhpPMmmOaYGeEwFVrxFW7+gSwa1J66InzfdCqEtg==
+"@extreal-dev/extreal.integration.chat.webrtc@1.1.0-next.1":
+  version "1.1.0-next.1"
+  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.chat.webrtc/-/extreal.integration.chat.webrtc-1.1.0-next.1.tgz#9f82f497f7b2713636faef495ab24574b539be1c"
+  integrity sha512-Ro9XrDEZzhtal7xpcnVJxTVWA7Bqaiuvdef5Vr/vOBasL4c+FxJb/kX6wVRisrw8wgiY+d0sV8HrfBXn1kiHKQ==
   dependencies:
-    "@extreal-dev/extreal.integration.p2p.webrtc" "^1.0.0"
-    "@extreal-dev/extreal.integration.web.common" "^1.0.0"
+    "@extreal-dev/extreal.integration.p2p.webrtc" "^1.1.0-next.2"
+    "@extreal-dev/extreal.integration.web.common" "^1.1.0-next.2"
 
-"@extreal-dev/extreal.integration.messaging.redis@../../Packages/Extreal.Integration.Messaging.Redis/WebScripts~/":
-  version "1.0.0-Next.1"
+"@extreal-dev/extreal.integration.messaging.redis@1.0.0-next.1":
+  version "1.0.0-next.1"
+  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.messaging.redis/-/extreal.integration.messaging.redis-1.0.0-next.1.tgz#8e526945e13d9a40834ad1b8e6f68ab30c33af05"
+  integrity sha512-4XDWYZovHX47JSDy/CQ0qFqeHUj6+SHpDq/0wYb2mjnHyrzlhKjPfHbdXMovprcd/sCM5GqgpluHaNdtxvBMVg==
   dependencies:
-    "@extreal-dev/extreal.integration.web.common" "^1.0.0"
-    socket.io-client "^4.7.1"
+    "@extreal-dev/extreal.integration.web.common" "1.1.0-next.2"
+    socket.io-client "4.7.4"
 
-"@extreal-dev/extreal.integration.p2p.webrtc@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.p2p.webrtc/-/extreal.integration.p2p.webrtc-1.0.0.tgz#8ed6edc35435bcd369b976cd69b14b46cf3e30dd"
-  integrity sha512-q05gRa1wS9zdAe/OPgD7H23MfcFwCs5nbl1nV5wpvd0EyKHJ21AasyMo0C3ar6FuqLiyUUcsY94xSm35622lZg==
+"@extreal-dev/extreal.integration.p2p.webrtc@1.1.0-next.2", "@extreal-dev/extreal.integration.p2p.webrtc@^1.1.0-next.2":
+  version "1.1.0-next.2"
+  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.p2p.webrtc/-/extreal.integration.p2p.webrtc-1.1.0-next.2.tgz#92f43f9ed2c081a687f756ddfbee8d04d8c04bd5"
+  integrity sha512-EWaT/F9dzpYfwNT6npKdFRhBlvt1m8UiaZXDkvvr+SODwuiaYe6MqGFG4JIRCTj52KDE5GdP0IlHjSw2zN8rBA==
   dependencies:
-    "@extreal-dev/extreal.integration.web.common" "^1.0.0"
-    socket.io-client "^4.7.1"
+    "@extreal-dev/extreal.integration.web.common" "^1.1.0-next.2"
+    socket.io-client "4.7.4"
 
-"@extreal-dev/extreal.integration.web.common@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.web.common/-/extreal.integration.web.common-1.0.0.tgz#3113ecaf48e44cf6712d18fc6b40991b4cd82d3a"
-  integrity sha512-aH5A5ClpaKVUFE1DbvYVy4L7J81wo+oQmBJJmc6geR5CQTa7942CUYW11jnPp5hCq1QXG+jz/yVpU26p00I+Qw==
+"@extreal-dev/extreal.integration.web.common@1.1.0-next.2", "@extreal-dev/extreal.integration.web.common@^1.1.0-next.2":
+  version "1.1.0-next.2"
+  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.web.common/-/extreal.integration.web.common-1.1.0-next.2.tgz#752a8c9b89a4d92e49220b75cf39cb7070434a03"
+  integrity sha512-1xnnY+qGaL48bKy9X+ZStEO2yQ7xku4ChHvrADmtyFYlUMV2bhZUyxLkGrljFRp2qmor488AU29/UK5AibfkaQ==
 
 "@jridgewell/gen-mapping@^0.3.0":
   version "0.3.3"
@@ -313,10 +315,10 @@ smob@^1.0.0:
   resolved "https://registry.yarnpkg.com/smob/-/smob-1.4.0.tgz#ac9751fe54b1fc1fc8286a628d4e7f824273b95a"
   integrity sha512-MqR3fVulhjWuRNSMydnTlweu38UhQ0HXM4buStD/S3mc/BzX3CuM9OmhyQpmtYCvoYdl5ris6TI0ZqH355Ymqg==
 
-socket.io-client@^4.7.1:
-  version "4.7.2"
-  resolved "https://registry.yarnpkg.com/socket.io-client/-/socket.io-client-4.7.2.tgz#f2f13f68058bd4e40f94f2a1541f275157ff2c08"
-  integrity sha512-vtA0uD4ibrYD793SOIAwlo8cj6haOeMHrGvwPxJsxH7CeIksqJ+3Zc06RvWTIFgiSqx4A3sOnTXpfAEE2Zyz6w==
+socket.io-client@4.7.4:
+  version "4.7.4"
+  resolved "https://registry.yarnpkg.com/socket.io-client/-/socket.io-client-4.7.4.tgz#5f0e060ff34ac0a4b4c5abaaa88e0d1d928c64c8"
+  integrity sha512-wh+OkeF0rAVCrABWQBaEjLfb7DVPotMbu0cgWgyR0v6eA4EoVnAwcIeIbcdTE3GT/H3kbdLl7OoH2+asoDRIIg==
   dependencies:
     "@socket.io/component-emitter" "~3.1.0"
     debug "~4.3.2"

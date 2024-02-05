@@ -17,7 +17,6 @@ const config: RollupOptions = {
         typescript(),
         nodeResolve({
             browser: true,
-            dedupe: ["@extreal-dev/extreal.integration.web.common"],
         }),
     ],
 };
