@@ -8,6 +8,7 @@ In `Build Settings` - `Scenes in Build`, check `Holiday.PerformanceTest/Performa
   - It is recommended to turn on Development Build to reduce build time.
 - Windows Dedicated Server (load client)
   - Change Project Settings > Player > Other Settings > Optimization > Managed Stripping Level to "Minimal".
+  - Add Scripting Define Symbol: 'HOLIDAY_LOAD_CLIENT'.
 
 ## Perform performance test
 ### Prepare
