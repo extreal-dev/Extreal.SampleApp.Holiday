@@ -65,7 +65,7 @@ namespace Extreal.SampleApp.Holiday.Controls.TextChatControl
         public async UniTaskVoid JoinAsync()
         {
             groupName = $"TextChat#{appState.GroupName}";
-            var joiningConfig = new MessagingJoiningConfig(groupName, assetHelper.MessagingConfig.MaxCapacity);
+            var joiningConfig = new MessagingJoiningConfig(groupName);
             ;
             try
             {

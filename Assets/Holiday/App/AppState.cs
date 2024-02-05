@@ -24,8 +24,7 @@ namespace Extreal.SampleApp.Holiday.App
         public SpaceConfig.Space Space { get; private set; }
         public bool IsHost => role == GroupRole.Host;
         public bool IsClient => role == GroupRole.Client;
-        public string GroupName { get; private set; } // Host only
-        public string GroupId { get; private set; } // Client only
+        public string GroupName { get; private set; }
         public string SpaceName { get; private set; }
 
         public IReadOnlyReactiveProperty<bool> PlayingReady => playingReady.AddTo(disposables);
@@ -118,7 +117,6 @@ namespace Extreal.SampleApp.Holiday.App
         public void SetSpace(SpaceConfig.Space space) => Space = space;
         public void SetRole(GroupRole role) => this.role = role;
         public void SetGroupName(string groupName) => GroupName = groupName;
-        public void SetGroupId(string groupId) => GroupId = groupId;
         public void SetSpaceName(string spaceName) => SpaceName = spaceName;
         public void SetMultiplayReady(bool ready) => multiplayReady.Value = ready;
         public void SetSfuReady(bool ready) => sfuReady.Value = ready;
