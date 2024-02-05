@@ -150,8 +150,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0fb34cd789256e74f924ea1bc272e545, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   joystickCanvas: {fileID: 1638414853}
 --- !u!4 &286205964
 Transform:
@@ -262,7 +262,7 @@ PrefabInstance:
     - target: {fileID: 166868854162214642, guid: 2f7f3dde7ae722a4aafffe20691ad702,
         type: 3}
       propertyPath: buttonStateOutputEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
+      value:
       objectReference: {fileID: 1638414854}
     - target: {fileID: 166868854162214642, guid: 2f7f3dde7ae722a4aafffe20691ad702,
         type: 3}
@@ -393,7 +393,7 @@ PrefabInstance:
     - target: {fileID: 5959203425371069255, guid: 2f7f3dde7ae722a4aafffe20691ad702,
         type: 3}
       propertyPath: joystickOutputEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
+      value:
       objectReference: {fileID: 1638414854}
     - target: {fileID: 5959203425371069255, guid: 2f7f3dde7ae722a4aafffe20691ad702,
         type: 3}
@@ -414,7 +414,7 @@ PrefabInstance:
     - target: {fileID: 7113428977333465798, guid: 2f7f3dde7ae722a4aafffe20691ad702,
         type: 3}
       propertyPath: joystickOutputEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
+      value:
       objectReference: {fileID: 1638414854}
     - target: {fileID: 7113428977333465798, guid: 2f7f3dde7ae722a4aafffe20691ad702,
         type: 3}
@@ -435,7 +435,7 @@ PrefabInstance:
     - target: {fileID: 8690618095498820080, guid: 2f7f3dde7ae722a4aafffe20691ad702,
         type: 3}
       propertyPath: buttonStateOutputEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
+      value:
       objectReference: {fileID: 1638414854}
     - target: {fileID: 8690618095498820080, guid: 2f7f3dde7ae722a4aafffe20691ad702,
         type: 3}
@@ -485,8 +485,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 03bb78f34eb3a6a40b7d83147d5f0c40, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   holidayPlayerInput: {fileID: 0}
 --- !u!1 &1998300717
 GameObject:
@@ -515,8 +515,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8674ccd4d5987754494c3df3a35b183b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   parentReference:
     TypeName: Extreal.SampleApp.Holiday.App.AppScope
   autoRun: 1

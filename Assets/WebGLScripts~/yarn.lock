@@ -2,49 +2,23 @@
 # yarn lockfile v1
 
 
-"@extreal-dev/extreal.integration.chat.webrtc@1.1.0-next.1":
-  version "1.1.0-next.1"
-  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.chat.webrtc/-/extreal.integration.chat.webrtc-1.1.0-next.1.tgz#9f82f497f7b2713636faef495ab24574b539be1c"
-  integrity sha512-Ro9XrDEZzhtal7xpcnVJxTVWA7Bqaiuvdef5Vr/vOBasL4c+FxJb/kX6wVRisrw8wgiY+d0sV8HrfBXn1kiHKQ==
-  dependencies:
-    "@extreal-dev/extreal.integration.p2p.webrtc" "^1.1.0-next.2"
-    "@extreal-dev/extreal.integration.web.common" "^1.1.0-next.2"
-
-"@extreal-dev/extreal.integration.multiplay.ngo.webrtc@1.1.0-next.1":
-  version "1.1.0-next.1"
-  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.multiplay.ngo.webrtc/-/extreal.integration.multiplay.ngo.webrtc-1.1.0-next.1.tgz#561f4fe21420187a959781227be53e2f85f9ef9a"
-  integrity sha512-YCxMNleKMGmcj0fwAK7OW4F04JR2xYPrhLUAkxSbQ0Sm6tOudV9vKyCgHSicgpVaxDG3hQR4X1okiJLEqoQV2Q==
-  dependencies:
-    "@extreal-dev/extreal.integration.p2p.webrtc" "^1.1.0-next.2"
-    "@extreal-dev/extreal.integration.web.common" "^1.1.0-next.2"
-
-"@extreal-dev/extreal.integration.p2p.webrtc@1.1.0-next.2", "@extreal-dev/extreal.integration.p2p.webrtc@^1.1.0-next.2":
-  version "1.1.0-next.2"
-  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.p2p.webrtc/-/extreal.integration.p2p.webrtc-1.1.0-next.2.tgz#92f43f9ed2c081a687f756ddfbee8d04d8c04bd5"
-  integrity sha512-EWaT/F9dzpYfwNT6npKdFRhBlvt1m8UiaZXDkvvr+SODwuiaYe6MqGFG4JIRCTj52KDE5GdP0IlHjSw2zN8rBA==
-  dependencies:
-    "@extreal-dev/extreal.integration.web.common" "^1.1.0-next.2"
-    socket.io-client "4.7.4"
-
-"@extreal-dev/extreal.integration.web.common@^1.1.0-next.2":
-  version "1.1.0-next.2"
-  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.web.common/-/extreal.integration.web.common-1.1.0-next.2.tgz#752a8c9b89a4d92e49220b75cf39cb7070434a03"
-  integrity sha512-1xnnY+qGaL48bKy9X+ZStEO2yQ7xku4ChHvrADmtyFYlUMV2bhZUyxLkGrljFRp2qmor488AU29/UK5AibfkaQ==
-"@extreal-dev/extreal.integration.messaging.redis@../../Packages/Extreal.Integration.Messaging.Redis/WebScripts~/":
+"@extreal-dev/extreal.integration.messaging.redis@1.0.0-next.1":
   version "1.0.0-next.1"
+  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.messaging.redis/-/extreal.integration.messaging.redis-1.0.0-next.1.tgz#8e526945e13d9a40834ad1b8e6f68ab30c33af05"
+  integrity sha512-4XDWYZovHX47JSDy/CQ0qFqeHUj6+SHpDq/0wYb2mjnHyrzlhKjPfHbdXMovprcd/sCM5GqgpluHaNdtxvBMVg==
   dependencies:
     "@extreal-dev/extreal.integration.web.common" "1.1.0-next.2"
     socket.io-client "4.7.4"
+
+"@extreal-dev/extreal.integration.web.common@1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.web.common/-/extreal.integration.web.common-1.0.3.tgz#094bcb46aa1994177d1a1f624f31c1181f1f525b"
+  integrity sha512-ntZmw43lJK2JnXRGQ8WTv86aKMZMQotcZFAYx2DPLJBCS3ZqjOL7kcdwKfFMgp2UEdR+/VP88gobHkTMQPOdyw==
 
 "@extreal-dev/extreal.integration.web.common@1.1.0-next.2":
   version "1.1.0-next.2"
   resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.web.common/-/extreal.integration.web.common-1.1.0-next.2.tgz#752a8c9b89a4d92e49220b75cf39cb7070434a03"
   integrity sha512-1xnnY+qGaL48bKy9X+ZStEO2yQ7xku4ChHvrADmtyFYlUMV2bhZUyxLkGrljFRp2qmor488AU29/UK5AibfkaQ==
-
-"@extreal-dev/extreal.integration.web.common@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.web.common/-/extreal.integration.web.common-1.0.3.tgz#094bcb46aa1994177d1a1f624f31c1181f1f525b"
-  integrity sha512-ntZmw43lJK2JnXRGQ8WTv86aKMZMQotcZFAYx2DPLJBCS3ZqjOL7kcdwKfFMgp2UEdR+/VP88gobHkTMQPOdyw==
 
 "@jridgewell/gen-mapping@^0.3.0":
   version "0.3.3"
@@ -79,9 +53,9 @@
   integrity sha512-eF2rxCRulEKXHTRiDrDy6erMYWqNw4LPdQ8UQA4huuxaQsVeRPFl2oM8oDGxMFhJUWZf9McpLtJasDDZb/Bpeg==
 
 "@jridgewell/trace-mapping@^0.3.9":
-  version "0.3.21"
-  resolved "https://registry.yarnpkg.com/@jridgewell/trace-mapping/-/trace-mapping-0.3.21.tgz#5dc1df7b3dc4a6209e503a924e1ca56097a2bb15"
-  integrity sha512-SRfKmRe1KvYnxjEMtxEr+J4HIeMX5YBg/qhRHpxEIGjhX1rshcHlnFUE9K0GazhVKWM7B+nARSkV8LuvJdJ5/g==
+  version "0.3.22"
+  resolved "https://registry.yarnpkg.com/@jridgewell/trace-mapping/-/trace-mapping-0.3.22.tgz#72a621e5de59f5f1ef792d0793a82ee20f645e4c"
+  integrity sha512-Wf963MzWtA2sjrNt+g18IAln9lKnlRp+K2eH4jjIoF1wYeq3aMREpG09xhlhdzS0EjwU7qmUJYangWa+151vZw==
   dependencies:
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
@@ -165,9 +139,9 @@
   integrity sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==
 
 "@types/node@^20.4.2":
-  version "20.11.4"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.11.4.tgz#c724a5d6723182af758b91b994209336f4439cb7"
-  integrity sha512-6I0fMH8Aoy2lOejL3s4LhyIYX34DPwY8bl5xlNjBvUEk8OHrcuzsFt+Ied4LvJihbtXPM+8zUqdydfIti86v9g==
+  version "20.11.16"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.11.16.tgz#4411f79411514eb8e2926f036c86c9f0e4ec6708"
+  integrity sha512-gKb0enTmRCzXSSUJDq6/sPcqrfCv2mkkG6Jt/clpn5eiCbKTY+SgZUxo+p8ZKMof5dCp9vHQUAB7wOUTod22wQ==
   dependencies:
     undici-types "~5.26.4"
 
@@ -177,9 +151,9 @@
   integrity sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==
 
 "@types/uuid@^9.0.7":
-  version "9.0.7"
-  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-9.0.7.tgz#b14cebc75455eeeb160d5fe23c2fcc0c64f724d8"
-  integrity sha512-WUtIVRUZ9i5dYXefDEAI7sh9/O7jGvHg7Df/5O/gtH3Yabe5odI3UWopVR1qbPXQtvOxWu3mM4XxlYeZtMWF4g==
+  version "9.0.8"
+  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-9.0.8.tgz#7545ba4fc3c003d6c756f651f3bf163d8f0f29ba"
+  integrity sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==
 
 acorn@^8.8.2:
   version "8.11.3"
@@ -338,7 +312,6 @@ smob@^1.0.0:
   integrity sha512-9LK+E7Hv5R9u4g4C3p+jjLstaLe11MDsL21UpYaCNmapvMkYhqCV4A/f/3gyH8QjMyh6l68q9xC85vihY9ahMQ==
 
 socket.io-client@4.7.4:
-socket.io-client@^4.7.1:
   version "4.7.4"
   resolved "https://registry.yarnpkg.com/socket.io-client/-/socket.io-client-4.7.4.tgz#5f0e060ff34ac0a4b4c5abaaa88e0d1d928c64c8"
   integrity sha512-wh+OkeF0rAVCrABWQBaEjLfb7DVPotMbu0cgWgyR0v6eA4EoVnAwcIeIbcdTE3GT/H3kbdLl7OoH2+asoDRIIg==
@@ -375,9 +348,9 @@ supports-preserve-symlinks-flag@^1.0.0:
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
 terser@^5.17.4:
-  version "5.26.0"
-  resolved "https://registry.yarnpkg.com/terser/-/terser-5.26.0.tgz#ee9f05d929f4189a9c28a0feb889d96d50126fe1"
-  integrity sha512-dytTGoE2oHgbNV9nTzgBEPaqAWvcJNl66VZ0BkJqlvp71IjO8CxdBx/ykCNb47cLnCmCvRZ6ZR0tLkqvZCdVBQ==
+  version "5.27.0"
+  resolved "https://registry.yarnpkg.com/terser/-/terser-5.27.0.tgz#70108689d9ab25fef61c4e93e808e9fd092bf20c"
+  integrity sha512-bi1HRwVRskAjheeYl291n3JC4GgO/Ty4z1nVs5AAsmonJulGxpSektecnNedrwK9C7vpvVtcX3cw00VSLt7U2A==
   dependencies:
     "@jridgewell/source-map" "^0.3.3"
     acorn "^8.8.2"

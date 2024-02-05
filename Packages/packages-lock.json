@@ -69,16 +69,6 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-    "com.unity.collections": {
-      "version": "1.2.4",
-      "depth": 3,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.burst": "1.6.6",
-        "com.unity.test-framework": "1.1.31"
-      },
-      "url": "https://packages.unity.com"
-    },
     "com.unity.editorcoroutines": {
       "version": "1.0.0",
       "depth": 1,
@@ -103,12 +93,19 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.visualstudio": {
-      "version": "2.0.22",
+      "version": "2.0.18",
       "depth": 0,
       "source": "registry",
       "dependencies": {
         "com.unity.test-framework": "1.1.9"
       },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.ide.vscode": {
+      "version": "1.2.5",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.inputsystem": {
@@ -130,23 +127,6 @@
     "com.unity.mobile.android-logcat": {
       "version": "1.4.0",
       "depth": 0,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.netcode.gameobjects": {
-      "version": "1.7.1",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.nuget.mono-cecil": "1.10.1",
-        "com.unity.transport": "1.4.0"
-      },
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.nuget.mono-cecil": {
-      "version": "1.11.4",
-      "depth": 2,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
@@ -280,17 +260,6 @@
       },
       "url": "https://packages.unity.com"
     },
-    "com.unity.transport": {
-      "version": "1.4.1",
-      "depth": 2,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.collections": "1.2.4",
-        "com.unity.burst": "1.6.6",
-        "com.unity.mathematics": "1.2.6"
-      },
-      "url": "https://packages.unity.com"
-    },
     "com.unity.ugui": {
       "version": "1.0.0",
       "depth": 0,
@@ -311,8 +280,8 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.webrtc": {
-      "version": "3.0.0-pre.7",
-      "depth": 1,
+      "version": "3.0.0-pre.6",
+      "depth": 0,
       "source": "registry",
       "dependencies": {
         "com.unity.modules.jsonserialize": "1.0.0",
@@ -383,98 +352,43 @@
         "com.unity.webrtc": "3.0.0-pre.6"
       }
     },
-    "jp.co.tis.extreal.integration.chat.webrtc": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.Chat.WebRTC.git#1.1.0-next.1",
+    "jp.co.tis.extreal.integration.messaging": {
+      "version": "https://github.com/extreal-dev/Extreal.Integration.Messaging.git#1.0.0-next.2",
       "depth": 0,
       "source": "git",
-      "dependencies": {
-        "com.unity.webrtc": "3.0.0-pre.7",
-        "com.cysharp.unitask": "2.5.0",
-        "com.neuecc.unirx": "7.1.0",
-        "jp.co.tis.extreal.core.logging": "1.3.0-next.1",
-        "jp.co.tis.extreal.core.common": "1.2.0-next.1",
-        "jp.co.tis.extreal.integration.web.common": "1.1.0-next.2",
-        "jp.co.tis.extreal.integration.p2p.webrtc": "1.1.0-next.2"
-      },
-      "hash": "1a71a040bee0974eaaa39b5af4f163efd4d8d754"
-    },
-    "jp.co.tis.extreal.integration.messaging": {
-      "version": "file:Extreal.Integration.Messaging",
-      "depth": 0,
-      "source": "embedded",
       "dependencies": {
         "jp.co.tis.extreal.core.logging": "1.3.0-next.1",
         "jp.co.tis.extreal.core.common": "1.2.0-next.1",
         "com.cysharp.unitask": "2.5.0",
         "com.neuecc.unirx": "7.1.0"
-      }
+      },
+      "hash": "d858779112bf8ff76197dc2cf413f0238a5655b8"
     },
     "jp.co.tis.extreal.integration.messaging.redis": {
-      "version": "file:Extreal.Integration.Messaging.Redis",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.Messaging.Redis.git#1.0.0-next.3",
       "depth": 0,
-      "source": "embedded",
+      "source": "git",
       "dependencies": {
         "com.cysharp.unitask": "2.5.0",
         "com.neuecc.unirx": "7.1.0",
         "jp.co.tis.extreal.core.logging": "1.3.0-next.1",
         "jp.co.tis.extreal.core.common": "1.2.0-next.1",
-        "jp.co.tis.extreal.integration.messaging": "1.0.0-next.1"
-      }
+        "jp.co.tis.extreal.integration.messaging": "1.0.0-next.2"
+      },
+      "hash": "8d8e6429b7122ea2b162d2ece3f4beedaaac0b4d"
     },
     "jp.co.tis.extreal.integration.multiplay.messaging": {
-      "version": "file:Extreal.Integration.Multiplay.Messaging",
-      "depth": 0,
-      "source": "embedded",
-      "dependencies": {
-        "com.cysharp.unitask": "2.3.3",
-        "com.neuecc.unirx": "7.1.0",
-        "jp.co.tis.extreal.core.logging": "1.2.0",
-        "jp.co.tis.extreal.core.common": "1.1.0",
-        "jp.co.tis.extreal.integration.messaging": "1.0.0-next.1"
-      }
-    },
-    "jp.co.tis.extreal.integration.multiplay.ngo": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.Multiplay.NGO.git#1.3.0-next.1",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.multiplay.Messaging.git#1.0.0-next.2",
       "depth": 0,
       "source": "git",
       "dependencies": {
-        "com.unity.netcode.gameobjects": "1.7.1",
-        "com.cysharp.unitask": "2.5.0",
-        "com.neuecc.unirx": "7.1.0",
-        "jp.co.tis.extreal.core.logging": "1.3.0-next.1",
-        "jp.co.tis.extreal.core.common": "1.2.0-next.1"
-      },
-      "hash": "a77a2ce10ac73f86d460b5672cf5e109867c40d2"
-    },
-    "jp.co.tis.extreal.integration.multiplay.ngo.webrtc": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.Multiplay.NGO.WebRTC.git#1.1.0-next.1",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {
-        "com.unity.netcode.gameobjects": "1.7.1",
         "com.cysharp.unitask": "2.5.0",
         "com.neuecc.unirx": "7.1.0",
         "jp.co.tis.extreal.core.logging": "1.3.0-next.1",
         "jp.co.tis.extreal.core.common": "1.2.0-next.1",
-        "jp.co.tis.extreal.integration.web.common": "1.1.0-next.2",
-        "jp.co.tis.extreal.integration.p2p.webrtc": "1.1.0-next.2",
-        "jp.co.tis.extreal.integration.multiplay.ngo": "1.3.0-next.1"
+        "jp.co.tis.extreal.integration.messaging": "1.0.0-next.2"
       },
-      "hash": "1b1ed65d03e2fb41587b07c8e1ac5e94bc118534"
-    },
-    "jp.co.tis.extreal.integration.p2p.webrtc": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.P2P.WebRTC.git#1.1.0-next.2",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {
-        "com.unity.webrtc": "3.0.0-pre.7",
-        "com.cysharp.unitask": "2.5.0",
-        "com.neuecc.unirx": "7.1.0",
-        "jp.co.tis.extreal.core.logging": "1.3.0-next.1",
-        "jp.co.tis.extreal.core.common": "1.2.0-next.1",
-        "jp.co.tis.extreal.integration.web.common": "1.1.0-next.2"
-      },
-      "hash": "c21de1f277d45207a6a380bcf084a230cf3bf3fe"
+      "hash": "873ac8dd88dd2af293e9e418728c5e6f601c0774"
     },
     "jp.co.tis.extreal.integration.sfu.ome": {
       "version": "file:Extreal.Integration.SFU.OME",

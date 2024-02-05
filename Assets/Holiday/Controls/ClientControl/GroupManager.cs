@@ -30,7 +30,7 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
             groups.Value =
                 updatedGroups
                     .Where(group => !group.Name.StartsWith("Multiplay#"))
-                    .Select(group => new Group(group.Id, group.Name["TextChat#".Length..]))
+                    .Select(group => new Group(group.Name["TextChat#".Length..]))
                     .ToList();
         }
 

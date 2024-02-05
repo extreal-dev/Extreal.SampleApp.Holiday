@@ -47,11 +47,7 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
                 .AddTo(sceneDisposables);
 
             groupSelectionScreenView.OnGroupChanged
-                .Subscribe((groupName) =>
-                {
-                    appState.SetGroupId(groupManager.FindByName(groupName)?.Id);
-                    appState.SetGroupName(groupName);
-                })
+                .Subscribe(appState.SetGroupName)
                 .AddTo(sceneDisposables);
 
             groupSelectionScreenView.OnUpdateButtonClicked
@@ -74,7 +70,6 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
                     if (groups.Count > 0)
                     {
                         appState.SetGroupName(groups.First().Name);
-                        appState.SetGroupId(groups.First().Id);
                     }
                 })
                 .AddTo(sceneDisposables);
