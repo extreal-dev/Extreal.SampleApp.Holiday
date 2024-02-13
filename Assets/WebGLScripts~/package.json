@@ -1,14 +1,12 @@
 {
   "dependencies": {
     "@extreal-dev/extreal.integration.web.common": "1.1.0-next.2",
-    "@extreal-dev/extreal.integration.messaging.redis": "1.0.0-next.1",
-    "uuid": "^9.0.1"
+    "@extreal-dev/extreal.integration.messaging.redis": "1.0.0-next.1"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.1.0",
     "@rollup/plugin-terser": "^0.4.3",
     "@rollup/plugin-typescript": "^11.1.2",
-    "@types/uuid": "^9.0.7",
     "@types/node": "^20.4.2",
     "rollup": "^3.26.2",
     "rome": "^12.1.3",
