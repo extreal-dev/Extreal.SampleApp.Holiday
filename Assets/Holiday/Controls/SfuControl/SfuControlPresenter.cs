@@ -55,7 +55,7 @@ namespace Extreal.SampleApp.Holiday.Controls.SfuControl
             {
                 return;
             }
-            omeClient.ConnectAsync(appState.GroupName).Forget();
+            omeClient.JoinAsync(appState.GroupName).Forget();
         }
 
         protected override void OnStageExiting(StageName stageName, AppState appState)
@@ -64,7 +64,7 @@ namespace Extreal.SampleApp.Holiday.Controls.SfuControl
             {
                 return;
             }
-            omeClient.DisconnectAsync().Forget();
+            omeClient.LeaveAsync().Forget();
             appState.SetSfuReady(false);
         }
     }

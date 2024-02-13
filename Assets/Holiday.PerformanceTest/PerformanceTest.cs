@@ -459,15 +459,9 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
             using var writer = new StreamWriter(file, Encoding.UTF8);
             writer.WriteLine("Date Time VoiceReceivedCount");
 
-            var audioLevelChangedClients = new List<string>();
+            var audioLevelChangedClients = new HashSet<string>();
             voiceChatClient.OnAudioLevelChanged
-                .Subscribe(audioLevels =>
-                    audioLevelChangedClients =
-                        audioLevels
-                            .Where(audioLevel => audioLevel.Value != 0f)
-                            .Select(audioLevel => audioLevel.Key)
-                            .Union(audioLevelChangedClients)
-                            .ToList())
+                .Subscribe(audioLevel => audioLevelChangedClients.Add(audioLevel.id))
                 .AddTo(this);
 
             while (!isDestroyed)
