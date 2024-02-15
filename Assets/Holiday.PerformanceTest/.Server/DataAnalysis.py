@@ -29,8 +29,8 @@ def analysis(file_name):
     data = f.readlines()
     f.close()
 
-    target_data = data[300:-300]
-    memories = [s.split(' ')[3] for s in target_data]
+    target_data = data[600:-600]
+    memories = [s.split(' ')[4] for s in target_data]
     max_memory = max(memories)
     min_memory = min(memories)
 
