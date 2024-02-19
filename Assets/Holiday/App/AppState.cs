@@ -73,7 +73,7 @@ namespace Extreal.SampleApp.Holiday.App
                 .Where(_ =>
                 {
                     LogWaitingStatus();
-                    return multiplayReady.Value && sfuReady.Value && spaceReady.Value && landscapeInitialized.Value;
+                    return multiplayReady.Value && spaceReady.Value && landscapeInitialized.Value;
                 })
                 .Subscribe(_ =>
                 {
