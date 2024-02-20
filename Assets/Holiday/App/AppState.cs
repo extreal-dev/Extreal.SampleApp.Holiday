@@ -69,7 +69,7 @@ namespace Extreal.SampleApp.Holiday.App
 
         [SuppressMessage("Usage", "CC0033")]
         private void MonitorPlayingReadyStatus() =>
-            multiplayReady.Merge(sfuReady, spaceReady, landscapeInitialized)
+            multiplayReady.Merge(spaceReady, landscapeInitialized)
                 .Where(_ =>
                 {
                     LogWaitingStatus();
@@ -107,8 +107,8 @@ namespace Extreal.SampleApp.Holiday.App
         {
             if (Logger.IsDebug())
             {
-                Logger.LogDebug($"Multiplay, SFU, Space Ready, Landscape Initialized: " +
-                                $"{multiplayReady.Value}, {sfuReady.Value}, {spaceReady.Value}, {landscapeInitialized.Value}");
+                Logger.LogDebug($"Multiplay, Space Ready, Landscape Initialized: " +
+                                $"{multiplayReady.Value}, {spaceReady.Value}, {landscapeInitialized.Value}");
             }
         }
 

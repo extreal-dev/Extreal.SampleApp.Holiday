@@ -236,11 +236,11 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
 
             if (!PerformanceTestArgumentHandler.SuppressVoiceChat)
             {
-                var voiceChatClient = clientControlScope.Container.Resolve(typeof(VoiceChatClient)) as VoiceChatClient;
-                var voicePeriod = PerformanceTestArgumentHandler.SendVoicePeriod;
-                SetAudioClip();
-                RepeatVoiceChatSendAsync(voicePeriod).Forget();
-                DumpVoiceChatStatusAsync(voiceChatClient, voicePeriod).Forget();
+                // var voiceChatClient = clientControlScope.Container.Resolve(typeof(VoiceChatClient)) as VoiceChatClient;
+                // var voicePeriod = PerformanceTestArgumentHandler.SendVoicePeriod;
+                // SetAudioClip();
+                // RepeatVoiceChatSendAsync(voicePeriod).Forget();
+                // DumpVoiceChatStatusAsync(voiceChatClient, voicePeriod).Forget();
             }
         }
 

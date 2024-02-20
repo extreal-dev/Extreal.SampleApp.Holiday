@@ -58,6 +58,7 @@ start GetCpuUtilization.bat %get_cpu_lifetime% %cpu_file_name%
 
 if %1==include_host (
     set counter=0
+    echo executing !counter!/%loop_count%
     call :SetCountToArgs !counter!
     start C:\Windows\System32\cmd.exe /c ^
         ^" ^
@@ -77,6 +78,7 @@ if %1==include_host (
 
 for /l %%i in (%loop_start_index%, 1, %loop_count%) do (
     set counter=%%i
+    echo executing !counter!/%loop_count%
     call :SetCountToArgs !counter!
     start C:\Windows\System32\cmd.exe /c ^
         ^" ^

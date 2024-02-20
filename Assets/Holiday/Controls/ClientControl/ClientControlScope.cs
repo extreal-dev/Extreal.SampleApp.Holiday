@@ -31,11 +31,11 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
             var textChatClient = RedisMessagingClientProvider.Provide(assetHelper.MessagingConfig.RedisMessagingConfig);
             builder.RegisterComponent<MessagingClient>(textChatClient);
 
-            var omeClient = OmeClientProvider.Provide(assetHelper.OmeConfig);
-            builder.RegisterComponent(omeClient);
+            // var omeClient = OmeClientProvider.Provide(assetHelper.OmeConfig);
+            // builder.RegisterComponent(omeClient);
 
-            var voiceChatClient = VoiceChatClientProvider.Provide(omeClient, assetHelper.VoiceChatConfig);
-            builder.RegisterComponent(voiceChatClient);
+            // var voiceChatClient = VoiceChatClientProvider.Provide(omeClient, assetHelper.VoiceChatConfig);
+            // builder.RegisterComponent(voiceChatClient);
 
             builder.RegisterEntryPoint<ClientControlPresenter>();
         }

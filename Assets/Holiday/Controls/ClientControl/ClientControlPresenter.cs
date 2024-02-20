@@ -14,18 +14,19 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
     {
         private readonly AssetHelper assetHelper;
         private readonly MultiplayClient multiplayClient;
-        private readonly OmeClient omeClient;
+        // private readonly OmeClient omeClient;
 
         public ClientControlPresenter(
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState,
             AssetHelper assetHelper,
-            MultiplayClient multiplayClient,
-            OmeClient omeClient) : base(stageNavigator, appState)
+            MultiplayClient multiplayClient
+            // OmeClient omeClient
+            ) : base(stageNavigator, appState)
         {
             this.assetHelper = assetHelper;
             this.multiplayClient = multiplayClient;
-            this.omeClient = omeClient;
+            // this.omeClient = omeClient;
         }
 
         protected override void Initialize(
@@ -34,7 +35,7 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
             CompositeDisposable sceneDisposables)
         {
             InitializeMultiplayClient(stageNavigator, appState, sceneDisposables);
-            InitializeOmeClient(appState, sceneDisposables);
+            // InitializeOmeClient(appState, sceneDisposables);
         }
 
         private void InitializeMultiplayClient(
@@ -56,13 +57,13 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
                 .AddTo(sceneDisposables);
         }
 
-        private void InitializeOmeClient
-        (
-            AppState appState,
-            CompositeDisposable sceneDisposables
-        )
-            => omeClient.OnUnexpectedLeft
-                .Subscribe(reason => appState.Notify($"Connection to SFU is failed: {reason}"))
-                .AddTo(sceneDisposables);
+        // private void InitializeOmeClient
+        // (
+        //     AppState appState,
+        //     CompositeDisposable sceneDisposables
+        // )
+        //     => omeClient.OnUnexpectedLeft
+        //         .Subscribe(reason => appState.Notify($"Connection to SFU is failed: {reason}"))
+        //         .AddTo(sceneDisposables);
     }
 }
