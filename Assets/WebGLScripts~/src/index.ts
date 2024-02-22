@@ -1,8 +1,11 @@
-import { addFunction, isDebug } from "@extreal-dev/extreal.integration.web.common";
+import { addFunction, isDebug, VideoPlayerAdopter } from "@extreal-dev/extreal.integration.web.common";
 import { RedisMessagingAdapter } from "@extreal-dev/extreal.integration.messaging.redis";
 import { isTouchDevice } from "./isTouchDevice";
 import { VoiceChatAdapter } from "./Extreal.Integration.Chat.OME";
 import { OmeAdapter } from "./Extreal.Integration.SFU.OME";
+
+const videoPlayerAdapter = new VideoPlayerAdopter();
+videoPlayerAdapter.adopt();
 
 const omeAdapter = new OmeAdapter();
 omeAdapter.adapt();

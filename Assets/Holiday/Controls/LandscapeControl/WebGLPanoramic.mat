@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Panoramic
+  m_Name: WebGLPanoramic
   m_Shader: {fileID: 4800000, guid: dc24eda98d0bbc2439c5c29cdc5f37cb, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -61,8 +61,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: -1, y: 1}
+        m_Texture: {fileID: 8400000, guid: a588a30533d8f284ea3c97b39c3c33bb, type: 2}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}

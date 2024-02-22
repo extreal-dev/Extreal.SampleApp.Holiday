@@ -1,23 +1,24 @@
 using Extreal.Core.Logging;
+using Extreal.Integration.Web.Common.Video;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.Config;
 using UniRx;
-using UnityEngine.Video;
 
 namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl.LandscapePlayers.Video
 {
     public class LandscapeVideoPlayer : LandscapePlayerBase
     {
         private static readonly ELogger Logger = LoggingManager.GetLogger(nameof(LandscapeVideoPlayer));
+        private readonly CompositeDisposable disposables = new CompositeDisposable();
 
         private readonly AppState appState;
         private readonly LandscapeConfig landscapeConfig;
-        private readonly VideoPlayer videoPlayer;
+        private readonly EVideoPlayer videoPlayer;
         private readonly string videoFileName;
 
         private bool isPlaying;
 
-        public LandscapeVideoPlayer(AppState appState, LandscapeConfig landscapeConfig, VideoPlayer videoPlayer, string videoFileName)
+        public LandscapeVideoPlayer(AppState appState, LandscapeConfig landscapeConfig, EVideoPlayer videoPlayer, string videoFileName)
         {
             this.appState = appState;
             this.landscapeConfig = landscapeConfig;
@@ -27,13 +28,19 @@ namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl.LandscapePlayers.V
 
             this.videoPlayer.gameObject.SetActive(true);
 
-            this.videoPlayer.url = AppUtils.ConcatUrl(this.landscapeConfig.BaseUrl, this.videoFileName);
+            this.videoPlayer.Initialize();
+            this.videoPlayer.SetUrl(AppUtils.ConcatUrl(this.landscapeConfig.BaseUrl, this.videoFileName));
 
-            this.videoPlayer.errorReceived += ErrorReceived;
-            this.videoPlayer.prepareCompleted += PrepareCompleted;
+            this.videoPlayer.OnErrorReceived
+                .Subscribe(ErrorReceived)
+                .AddTo(disposables);
+
+            this.videoPlayer.OnPrepareCompleted
+                .Subscribe(_ => PrepareCompleted())
+                .AddTo(disposables);
         }
 
-        private void ErrorReceived(VideoPlayer source, string message)
+        private void ErrorReceived(string message)
         {
             OnErrorOccurredSubject.OnNext(Unit.Default);
             Logger.LogError(message);
@@ -45,9 +52,7 @@ namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl.LandscapePlayers.V
 
         protected override void ReleaseManagedResources()
         {
-            videoPlayer.Stop();
-            videoPlayer.errorReceived -= ErrorReceived;
-            videoPlayer.prepareCompleted -= PrepareCompleted;
+            videoPlayer.Clear();
             videoPlayer.gameObject.SetActive(false);
             base.ReleaseManagedResources();
         }
@@ -55,7 +60,7 @@ namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl.LandscapePlayers.V
         public override void Play()
             => videoPlayer.Prepare();
 
-        private void PrepareCompleted(VideoPlayer source)
+        private void PrepareCompleted()
         {
             videoPlayer.Play();
             isPlaying = true;

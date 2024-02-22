@@ -7,6 +7,8 @@ namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl
     public class LandscapeControlView : MonoBehaviour
     {
         [SerializeField] private GameObject stageRoot;
+        [SerializeField] private GameObject sphere;
+        [SerializeField] private GameObject webGLSphere;
         [SerializeField] private MeshCollider moveLimit;
 
         private Mesh mesh;
@@ -31,5 +33,11 @@ namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl
 
         public void SetStageActive(bool value)
             => stageRoot.SetActive(value);
+
+        public void SwitchSphere(bool toWebGL)
+        {
+            sphere.SetActive(!toWebGL);
+            webGLSphere.SetActive(toWebGL);
+        }
     }
 }

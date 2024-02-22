@@ -38,6 +38,11 @@ namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl
             CompositeDisposable stageDisposables
         )
         {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            var isLandscapeTypeVideo = appState.Space.LandscapeType == LandscapeType.Video;
+            landscapeControlView.SwitchSphere(isLandscapeTypeVideo);
+#endif
+
             var isLandscapeTypeNone = appState.Space.LandscapeType == LandscapeType.None;
             landscapeControlView.SetStageActive(!isLandscapeTypeNone);
             PlayLandscapeAsync(stageName, appState, stageDisposables);

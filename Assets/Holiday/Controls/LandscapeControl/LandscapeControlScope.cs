@@ -3,15 +3,15 @@ using Extreal.SampleApp.Holiday.Controls.LandscapeControl.LandscapePlayers.Video
 using Extreal.SampleApp.Holiday.Controls.LandscapeControl.LandscapePlayers.Image;
 using Extreal.SampleApp.Holiday.Controls.LandscapeControl.LandscapePlayers.None;
 using UnityEngine;
-using UnityEngine.Video;
 using VContainer;
 using VContainer.Unity;
+using Extreal.Integration.Web.Common.Video;
 
 namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl
 {
     public class LandscapeControlScope : LifetimeScope
     {
-        [SerializeField] private VideoPlayer videoPlayer;
+        [SerializeField] private EVideoPlayer videoPlayer;
         [SerializeField] private Renderer panoramicRenderer;
         [SerializeField] private LandscapeControlView landscapeControlView;
 

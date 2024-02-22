@@ -10,10 +10,8 @@
     "@extreal-dev/extreal.integration.web.common" "1.1.0-next.2"
     socket.io-client "4.7.4"
 
-"@extreal-dev/extreal.integration.web.common@1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.web.common/-/extreal.integration.web.common-1.0.3.tgz#094bcb46aa1994177d1a1f624f31c1181f1f525b"
-  integrity sha512-ntZmw43lJK2JnXRGQ8WTv86aKMZMQotcZFAYx2DPLJBCS3ZqjOL7kcdwKfFMgp2UEdR+/VP88gobHkTMQPOdyw==
+"@extreal-dev/extreal.integration.web.common@../../Packages/Extreal.Integration.Web.Common/WebScripts~/":
+  version "1.0.0"
 
 "@extreal-dev/extreal.integration.web.common@1.1.0-next.2":
   version "1.1.0-next.2"
