@@ -5,7 +5,7 @@ using Extreal.Core.StageNavigation;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
-using Extreal.SampleApp.Holiday.App.P2P;
+using Extreal.SampleApp.Holiday.App.Group;
 using Extreal.SampleApp.Holiday.App.Stages;
 using UniRx;
 
