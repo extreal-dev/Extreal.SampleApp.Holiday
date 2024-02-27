@@ -27,29 +27,17 @@ namespace Extreal.SampleApp.Holiday.Controls.SfuControl
             this.omeClient = omeClient;
         }
 
-        protected override void Initialize(
+        protected override void Initialize
+        (
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState,
-            CompositeDisposable sceneDisposables)
-        {
-            omeClient.OnJoined
+            CompositeDisposable sceneDisposables
+        )
+            => omeClient.OnJoined
                 .Subscribe(_ => appState.SetSfuReady(true))
                 .AddTo(sceneDisposables);
 
-            omeClient.OnLeft
-                .Subscribe(reason =>
-                {
-                    if (Logger.IsDebug())
-                    {
-                        Logger.LogDebug($"Left room of SFU: reason={reason}");
-                    }
-                    appState.SetSfuReady(false);
-                })
-                .AddTo(sceneDisposables);
-        }
-
-        protected override void OnStageEntered(
-            StageName stageName, AppState appState, CompositeDisposable stageDisposables)
+        protected override void OnStageEntered(StageName stageName, AppState appState, CompositeDisposable stageDisposables)
         {
             if (appState.SfuReady.Value)
             {
