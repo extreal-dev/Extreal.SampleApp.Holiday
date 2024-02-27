@@ -35,12 +35,8 @@ namespace Extreal.SampleApp.Holiday.App
             ClearCacheOnDev();
 
             var logLevel = InitializeLogging();
-#if UNITY_IOS || UNITY_ANDROID
             InitializeMicrophone();
-#endif
-#if UNITY_EDITOR || UNITY_WEBGL
             InitializeWebGL();
-#endif
 
             var logger = LoggingManager.GetLogger(nameof(AppScope));
             if (logger.IsDebug())
