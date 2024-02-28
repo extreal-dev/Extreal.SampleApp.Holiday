@@ -24,7 +24,7 @@ class VoiceChatAdapter {
             }
             this.voiceChatClient = new VoiceChatClient(getOmeClient, voiceChatConfig, hasMicrophone, {
                 onAudioLevelChanged: (id, audioLevel) =>
-                    callback(this.withPrefix("HandleOnAudioLevelChanged"), id, audioLevel.toString()),
+                    callback(this.withPrefix("HandleOnAudioLevelChanged"), id, audioLevel.toString(), true),
             });
         });
 
