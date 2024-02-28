@@ -4,7 +4,6 @@
     "references": [
         "Cinemachine",
         "Unity.Addressables",
-        "Unity.Collections",
         "Unity.InputSystem",
         "Unity.ResourceManager",
         "Unity.TextMeshPro",
@@ -21,7 +20,7 @@
         "Extreal.SampleApp.Holiday.Analyzer",
         "Extreal.Integration.Multiplay.Messaging",
         "Extreal.Integration.Messaging",
-        "Extreal.Integration.Messaging.Redis",
+        "Extreal.Integration.Messaging.Socket.IO",
         "Extreal.Integration.SFU.OME",
         "Extreal.Integration.Chat.OME"
     ],

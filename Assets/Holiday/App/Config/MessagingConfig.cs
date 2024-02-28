@@ -1,6 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Extreal.Integration.Messaging.Redis;
+using Extreal.Integration.Messaging.Socket.IO;
 using SocketIOClient;
 using UnityEngine;
 
@@ -11,8 +11,8 @@ namespace Extreal.SampleApp.Holiday.App.Config
         fileName = nameof(MessagingConfig))]
     public class MessagingConfig : ScriptableObject
     {
-        public RedisMessagingConfig RedisMessagingConfig
-            => new RedisMessagingConfig(
+        public SocketIOMessagingConfig SocketIOMessagingConfig
+            => new SocketIOMessagingConfig(
                 messagingUrl,
                 new SocketIOOptions
                 {
