@@ -1,7 +1,7 @@
+using Extreal.Integration.Web.Common.Video;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
-using UnityEngine.Video;
 
 namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl.LandscapePlayers.Video
 {
@@ -10,10 +10,10 @@ namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl.LandscapePlayers.V
         public LandscapeType LandscapeType => LandscapeType.Video;
 
         private readonly AppState appState;
-        private readonly VideoPlayer videoPlayer;
+        private readonly EVideoPlayer videoPlayer;
         private readonly LandscapeConfig landscapeConfig;
 
-        public LandscapeVideoPlayerFactory(AppState appState, VideoPlayer videoPlayer, AssetHelper assetHelper)
+        public LandscapeVideoPlayerFactory(AppState appState, EVideoPlayer videoPlayer, AssetHelper assetHelper)
         {
             this.appState = appState;
             this.videoPlayer = videoPlayer;
