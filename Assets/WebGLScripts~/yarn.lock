@@ -2,18 +2,28 @@
 # yarn lockfile v1
 
 
-"@extreal-dev/extreal.integration.messaging.socket.io@1.0.0-next.1":
+"@extreal-dev/extreal.integration.chat.ome@1.0.0-next.1":
   version "1.0.0-next.1"
-  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.messaging.socket.io/-/extreal.integration.messaging.socket.io-1.0.0-next.1.tgz#116ac11e1c56dab8765f776cdba1befcce329315"
-  integrity sha512-zCzABmlvbkldbcP4FcHGiyMFep9+KTHHwGE8ZuhZuO1fIx5atKZqhQgmz8wIm2HPmCNxqB2vAq7zv41TBOj12g==
+  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.chat.ome/-/extreal.integration.chat.ome-1.0.0-next.1.tgz#7ab4a0429ba8cabef75089beb98ae4ef236b7730"
+  integrity sha512-neD4IbW8Ta6UcyiK6tRYCIPFBdHwvBHp0wg0JeuFIBRyWcKrjZ9SsTfFjvjIo2kYHuKpE7KEBwDVFN2fUY73uA==
   dependencies:
-    "@extreal-dev/extreal.integration.web.common" "1.1.0-next.2"
+    "@extreal-dev/extreal.integration.sfu.ome" "1.0.0-next.3"
+    "@extreal-dev/extreal.integration.web.common" "1.1.0-next.3"
+
+"@extreal-dev/extreal.integration.messaging.socket.io@1.0.0-next.2":
+  version "1.0.0-next.2"
+  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.messaging.socket.io/-/extreal.integration.messaging.socket.io-1.0.0-next.2.tgz#c9be1d028a10064657a3b16f7325dd903d0e38af"
+  integrity sha512-23v0wH5qO4Pfe3mHERxWNkwVrIvQRZFVZsCmGjMd0CImKm0ID0ptAr7kphElbz2K9soN3iwLhBG3Y0dKhXQUHw==
+  dependencies:
+    "@extreal-dev/extreal.integration.web.common" "1.1.0-next.3"
     socket.io-client "4.7.4"
 
-"@extreal-dev/extreal.integration.web.common@1.1.0-next.2":
-  version "1.1.0-next.2"
-  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.web.common/-/extreal.integration.web.common-1.1.0-next.2.tgz#752a8c9b89a4d92e49220b75cf39cb7070434a03"
-  integrity sha512-1xnnY+qGaL48bKy9X+ZStEO2yQ7xku4ChHvrADmtyFYlUMV2bhZUyxLkGrljFRp2qmor488AU29/UK5AibfkaQ==
+"@extreal-dev/extreal.integration.sfu.ome@1.0.0-next.3":
+  version "1.0.0-next.3"
+  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.sfu.ome/-/extreal.integration.sfu.ome-1.0.0-next.3.tgz#099212ee4bf2cc1e201f8b5d4056ebb58b71fe90"
+  integrity sha512-IjF+tpR64hYXaGITtRw53ftnbW1LjJ4bFoCPJBKjggK1FGfZQFetCBAd2iWxDvTBS5MP/1daQHCjxU3InLMw4A==
+  dependencies:
+    "@extreal-dev/extreal.integration.web.common" "1.1.0-next.3"
 
 "@extreal-dev/extreal.integration.web.common@1.1.0-next.3":
   version "1.1.0-next.3"

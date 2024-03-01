@@ -341,9 +341,9 @@
       "hash": "b608a7e5997ba027e19f0dc6b7cea5ba94831ef0"
     },
     "jp.co.tis.extreal.integration.chat.ome": {
-      "version": "file:Extreal.Integration.Chat.OME",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.Chat.OME.git#1.0.0-next.1",
       "depth": 0,
-      "source": "embedded",
+      "source": "git",
       "dependencies": {
         "com.cysharp.unitask": "2.5.0",
         "com.neuecc.unirx": "7.1.0",
@@ -352,7 +352,8 @@
         "jp.co.tis.extreal.integration.web.common": "1.1.0-next.3",
         "jp.co.tis.extreal.integration.sfu.ome": "1.0.0-next.1",
         "com.unity.webrtc": "3.0.0-pre.7"
-      }
+      },
+      "hash": "36796e353520c5948d88ea25530a3bc3a9780fcb"
     },
     "jp.co.tis.extreal.integration.messaging": {
       "version": "https://github.com/extreal-dev/Extreal.Integration.Messaging.git#1.0.0-next.4",
@@ -381,7 +382,7 @@
       "hash": "d1f72f99c52ef604a42878daef08ec5f0e7bec9c"
     },
     "jp.co.tis.extreal.integration.multiplay.messaging": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.multiplay.Messaging.git#1.0.0-next.5",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.multiplay.Messaging.git#1.0.0-next.6",
       "depth": 0,
       "source": "git",
       "dependencies": {
@@ -391,12 +392,12 @@
         "jp.co.tis.extreal.core.common": "1.2.0-next.1",
         "jp.co.tis.extreal.integration.messaging": "1.0.0-next.4"
       },
-      "hash": "9020e10a18f8d6dc2a9dc6b5d87c2eeee18562b9"
+      "hash": "6b75f54d8756d75404263d6954d97e0cec45b195"
     },
     "jp.co.tis.extreal.integration.sfu.ome": {
-      "version": "file:Extreal.Integration.SFU.OME",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.SFU.OME.git#1.0.0-next.1",
       "depth": 0,
-      "source": "embedded",
+      "source": "git",
       "dependencies": {
         "com.cysharp.unitask": "2.5.0",
         "com.neuecc.unirx": "7.1.0",
@@ -405,7 +406,8 @@
         "jp.co.tis.extreal.integration.web.common": "1.1.0-next.3",
         "com.endel.nativewebsocket": "1.1.4",
         "com.unity.webrtc": "3.0.0-pre.7"
-      }
+      },
+      "hash": "56c045abf64a3fe0259dfc3b53cfa2d5a60a1859"
     },
     "jp.co.tis.extreal.integration.web.common": {
       "version": "https://github.com/extreal-dev/Extreal.Integration.Web.Common.git#1.1.0-next.3",

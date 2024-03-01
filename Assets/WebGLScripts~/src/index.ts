@@ -1,8 +1,8 @@
 import { VideoPlayerAdapter, addFunction, isDebug } from "@extreal-dev/extreal.integration.web.common";
 import { SocketIOMessagingAdapter } from "@extreal-dev/extreal.integration.messaging.socket.io";
 import { isTouchDevice } from "./isTouchDevice";
-import { VoiceChatAdapter } from "./Extreal.Integration.Chat.OME";
-import { OmeAdapter } from "./Extreal.Integration.SFU.OME";
+import { OmeAdapter } from "@extreal-dev/extreal.integration.sfu.ome";
+import { VoiceChatAdapter } from "@extreal-dev/extreal.integration.chat.ome";
 
 const videoPlayerAdapter = new VideoPlayerAdapter();
 videoPlayerAdapter.adapt();
