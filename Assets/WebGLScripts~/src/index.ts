@@ -7,9 +7,6 @@ import { VoiceChatAdapter } from "@extreal-dev/extreal.integration.chat.ome";
 const videoPlayerAdapter = new VideoPlayerAdapter();
 videoPlayerAdapter.adapt();
 
-const videoPlayerAdapter = new VideoPlayerAdopter();
-videoPlayerAdapter.adopt();
-
 const omeAdapter = new OmeAdapter();
 omeAdapter.adapt();
 

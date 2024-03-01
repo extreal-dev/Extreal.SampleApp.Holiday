@@ -248,6 +248,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
         {
             while (player != null)
             {
+                UnityEngine.Debug.LogWarning("!!! Moveing");
                 var moveDuration = UnityEngine.Random.Range(1f, 5f);
                 var moveDirection = new Vector2(UnityEngine.Random.Range(-1, 2), UnityEngine.Random.Range(-1, 2));
                 while (moveDirection == Vector2.zero)

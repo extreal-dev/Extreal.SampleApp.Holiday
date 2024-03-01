@@ -6,6 +6,7 @@ using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 using Extreal.Integration.Web.Common.Video;
+using UnityEngine.Video;
 
 namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl
 {

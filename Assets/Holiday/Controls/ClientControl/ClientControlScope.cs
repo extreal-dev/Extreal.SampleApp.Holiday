@@ -22,7 +22,9 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
 
             var socketIOMessagingClient = SocketIOMessagingClientProvider.Provide(assetHelper.MultiplayConfig.SocketIOMessagingConfig);
             var queuingMessagingClient = new QueuingMessagingClient(socketIOMessagingClient);
-
+#if HOLIDAY_LOAD_CLIENT
+            builder.Register<MultiplayClient, MultiplayClientForTest>(Lifetime.Singleton).WithParameter(queuingMessagingClient).WithParameter<INetworkObjectsProvider>(networkObjectsProvider);
+#else
             builder.Register<MultiplayClient>(Lifetime.Singleton).WithParameter(queuingMessagingClient).WithParameter<INetworkObjectsProvider>(networkObjectsProvider);
 #endif
 
