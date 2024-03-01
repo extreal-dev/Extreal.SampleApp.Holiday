@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Extreal.Integration.P2P.WebRTC;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
+using Extreal.SampleApp.Holiday.App.Group;
 using TMPro;
 using UniRx;
 using UnityEngine;
@@ -27,7 +27,7 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
 
         [Inject] private AssetHelper assetHelper;
 
-        public IObservable<PeerRole> OnRoleChanged =>
+        public IObservable<GroupRole> OnRoleChanged =>
             roleDropdown.onValueChanged.AsObservable()
                 .Select(index => Roles[index]).TakeUntilDestroy(this);
 
@@ -42,7 +42,7 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
         public IObservable<Unit> OnGoButtonClicked => goButton.OnClickAsObservable().TakeUntilDestroy(this);
         public IObservable<Unit> OnBackButtonClicked => backButton.OnClickAsObservable().TakeUntilDestroy(this);
 
-        private static readonly List<PeerRole> Roles = new List<PeerRole> { PeerRole.Host, PeerRole.Client };
+        private static readonly List<GroupRole> Roles = new List<GroupRole> { GroupRole.Host, GroupRole.Client };
         private readonly List<string> groupNames = new List<string>();
 
         [SuppressMessage("Style", "IDE0051"), SuppressMessage("Style", "CC0061")]
@@ -60,23 +60,23 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
             groupDropdown.options = new List<TMP_Dropdown.OptionData>();
 
             OnRoleChanged.Subscribe(SwitchInputMode);
-            OnGroupNameChanged.Subscribe(_ => CanGo(PeerRole.Host));
+            OnGroupNameChanged.Subscribe(_ => CanGo(GroupRole.Host));
         }
 
-        private void SwitchInputMode(PeerRole role)
+        private void SwitchInputMode(GroupRole role)
         {
-            groupNameInputField.gameObject.SetActive(role == PeerRole.Host);
-            groupDropdown.gameObject.SetActive(role == PeerRole.Client);
-            updateButton.gameObject.SetActive(role == PeerRole.Client);
+            groupNameInputField.gameObject.SetActive(role == GroupRole.Host);
+            groupDropdown.gameObject.SetActive(role == GroupRole.Client);
+            updateButton.gameObject.SetActive(role == GroupRole.Client);
             CanGo(role);
         }
 
-        private void CanGo(PeerRole role) =>
+        private void CanGo(GroupRole role) =>
             goButton.gameObject.SetActive(
-                (role == PeerRole.Host && groupNameInputField.text.Length > 0)
-                || (role == PeerRole.Client && groupDropdown.options.Count > 0));
+                (role == GroupRole.Host && groupNameInputField.text.Length > 0)
+                || (role == GroupRole.Client && groupDropdown.options.Count > 0));
 
-        public void SetInitialValues(PeerRole role)
+        public void SetInitialValues(GroupRole role)
         {
             roleDropdown.value = Roles.IndexOf(role);
             groupNameInputField.text = string.Empty;

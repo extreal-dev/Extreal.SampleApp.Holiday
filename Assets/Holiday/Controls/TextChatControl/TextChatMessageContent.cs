@@ -1,5 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
-using Extreal.SampleApp.Holiday.App.P2P;
+using Extreal.SampleApp.Holiday.App.Group;
 using UnityEngine;
 
 namespace Extreal.SampleApp.Holiday.Controls.TextChatControl

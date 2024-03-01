@@ -9,6 +9,8 @@ namespace Extreal.SampleApp.Holiday.App
         public static bool IsTouchDevice()
 #if UNITY_WEBGL && !UNITY_EDITOR
             => bool.Parse(Extreal.Integration.Web.Common.WebGLHelper.CallFunction(nameof(IsTouchDevice)));
+#elif UNITY_IOS || UNITY_ANDROID
+            => true;
 #else
             => false;
 #endif

@@ -1,6 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using Cysharp.Threading.Tasks;
 using Extreal.Core.StageNavigation;
-using Extreal.Integration.Chat.WebRTC;
+using Extreal.Integration.Chat.OME;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.App.Stages;
@@ -29,17 +29,15 @@ namespace Extreal.SampleApp.Holiday.Controls.VoiceChatControl
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState,
             CompositeDisposable sceneDisposables)
-            => voiceChatScreenView.OnMuteButtonClicked
+        {
+            voiceChatScreenView.OnMuteButtonClicked
                 .Subscribe(_ => voiceChatClient.ToggleMute())
                 .AddTo(sceneDisposables);
 
-        [SuppressMessage("CodeCracker", "CC0092")]
-        protected override void OnStageEntered(
-            StageName stageName,
-            AppState appState,
-            CompositeDisposable stageDisposables) => voiceChatClient.OnMuted
+            voiceChatClient.OnMuted
                 .Subscribe(voiceChatScreenView.ToggleMute)
-                .AddTo(stageDisposables);
+                .AddTo(sceneDisposables);
+        }
 
         protected override void OnStageExiting(StageName stageName, AppState appState)
         {

@@ -38,17 +38,20 @@ namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl
             CompositeDisposable stageDisposables
         )
         {
+            var isLandscapeTypeVideo = appState.Space.LandscapeType == LandscapeType.Video;
+#if UNITY_WEBGL && !UNITY_EDITOR
+            landscapeControlView.SwitchSphere(isLandscapeTypeVideo);
+#else
+            landscapeControlView.SwitchVideoPlayerVisibility(isLandscapeTypeVideo);
+#endif
+
             var isLandscapeTypeNone = appState.Space.LandscapeType == LandscapeType.None;
             landscapeControlView.SetStageActive(!isLandscapeTypeNone);
             PlayLandscapeAsync(stageName, appState, stageDisposables);
         }
 
         protected override void OnStageExiting(StageName stageName, AppState appState)
-        {
-            var isLandscapeTypeNone = appState.Space.LandscapeType == LandscapeType.None;
-            landscapeControlView.SetStageActive(isLandscapeTypeNone);
-            appState.SetLandscapeInitialized(false);
-        }
+            => appState.SetLandscapeInitialized(false);
 
         private void PlayLandscapeAsync
         (

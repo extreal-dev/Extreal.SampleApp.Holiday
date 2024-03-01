@@ -6,7 +6,7 @@ using Extreal.Core.Logging;
 using Extreal.Integration.Messaging;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
-using Extreal.SampleApp.Holiday.App.P2P;
+using Extreal.SampleApp.Holiday.App.Group;
 using SocketIOClient;
 using UniRx;
 using UnityEngine;

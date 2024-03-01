@@ -1,17 +1,20 @@
-import { PeerAdapter } from "@extreal-dev/extreal.integration.p2p.webrtc";
-import { VoiceChatAdapter } from "@extreal-dev/extreal.integration.chat.webrtc";
-import { addFunction, isDebug } from "@extreal-dev/extreal.integration.web.common";
+import { VideoPlayerAdapter, addFunction, isDebug } from "@extreal-dev/extreal.integration.web.common";
+import { SocketIOMessagingAdapter } from "@extreal-dev/extreal.integration.messaging.socket.io";
 import { isTouchDevice } from "./isTouchDevice";
-import { RedisMessagingAdapter } from "@extreal-dev/extreal.integration.messaging.redis";
+import { OmeAdapter } from "@extreal-dev/extreal.integration.sfu.ome";
+import { VoiceChatAdapter } from "@extreal-dev/extreal.integration.chat.ome";
 
-const peerAdapter = new PeerAdapter();
-peerAdapter.adapt();
+const videoPlayerAdapter = new VideoPlayerAdapter();
+videoPlayerAdapter.adapt();
+
+const omeAdapter = new OmeAdapter();
+omeAdapter.adapt();
 
 const voiceChatAdapter = new VoiceChatAdapter();
-voiceChatAdapter.adapt(peerAdapter.getPeerClient);
+voiceChatAdapter.adapt(omeAdapter.getOmeClient);
 
-const redisMessagingAdapter = new RedisMessagingAdapter();
-redisMessagingAdapter.adapt();
+const socketIOMessagingAdapter = new SocketIOMessagingAdapter();
+socketIOMessagingAdapter.adapt();
 
 addFunction("IsTouchDevice", () => {
     const result = isTouchDevice();

@@ -6,8 +6,8 @@ using Extreal.Core.Common.System;
 using Extreal.Core.Logging;
 using Extreal.Core.StageNavigation;
 using Extreal.Integration.AssetWorkflow.Addressables;
-using Extreal.Integration.Chat.WebRTC;
-using Extreal.Integration.P2P.WebRTC;
+using Extreal.Integration.Chat.OME;
+using Extreal.Integration.SFU.OME;
 using Extreal.SampleApp.Holiday.App.Config;
 using Extreal.SampleApp.Holiday.Screens.ConfirmationScreen;
 using UniRx;
@@ -23,11 +23,11 @@ namespace Extreal.SampleApp.Holiday.App.AssetWorkflow
         public IObservable<bool> OnConnectRetried => assetProvider.OnConnectRetried;
 
         public MessageConfig MessageConfig { get; private set; }
-        public PeerConfig PeerConfig { get; private set; }
         public MessagingConfig MessagingConfig { get; private set; }
         public MultiplayConfig MultiplayConfig { get; private set; }
         public AvatarConfig AvatarConfig { get; private set; }
 
+        public OmeConfig OmeConfig { get; private set; }
         public VoiceChatConfig VoiceChatConfig { get; private set; }
 
         public SpaceConfig SpaceConfig { get; private set; }
@@ -57,11 +57,11 @@ namespace Extreal.SampleApp.Holiday.App.AssetWorkflow
             {
                 assetDisposables.Clear();
                 MessageConfig = await LoadAndAddToDisposablesAsync<MessageConfig>();
-                PeerConfig = await LoadAndReleaseAsync<P2PConfig, PeerConfig>(asset => asset.PeerConfig);
                 AvatarConfig = await LoadAndAddToDisposablesAsync<AvatarConfig>();
                 SpaceConfig = await LoadAndAddToDisposablesAsync<SpaceConfig>();
                 MessagingConfig = await LoadAndAddToDisposablesAsync<MessagingConfig>();
                 MultiplayConfig = await LoadAndAddToDisposablesAsync<MultiplayConfig>();
+                OmeConfig = await LoadAndReleaseAsync<SfuConfig, OmeConfig>(asset => asset.OmeConfig);
                 VoiceChatConfig = await LoadAndReleaseAsync<ChatConfig, VoiceChatConfig>(
                     asset => asset.VoiceChatConfig);
                 LandscapeConfig = await LoadAndAddToDisposablesAsync<LandscapeConfig>();

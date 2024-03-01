@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using Cysharp.Threading.Tasks;
 using Extreal.Core.StageNavigation;
-using Extreal.Integration.P2P.WebRTC;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
+using Extreal.SampleApp.Holiday.App.Group;
 using Extreal.SampleApp.Holiday.App.Stages;
 using Extreal.SampleApp.Holiday.Controls.ClientControl;
 using UniRx;
@@ -13,7 +13,6 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
 {
     public class GroupSelectionScreenPresenter : StagePresenterBase
     {
-        private readonly PeerClient peerClient;
         private readonly GroupManager groupManager;
         private readonly GroupSelectionScreenView groupSelectionScreenView;
         private readonly AssetHelper assetHelper;
@@ -23,12 +22,10 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState,
             AssetHelper assetHelper,
-            PeerClient peerClient,
             GroupManager groupManager,
             GroupSelectionScreenView groupSelectionScreenView
         ) : base(stageNavigator, appState)
         {
-            this.peerClient = peerClient;
             this.groupManager = groupManager;
             this.groupSelectionScreenView = groupSelectionScreenView;
             this.assetHelper = assetHelper;
@@ -50,11 +47,7 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
                 .AddTo(sceneDisposables);
 
             groupSelectionScreenView.OnGroupChanged
-                .Subscribe((groupName) =>
-                {
-                    appState.SetGroupId(groupManager.FindByName(groupName)?.Id);
-                    appState.SetGroupName(groupName);
-                })
+                .Subscribe(appState.SetGroupName)
                 .AddTo(sceneDisposables);
 
             groupSelectionScreenView.OnUpdateButtonClicked
@@ -77,13 +70,8 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
                     if (groups.Count > 0)
                     {
                         appState.SetGroupName(groups.First().Name);
-                        appState.SetGroupId(groups.First().Id);
                     }
                 })
-                .AddTo(sceneDisposables);
-
-            peerClient.OnConnectFailed
-                .Subscribe(_ => appState.Notify(assetHelper.MessageConfig.GroupMatchingUpdateFailureMessage))
                 .AddTo(sceneDisposables);
         }
 
@@ -95,7 +83,7 @@ namespace Extreal.SampleApp.Holiday.Screens.GroupSelectionScreen
         )
         {
             groupSelectionScreenView.Initialize();
-            var role = appState.IsHost ? PeerRole.Host : PeerRole.Client;
+            var role = appState.IsHost ? GroupRole.Host : GroupRole.Client;
             groupSelectionScreenView.SetInitialValues(role);
         }
     }

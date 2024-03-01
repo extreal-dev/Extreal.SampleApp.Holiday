@@ -7,6 +7,13 @@
       "dependencies": {},
       "url": "https://package.openupm.com"
     },
+    "com.endel.nativewebsocket": {
+      "version": "1.1.4",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://package.openupm.com"
+    },
     "com.neuecc.unirx": {
       "version": "7.1.0",
       "depth": 1,
@@ -35,13 +42,6 @@
       "dependencies": {
         "com.unity.modules.ai": "1.0.0"
       },
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.build-report-inspector": {
-      "version": "0.3.0-preview",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.burst": {
@@ -309,110 +309,117 @@
       "hash": "cb2790a6e1b1c2049fad53abf95a05d7ec079495"
     },
     "jp.co.tis.extreal.core.logging": {
-      "version": "https://github.com/extreal-dev/Extreal.Core.Logging.git#1.3.0-next.1",
+      "version": "https://github.com/extreal-dev/Extreal.Core.Logging.git#1.2.0",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "8b8ce884fa002dccc44f314b21973c3f213a6262"
+      "hash": "460ebea3b77ee572f81bf6217c2fbb31e7a66158"
     },
     "jp.co.tis.extreal.core.stagenavigation": {
-      "version": "https://github.com/extreal-dev/Extreal.Core.StageNavigation.git#1.3.0-next.1",
+      "version": "https://github.com/extreal-dev/Extreal.Core.StageNavigation.git#1.3.0-next.2",
       "depth": 0,
       "source": "git",
       "dependencies": {
-        "jp.co.tis.extreal.core.logging": "1.3.0-next.1",
+        "jp.co.tis.extreal.core.logging": "1.2.0",
         "jp.co.tis.extreal.core.common": "1.2.0-next.1",
         "com.cysharp.unitask": "2.5.0",
         "com.neuecc.unirx": "7.1.0"
       },
-      "hash": "5f8cef8eb16f4e409a81b3ce6ce915544fcc3d49"
+      "hash": "911b32c8bc56bdddf39e23b6dfbac75b2ca088f3"
     },
     "jp.co.tis.extreal.integration.assetworkflow.addressables": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.AssetWorkflow.Addressables.git#1.2.0-next.1",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.AssetWorkflow.Addressables.git#1.2.0-next.3",
       "depth": 0,
       "source": "git",
       "dependencies": {
-        "jp.co.tis.extreal.core.logging": "1.3.0-next.1",
+        "jp.co.tis.extreal.core.logging": "1.2.0",
         "jp.co.tis.extreal.core.common": "1.2.0-next.1",
         "com.unity.addressables": "1.21.19",
         "com.cysharp.unitask": "2.5.0",
         "com.neuecc.unirx": "7.1.0"
       },
-      "hash": "c43c503d80055fc4635b3c65f9f0521f34be0c1c"
+      "hash": "b608a7e5997ba027e19f0dc6b7cea5ba94831ef0"
     },
-    "jp.co.tis.extreal.integration.chat.webrtc": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.Chat.WebRTC.git#1.1.0-next.1",
+    "jp.co.tis.extreal.integration.chat.ome": {
+      "version": "https://github.com/extreal-dev/Extreal.Integration.Chat.OME.git#1.0.0-next.1",
       "depth": 0,
       "source": "git",
       "dependencies": {
-        "com.unity.webrtc": "3.0.0-pre.7",
         "com.cysharp.unitask": "2.5.0",
         "com.neuecc.unirx": "7.1.0",
-        "jp.co.tis.extreal.core.logging": "1.3.0-next.1",
+        "jp.co.tis.extreal.core.logging": "1.2.0",
         "jp.co.tis.extreal.core.common": "1.2.0-next.1",
-        "jp.co.tis.extreal.integration.web.common": "1.1.0-next.2",
-        "jp.co.tis.extreal.integration.p2p.webrtc": "1.1.0-next.2"
+        "jp.co.tis.extreal.integration.web.common": "1.1.0-next.3",
+        "jp.co.tis.extreal.integration.sfu.ome": "1.0.0-next.1",
+        "com.unity.webrtc": "3.0.0-pre.7"
       },
-      "hash": "1a71a040bee0974eaaa39b5af4f163efd4d8d754"
+      "hash": "36796e353520c5948d88ea25530a3bc3a9780fcb"
     },
     "jp.co.tis.extreal.integration.messaging": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.Messaging.git#1.0.0-next.2",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.Messaging.git#1.0.0-next.4",
       "depth": 0,
       "source": "git",
       "dependencies": {
-        "jp.co.tis.extreal.core.logging": "1.3.0-next.1",
+        "jp.co.tis.extreal.core.logging": "1.2.0",
         "jp.co.tis.extreal.core.common": "1.2.0-next.1",
         "com.cysharp.unitask": "2.5.0",
         "com.neuecc.unirx": "7.1.0"
       },
-      "hash": "d858779112bf8ff76197dc2cf413f0238a5655b8"
+      "hash": "22f647b7366068e7125cd1127457dca49bc9fd5f"
     },
-    "jp.co.tis.extreal.integration.messaging.redis": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.Messaging.Redis.git#1.0.0-next.3",
+    "jp.co.tis.extreal.integration.messaging.socket.io": {
+      "version": "https://github.com/extreal-dev/Extreal.Integration.Messaging.Socket.IO.git#1.0.0-next.6",
       "depth": 0,
       "source": "git",
       "dependencies": {
         "com.cysharp.unitask": "2.5.0",
         "com.neuecc.unirx": "7.1.0",
-        "jp.co.tis.extreal.core.logging": "1.3.0-next.1",
+        "jp.co.tis.extreal.core.logging": "1.2.0",
         "jp.co.tis.extreal.core.common": "1.2.0-next.1",
-        "jp.co.tis.extreal.integration.messaging": "1.0.0-next.2"
+        "jp.co.tis.extreal.integration.messaging": "1.0.0-next.4",
+        "jp.co.tis.extreal.integration.web.common": "1.1.0-next.3"
       },
-      "hash": "8d8e6429b7122ea2b162d2ece3f4beedaaac0b4d"
+      "hash": "d1f72f99c52ef604a42878daef08ec5f0e7bec9c"
     },
     "jp.co.tis.extreal.integration.multiplay.messaging": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.multiplay.Messaging.git#1.0.0-next.2",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.multiplay.Messaging.git#1.0.0-next.6",
       "depth": 0,
       "source": "git",
       "dependencies": {
         "com.cysharp.unitask": "2.5.0",
         "com.neuecc.unirx": "7.1.0",
-        "jp.co.tis.extreal.core.logging": "1.3.0-next.1",
+        "jp.co.tis.extreal.core.logging": "1.2.0",
         "jp.co.tis.extreal.core.common": "1.2.0-next.1",
-        "jp.co.tis.extreal.integration.messaging": "1.0.0-next.2"
+        "jp.co.tis.extreal.integration.messaging": "1.0.0-next.4"
       },
-      "hash": "873ac8dd88dd2af293e9e418728c5e6f601c0774"
+      "hash": "6b75f54d8756d75404263d6954d97e0cec45b195"
     },
-    "jp.co.tis.extreal.integration.p2p.webrtc": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.P2P.WebRTC.git#1.1.0-next.2",
+    "jp.co.tis.extreal.integration.sfu.ome": {
+      "version": "https://github.com/extreal-dev/Extreal.Integration.SFU.OME.git#1.0.0-next.1",
       "depth": 0,
       "source": "git",
       "dependencies": {
-        "com.unity.webrtc": "3.0.0-pre.7",
         "com.cysharp.unitask": "2.5.0",
         "com.neuecc.unirx": "7.1.0",
-        "jp.co.tis.extreal.core.logging": "1.3.0-next.1",
+        "jp.co.tis.extreal.core.logging": "1.2.0",
         "jp.co.tis.extreal.core.common": "1.2.0-next.1",
-        "jp.co.tis.extreal.integration.web.common": "1.1.0-next.2"
+        "jp.co.tis.extreal.integration.web.common": "1.1.0-next.3",
+        "com.endel.nativewebsocket": "1.1.4",
+        "com.unity.webrtc": "3.0.0-pre.7"
       },
-      "hash": "c21de1f277d45207a6a380bcf084a230cf3bf3fe"
+      "hash": "56c045abf64a3fe0259dfc3b53cfa2d5a60a1859"
     },
     "jp.co.tis.extreal.integration.web.common": {
-      "version": "https://github.com/extreal-dev/Extreal.Integration.Web.Common.git#1.1.0-next.2",
+      "version": "https://github.com/extreal-dev/Extreal.Integration.Web.Common.git#1.1.0-next.3",
       "depth": 0,
       "source": "git",
-      "dependencies": {},
-      "hash": "9935b25f748007439c23c5a4e6ab1aad8da035dc"
+      "dependencies": {
+        "com.cysharp.unitask": "2.3.3",
+        "com.neuecc.unirx": "7.1.0",
+        "jp.co.tis.extreal.core.logging": "1.3.0-next.1",
+        "jp.co.tis.extreal.core.common": "1.2.0-next.1"
+      },
+      "hash": "a8a3ea2fa1250c64324fc818216d5f760687a07a"
     },
     "jp.hadashikick.vcontainer": {
       "version": "1.14.0",

@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
   m_Name: AppCommon
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   m_GroupName: AppCommon
   m_Data:
     m_SerializedData: []
@@ -29,11 +29,6 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 60f62b0f283062a4092d1ab18c497448
     m_Address: MultiplayConfig
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 3ce9f7a676c41ca45aeddd2fcf78e28a
-    m_Address: P2PConfig
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -59,6 +54,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 10937d40dc9a78c45a1a747468a3d839
     m_Address: MessagingConfig
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ac27d7514c24b074180c000cc62a32a8
+    m_Address: SfuConfig
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

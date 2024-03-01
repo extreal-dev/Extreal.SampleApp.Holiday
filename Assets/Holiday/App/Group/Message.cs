@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
-namespace Extreal.SampleApp.Holiday.App.P2P
+namespace Extreal.SampleApp.Holiday.App.Group
 {
     [Serializable]
     public class Message : ISerializationCallbackReceiver

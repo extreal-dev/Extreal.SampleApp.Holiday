@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Extreal.Integration.Chat.WebRTC;
+using Extreal.Integration.Chat.OME;
 using UnityEngine;
 
 namespace Extreal.SampleApp.Holiday.App.Config
@@ -10,7 +10,11 @@ namespace Extreal.SampleApp.Holiday.App.Config
     public class ChatConfig : ScriptableObject
     {
         [SerializeField, SuppressMessage("Usage", "CC0052")] private bool initialMute = true;
+        [SerializeField, SuppressMessage("Usage", "CC0052")] private float initialInVolume = 1f;
+        [SerializeField, SuppressMessage("Usage", "CC0052")] private float initialOutVolume = 1f;
+        [SerializeField, SuppressMessage("Usage", "CC0052")] private float audioLevelCheckIntervalSeconds = 1f;
 
-        public VoiceChatConfig VoiceChatConfig => new VoiceChatConfig(initialMute);
+        public VoiceChatConfig VoiceChatConfig
+            => new VoiceChatConfig(initialMute, initialInVolume, initialOutVolume, audioLevelCheckIntervalSeconds);
     }
 }
