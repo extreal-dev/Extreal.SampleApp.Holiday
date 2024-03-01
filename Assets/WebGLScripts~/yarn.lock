@@ -2,21 +2,33 @@
 # yarn lockfile v1
 
 
-"@extreal-dev/extreal.integration.messaging.redis@1.0.0-next.1":
+"@extreal-dev/extreal.integration.chat.ome@1.0.0-next.1":
   version "1.0.0-next.1"
-  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.messaging.redis/-/extreal.integration.messaging.redis-1.0.0-next.1.tgz#8e526945e13d9a40834ad1b8e6f68ab30c33af05"
-  integrity sha512-4XDWYZovHX47JSDy/CQ0qFqeHUj6+SHpDq/0wYb2mjnHyrzlhKjPfHbdXMovprcd/sCM5GqgpluHaNdtxvBMVg==
+  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.chat.ome/-/extreal.integration.chat.ome-1.0.0-next.1.tgz#7ab4a0429ba8cabef75089beb98ae4ef236b7730"
+  integrity sha512-neD4IbW8Ta6UcyiK6tRYCIPFBdHwvBHp0wg0JeuFIBRyWcKrjZ9SsTfFjvjIo2kYHuKpE7KEBwDVFN2fUY73uA==
   dependencies:
-    "@extreal-dev/extreal.integration.web.common" "1.1.0-next.2"
+    "@extreal-dev/extreal.integration.sfu.ome" "1.0.0-next.3"
+    "@extreal-dev/extreal.integration.web.common" "1.1.0-next.3"
+
+"@extreal-dev/extreal.integration.messaging.socket.io@1.0.0-next.2":
+  version "1.0.0-next.2"
+  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.messaging.socket.io/-/extreal.integration.messaging.socket.io-1.0.0-next.2.tgz#c9be1d028a10064657a3b16f7325dd903d0e38af"
+  integrity sha512-23v0wH5qO4Pfe3mHERxWNkwVrIvQRZFVZsCmGjMd0CImKm0ID0ptAr7kphElbz2K9soN3iwLhBG3Y0dKhXQUHw==
+  dependencies:
+    "@extreal-dev/extreal.integration.web.common" "1.1.0-next.3"
     socket.io-client "4.7.4"
 
-"@extreal-dev/extreal.integration.web.common@../../Packages/Extreal.Integration.Web.Common/WebScripts~/":
-  version "1.0.0"
+"@extreal-dev/extreal.integration.sfu.ome@1.0.0-next.3":
+  version "1.0.0-next.3"
+  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.sfu.ome/-/extreal.integration.sfu.ome-1.0.0-next.3.tgz#099212ee4bf2cc1e201f8b5d4056ebb58b71fe90"
+  integrity sha512-IjF+tpR64hYXaGITtRw53ftnbW1LjJ4bFoCPJBKjggK1FGfZQFetCBAd2iWxDvTBS5MP/1daQHCjxU3InLMw4A==
+  dependencies:
+    "@extreal-dev/extreal.integration.web.common" "1.1.0-next.3"
 
-"@extreal-dev/extreal.integration.web.common@1.1.0-next.2":
-  version "1.1.0-next.2"
-  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.web.common/-/extreal.integration.web.common-1.1.0-next.2.tgz#752a8c9b89a4d92e49220b75cf39cb7070434a03"
-  integrity sha512-1xnnY+qGaL48bKy9X+ZStEO2yQ7xku4ChHvrADmtyFYlUMV2bhZUyxLkGrljFRp2qmor488AU29/UK5AibfkaQ==
+"@extreal-dev/extreal.integration.web.common@1.1.0-next.3":
+  version "1.1.0-next.3"
+  resolved "https://registry.yarnpkg.com/@extreal-dev/extreal.integration.web.common/-/extreal.integration.web.common-1.1.0-next.3.tgz#bd277a92f7b262c6882e57fc19704884ec2649a2"
+  integrity sha512-NO3d65FG47yigviEmm+qpEQEGAEUNRRrIC0Rx43c98a1OOayQ1EKC8qz7I8IWrTm5BXbYYyher9xs/x06/tgMg==
 
 "@jridgewell/gen-mapping@^0.3.0":
   version "0.3.3"
@@ -147,11 +159,6 @@
   version "1.20.2"
   resolved "https://registry.yarnpkg.com/@types/resolve/-/resolve-1.20.2.tgz#97d26e00cd4a0423b4af620abecf3e6f442b7975"
   integrity sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==
-
-"@types/uuid@^9.0.7":
-  version "9.0.8"
-  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-9.0.8.tgz#7545ba4fc3c003d6c756f651f3bf163d8f0f29ba"
-  integrity sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==
 
 acorn@^8.8.2:
   version "8.11.3"
@@ -369,11 +376,6 @@ undici-types@~5.26.4:
   version "5.26.5"
   resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-5.26.5.tgz#bcd539893d00b56e964fd2657a4866b221a65617"
   integrity sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==
-
-uuid@^9.0.1:
-  version "9.0.1"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-9.0.1.tgz#e188d4c8853cc722220392c424cd637f32293f30"
-  integrity sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==
 
 ws@~8.11.0:
   version "8.11.0"

@@ -26,9 +26,6 @@ namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl.LandscapePlayers.V
             this.videoPlayer = videoPlayer;
             this.videoFileName = videoFileName;
 
-            this.videoPlayer.gameObject.SetActive(true);
-
-            this.videoPlayer.Initialize();
             this.videoPlayer.SetUrl(AppUtils.ConcatUrl(this.landscapeConfig.BaseUrl, this.videoFileName));
 
             this.videoPlayer.OnErrorReceived
@@ -52,8 +49,8 @@ namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl.LandscapePlayers.V
 
         protected override void ReleaseManagedResources()
         {
-            videoPlayer.Clear();
-            videoPlayer.gameObject.SetActive(false);
+            videoPlayer.Stop();
+            disposables.Dispose();
             base.ReleaseManagedResources();
         }
 

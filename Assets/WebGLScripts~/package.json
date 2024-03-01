@@ -1,8 +1,9 @@
 {
   "dependencies": {
-    "@extreal-dev/extreal.integration.messaging.redis": "1.0.0-next.1",
-    "@extreal-dev/extreal.integration.web.common": "../../Packages/Extreal.Integration.Web.Common/WebScripts~/",
-    "uuid": "^9.0.1"
+    "@extreal-dev/extreal.integration.web.common": "1.1.0-next.3",
+    "@extreal-dev/extreal.integration.messaging.socket.io": "1.0.0-next.2",
+    "@extreal-dev/extreal.integration.sfu.ome": "1.0.0-next.3",
+    "@extreal-dev/extreal.integration.chat.ome": "1.0.0-next.1"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.1.0",

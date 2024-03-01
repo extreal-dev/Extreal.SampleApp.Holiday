@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using Extreal.Integration.SFU.OME;
 using UnityEngine;
 
-namespace Extreal.SampleApp.Holiday
+namespace Extreal.SampleApp.Holiday.App.Config
 {
     [CreateAssetMenu(
         menuName = nameof(Holiday) + "/" + nameof(SfuConfig),

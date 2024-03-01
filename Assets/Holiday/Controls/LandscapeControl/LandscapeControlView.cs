@@ -7,6 +7,7 @@ namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl
     public class LandscapeControlView : MonoBehaviour
     {
         [SerializeField] private GameObject stageRoot;
+        [SerializeField] private GameObject videoPlayer;
         [SerializeField] private GameObject sphere;
         [SerializeField] private GameObject webGLSphere;
         [SerializeField] private MeshCollider moveLimit;
@@ -39,5 +40,8 @@ namespace Extreal.SampleApp.Holiday.Controls.LandscapeControl
             sphere.SetActive(!toWebGL);
             webGLSphere.SetActive(toWebGL);
         }
+
+        public void SwitchVideoPlayerVisibility(bool isVisible)
+            => videoPlayer.SetActive(isVisible);
     }
 }

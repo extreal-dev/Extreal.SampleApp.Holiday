@@ -1,8 +1,11 @@
-import { addFunction, isDebug, VideoPlayerAdopter } from "@extreal-dev/extreal.integration.web.common";
-import { RedisMessagingAdapter } from "@extreal-dev/extreal.integration.messaging.redis";
+import { VideoPlayerAdapter, addFunction, isDebug } from "@extreal-dev/extreal.integration.web.common";
+import { SocketIOMessagingAdapter } from "@extreal-dev/extreal.integration.messaging.socket.io";
 import { isTouchDevice } from "./isTouchDevice";
-import { VoiceChatAdapter } from "./Extreal.Integration.Chat.OME";
-import { OmeAdapter } from "./Extreal.Integration.SFU.OME";
+import { OmeAdapter } from "@extreal-dev/extreal.integration.sfu.ome";
+import { VoiceChatAdapter } from "@extreal-dev/extreal.integration.chat.ome";
+
+const videoPlayerAdapter = new VideoPlayerAdapter();
+videoPlayerAdapter.adapt();
 
 const videoPlayerAdapter = new VideoPlayerAdopter();
 videoPlayerAdapter.adopt();
@@ -13,8 +16,8 @@ omeAdapter.adapt();
 const voiceChatAdapter = new VoiceChatAdapter();
 voiceChatAdapter.adapt(omeAdapter.getOmeClient);
 
-const redisMessagingAdapter = new RedisMessagingAdapter();
-redisMessagingAdapter.adapt();
+const socketIOMessagingAdapter = new SocketIOMessagingAdapter();
+socketIOMessagingAdapter.adapt();
 
 addFunction("IsTouchDevice", () => {
     const result = isTouchDevice();
