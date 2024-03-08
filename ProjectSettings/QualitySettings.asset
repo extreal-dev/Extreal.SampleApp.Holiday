@@ -4,7 +4,7 @@
 QualitySettings:
   m_ObjectHideFlags: 0
   serializedVersion: 5
-  m_CurrentQuality: 2
+  m_CurrentQuality: 0
   m_QualitySettings:
   - serializedVersion: 3
     name: Performant
@@ -44,7 +44,7 @@ QualitySettings:
     asyncUploadBufferSize: 16
     asyncUploadPersistentBuffer: 1
     resolutionScalingFixedDPIFactor: 1
-    customRenderPipeline: {fileID: 11400000, guid: e0c9534abb0db4142b4142738e834de8,
+    customRenderPipeline: {fileID: 11400000, guid: bc4d7d176779341b3b61a672b3841732,
       type: 2}
     terrainQualityOverrides: 0
     terrainPixelError: 1
