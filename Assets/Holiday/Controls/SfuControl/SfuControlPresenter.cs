@@ -27,10 +27,12 @@ namespace Extreal.SampleApp.Holiday.Controls.SfuControl
             this.omeClient = omeClient;
         }
 
-        protected override void Initialize(
+        protected override void Initialize
+        (
             StageNavigator<StageName, SceneName> stageNavigator,
             AppState appState,
-            CompositeDisposable sceneDisposables)
+            CompositeDisposable sceneDisposables
+        )
         {
             omeClient.OnJoined
                 .Subscribe(_ => appState.SetSfuReady(true))
@@ -48,8 +50,7 @@ namespace Extreal.SampleApp.Holiday.Controls.SfuControl
                 .AddTo(sceneDisposables);
         }
 
-        protected override void OnStageEntered(
-            StageName stageName, AppState appState, CompositeDisposable stageDisposables)
+        protected override void OnStageEntered(StageName stageName, AppState appState, CompositeDisposable stageDisposables)
         {
             if (appState.SfuReady.Value)
             {

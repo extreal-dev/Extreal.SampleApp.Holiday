@@ -33,7 +33,5 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
                     .Select(group => new Group(group.Name["TextChat#".Length..]))
                     .ToList();
         }
-
-        public Group FindByName(string name) => groups.Value.First(groups => groups.Name == name);
     }
 }

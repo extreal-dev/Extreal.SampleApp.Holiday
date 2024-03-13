@@ -8,7 +8,7 @@ using Extreal.SampleApp.Holiday.App.Group;
 using Extreal.SampleApp.Holiday.Controls.RetryStatusControl;
 using Extreal.SampleApp.Holiday.Screens.ConfirmationScreen;
 using UniRx;
-using Message = Extreal.SampleApp.Holiday.App.P2P.Message;
+using Message = Extreal.SampleApp.Holiday.App.Group.Message;
 
 namespace Extreal.SampleApp.Holiday.App
 {
