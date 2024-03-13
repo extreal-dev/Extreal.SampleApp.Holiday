@@ -6,7 +6,6 @@
         "Cinemachine",
         "Unity.ResourceManager",
         "Unity.Addressables",
-        "Unity.Collections",
         "Unity.TextMeshPro",
         "UniRx",
         "UniTask",
@@ -17,7 +16,8 @@
         "Extreal.Core.Common",
         "Extreal.Integration.Chat.OME",
         "Extreal.Integration.Multiplay.Messaging",
-        "Extreal.Integration.Messaging"
+        "Extreal.Integration.Messaging",
+        "Extreal.Integration.SFU.OME"
     ],
     "includePlatforms": [
         "Editor",

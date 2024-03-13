@@ -21,11 +21,10 @@ namespace Extreal.SampleApp.Holiday.App.Config
         [SerializeField] private string spaceGoButtonLabel;
         [SerializeField] private string spaceBackButtonLabel;
 
-        [SerializeField] private string groupMatchingUpdateFailureMessage;
-
-        [SerializeField] private string p2PStartFailureMessage;
-        [SerializeField] private string p2PUnexpectedDisconnectedMessage;
-        [SerializeField] private string p2PHostNameAlreadyExistsMessage;
+        [SerializeField] private string omeUnexpectedDisconnectedMessage;
+        [SerializeField] private string omeJoinRetryMessage;
+        [SerializeField] private string omeJoinRetrySuccessMessage;
+        [SerializeField] private string omeJoinRetryFailureMessage;
 
         [SerializeField] private string textChatMessagingGroupNameAlreadyExistsMessage;
         [SerializeField] private string textChatUnexpectedDisconnectedMessage;
@@ -49,11 +48,10 @@ namespace Extreal.SampleApp.Holiday.App.Config
         public string SpaceGoButtonLabel => spaceGoButtonLabel;
         public string SpaceBackButtonLabel => spaceBackButtonLabel;
 
-        public string GroupMatchingUpdateFailureMessage => groupMatchingUpdateFailureMessage;
-
-        public string P2PStartFailureMessage => p2PStartFailureMessage;
-        public string P2PUnexpectedDisconnectedMessage => p2PUnexpectedDisconnectedMessage;
-        public string P2PHostNameAlreadyExistsMessage => p2PHostNameAlreadyExistsMessage;
+        public string OmeUnexpectedDisconnectedMessage => omeUnexpectedDisconnectedMessage;
+        public string OmeJoinRetryMessage => omeJoinRetryMessage;
+        public string OmeJoinRetrySuccessMessage => omeJoinRetrySuccessMessage;
+        public string OmeJoinRetryFailureMessage => omeJoinRetryFailureMessage;
 
         public string TextChatMessagingGroupNameAlreadyExistsMessage => textChatMessagingGroupNameAlreadyExistsMessage;
         public string TextChatUnexpectedDisconnectedMessage => textChatUnexpectedDisconnectedMessage;

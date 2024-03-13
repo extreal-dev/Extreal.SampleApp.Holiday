@@ -21,7 +21,7 @@ set cpu_file_name=%work_dir%\%INSTANCE_NAME%_CpuUtilization.csv
 set pre_memory_file_name=%work_dir%\%INSTANCE_NAME%_MemoryUtilization
 set pre_multiplay_file_name=%work_dir%\%INSTANCE_NAME%_MultiplayStatus
 set pre_text_chat_file_name=%work_dir%\%INSTANCE_NAME%_TextChatStatus
-set pre_voice_chat_file_name=%work_dir%\%INSTANCE_NAME%VoiceChatStatus
+set pre_voice_chat_file_name=%work_dir%\%INSTANCE_NAME%_VoiceChatStatus
 set pre_log_file_name=%work_dir%\Logs\%INSTANCE_NAME%_Log
 
 if %1==include_host (
@@ -58,6 +58,7 @@ start GetCpuUtilization.bat %get_cpu_lifetime% %cpu_file_name%
 
 if %1==include_host (
     set counter=0
+    echo !counter!/%loop_count%
     call :SetCountToArgs !counter!
     start C:\Windows\System32\cmd.exe /c ^
         ^" ^
@@ -77,6 +78,7 @@ if %1==include_host (
 
 for /l %%i in (%loop_start_index%, 1, %loop_count%) do (
     set counter=%%i
+    echo !counter!/%loop_count%
     call :SetCountToArgs !counter!
     start C:\Windows\System32\cmd.exe /c ^
         ^" ^

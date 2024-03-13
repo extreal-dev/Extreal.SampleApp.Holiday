@@ -129,14 +129,20 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
 
             var clientControlScope = FindObjectOfType<ClientControlScope>();
             var appState = clientControlScope.Container.Resolve(typeof(AppState)) as AppState;
+#if HOLIDAY_LOAD_CLIENT
             var multiplayClient = clientControlScope.Container.Resolve(typeof(MultiplayClient)) as MultiplayClientForTest;
+#else
+            var multiplayClient = clientControlScope.Container.Resolve(typeof(MultiplayClient)) as MultiplayClient;
+#endif
             var messagingClient = clientControlScope.Container.Resolve(typeof(MessagingClient)) as MessagingClient;
             var assetHelper = clientControlScope.Container.Resolve(typeof(AssetHelper)) as AssetHelper;
 
+#if HOLIDAY_LOAD_CLIENT
             if (PerformanceTestArgumentHandler.SuppressMultiplay)
             {
                 multiplayClient.Suppress();
             }
+#endif
 
             {
                 var playingReady = false;
@@ -181,7 +187,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
 
                         // Enters specified space
                         await UniTask.WaitUntil(() => multiplayClient.JoinedClients.Count == PerformanceTestArgumentHandler.GroupCapacity);
-                        await UniTask.Delay(TimeSpan.FromSeconds(5));
+                        await UniTask.Delay(TimeSpan.FromSeconds(30));
                         PushButtonNamed("GoButton");
                     }
                 }
@@ -223,7 +229,9 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                 var player = multiplayClient.LocalClient.NetworkObjects[0];
                 var playerInput = player.GetComponent<HolidayPlayerInput>();
                 RepeatMovePlayerAsync(player, playerInput).Forget();
+#if HOLIDAY_LOAD_CLIENT
                 DumpMultiplayStatusAsync(multiplayClient).Forget();
+#endif
             }
 
             if (!PerformanceTestArgumentHandler.SuppressTextChat)
@@ -239,14 +247,14 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                 var voiceChatClient = clientControlScope.Container.Resolve(typeof(VoiceChatClient)) as VoiceChatClient;
                 var voicePeriod = PerformanceTestArgumentHandler.SendVoicePeriod;
                 SetAudioClip();
-                RepeatVoiceChatSendAsync(voicePeriod).Forget();
+                RepeatVoiceChatSendAsync(voiceChatClient, voicePeriod).Forget();
                 DumpVoiceChatStatusAsync(voiceChatClient, voicePeriod).Forget();
             }
         }
 
         private async UniTaskVoid RepeatMovePlayerAsync(GameObject player, HolidayPlayerInput playerInput)
         {
-            while (player != null)
+            while (player != null && !isDestroyed)
             {
                 var moveDuration = UnityEngine.Random.Range(1f, 5f);
                 var moveDirection = new Vector2(UnityEngine.Random.Range(-1, 2), UnityEngine.Random.Range(-1, 2));
@@ -343,7 +351,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
         private async UniTaskVoid RepeatTextMessageSendAsync(TMP_InputField messageInput, int messagePeriod)
         {
             await UniTask.Delay(UnityEngine.Random.Range(0, messagePeriod * 1000));
-            while (true)
+            while (!isDestroyed)
             {
                 var message = messageRepertoire[UnityEngine.Random.Range(0, messageRepertoire.Length)];
                 messageInput.text = message;
@@ -413,22 +421,24 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
             inAudio.Play();
         }
 
-        private static async UniTaskVoid RepeatVoiceChatSendAsync(int voicePeriod)
+        private async UniTaskVoid RepeatVoiceChatSendAsync(VoiceChatClient voiceChatClient, int voicePeriod)
         {
+            PushButtonNamed("MuteButton");
+            voiceChatClient.SetInVolume(0.01f);
             await UniTask.Delay(UnityEngine.Random.Range(0, voicePeriod * 1000));
-            while (true)
+            while (!isDestroyed)
             {
-                PushButtonNamed("MuteButton");
+                voiceChatClient.SetInVolume(1f);
                 if (logger.IsDebug())
                 {
-                    logger.LogDebug($"Start to send voice");
+                    logger.LogDebug($"Start speaking");
                 }
                 await UniTask.Delay(voicePeriod * 1000 / 5);
 
-                PushButtonNamed("MuteButton");
+                voiceChatClient.SetInVolume(0.01f);
                 if (logger.IsDebug())
                 {
-                    logger.LogDebug($"Stop to send voice");
+                    logger.LogDebug($"Stop speaking");
                 }
                 await UniTask.Delay(voicePeriod * 1000 * 4 / 5);
             }
@@ -461,7 +471,8 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
 
             var audioLevelChangedClients = new HashSet<string>();
             voiceChatClient.OnAudioLevelChanged
-                .Subscribe(audioLevel => audioLevelChangedClients.Add(audioLevel.id))
+                .Where(tuple => tuple.audioLevel > 0f)
+                .Subscribe(tuple => audioLevelChangedClients.Add(tuple.id))
                 .AddTo(this);
 
             while (!isDestroyed)

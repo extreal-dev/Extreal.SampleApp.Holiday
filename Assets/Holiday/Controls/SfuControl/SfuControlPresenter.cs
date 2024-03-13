@@ -41,7 +41,7 @@ namespace Extreal.SampleApp.Holiday.Controls.SfuControl
                 {
                     if (Logger.IsDebug())
                     {
-                        Logger.LogDebug($"Left room of SFU: reason={reason}");
+                        Logger.LogDebug("Left group of SFU");
                     }
                     appState.SetSfuReady(false);
                 })

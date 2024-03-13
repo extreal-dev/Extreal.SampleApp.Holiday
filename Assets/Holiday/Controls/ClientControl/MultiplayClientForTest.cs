@@ -20,7 +20,10 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
 
         protected override void ReleaseManagedResources()
         {
-            Object.Destroy(input.gameObject);
+            if (input.gameObject != null)
+            {
+                Object.Destroy(input.gameObject);
+            }
             base.ReleaseManagedResources();
         }
 

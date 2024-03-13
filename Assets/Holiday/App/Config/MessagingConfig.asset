@@ -14,4 +14,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   messagingUrl: http://localhost:3030
   timeoutSeconds: 3
-  maxCapacity: 100

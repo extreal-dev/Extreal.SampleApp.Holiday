@@ -23,12 +23,11 @@ MonoBehaviour:
   groupSelectionBackButtonLabel: Back
   spaceGoButtonLabel: Go
   spaceBackButtonLabel: Back
-  groupMatchingUpdateFailureMessage: Failed to update groups. If you wish to update
-    it again, press the Update button again.
-  p2PStartFailureMessage: Failed to connect to P2P. If you wish to reconnect, please
-    retry.
-  p2PUnexpectedDisconnectedMessage: P2P disconnected unexpectedly.
-  p2PHostNameAlreadyExistsMessage: Host name already exists
+  omeUnexpectedDisconnectedMessage: 'Connection to SFU is failed: {0}'
+  omeJoinRetryMessage: 'Reconnect for SFU : {0}'
+  omeJoinRetrySuccessMessage: Successfully reconnected for SFU.
+  omeJoinRetryFailureMessage: Failed to reconnect for SFU. If you wish to reconnect,
+    please retry.
   textChatMessagingGroupNameAlreadyExistsMessage: Text chat group name already exists
   textChatUnexpectedDisconnectedMessage: Text chat disconnected unexpectedly.
   multiplayConnectionApprovalRejectedMessage: Space is full.

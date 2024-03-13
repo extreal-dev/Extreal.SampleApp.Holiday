@@ -61,8 +61,25 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
             AppState appState,
             CompositeDisposable sceneDisposables
         )
-            => omeClient.OnUnexpectedLeft
-                .Subscribe(reason => appState.Notify($"Connection to SFU is failed: {reason}"))
+        {
+            omeClient.OnUnexpectedLeft
+                .Subscribe(reason => appState.Notify(string.Format(assetHelper.MessageConfig.OmeUnexpectedDisconnectedMessage, reason)))
                 .AddTo(sceneDisposables);
+
+            omeClient.OnJoinRetrying
+                .Subscribe(retryCount => AppUtils.NotifyRetrying(
+                    appState,
+                    assetHelper.MessageConfig.OmeJoinRetryMessage,
+                    retryCount))
+                .AddTo(sceneDisposables);
+
+            omeClient.OnJoinRetried
+                .Subscribe(result => AppUtils.NotifyRetried(
+                    appState,
+                    result,
+                    assetHelper.MessageConfig.OmeJoinRetrySuccessMessage,
+                    assetHelper.MessageConfig.OmeJoinRetryFailureMessage))
+                .AddTo(sceneDisposables);
+        }
     }
 }

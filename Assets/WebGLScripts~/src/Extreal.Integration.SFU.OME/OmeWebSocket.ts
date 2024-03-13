@@ -8,6 +8,8 @@ type OmeWebSocketCallbacks = {
     onUnexpectedLeft: (reason: string) => void;
     onUserJoined: (clientId: string) => void;
     onUserLeft: (clientId: string) => void;
+    onJoinRetrying: (count: number) => void;
+    onJoinRetried: (result: boolean) => void;
     handleGroupList: (groupList: GroupListResponse) => void;
 };
 
@@ -19,7 +21,6 @@ class OmeWebSocket extends WebSocket {
     private isDebug;
     private callbacks;
 
-    private isConnected = false;
     private groupName = "";
     private localClientId = "";
 
@@ -31,9 +32,13 @@ class OmeWebSocket extends WebSocket {
     private publishConnection: OmeRTCPeerConnection | null = null;
     private subscribeConnections = new Map<string, OmeRTCPeerConnection>();
 
+    private publishRetryCount = 0;
+    private readonly MaxPublishRetries = 3;
+    private readonly PublishRetryInterval = 5;
+
     private subscribeRetryCounts = new Map<string, number>();
-    private readonly MaxSubscribeRetries = 20;
-    private readonly SubscribeRetryInterval = 0.5;
+    private readonly MaxSubscribeRetries = 10;
+    private readonly SubscribeRetryInterval = 2;
 
     constructor(url: string, defaultIceServers: RTCIceServer[], isDebug: boolean, callbacks: OmeWebSocketCallbacks) {
         super(url);
@@ -61,11 +66,10 @@ class OmeWebSocket extends WebSocket {
         if (this.isDebug) {
             console.log("OnOpen");
         }
-        this.isConnected = true;
     };
 
-    private publish = (groupName: string) => {
-        if (!this.isConnected) {
+    private sendPublishRequest = (groupName: string) => {
+        if (this.readyState !== this.OPEN) {
             if (this.isDebug) {
                 console.log("WebSocket is not connected");
             }
@@ -78,7 +82,6 @@ class OmeWebSocket extends WebSocket {
         if (this.isDebug) {
             console.log(`OnClose: reason=${ev.reason}`);
         }
-        this.isConnected = false;
         this.closeAllRTCConnections();
         if (ev.code === 1000) {
             this.callbacks.onLeft();
@@ -96,14 +99,14 @@ class OmeWebSocket extends WebSocket {
 
     private closeAllRTCConnections = () => {
         if (this.isDebug) {
-            console.log(`Left room: groupName=${this.groupName}`);
+            console.log("Lose all RTCConnections");
         }
 
         if (this.publishConnection) {
             for (const hook of this.publishPcCloseHooks) {
                 this.handleHook(hook, this.localClientId, this.publishConnection as OmeRTCPeerConnection);
             }
-            this.close();
+            this.publishConnection.close();
             this.publishConnection = null;
             this.localClientId = "";
         }
@@ -134,31 +137,46 @@ class OmeWebSocket extends WebSocket {
         if (command.command === "list groups") {
             this.callbacks.handleGroupList(command.groupListResponse as GroupListResponse);
         } else if (command.command === "publish offer") {
-            this.publishOfferEvent(command);
+            this.receivePublishOffer(command);
         } else if (command.command === "subscribe offer") {
-            this.subscribeOfferEvent(command);
+            this.receiveSubscribeOffer(command);
         } else if (command.command === "join") {
-            this.joinMemberEvent(command);
+            this.receiveJoinMember(command);
         } else if (command.command === "leave") {
-            this.leaveMemberEvent(command);
+            this.receiveLeaveMember(command);
         }
     };
 
-    private publishOfferEvent = async (command: OmeMessage) => {
+    private receivePublishOffer = async (command: OmeMessage) => {
         let isSetLocalCandidate = false;
 
         const configuration = this.createRTCConfiguration(command.getIceServers());
         const pc = new OmeRTCPeerConnection(configuration, this.isDebug);
+        pc.setFailedCallback(() => {
+            this.closeAllRTCConnections();
+
+            if (this.publishRetryCount < this.MaxPublishRetries) {
+                setTimeout(() => {
+                  this.publishRetryCount++;
+                  this.callbacks.onJoinRetrying(this.publishRetryCount);
+                  this.sendPublishRequest(this.groupName);
+                }, this.PublishRetryInterval * 1000);
+            } else {
+                if (this.isDebug) {
+                    console.error("Maximum publish retryCount reached");
+                }
+                this.publishRetryCount = 0;
+                this.callbacks.onJoinRetried(false);
+            }
+        })
         pc.setCreateAnswerCompletion((answer) => {
             const message = OmeMessage.createAnswerMessage(command.id, answer);
             this.send(message);
         });
         pc.setIceCandidateCallback((candidate) => {
             if (!isSetLocalCandidate) {
-                // const sdpMid = candidate.sdpMid;
                 if (command.candidates) {
                     for (const candidateInit of command.candidates) {
-                        // candidateInit.sdpMid = sdpMid;
                         pc.addIceCandidate(candidateInit);
                     }
                 }
@@ -169,12 +187,17 @@ class OmeWebSocket extends WebSocket {
         });
         pc.setConnectedCallback(() => {
             if (this.isDebug) {
-                console.log(`Joined room: groupName=${this.groupName}`);
+                console.log(`Joined group: groupName=${this.groupName}`);
             }
 
             const message = OmeMessage.createJoinMessage(command.id);
             this.send(message);
             this.callbacks.onJoined(command.getClientId());
+
+            if (this.publishRetryCount > 0) {
+                this.publishRetryCount = 0;
+                this.callbacks.onJoinRetried(true);
+            }
         });
 
         for (const hook of this.publishPcCreateHooks) {
@@ -186,7 +209,7 @@ class OmeWebSocket extends WebSocket {
         pc.createAnswerSdpAsync(command.getSdp());
     };
 
-    private subscribeOfferEvent = (command: OmeMessage) => {
+    private receiveSubscribeOffer = (command: OmeMessage) => {
         const currentRetryCount = this.subscribeRetryCounts.get(command.getClientId()) ?? 0;
 
         if (command.error) {
@@ -198,7 +221,7 @@ class OmeWebSocket extends WebSocket {
                     }, this.SubscribeRetryInterval * 1000);
                 } else {
                     if (this.isDebug) {
-                        console.error(`Maximum retryCount reached: ${command.getClientId()}`);
+                        console.error(`Maximum subscribe retryCount reached: ${command.getClientId()}`);
                     }
                     this.subscribeRetryCounts.delete(command.getClientId());
                 }
@@ -276,7 +299,7 @@ class OmeWebSocket extends WebSocket {
     };
 
     private subscribe = (clientId: string) => {
-        if (!this.isConnected) {
+        if (this.readyState !== this.OPEN) {
             if (this.isDebug) {
                 console.log("WebSocket is not connected");
             }
@@ -285,7 +308,7 @@ class OmeWebSocket extends WebSocket {
         this.send(OmeMessage.createSubscribeOffer(clientId));
     };
 
-    private joinMemberEvent = (command: OmeMessage) => {
+    private receiveJoinMember = (command: OmeMessage) => {
         if (this.isDebug) {
             console.log(`User joined: clientId=${command.getClientId()}`);
         }
@@ -294,7 +317,7 @@ class OmeWebSocket extends WebSocket {
         this.callbacks.onUserJoined(command.getClientId());
     };
 
-    private leaveMemberEvent = (command: OmeMessage) => {
+    private receiveLeaveMember = (command: OmeMessage) => {
         if (this.isDebug) {
             console.log(`User left: clientId=${command.getClientId()}`);
         }
@@ -325,7 +348,7 @@ class OmeWebSocket extends WebSocket {
 
     public connect = (groupName: string) => {
         this.groupName = groupName;
-        this.publish(this.groupName);
+        this.sendPublishRequest(this.groupName);
     };
 }
 
