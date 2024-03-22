@@ -22,6 +22,7 @@ set pre_memory_file_name=%work_dir%\%INSTANCE_NAME%_MemoryUtilization
 set pre_multiplay_file_name=%work_dir%\%INSTANCE_NAME%_MultiplayStatus
 set pre_text_chat_file_name=%work_dir%\%INSTANCE_NAME%_TextChatStatus
 set pre_voice_chat_file_name=%work_dir%\%INSTANCE_NAME%_VoiceChatStatus
+set pre_ome_file_name=%work_dir%\%INSTANCE_NAME%_OmeStatus
 set pre_log_file_name=%work_dir%\Logs\%INSTANCE_NAME%_Log
 
 if %1==include_host (
@@ -43,6 +44,7 @@ if %4==suppress_voice_chat (
     set arg_for_voice_chat=--suppress-voice-chat
 ) else (
     set pre_arg_for_voice_chat=--voice-chat-status-dump-file %pre_voice_chat_file_name%
+    set pre_arg_for_ome=--ome-status-dump-file %pre_ome_file_name%
 )
 if not "%5"=="" (
     set space_name=%5
@@ -71,6 +73,7 @@ if %1==include_host (
         !arg_for_multiplay! ^
         !arg_for_text_chat! ^
         !arg_for_voice_chat! ^
+        !arg_for_ome! ^
         ^> %pre_log_file_name%!counter!.log 2^>^&1 ^
         ^"
     powershell sleep 10
@@ -91,6 +94,7 @@ for /l %%i in (%loop_start_index%, 1, %loop_count%) do (
         !arg_for_multiplay! ^
         !arg_for_text_chat! ^
         !arg_for_voice_chat! ^
+        !arg_for_ome! ^
         ^> %pre_log_file_name%!counter!.log 2^>^&1 ^
         ^"
     powershell sleep 10
@@ -113,5 +117,6 @@ if defined pre_arg_for_text_chat (
 )
 if defined pre_arg_for_voice_chat (
     set arg_for_voice_chat=%pre_arg_for_voice_chat%%1.txt
+    set arg_for_ome=%pre_arg_for_ome%%1.txt
 )
 exit /b

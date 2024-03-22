@@ -9,6 +9,7 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
         public static string MultiplayStatusDumpFile { get; private set; }
         public static string TextChatStatusDumpFile { get; private set; }
         public static string VoiceChatStatusDumpFile { get; private set; }
+        public static string OmeStatusDumpFile { get; private set; }
         public static int SendMessagePeriod { get; private set; } = 5;
         public static int SendVoicePeriod { get; private set; } = 5;
         public static float Lifetime { get; private set; }
@@ -77,6 +78,17 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                             return;
                         }
                         VoiceChatStatusDumpFile = args[i];
+                        break;
+                    }
+                    case "--ome-status-dump-file":
+                    {
+                        i++;
+                        if (i == argLength || args[i].StartsWith('-'))
+                        {
+                            DumpHelpWithErrorMessage();
+                            return;
+                        }
+                        OmeStatusDumpFile = args[i];
                         break;
                     }
                     case "--send-message-period":
@@ -217,6 +229,8 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                     + "                                         If not specified, the text chat status is not captured." + Environment.NewLine
                     + "  --voice-chat-status-dump-file <file> : Gets the voice chat status and dumps to the <file>." + Environment.NewLine
                     + "                                         If not specified, the voice chat status is not captured." + Environment.NewLine
+                    + "  --ome-status-dump-file <file>        : Gets the ome status and dumps to the <file>." + Environment.NewLine
+                    + "                                         If not specified, the ome status is not captured." + Environment.NewLine
                     + "  --send-message-period <int num>      : The client sends a message once every <int num> seconds." + Environment.NewLine
                     + "                                         If not specified/input 0 or lower, the period is set to 5." + Environment.NewLine
                     + "  --send-voice-period <int num>        : The client sends voice once every <int num> seconds." + Environment.NewLine
