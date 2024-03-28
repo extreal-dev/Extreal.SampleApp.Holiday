@@ -22,6 +22,7 @@ namespace Extreal.SampleApp.Holiday.App.Config
         [SerializeField] private string spaceBackButtonLabel;
 
         [SerializeField] private string omeUnexpectedDisconnectedMessage;
+        [SerializeField] private string omeUnexpectedSubscribeFailedMessage;
         [SerializeField] private string omeJoinRetryMessage;
         [SerializeField] private string omeJoinRetrySuccessMessage;
         [SerializeField] private string omeJoinRetryFailureMessage;
@@ -49,6 +50,7 @@ namespace Extreal.SampleApp.Holiday.App.Config
         public string SpaceBackButtonLabel => spaceBackButtonLabel;
 
         public string OmeUnexpectedDisconnectedMessage => omeUnexpectedDisconnectedMessage;
+        public string OmeUnexpectedSubscribeFailedMessage => omeUnexpectedSubscribeFailedMessage;
         public string OmeJoinRetryMessage => omeJoinRetryMessage;
         public string OmeJoinRetrySuccessMessage => omeJoinRetrySuccessMessage;
         public string OmeJoinRetryFailureMessage => omeJoinRetryFailureMessage;

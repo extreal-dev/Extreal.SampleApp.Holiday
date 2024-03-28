@@ -66,6 +66,10 @@ namespace Extreal.SampleApp.Holiday.Controls.ClientControl
                 .Subscribe(reason => appState.Notify(string.Format(assetHelper.MessageConfig.OmeUnexpectedDisconnectedMessage, reason)))
                 .AddTo(sceneDisposables);
 
+            omeClient.OnUnexpectedSubscribeFailed
+                .Subscribe(reason => appState.Notify(string.Format(assetHelper.MessageConfig.OmeUnexpectedSubscribeFailedMessage, reason)))
+                .AddTo(sceneDisposables);
+
             omeClient.OnJoinRetrying
                 .Subscribe(retryCount => AppUtils.NotifyRetrying(
                     appState,

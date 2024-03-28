@@ -24,6 +24,7 @@ MonoBehaviour:
   spaceGoButtonLabel: Go
   spaceBackButtonLabel: Back
   omeUnexpectedDisconnectedMessage: 'Connection to SFU is failed: {0}'
+  omeUnexpectedSubscribeFailedMessage: 'Subscribe connection is failed: {0}'
   omeJoinRetryMessage: 'Reconnect for SFU : {0}'
   omeJoinRetrySuccessMessage: Successfully reconnected for SFU.
   omeJoinRetryFailureMessage: Failed to reconnect for SFU. If you wish to reconnect,
