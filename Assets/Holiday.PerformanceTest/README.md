@@ -67,14 +67,18 @@ In `Build Settings` - `Scenes in Build`, check `Holiday.PerformanceTest/Performa
     - `VoiceChatServerStartPerformanceTest.sh`.
 
 #### 2. Check resource usage of observation client
-Please Check manually.
+Please check manually.
 - For WebGL:
     1. Close all applications and Chrome tabs other than the one you are using.
     1. Start Task Manager and check Google Chrome's CPU and memory from the Processes tab.
     1. Start Resource Monitor and check the sending and receiving of chrome.exe from the network tab.
-    1. run the app.
+    1. Run the app.
 - For Android:
+    1. Open Android Studio and select the process of the running application.
+    1. Launch Profiler and check CPU and memory usage.
+    1. Use the Network inspector to check network transmission and reception.
 - For iPhone:
+    1. Open Debug Navigator from Xcode where the build was performed to check CPU, memory usage, and network send/receive usage.
 - For PC:
     1. Close all applications.
     1. Start Task Manager and check Application's CPU and memory from the Processes tab.
