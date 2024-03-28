@@ -9,6 +9,7 @@ using Extreal.Core.Logging;
 using Extreal.Integration.Chat.OME;
 using Extreal.Integration.Messaging;
 using Extreal.Integration.Multiplay.Messaging;
+using Extreal.Integration.SFU.OME;
 using Extreal.SampleApp.Holiday.App;
 using Extreal.SampleApp.Holiday.App.AssetWorkflow;
 using Extreal.SampleApp.Holiday.App.Config;
@@ -122,12 +123,18 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                 await UniTask.Yield();
             }
 
+            var clientControlScope = FindObjectOfType<ClientControlScope>();
+            if (!PerformanceTestArgumentHandler.SuppressVoiceChat)
+            {
+                var omeClient = clientControlScope.Container.Resolve(typeof(OmeClient)) as OmeClient;
+                DumpOmeStatusAsync(omeClient).Forget();
+            }
+
             // Enters VirtualSpace
             PushButtonNamed("GoButton");
             await UniTask.WaitUntil(() =>
                 ExistButtonOfSceneNamed(SceneName.TextChatControl));
 
-            var clientControlScope = FindObjectOfType<ClientControlScope>();
             var appState = clientControlScope.Container.Resolve(typeof(AppState)) as AppState;
 #if HOLIDAY_LOAD_CLIENT
             var multiplayClient = clientControlScope.Container.Resolve(typeof(MultiplayClient)) as MultiplayClientForTest;
@@ -246,8 +253,11 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
             {
                 var voiceChatClient = clientControlScope.Container.Resolve(typeof(VoiceChatClient)) as VoiceChatClient;
                 var voicePeriod = PerformanceTestArgumentHandler.SendVoicePeriod;
-                SetAudioClip();
-                RepeatVoiceChatSendAsync(voiceChatClient, voicePeriod).Forget();
+                if (PerformanceTestArgumentHandler.Role == Role.Host)
+                {
+                    SetAudioClip();
+                    RepeatVoiceChatSendAsync(voiceChatClient, voicePeriod).Forget();
+                }
                 DumpVoiceChatStatusAsync(voiceChatClient, voicePeriod).Forget();
             }
         }
@@ -328,14 +338,18 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
             using var file = File.Create(path);
             using var writer = new StreamWriter(file, Encoding.UTF8);
             writer.WriteLine("Date Time MovingClientNum");
+            writer.Flush();
+            file.Flush();
 
             while (!isDestroyed)
             {
-                var currentTime = DateTime.Now;
+                var currentTime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
                 var movingClientNum = multiplayClient.UpdatedClients.Count + 1;
                 multiplayClient.UpdatedClients.Clear();
 
                 writer.WriteLine($"{currentTime} {movingClientNum}");
+                writer.Flush();
+                file.Flush();
 
                 try
                 {
@@ -390,6 +404,8 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
             using var file = File.Create(path);
             using var writer = new StreamWriter(file, Encoding.UTF8);
             writer.WriteLine("Date Time MessageReceivedCount");
+            writer.Flush();
+            file.Flush();
 
             var messageReceivedCount = 0;
             messagingClient.OnMessageReceived
@@ -398,8 +414,10 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
 
             while (!isDestroyed)
             {
-                var currentTime = DateTime.Now;
+                var currentTime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
                 writer.WriteLine($"{currentTime} {messageReceivedCount}");
+                writer.Flush();
+                file.Flush();
 
                 messageReceivedCount = 0;
 
@@ -468,6 +486,8 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
             using var file = File.Create(path);
             using var writer = new StreamWriter(file, Encoding.UTF8);
             writer.WriteLine("Date Time VoiceReceivedCount");
+            writer.Flush();
+            file.Flush();
 
             var audioLevelChangedClients = new HashSet<string>();
             voiceChatClient.OnAudioLevelChanged
@@ -477,8 +497,10 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
 
             while (!isDestroyed)
             {
-                var currentTime = DateTime.Now;
+                var currentTime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
                 writer.WriteLine($"{currentTime} {audioLevelChangedClients.Count}");
+                writer.Flush();
+                file.Flush();
 
                 audioLevelChangedClients.Clear();
 
@@ -491,6 +513,59 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
                     break;
                 }
             }
+        }
+
+        private async UniTaskVoid DumpOmeStatusAsync(OmeClient omeClient)
+        {
+            var path = PerformanceTestArgumentHandler.OmeStatusDumpFile;
+            if (string.IsNullOrEmpty(path))
+            {
+                return;
+            }
+            if (File.Exists(path))
+            {
+                if (logger.IsDebug())
+                {
+                    logger.LogDebug($"There already exists a file at {path}");
+                }
+                return;
+            }
+
+            if (logger.IsDebug())
+            {
+                logger.LogDebug($"Creates a file {path} and writes data into it");
+            }
+
+            using var file = File.Create(path);
+            using var writer = new StreamWriter(file, Encoding.UTF8);
+            writer.WriteLine("Date Time OmeConnectedCount");
+            writer.Flush();
+            file.Flush();
+
+            var omeClientCount = 0;
+            omeClient.OnUserJoined
+                .Subscribe(_ =>
+                {
+                    omeClientCount++;
+                    var currentTime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+                    writer.WriteLine($"{currentTime} {omeClientCount}");
+                    writer.Flush();
+                    file.Flush();
+                })
+                .AddTo(this);
+
+            omeClient.OnUserLeft
+                .Subscribe(_ =>
+                {
+                    omeClientCount--;
+                    var currentTime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+                    writer.WriteLine($"{currentTime} {omeClientCount}");
+                    writer.Flush();
+                    file.Flush();
+                })
+                .AddTo(this);
+
+            await UniTask.WaitUntil(() => isDestroyed);
         }
 
         private bool InRange(Vector3 position)
@@ -556,14 +631,18 @@ namespace Extreal.SampleApp.Holiday.PerformanceTest
             using var file = File.Create(path);
             using var writer = new StreamWriter(file, Encoding.UTF8);
             writer.WriteLine("Date Time TotalReservedMemory TotalAllocatedMemory TotalUnusedReservedMemory");
+            writer.Flush();
+            file.Flush();
 
             while (!isDestroyed)
             {
-                var currentTime = DateTime.Now;
+                var currentTime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
                 var totalReservedMemory = Profiler.GetTotalReservedMemoryLong();
                 var totalAllocatedMemory = Profiler.GetTotalAllocatedMemoryLong();
                 var totalUnusedReservedMemory = Profiler.GetTotalUnusedReservedMemoryLong();
                 writer.WriteLine($"{currentTime} {totalReservedMemory} {totalAllocatedMemory} {totalUnusedReservedMemory}");
+                writer.Flush();
+                file.Flush();
 
                 try
                 {
